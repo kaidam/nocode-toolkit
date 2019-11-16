@@ -1,0 +1,19 @@
+{
+  "name": "example-site-basic",
+  "version": "0.0.1",
+  "private": true,
+  "description": "",
+  "dependencies": {
+    "@nocode-toolkit/builder": "^0.0.1",
+    "@nocode-toolkit/website": "^0.0.1",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "scripts": {
+    "develop": "nocode develop",
+    "build": "nocode build",
+    "publish": "nocode publish"
+  },
+  "author": "",
+  "license": "ISC"
+}

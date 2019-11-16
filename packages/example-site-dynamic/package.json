@@ -1,0 +1,26 @@
+{
+  "name": "example-site-dynamic",
+  "version": "0.0.1",
+  "private": true,
+  "description": "",
+  "dependencies": {
+    "@nocode-toolkit/builder": "^0.0.1",
+    "@nocode-toolkit/website": "^0.0.1",
+    "@nocode-toolkit/website-material-ui": "^0.0.1",
+    "@loadable/component": "^5.7.0",
+    "@material-ui/core": "^4.3.3",
+    "@material-ui/icons": "^4.2.1",
+    "@material-ui/styles": "^4.4.1",
+    "axios": "^0.18.0",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.0.1"
+  },
+  "scripts": {
+    "develop": "nocode develop",
+    "build": "nocode build --base-url /preview/loadable/",
+    "publish": "nocode publish"
+  },
+  "author": "",
+  "license": "ISC"
+}

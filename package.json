@@ -1,0 +1,15 @@
+{
+  "name": "nocode-toolkit",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "lerna run build"
+  },
+  "devDependencies": {
+    "lerna": "^3.13.2"
+  },
+  "license": "MIT"
+}
