@@ -1,6 +1,6 @@
 {
   "name": "@nocode-toolkit/website-material",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Frontend utilities for building a nocode website with material-ui.",
   "scripts": {
     "build": "npx babel src --out-dir lib",
@@ -30,10 +30,10 @@
     "@babel/preset-env": "7.3.4",
     "@babel/preset-react": "7.0.0",
     "@babel/runtime": "^7.4.3",
-    "@nocode/website": "^0.0.1",
     "@material-ui/core": "^4.3.3",
     "@material-ui/icons": "^4.2.1",
     "@material-ui/styles": "^4.4.1",
+    "@nocode/website": "^0.0.1",
     "react": "^16.8.6"
   },
   "license": "MIT"
