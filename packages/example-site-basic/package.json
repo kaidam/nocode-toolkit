@@ -1,11 +1,11 @@
 {
   "name": "example-site-basic",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "description": "",
   "dependencies": {
-    "@nocode-toolkit/builder": "^1.0.1",
-    "@nocode-toolkit/website": "^1.0.2",
+    "@nocode-toolkit/builder": "^1.0.3",
+    "@nocode-toolkit/website": "^1.0.3",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
   },
