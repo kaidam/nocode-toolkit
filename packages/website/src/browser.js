@@ -1,6 +1,7 @@
 import React from 'react'
 import { hydrate, render } from 'react-dom'
 import { Provider } from 'react-redux'
+import { HelmetProvider } from 'react-helmet-async'
 
 import Store from './store'
 
@@ -24,7 +25,9 @@ const Render = ({
   
     const container = (
       <Provider store={ store }>
-        <App />
+        <HelmetProvider>
+          <App />
+        </HelmetProvider>
       </Provider>
     )
     renderFunction(container, rootEl)

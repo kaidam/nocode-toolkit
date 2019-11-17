@@ -50,7 +50,10 @@ const externalsMiddleware = ({
     Promise.all(resolvePromises)
       .then(() => done())
       .catch(e => {
-        if(errorLog) errorLog(`externalsMiddleware: ${e.toString()}`)
+        if(errorLog) {
+          errorLog(`externalsMiddleware: ${e.toString()}`)
+          console.trace()
+        }
         done(e)
       })
   }

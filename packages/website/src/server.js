@@ -1,7 +1,7 @@
 import React from 'react'
 import { renderToString } from 'react-dom/server'
 import { Provider } from 'react-redux'
-import { Helmet } from 'react-helmet'
+import { HelmetProvider } from 'react-helmet-async'
 
 import Store from './store'
 
@@ -13,11 +13,16 @@ const Server = ({
   globals,
   errorLog,
   appProps = {},
+  // a function that returns extra HTML we need to include in the page
   getInjectedHTML,
+  // a custom render function that handles things like server side style sheets
+  // this will return bodyHTML and injectedHTML (optionally)
   render,
 }, done) => {
 
   let routeResult = null
+
+  const helmetContext = {}
 
   const {
     store,
@@ -37,7 +42,9 @@ const Server = ({
 
     const appElem = (
       <Provider store={ store }>
-        <App {...appProps} />
+        <HelmetProvider context={helmetContext}>
+          <App {...appProps} />
+        </HelmetProvider>
       </Provider>
     )
 
@@ -46,6 +53,12 @@ const Server = ({
       store,
     }
 
+    // if we have a custom render function - use it
+    // this is used in cases like the material-ui server side rendering
+    // where we need to collect the style sheets
+    // for example - website-material-ui/src/server.js
+    // passes a custom render function that collects stylesheets
+    // and renders them to injectedHTML
     if(render) {
       const {
         bodyHtml,
@@ -63,8 +76,8 @@ const Server = ({
       results.injectedHTML = getInjectedHTML ? getInjectedHTML() : ''
     }
 
-    results.helmet = Helmet.renderStatic()
-
+    results.helmet =helmetContext.helmet
+    
     done(null, results)
   })
 }

@@ -37,7 +37,7 @@
     "immer": "^2.1.5",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-helmet": "^6.0.0-beta",
+    "react-helmet-async": "^1.0.4",
     "react-hot-loader": "^4.8.3",
     "react-redux": "^7.0.1",
     "react-router5": "^7.1.0",
