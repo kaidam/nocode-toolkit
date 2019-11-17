@@ -1,8 +1,10 @@
-import render from '@nocode-toolkit/website-material-ui/lib/browser'
+import Render from '@nocode-toolkit/website-material-ui/lib/browser'
 import App from './app'
 import reducers from './store/reducers'
 
-render({  
-  App,
+const render = Render({
   reducers,
+  App,
 })
+
+render()

@@ -11,21 +11,33 @@ const Render = ({
   reducers,
   App,
 }) => {
-  const {
-    store,
-    router,
-  } = Store({
-    reducers,
-  })
 
-  router.start()
+  const render = () => {
+    const {
+      store,
+      router,
+    } = Store({
+      reducers,
+    })
+  
+    router.start()
+  
+    const container = (
+      <Provider store={ store }>
+        <App />
+      </Provider>
+    )
+    renderFunction(container, rootEl)
+  }
 
-  const container = (
-    <Provider store={ store }>
-      <App />
-    </Provider>
-  )
-  renderFunction(container, rootEl)
+  window._reloadNocodeApp = () => {
+    render({
+      reducers,
+      App,
+    })
+  }
+
+  return render
 }
 
 export default Render
