@@ -1,7 +1,5 @@
-//import axios from 'axios'
 import CreateReducer from '@nocode-toolkit/website/lib/store/utils/createReducer'
 import CreateActions from '@nocode-toolkit/website/lib/store/utils/createActions'
-//import selectors from '@nocode-toolkit/website/lib/selectors'
 
 const prefix = 'ui'
 const initialState = {

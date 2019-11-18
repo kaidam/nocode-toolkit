@@ -11,7 +11,6 @@
     "@nocode-toolkit/builder": "^1.0.4",
     "@nocode-toolkit/website": "^1.0.4",
     "@nocode-toolkit/website-material-ui": "^1.0.4",
-    "axios": "^0.18.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-redux": "^7.0.1",
