@@ -1,0 +1,60 @@
+{
+  "name": "@nocode-toolkit/ui",
+  "version": "1.0.5",
+  "description": "React/Redux library for nocode website editors",
+  "scripts": {
+    "build": "npx babel src --out-dir lib",
+    "prepare": "npm run build"
+  },
+  "files": [
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.3.4",
+    "@babel/plugin-proposal-class-properties": "^7.3.4",
+    "@babel/plugin-proposal-decorators": "^7.3.0",
+    "@babel/plugin-proposal-export-namespace-from": "^7.2.0",
+    "@babel/plugin-proposal-function-sent": "^7.2.0",
+    "@babel/plugin-proposal-json-strings": "^7.2.0",
+    "@babel/plugin-proposal-numeric-separator": "^7.2.0",
+    "@babel/plugin-proposal-throw-expressions": "^7.2.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/plugin-syntax-import-meta": "^7.2.0",
+    "@babel/plugin-transform-react-jsx-source": "^7.2.0",
+    "@babel/plugin-transform-runtime": "^7.4.0",
+    "@babel/preset-env": "^7.3.4",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/runtime": "^7.4.3",
+    "@material-ui/core": "^4.3.3",
+    "@material-ui/icons": "^4.2.1",
+    "@material-ui/styles": "^4.4.1",
+    "@nocode-toolkit/website": "1.0.5",
+    "@nocode-toolkit/website-material-ui": "1.0.5",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-redux": "^7.0.1",
+    "axios": "0.19.0",
+    "bluebird": "^3.5.4",
+    "reselect": "^4.0.0",
+    "dotty": "^0.1.0",
+    "classnames": "^2.2.6",
+    "react-beautiful-dnd": "^12.0.0",
+    "react-youtube-embed": "^1.0.2",
+    "slate": "^0.47.9",
+    "slate-html-serializer": "^0.8.11",
+    "slate-plain-serializer": "^0.7.11",
+    "slate-react": "^0.22.10",
+    "is-hotkey": "^0.1.6",
+    "react-dropzone": "^10.1.4",
+    "yup": "^0.27.0",
+    "formik": "2.0.4",
+    "pretty-bytes": "^5.2.0",
+    "immutable": "^4.0.0-rc.12"
+  },
+  "license": "MIT",
+  "gitHead": "603d909b959c0f07efede8078141e98e93a41290"
+}
