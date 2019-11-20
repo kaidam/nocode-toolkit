@@ -2,7 +2,7 @@
   "name": "@nocode-toolkit/website",
   "version": "1.0.8",
   "description": "Frontend utilities for building a nocode website.",
-  "scripts": {},,
+  "scripts": {},
   "publishConfig": {
     "access": "public"
   },
