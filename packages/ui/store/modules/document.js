@@ -1,8 +1,8 @@
 import axios from 'axios'
-import CreateReducer from '@nocode-toolkit/website/src/store/utils/createReducer'
-import CreateActions from '@nocode-toolkit/website/src/store/utils/createActions'
+import CreateReducer from '@nocode-toolkit/website/store/utils/createReducer'
+import CreateActions from '@nocode-toolkit/website/store/utils/createActions'
 
-import nocodeActions from '@nocode-toolkit/website/src/store/moduleNocode'
+import nocodeActions from '@nocode-toolkit/website/store/moduleNocode'
 
 import { document as initialState } from '../initialState'
 import apiUtils from '../../utils/api'

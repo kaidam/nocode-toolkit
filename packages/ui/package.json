@@ -3,9 +3,6 @@
   "version": "1.0.8",
   "description": "React/Redux library for nocode website editors",
   "scripts": {},
-  "files": [
-    "src"
-  ],
   "publishConfig": {
     "access": "public"
   },

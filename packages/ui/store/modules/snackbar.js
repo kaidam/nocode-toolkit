@@ -1,5 +1,5 @@
-import CreateReducer from '@nocode-toolkit/website/src/store/utils/createReducer'
-import CreateActions from '@nocode-toolkit/website/src/store/utils/createActions'
+import CreateReducer from '@nocode-toolkit/website/store/utils/createReducer'
+import CreateActions from '@nocode-toolkit/website/store/utils/createActions'
 
 import { snackbar as initialState } from '../initialState'
 

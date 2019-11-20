@@ -1,4 +1,4 @@
-import ThemeFactory from '@nocode-toolkit/website-material-ui/lib/themeFactory'
+import ThemeFactory from '@nocode-toolkit/website-material-ui/themeFactory'
 import selectors from './store/selectors'
 
 const baseTheme = inject => ThemeFactory(state => {

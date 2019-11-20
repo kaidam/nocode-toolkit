@@ -8,7 +8,7 @@ import Menu from '@material-ui/core/Menu'
 import MoreVert from '@material-ui/icons/MoreVert'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 
-import Link from '@nocode-toolkit/website/src/Link'
+import Link from '@nocode-toolkit/website/Link'
 
 import Suspense from '../system/Suspense'
 

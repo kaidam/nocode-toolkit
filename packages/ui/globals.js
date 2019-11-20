@@ -1,4 +1,4 @@
-import utils from '@nocode-toolkit/website/src/store/utils'
+import utils from '@nocode-toolkit/website/store/utils'
 
 const isUIActivated = () => {
   if(utils.isNode) return false

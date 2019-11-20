@@ -1,9 +1,9 @@
 import axios from 'axios'
 import Promise from 'bluebird'
-import CreateReducer from '@nocode-toolkit/website/src/store/utils/createReducer'
-import CreateActions from '@nocode-toolkit/website/src/store/utils/createActions'
-import selectors from '@nocode-toolkit/website/src/selectors'
-import routerActions from '@nocode-toolkit/website/src/store/moduleRouter'
+import CreateReducer from '@nocode-toolkit/website/store/utils/createReducer'
+import CreateActions from '@nocode-toolkit/website/store/utils/createActions'
+import selectors from '@nocode-toolkit/website/selectors'
+import routerActions from '@nocode-toolkit/website/store/moduleRouter'
 
 import globals from '../../globals'
 import { ui as initialState } from '../initialState'

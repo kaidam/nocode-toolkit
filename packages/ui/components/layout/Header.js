@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import Header from '@nocode-toolkit/website/src/Header'
+import Header from '@nocode-toolkit/website/Header'
 
 import selectors from '../../store/selectors'
 

@@ -1,4 +1,4 @@
-import core from '@nocode-toolkit/website/src/selectors'
+import core from '@nocode-toolkit/website/selectors'
 
 const settings = state => {
   const settingsItem = core.nocode.item(state, 'content', 'settings') || {}
