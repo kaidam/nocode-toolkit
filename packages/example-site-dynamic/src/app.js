@@ -2,8 +2,8 @@ import React from 'react'
 import { hot } from 'react-hot-loader'
 import { connect } from 'react-redux'
 
-import Router from '@nocode-toolkit/website/lib/Router'
-import Theme from '@nocode-toolkit/website-material-ui/lib/Theme'
+import Router from '@nocode-toolkit/website/src/Router'
+import Theme from '@nocode-toolkit/website-material-ui/src/Theme'
 
 import themeFactory from './theme'
 import LayoutDefault from './pages/Layout'

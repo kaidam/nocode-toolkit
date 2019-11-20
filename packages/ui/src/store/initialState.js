@@ -1,4 +1,4 @@
-import utils from '@nocode-toolkit/website/lib/store/utils'
+import utils from '@nocode-toolkit/website/src/store/utils'
 
 export const ui = {
   initialised: false,

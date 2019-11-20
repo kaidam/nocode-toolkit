@@ -3,7 +3,7 @@ import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
 
 import Typography from '@material-ui/core/Typography'
-import Link from '@nocode-toolkit/website/lib/Link'
+import Link from '@nocode-toolkit/website/src/Link'
 
 import Suspense from '../system/Suspense'
 

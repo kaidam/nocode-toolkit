@@ -1,4 +1,4 @@
-import core from '@nocode-toolkit/website/lib/selectors'
+import core from '@nocode-toolkit/website/src/selectors'
 import library from '../../types/library'
 import finder from './finder'
 

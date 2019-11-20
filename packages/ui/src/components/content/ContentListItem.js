@@ -8,7 +8,7 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 
-import Link from '@nocode-toolkit/website/lib/Link'
+import Link from '@nocode-toolkit/website/src/Link'
 
 import Suspense from '../system/Suspense'
 import ContentIcon from './Icon'

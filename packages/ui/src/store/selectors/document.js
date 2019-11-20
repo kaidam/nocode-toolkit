@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect'
-import core from '@nocode-toolkit/website/lib/selectors'
+import core from '@nocode-toolkit/website/src/selectors'
 
 import {
   props,

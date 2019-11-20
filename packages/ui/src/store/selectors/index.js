@@ -1,4 +1,4 @@
-import core from '@nocode-toolkit/website/lib/selectors'
+import core from '@nocode-toolkit/website/src/selectors'
 import network from './network'
 import dialog from './dialog'
 import types from './types'

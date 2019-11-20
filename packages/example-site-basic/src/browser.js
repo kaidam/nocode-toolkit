@@ -1,4 +1,4 @@
-import Render from '@nocode-toolkit/website/lib/browser'
+import Render from '@nocode-toolkit/website/src/browser'
 import App from './app'
 
 const render = Render({

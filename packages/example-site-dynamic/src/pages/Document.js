@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Paper from '@material-ui/core/Paper'
 
-import selectors from '@nocode-toolkit/website/lib/selectors'
+import selectors from '@nocode-toolkit/website/src/selectors'
 
 import styles from '../styles/document'
 

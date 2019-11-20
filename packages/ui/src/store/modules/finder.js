@@ -1,7 +1,7 @@
 import Promise from 'bluebird'
 import axios from 'axios'
-import CreateReducer from '@nocode-toolkit/website/lib/store/utils/createReducer'
-import CreateActions from '@nocode-toolkit/website/lib/store/utils/createActions'
+import CreateReducer from '@nocode-toolkit/website/src/store/utils/createReducer'
+import CreateActions from '@nocode-toolkit/website/src/store/utils/createActions'
 
 import selectors from '../selectors'
 import apiUtils from '../../utils/api'

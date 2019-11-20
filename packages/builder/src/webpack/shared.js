@@ -1,6 +1,6 @@
 const babelLoader = {
   test: /\.js$/,
-  exclude: /node_modules/,
+  exclude: /node_modules\/(?!@nocode-toolkit).*/,
   use: {
     loader: 'babel-loader',
     options: {

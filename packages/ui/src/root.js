@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import Router from '@nocode-toolkit/website/lib/Router'
+import Router from '@nocode-toolkit/website/src/Router'
 import Theme from '@nocode-toolkit/website-material-ui/lib/Theme'
-import selectors from '@nocode-toolkit/website/lib/selectors'
+import selectors from '@nocode-toolkit/website/src/selectors'
 
 import Loading from './components/system/Loading'
 

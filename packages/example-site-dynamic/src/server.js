@@ -1,4 +1,4 @@
-import Server from '@nocode-toolkit/website-material-ui/lib/server'
+import Server from '@nocode-toolkit/website-material-ui/src/server'
 import App from './app'
 
 const server = Server({

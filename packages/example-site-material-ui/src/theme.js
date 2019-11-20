@@ -1,5 +1,5 @@
-import ThemeFactory from '@nocode-toolkit/website-material-ui/lib/themeFactory'
-import selectors from '@nocode-toolkit/website/lib/selectors'
+import ThemeFactory from '@nocode-toolkit/website-material-ui/src/themeFactory'
+import selectors from '@nocode-toolkit/website/src/selectors'
 
 const themeFactory = ThemeFactory(state => {
   const config = selectors.nocode.config(state)

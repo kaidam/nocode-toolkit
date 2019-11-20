@@ -1,9 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import selectors from '@nocode-toolkit/website/lib/selectors'
-import Header from '@nocode-toolkit/website/lib/Header'
-import Link from '@nocode-toolkit/website/lib/Link'
+import selectors from '@nocode-toolkit/website/src/selectors'
+import Header from '@nocode-toolkit/website/src/Header'
+import Link from '@nocode-toolkit/website/src/Link'
 
 @connect(
   state => {

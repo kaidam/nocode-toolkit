@@ -1,4 +1,4 @@
-import Server from '@nocode-toolkit/website/lib/server'
+import Server from '@nocode-toolkit/website/src/server'
 import App from './app'
 
 const server = Server({

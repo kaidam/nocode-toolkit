@@ -6,10 +6,10 @@ import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
 
-import selectors from '@nocode-toolkit/website/lib/selectors'
-import Header from '@nocode-toolkit/website/lib/Header'
-import Link from '@nocode-toolkit/website/lib/Link'
-import nocodeActions from '@nocode-toolkit/website/lib/store/moduleNocode'
+import selectors from '@nocode-toolkit/website/src/selectors'
+import Header from '@nocode-toolkit/website/src/Header'
+import Link from '@nocode-toolkit/website/src/Link'
+import nocodeActions from '@nocode-toolkit/website/src/store/moduleNocode'
 
 const changeColor = (color) => nocodeActions.setConfig({
   name: 'primaryColor',

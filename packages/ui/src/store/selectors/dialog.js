@@ -1,4 +1,4 @@
-import core from '@nocode-toolkit/website/lib/selectors'
+import core from '@nocode-toolkit/website/src/selectors'
 
 const open = (state, name) => {
   const queryParams = core.router.queryParams(state)

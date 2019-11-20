@@ -1,6 +1,6 @@
 import React from 'react'
 import { hot } from 'react-hot-loader'
-import Router from '@nocode-toolkit/website/lib/Router'
+import Router from '@nocode-toolkit/website/src/Router'
 
 import LayoutDefault from './components/Layout'
 import PageDefault from './components/Page'

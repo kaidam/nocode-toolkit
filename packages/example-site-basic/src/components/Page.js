@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import selectors from '@nocode-toolkit/website/lib/selectors'
+import selectors from '@nocode-toolkit/website/src/selectors'
 
 @connect(
   state => {

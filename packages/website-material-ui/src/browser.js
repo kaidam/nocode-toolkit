@@ -1,2 +1,2 @@
-import browser from '@nocode-toolkit/website/lib/browser'
+import browser from '@nocode-toolkit/website/src/browser'
 export default browser

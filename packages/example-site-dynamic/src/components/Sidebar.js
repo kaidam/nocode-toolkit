@@ -12,7 +12,7 @@ import FolderIcon from '@material-ui/icons/Folder'
 import DocumentIcon from '@material-ui/icons/InsertDriveFile'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 
-import Link from '@nocode-toolkit/website/lib/Link'
+import Link from '@nocode-toolkit/website/src/Link'
 
 import styles from '../styles/sidebar'
 

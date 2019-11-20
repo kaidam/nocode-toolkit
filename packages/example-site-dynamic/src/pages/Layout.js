@@ -10,9 +10,9 @@ import Drawer from '@material-ui/core/Drawer'
 import MenuIcon from '@material-ui/icons/Menu'
 import Divider from '@material-ui/core/Divider'
 
-import selectors from '@nocode-toolkit/website/lib/selectors'
-import Header from '@nocode-toolkit/website/lib/Header'
-import Link from '@nocode-toolkit/website/lib/Link'
+import selectors from '@nocode-toolkit/website/src/selectors'
+import Header from '@nocode-toolkit/website/src/Header'
+import Link from '@nocode-toolkit/website/src/Link'
 
 import styles from '../styles/layout'
 
