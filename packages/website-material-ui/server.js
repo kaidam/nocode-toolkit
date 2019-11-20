@@ -1,4 +1,4 @@
-import Server from '@nocode-toolkit/website/src/server'
+import Server from '@nocode-toolkit/website/server'
 import { ServerStyleSheets } from '@material-ui/styles'
 
 const MaterialUIServer = ({
