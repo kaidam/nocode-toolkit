@@ -4,10 +4,10 @@
   "description": "Build static websites using React and dynamic data sources.",
   "main": "index.js",
   "scripts": {
-    "test": "tape {src,test}/**/*.test.js | tap-spec"
+    "test": "tape **/*.test.js | tap-spec"
   },
   "bin": {
-    "nocode": "./src/cli.js"
+    "nocode": "./cli.js"
   },
   "publishConfig": {
     "access": "public"

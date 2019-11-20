@@ -19,6 +19,7 @@ tape('run the plugins and test the context output', (t) => {
   RunPlugins(context, plugins, (err) => {
     t.notok(err, `there was no error`)
     t.deepEqual(context.state, {
+      config: {},
       items: {
         fruit: {
           apples: 10,

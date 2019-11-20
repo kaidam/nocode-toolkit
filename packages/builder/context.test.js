@@ -4,6 +4,7 @@ const Context = require('./context')
 tape('context: blank constructor', (t) => {
   const context = new Context()
   t.deepEqual(context.state, {
+    config: {},
     items: {},
     routes: {},
     externals: {},
@@ -20,6 +21,7 @@ tape('context: constructor with values', (t) => {
     }
   }
   const CHECK_DATA = Object.assign({}, TEST_DATA, {
+    config: {},
     routes: {},
     externals: {},
   })
@@ -66,6 +68,7 @@ tape('context: item sets and gets values', (t) => {
   }
   context.item('thing', 10, 'apples')
   t.deepEqual(context.state, {
+    config: {},
     items: {
       thing: {
         10: 'apples',
@@ -82,6 +85,7 @@ tape('context: route sets and gets values', (t) => {
   const context = new Context()
   context.route('/thing', 10)
   t.deepEqual(context.state, {
+    config: {},
     items: {},
     routes: {
       '/thing': 10,
@@ -96,6 +100,7 @@ tape('context: external sets and gets values', (t) => {
   const context = new Context()
   context.external(5, 10)
   t.deepEqual(context.state, {
+    config: {},
     items: {},
     routes: {},
     externals: {
