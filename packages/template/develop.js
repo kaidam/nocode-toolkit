@@ -1,5 +1,7 @@
 const path = require('path')
 const express = require('express')
+const axios = require('axios')
+const httpProxy = require('http-proxy')
 const PreviewServer = require('@nocode-toolkit/builder/previewServer')
 
 const pino = require('pino')({
@@ -9,6 +11,13 @@ const pino = require('pino')({
 const Develop = ({
   options,
 }, callback) => {
+
+  const getApiUrl = (path, type = 'api') => `${options.nocodeApiHostname}/builder/${type}/${options.websiteId}${path}`
+  const getAuthHeaders = () => {
+    return {
+      'Authorization': `Bearer ${options.accessToken}`
+    }
+  }
 
   const app = express()
 
@@ -24,23 +33,19 @@ const Develop = ({
       id,
       req,
     }, done) => {
-      done('tbc')
-      // try {
-      //   const user = req.headers['x-nocode-user']
-      //   if(!user) throw new Error(`no user id found in request`)
-
-      //   const data = await controllers.website.getPreviewData({
-      //     website: id,
-      //     user,
-      //     baseUrl: getBaseUrl(getWebsiteId(req)),
-      //     externalsUrl: options.externalsPath,
-      //   })
-        
-      //   done(null, data)
-      // }
-      // catch(err) {
-      //   done(err)
-      // }
+      try {
+        const res = await axios({
+          method: 'get',
+          url: getApiUrl('/previewData'),
+          headers: getAuthHeaders(),
+        })
+        done(null, res.data)
+      }
+      catch(err) {
+        let message = err.toString()
+        if(err.response && err.response.data && err.response.data.error) message = err.response.data.error
+        done(message)
+      }
     },
     getExternal: async ({
       id,
@@ -121,7 +126,8 @@ const Develop = ({
   })
 
   app.listen(options.devserverPort, () => {
-    console.log(`webserver is bound to port ${options.devserverPort}`)
+    console.log(`webserver will listen to port ${options.devserverPort}`)
+    console.log(`your preview is now building...`)
   })
 
   callback()
