@@ -90,7 +90,7 @@ const DevelopmentConfig = (options) => {
       entryPointBrowser,
     ],
     resolve: {
-      alias: {
+      alias: options.resolveAlias || {
         'react-dom': '@hot-loader/react-dom',
       },
     },

@@ -1,5 +1,10 @@
 import utils from '@nocode-toolkit/website/store/utils'
 
+const hasNocodeData = () => {
+  if(utils.isNode) return false
+  return window._nocodeData ? true : false
+}
+
 const getNocodeData = () => {
   if(utils.isNode) return {}
   return window._nocodeData || {}
@@ -29,6 +34,7 @@ const isWindowInitialised = () => {
 }
 
 const globals = {
+  hasNocodeData,
   isUIActivated,
   setWindowInitialised,
   isWindowInitialised,

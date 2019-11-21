@@ -2,25 +2,42 @@ const webpack = require('webpack')
 const DevMiddleware = require('webpack-dev-middleware')
 const HotMiddleware = require('webpack-hot-middleware')
 
-const WebpackConfig = require('./webpack/browser')
+const WebpackConfigBrowser = require('./webpack/browser')
+const WebpackConfigProcessor = require('./webpack/configProcessor')
+
 const HTML = require('./html')
 const BuildInfo = require('./buildInfo')
 
 const WebpackDevServer = ({
   app,
   options,
-  onCompile,
+  webpackProcessors,
+  webpackCompilerHook,
 }) => {
-
   const {
     baseUrl,
   } = options
 
-  const webpackConfig = WebpackConfig(options, false)
+  const webpackConfigProcessor = WebpackConfigProcessor({
+    projectFolder: options.projectFolder,
+    nocodeWebpack: options.nocodeWebpack,
+    webpackProcessors: [
+      webpackProcessors,
+      options.webpackProcessors,
+    ]
+      .filter(p => p)
+      .reduce((all, current) => all.concat(current), [])
+  })
+  
+  const webpackConfig = webpackConfigProcessor(WebpackConfigBrowser(options, false), options, {
+    environment: 'development',
+    target: 'browser',
+  })
+
   const compiler = webpack(webpackConfig)
 
-  if(onCompile) {
-    compiler.hooks.afterCompile.tap('compileMessage', onCompile)
+  if(webpackCompilerHook) {
+    webpackCompilerHook(compiler)
   }
 
   const devMiddleware = DevMiddleware(compiler, {

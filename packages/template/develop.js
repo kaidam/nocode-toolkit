@@ -1,3 +1,4 @@
+const path = require('path')
 const express = require('express')
 const PreviewServer = require('@nocode-toolkit/builder/previewServer')
 
@@ -8,19 +9,6 @@ const pino = require('pino')({
 const Develop = ({
   options,
 }, callback) => {
-
-  const messageCallbacks = {
-    onListen: () => {
-      
-    },
-    onCompile: () => {
-      setTimeout(() => {
-        console.log('')
-        console.log(`the server is now ready!!!!`)
-        console.log(`you can view your website at: http://localhost:${options.devserverPort}`)
-      }, 500)
-    }
-  }
 
   const app = express()
 
@@ -93,15 +81,27 @@ const Develop = ({
       //   done(null, buildInfo)
       // })
     },
-    devModeWebpackOptions: (options) => {
-      return Object.assign({}, options, {
-        baseUrl: '/',
-        entryPointBrowser: options.entryPointBrowser,
-        nocodeConfig: options.nocodeConfig,
-        staticPath: options.staticPath,
+    webpackProcessors: [
+      (webpackConfig, options, env) => {
+        if(options.aliasLinks) {
+          webpackConfig.resolve.alias = {
+            '@material-ui/styles': path.resolve(options.projectFolder, 'node_modules', '@material-ui/styles'),
+            'react': path.resolve(options.projectFolder, 'node_modules', 'react'),
+            'react-dom': path.resolve(options.projectFolder, 'node_modules', '@hot-loader/react-dom'),
+          }
+        }
+        return webpackConfig
+      },
+    ],
+    webpackCompilerHook: (compiler) => {
+      compiler.hooks.afterCompile.tap('compileMessage', () => {
+        setTimeout(() => {
+          console.log('')
+          console.log(`the server is now ready!!!!`)
+          console.log(`you can view your website at: http://localhost:${options.devserverPort}`)
+        }, 500)
       })
     },
-    devModeOnCompile: messageCallbacks.onCompile,
   })
 
   app.use((req, res, next) => {
@@ -120,7 +120,9 @@ const Develop = ({
     res.json({ error: err.toString() })
   })
 
-  app.listen(options.devserverPort, messageCallbacks.onListen)
+  app.listen(options.devserverPort, () => {
+    console.log(`webserver is bound to port ${options.devserverPort}`)
+  })
 
   callback()
 }

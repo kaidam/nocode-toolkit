@@ -13,7 +13,7 @@ const ServerConfig = (options) => {
     serverBuildFilename,
   } = options
 
-  const config = {
+  const webpackConfig = {
     mode: 'production',
     target: 'node',
     context: projectFolder,
@@ -39,7 +39,7 @@ const ServerConfig = (options) => {
     ]
   }
 
-  return config
+  return webpackConfig
 }
 
 module.exports = ServerConfig

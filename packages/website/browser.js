@@ -20,7 +20,7 @@ const Render = ({
     } = Store({
       reducers,
     })
-  
+
     router.start()
   
     const container = (

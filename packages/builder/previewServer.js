@@ -11,14 +11,14 @@ const DevPreviewServer = ({
   app,
   options,
   mountPath,
-  devModeWebpackOptions,
-  devModeOnCompile,
+  webpackProcessors,
+  webpackCompilerHook,
 }) => {
-  const webpackOptions = devModeWebpackOptions(options)
   const serveHTML = WebpackDevServer({
     app,
-    options: webpackOptions,
-    onCompile: devModeOnCompile,
+    options,
+    webpackProcessors,
+    webpackCompilerHook,
   })
 
   app.get(`${mountPath}`, serveHTML)
@@ -122,11 +122,12 @@ const PreviewServer = ({
   // should we run the preview server against webpack dev server or against the
   // build?
   devMode,
-  devModeWebpackOptions,
-  // this is called when webpack has compiled
-  // used to print a "the server is ready" message AFTER the build
-  devModeOnCompile,
 
+  // functions that will transform the webpack config
+  webpackProcessors,
+
+  // run this function with the webpack compiler we we can hook into webpack events
+  webpackCompilerHook,
 }) => {
 
   const {
@@ -175,8 +176,8 @@ const PreviewServer = ({
       app,
       options,
       mountPath,
-      devModeWebpackOptions,
-      devModeOnCompile,
+      webpackProcessors,
+      webpackCompilerHook,
     })
   }
   else {

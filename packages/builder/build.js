@@ -6,6 +6,7 @@ const webpack = require('webpack')
 
 const WebpackConfigBrowser = require('./webpack/browser')
 const WebpackConfigServer = require('./webpack/server')
+const WebpackConfigProcessor = require('./webpack/configProcessor')
 
 const BuildInfo = require('./buildInfo')
 
@@ -40,6 +41,12 @@ const Build = ({
     buildinfoFilename,
   } = options
 
+  const webpackConfigProcessor = WebpackConfigProcessor({
+    projectFolder: options.projectFolder,
+    nocodeWebpack: options.nocodeWebpack,
+    webpackProcessors: options.webpackProcessors,
+  })
+
   async.series([
 
     // remove media folder
@@ -60,7 +67,10 @@ const Build = ({
     next => runBuild({
       name: 'browser',
       logger,
-      config: WebpackConfigBrowser(options, true),
+      config: webpackConfigProcessor(WebpackConfigBrowser(options, true), options, {
+        environment: 'production',
+        target: 'browser',
+      }),
     }, (err, webpackStats) => {
       if(err) return next(err)
       // output the filenames that we created so the publish handler can know
@@ -75,7 +85,10 @@ const Build = ({
     next => runBuild({
       name: 'server',
       logger,
-      config: WebpackConfigServer(options),
+      config: webpackConfigProcessor(WebpackConfigServer(options), options, {
+        environment: 'production',
+        target: 'server',
+      }),
      }, next),
 
   ], done)

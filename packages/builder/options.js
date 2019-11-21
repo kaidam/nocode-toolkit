@@ -34,6 +34,8 @@ const DEFAULT_OPTIONS = {
   buildinfoFilename: process.env.BUILDINFO_FILENAME || 'buildInfo.json',
   // what folder do we write externals to
   externalsPath: process.env.EXTERNALS_PATH || '_nocode_externals',
+  // a file that contains a module that will transform the webpack options
+  nocodeWebpack: process.env.NOCODE_WEBPACK || 'nocode-webpack.js',
 }
 
 /*
@@ -117,6 +119,9 @@ const addCli = (cli) => {
     })
     .option('externals-path', {
       describe: 'what folder do we write externals to',
+    })
+    .option('nocode-webpack', {
+      describe: 'a file with a module that will transform the webpack options',
     })
   return cli
 }

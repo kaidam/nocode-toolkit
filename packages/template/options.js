@@ -6,6 +6,7 @@ const DEFAULT_OPTIONS = {
   accessToken: process.env.ACCESS_TOKEN,
   websiteId: process.env.WEBSITE_ID,
   nocodeApiHostname: process.env.NOCODE_API_HOSTNAME || 'https://www.nocode.sites',
+  aliasLinks:  process.env.ALIAS_LINKS,
 }
 
 /*
@@ -25,10 +26,10 @@ const check = (options, command) => {
   } = options
 
   if(command == 'develop' || command == 'publish') {
-    if(!accessToken) return `no access token found - please provide either a ACCESS_TOKEN env variable or --access-token argument`
+    if(!accessToken || typeof(accessToken) === 'boolean') return `no access token found - please provide either a ACCESS_TOKEN env variable or --access-token argument`
   }
   if(command == 'develop') {
-    if(!websiteId) return `no website id found - please provide either a WEBSITE_ID env variable or --website-id argument`
+    if(!websiteId || typeof(websiteId) === 'boolean') return `no website id found - please provide either a WEBSITE_ID env variable or --website-id argument`
   }
   if(!fs.existsSync(path.resolve(projectFolder, entryPointBrowser))) return `the browser entry point: ${ entryPointBrowser } was not found`
   if(!fs.existsSync(path.resolve(projectFolder, entryPointServer))) return `the server entry point: ${ entryPointServer } was not found`
@@ -61,6 +62,9 @@ const addCli = (cli) => {
     })
     .option('website-id', {
       describe: 'the id of the website you want to develop against',
+    })
+    .option('alias-links', {
+      describe: 'used if you have a linked version of @nocode-toolkit/ui (mainly for internal development)',
     })
   BuilderOptions.addCli(cli)
   return cli

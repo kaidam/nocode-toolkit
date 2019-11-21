@@ -16,7 +16,9 @@ import actionLoader from './store/actionLoader'
       state,
       showUI: selectors.nocode.config(state, 'showUI'),
       initialised: globals.isWindowInitialised() || state.ui.initialised,
-      initialiseError: state.network.errors['ui.initialise'],
+      initialiseError: globals.hasNocodeData() ?
+        state.network.errors['ui.initialise'] :
+        `we have had trouble loading the nocode data source`,
     }
   }, {
     initialise: actionLoader('ui', 'initialise'),
