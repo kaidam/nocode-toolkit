@@ -98,14 +98,8 @@ const sideEffects = {
       id,
     }))
   },
-  waitForConfirmation: ({
-    title,
-    message,
-  }) => async (dispatch, getState) => {
-    dispatch(actions.setConfirmWindow({
-      title,
-      message,
-    }))
+  waitForConfirmation: (confirmOptions) => async (dispatch, getState) => {
+    dispatch(actions.setConfirmWindow(confirmOptions))
     let open = true
     let confirmed = false
     while(open) {

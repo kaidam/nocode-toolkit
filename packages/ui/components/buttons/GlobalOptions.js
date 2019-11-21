@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import Actions from '../../utils/actions'
 
 import Fab from '@material-ui/core/Fab'
@@ -9,6 +9,7 @@ import jobActions from '../../store/modules/job'
 import icons from '../../icons'
 
 import MenuButton from './MenuButton'
+import selectors from '../../store/selectors'
 
 const SettingsIcon = icons.settings
 

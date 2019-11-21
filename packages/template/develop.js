@@ -39,12 +39,12 @@ const Develop = ({
           url: getApiUrl('/previewData'),
           headers: getAuthHeaders(),
         })
-        done(null, res.data)
+        const nocodeData = res.data
+        nocodeData.config.publishDisabled = true
+        done(null, nocodeData)
       }
       catch(err) {
-        let message = err.toString()
-        if(err.response && err.response.data && err.response.data.error) message = err.response.data.error
-        done(message)
+        done(err)
       }
     },
     getExternal: async ({
@@ -52,23 +52,18 @@ const Develop = ({
       filename,
       req,
     }, done) => {
-      done('tbc')
-      // try {
 
-      //   const user = req.headers['x-nocode-user']
-      //   if(!user) throw new Error(`no user id found in request`)
-
-      //   const html = await controllers.remote.loadExternal({
-      //     website: id,
-      //     user,
-      //     filename,
-      //   })
-
-      //   done(null, html)
-      // }
-      // catch(err) {
-      //   done(err)
-      // }
+      try {
+        const res = await axios({
+          method: 'get',
+          url: getApiUrl(`/remote/external/${filename}`),
+          headers: getAuthHeaders(),
+        })
+        done(null, res.data)
+      }
+      catch(err) {
+        done(err)
+      }
     },
     getBuildInfo: (id, done) => {
       done('tbc')

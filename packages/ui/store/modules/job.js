@@ -217,13 +217,26 @@ const sideEffects = {
   },
 
   publish: () => wrapper('publish', async (dispatch, getState) => {
-    devconsole.log('publish website')
-    dispatch(actions.resetData())
-    await dispatch(actions.waitForJob({
-      loader: () => loaders.publish(getState),
-      type: 'publish',
-      showWindow: true,
-    }))
+    const nocodeConfig = selectors.nocode.config(getState())
+    if(nocodeConfig.publishDisabled) {
+      dispatch(uiActions.waitForConfirmation({
+        title: 'Publishing disabled',
+        message: `
+          <p>Publishing is disabled because you are running in local development mode</p>
+        `,
+        confirmTitle: 'OK',
+        hideCancel: true,
+      }))
+    }
+    else {
+      devconsole.log('publish website')
+      dispatch(actions.resetData())
+      await dispatch(actions.waitForJob({
+        loader: () => loaders.publish(getState),
+        type: 'publish',
+        showWindow: true,
+      }))
+    }    
   }),
 
   deploy: ({job, type}) => wrapper('deploy', async (dispatch, getState) => {

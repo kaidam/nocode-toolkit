@@ -40,10 +40,15 @@ const ConfirmDialog = ({
   const confirmWindow = useSelector(state => state.ui.confirmWindow)
   const title = confirmWindow ? confirmWindow.title : ''
   const message = confirmWindow ? confirmWindow.message : ''
+  
+  const cancelTitle = confirmWindow && confirmWindow.cancelTitle ? confirmWindow.cancelTitle : 'Cancel'
+  const confirmTitle = confirmWindow && confirmWindow.confirmTitle ? confirmWindow.confirmTitle : 'Confirm'
+  const showCancel = confirmWindow && confirmWindow.hideCancel ? false : true
+  const showConfirm = confirmWindow && confirmWindow.hideConfirm ? false : true
 
   const actions = Actions(useDispatch(), {
-    onCancel: uiActions.cancelConfirmWindow,
-    onConfirm: uiActions.acceptConfirmWindow,
+    onCancel: () => uiActions.cancelConfirmWindow(),
+    onConfirm: () => uiActions.acceptConfirmWindow(),
   })
 
   return (
@@ -60,30 +65,39 @@ const ConfirmDialog = ({
         { title }
       </DialogTitle>
       <DialogContent>
-        <Typography>
-          { message }
-        </Typography>
+        <div 
+          dangerouslySetInnerHTML={{__html: message }}
+        >
+        </div>
       </DialogContent>
       <DialogActions>
         <div className={ classes.buttonsContainer }>
           <div className={ classes.buttonsRight }>
-            <Button
-              className={ classes.button }
-              type="button"
-              variant="contained"
-              onClick={ actions.onCancel }
-            >
-              Cancel
-            </Button>
-            <Button
-              className={ classes.button }
-              type="button"
-              variant="contained"
-              color="primary"
-              onClick={ actions.onConfirm }
-            >
-              Confirm
-            </Button>
+            {
+              showCancel && (
+                <Button
+                  className={ classes.button }
+                  type="button"
+                  variant="contained"
+                  onClick={ actions.onCancel }
+                >
+                  { cancelTitle }
+                </Button>
+              )
+            }
+            {
+              showConfirm && (
+                <Button
+                  className={ classes.button }
+                  type="button"
+                  variant="contained"
+                  color="primary"
+                  onClick={ actions.onConfirm }
+                >
+                  { confirmTitle }
+                </Button>
+              )
+            }
           </div>
         </div>
       </DialogActions>
