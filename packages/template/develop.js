@@ -4,6 +4,8 @@ const axios = require('axios')
 const httpProxy = require('http-proxy')
 const PreviewServer = require('@nocode-toolkit/builder/previewServer')
 
+const Api = require('./api')
+
 const pino = require('pino')({
   name: 'developmentServer',
 })
@@ -12,12 +14,9 @@ const Develop = ({
   options,
 }, callback) => {
 
-  const getApiUrl = (path, type = 'api') => `${options.nocodeApiHostname}/builder/${type}/${options.websiteId}${path}`
-  const getAuthHeaders = () => {
-    return {
-      'Authorization': `Bearer ${options.accessToken}`
-    }
-  }
+  const api = Api({
+    options,
+  })
 
   const app = express()
 
@@ -32,8 +31,8 @@ const Develop = ({
   const getPreviewData = async (rebuild) => {
     const res = await axios({
       method: 'get',
-      url: getApiUrl('/previewData'),
-      headers: getAuthHeaders(),
+      url: api.getUrl('/previewData'),
+      headers: api.getAuthHeaders(),
       params: {
         rebuild: rebuild || '',
       },
@@ -59,7 +58,7 @@ const Develop = ({
   })
 
   app.all('/builder/api/:id/*', (req, res, next) => {
-    const authHeaders = getAuthHeaders()
+    const authHeaders = api.getAuthHeaders()
     req.headers.Authorization = authHeaders.Authorization
     proxy.web(req, res, {
       target: `${options.nocodeApiHostname}${req.url}`,
@@ -97,8 +96,8 @@ const Develop = ({
       try {
         const res = await axios({
           method: 'get',
-          url: getApiUrl(`/remote/external/${filename}`),
-          headers: getAuthHeaders(),
+          url: api.getUrl(`/remote/external/${filename}`),
+          headers: api.getAuthHeaders(),
         })
         done(null, res.data)
       }

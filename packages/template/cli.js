@@ -23,17 +23,17 @@ const cli = require('yargs')
   .command({
     command: 'build',
     desc: 'Build your template',
-    handler: (argv) => {
+    handler: async (argv) => {
       const options = Options.process(argv, 'build')
-      Build({
-        options,
-        logger: console.log,
-      }, (err) => {
-        if(err) {
-          console.error(err)
-          process.exit(1)
-        }
-      })
+      try {
+        await Build({
+          options,
+          logger: console.log,
+        })
+      } catch(err) {
+        console.error(err)
+        process.exit(1)
+      }
     },
   })
   .command({
