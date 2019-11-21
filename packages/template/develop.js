@@ -18,7 +18,7 @@ const Develop = ({
         console.log('')
         console.log(`the server is now ready!!!!`)
         console.log(`you can view your website at: http://localhost:${options.devserverPort}`)
-      }, 100)
+      }, 500)
     }
   }
 

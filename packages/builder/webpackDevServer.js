@@ -17,7 +17,6 @@ const WebpackDevServer = ({
   } = options
 
   const webpackConfig = WebpackConfig(options, false)
-
   const compiler = webpack(webpackConfig)
 
   if(onCompile) {

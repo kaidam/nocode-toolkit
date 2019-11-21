@@ -10,6 +10,7 @@ import { ui as initialState } from '../initialState'
 import networkWrapper from '../networkWrapper'
 import apiUtils from '../../utils/api'
 import jobActions from './job'
+import snackbarActions from './snackbar'
 
 const prefix = 'ui'
 
@@ -42,20 +43,17 @@ const loaders = {
 }
 
 const sideEffects = {
-  loadConfig: () => networkWrapper({
+  initialise: () => networkWrapper({
     prefix,
     name: 'initialise',
-    snackbarError: true,
+    snackbarError: false,
     handler: async (dispatch, getState) => {
       const data = await loaders.config(getState)
       dispatch(actions.setConfig(data))
+      dispatch(jobActions.waitForPreviewJob())
+      globals.setWindowInitialised()
     }
   }),
-  initialise: () => async (dispatch, getState) => {
-    await dispatch(actions.loadConfig())
-    dispatch(jobActions.waitForPreviewJob())
-    globals.setWindowInitialised()
-  },
   viewWebsites: () => (dispatch, getState) => {
     document.location = '/'
   },

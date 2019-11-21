@@ -1,8 +1,20 @@
 import utils from '@nocode-toolkit/website/store/utils'
 
+const getNocodeData = () => {
+  if(utils.isNode) return {}
+  return window._nocodeData || {}
+}
+
+const getNocodeConfig = () => {
+  if(utils.isNode) return {}
+  const nocodeData = getNocodeData()
+  return nocodeData.config || {}
+}
+
 const isUIActivated = () => {
   if(utils.isNode) return false
-  return window._nocodeData.config.showUI ? true : false
+  const config = getNocodeConfig()
+  return config.showUI ? true : false
 }
 
 const setWindowInitialised = () => {
