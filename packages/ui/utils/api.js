@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const websiteUrl = (getState, path) => {
   const websiteId = getState().nocode.config.websiteId
-  return [`/preview/api/${websiteId}`, path].join('/').replace(/\/+/g, '/')
+  return [`/builder/api/${websiteId}`, path].join('/').replace(/\/+/g, '/')
 }
 
 const apiUrl = (path) => [`/api/v1`, path].join('/').replace(/\/+/g, '/')

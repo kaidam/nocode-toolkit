@@ -27,7 +27,7 @@ const DevPreviewServer = ({
 const BuildPreviewServer = ({
   app,
   mountPath,
-  getPreviewId,
+  getWebsiteId,
   getBuildFolder,
   getBuildInfo,
   getBaseUrl,
@@ -39,8 +39,8 @@ const BuildPreviewServer = ({
   // otherwise - serve the file from the build folder
   const serveBuildFile = (req, res, next) => {
     const filename = req.params[0]
-    const previewId = getPreviewId(req)
-    getBuildFolder(previewId, (err, buildFolder) => {
+    const websiteId = getWebsiteId(req)
+    getBuildFolder(websiteId, (err, buildFolder) => {
       if(err) return next(err)
       const filePath = path.join(buildFolder, filename)
       fs.stat(filePath, (err, stat) => {
@@ -52,8 +52,8 @@ const BuildPreviewServer = ({
 
   // build and send the HTML based on the buildinfo
   const serveHTML = (req, res, next) => {
-    const previewId = getPreviewId(req)
-    getBuildInfo(previewId, (err, buildInfo) => {
+    const websiteId = getWebsiteId(req)
+    getBuildInfo(websiteId, (err, buildInfo) => {
       if(err) return next(err)
       const html = HTML({
         buildInfo,
@@ -77,26 +77,26 @@ const PreviewServer = ({
   // the nocode options
   options,
 
-  // what is the base path to serve from - e.g. '/preview/:id'
+  // what is the base path to serve from - e.g. '/builder/:id'
   mountPath,
-  // a function that given a http req, returns the id for the preview
-  // site being looked at - e.g /preview/3 -> 3
-  getPreviewId,
+  // a function that given a http req, returns the id for the website
+  // site being looked at - e.g /builder/3 -> 3
+  getWebsiteId,
 
   // a function that returns the base url for the site
-  // e.g. /preview/3 -> /preview/3
+  // e.g. /builder/3 -> /builder/3
   getBaseUrl,
 
   // an (async) function to return the location of the build folder
-  // for a given site - the function is passed the preview id
+  // for a given site - the function is passed the website id
   // and should return the full folder path of a template build
   getBuildFolder,
 
-  // an (async) function that given the preview id will return the build info
+  // an (async) function that given the website id will return the build info
   // for the build of that template
   getBuildInfo,
 
-  // load the data for a preview site - it is given the id and the req
+  // load the data for a website - it is given the id and the req
   // e.g. 
   // ({
   //   id,
@@ -106,7 +106,7 @@ const PreviewServer = ({
   // },
   getData,
 
-  // load an external for a preview site - it is given the id and filename
+  // load an external for a site - it is given the id and filename
   // e.g.Data
   // ({
   //   id,
@@ -132,7 +132,7 @@ const PreviewServer = ({
   app = app || express()
   
   const serveNocodeData = (req, res, next) => {
-    const id = getPreviewId(req)
+    const id = getWebsiteId(req)
     getData({
       id,
       req,
@@ -149,7 +149,7 @@ const PreviewServer = ({
   }
 
   const serveExternal = (req, res, next) => {
-    const id = getPreviewId(req)
+    const id = getWebsiteId(req)
     const filename = req.params[0]
     getExternal({
       id,
@@ -178,7 +178,7 @@ const PreviewServer = ({
       app,
       options,
       mountPath,
-      getPreviewId,
+      getWebsiteId,
       getBuildFolder,
       getBuildInfo,
       getBaseUrl,
