@@ -29,6 +29,35 @@ const Develop = ({
     res.status(500).json({ message: err.message || err.toString() });
   })
 
+  const getPreviewData = async (rebuild) => {
+    const res = await axios({
+      method: 'get',
+      url: getApiUrl('/previewData'),
+      headers: getAuthHeaders(),
+      params: {
+        rebuild: rebuild || '',
+      },
+    })
+    const nocodeData = res.data
+    nocodeData.config.publishDisabled = true
+    nocodeData.config.baseUrl = '/'
+    return nocodeData
+  }
+
+  // we need to intercept this so we can
+  //  * set baseUrl
+  //  * set publishDisabled
+  app.get('/builder/api/:id/previewData', async (req, res, next) => {
+    try {
+      const nocodeData = await getPreviewData(req.query.rebuild)
+      res.json(nocodeData)
+    }
+    catch(err) {
+      next(err)
+      done(err)
+    }
+  })
+
   app.all('/builder/api/:id/*', (req, res, next) => {
     const authHeaders = getAuthHeaders()
     req.headers.Authorization = authHeaders.Authorization
@@ -52,13 +81,7 @@ const Develop = ({
       req,
     }, done) => {
       try {
-        const res = await axios({
-          method: 'get',
-          url: getApiUrl('/previewData'),
-          headers: getAuthHeaders(),
-        })
-        const nocodeData = res.data
-        nocodeData.config.publishDisabled = true
+        const nocodeData = await getPreviewData(req.query.rebuild)
         done(null, nocodeData)
       }
       catch(err) {
