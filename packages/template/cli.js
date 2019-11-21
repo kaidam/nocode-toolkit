@@ -15,9 +15,6 @@ const cli = require('yargs')
     command: 'build',
     desc: 'Build your template',
     handler: (argv) => {
-      console.log('--------------------------------------------')
-      console.dir(Options.process(argv))
-      process.exit(1)
       Build({
         options: Options.process(argv),
         logger: console.log,
