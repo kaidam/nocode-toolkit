@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const Build = require('@nocode-toolkit/builder/build')
+const Build = require('./build')
 const Options = require('./options')
 const Develop = require('./develop')
 
