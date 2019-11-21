@@ -1,9 +1,14 @@
+const fs = require('fs')
 const path = require('path')
 
 // load the nocode config module from disk
 const getNocodeModule = (options) => {
   const configFile = path.join(options.projectFolder, options.nocodeConfig)
-  return require(configFile)
+  return fs.existsSync(configFile) ?
+    require(configFile) :
+    {
+      plugins: (config) => [],
+    }
 }
 
 // have we got plugins passed in or are we running with a nocode-config file?

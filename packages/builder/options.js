@@ -3,37 +3,37 @@ const path = require('path')
 
 const DEFAULT_OPTIONS = {
   // the root folder for the project
-  projectFolder: process.cwd(),
+  projectFolder: process.env.PROJECT_FOLDER || process.cwd(),
   // the filename in the project that runs nocode plugins
-  nocodeConfig: 'nocode-config.js',
+  nocodeConfig: process.env.NOCODE_CONFIG || 'nocode-config.js',
   // the filename we write the nocode data to (inside the publishPath)
-  nocodeDataPath: '_nocode_data.js',
+  nocodeDataPath: process.env.NOCODE_DATA_PATH || '_nocode_data.js',
   // what port does the dev server listen on
-  devserverPort: 8000,
+  devserverPort: process.env.DEVSERVER_PORT || 8000,
   // what port does the preview server listen on
-  previewPort: 80,
+  previewPort: process.env.PREVIEW_PORT || 80,
   // the entry point for the browser build
-  entryPointBrowser: './src/browser.js',  
+  entryPointBrowser: process.env.ENTRY_POINT_BROWSER || './src/browser.js',  
   // the entry point for the server build
-  entryPointServer: './src/server.js',
+  entryPointServer: process.env.ENTRY_POINT_SERVER || './src/server.js',
   // the file we output the browser code to (inside the buildPath)
-  browserBuildFilename: 'index.js',
+  browserBuildFilename: process.env.BROWSER_BUILD_FILENAME || 'index.js',
   // the file we output the server code to (inside the buildPath)
-  serverBuildFilename: 'server.js',
+  serverBuildFilename: process.env.SERVER_BUILD_FILENAME || 'server.js',
   // the folder the build is written to (relative to projectFolder)
-  buildPath: 'build',
+  buildPath: process.env.BUILD_PATH || 'build',
   // the folder the published website is written to (relative to projectFolder)
-  publishPath: 'public',
+  publishPath: process.env.PUBLISH_PATH || 'public',
   // the folder to load static assets from
-  staticPath: 'src/static',
+  staticPath: process.env.STATIC_PATH || 'src/static',
   // the folder downloaded media items are written to
-  mediaPath: '_media',
+  mediaPath: process.env.MEDIA_PATH || '_media',
   // the base URL the website will serve on
-  baseUrl: '/',
+  baseUrl: process.env.BASE_URL || '/',
   // the filename we write the build info to (inside the buildPath)
-  buildinfoFilename: 'buildInfo.json',
+  buildinfoFilename: process.env.BUILDINFO_FILENAME || 'buildInfo.json',
   // what folder do we write externals to
-  externalsPath: '_nocode_externals',
+  externalsPath: process.env.EXTERNALS_PATH || '_nocode_externals',
 }
 
 /*
@@ -45,12 +45,10 @@ const DEFAULT_OPTIONS = {
 // check the options for errors
 const check = ({
   projectFolder,
-  nocodeConfig,
   entryPointBrowser,
   entryPointServer,
 }) => {
   if(!fs.existsSync(projectFolder)) return `the project folder: ${ projectFolder } was not found`
-  if(!fs.existsSync(nocodeConfig)) return `the nocode config file: ${ nocodeConfig } was not found`
   if(!fs.existsSync(path.resolve(projectFolder, entryPointBrowser))) return `the browser entry point: ${ entryPointBrowser } was not found`
   if(!fs.existsSync(path.resolve(projectFolder, entryPointServer))) return `the server entry point: ${ entryPointServer } was not found`
   return null
@@ -60,9 +58,74 @@ const get = (opts, extra) => {
   return Object.assign({}, DEFAULT_OPTIONS, opts, extra)
 }
 
+const processOptions = (argv) => {
+  const options = get(argv)
+  const optionError = check(options)
+  if(optionError) {
+    console.error(optionError)
+    process.exit(1)
+  }
+  return options
+}
+
+const addCli = (cli) => {
+  cli
+    .option('project-folder', {
+      describe: 'the root folder of the nocode app',
+    })
+    .option('nocode-config', {
+      describe: 'path to the nocode config file',
+    })
+    .option('nocode-data-path', {
+      describe: 'the filename we write the nocode data to',
+    })
+    .option('devserver-port', {
+      describe: 'what port should the development server listen on',
+    })
+    .option('preview-port', {
+      describe: 'what port should the preview server listen on',
+    })
+    .option('entry-point-browser', {    
+      describe: 'the entry point of the browser code',
+    })
+    .option('entry-point-server', {    
+      describe: 'the entry point of the server code',
+    })
+    .option('browser-build-filename', {    
+      describe: 'the file we output the browser code to',
+    })
+    .option('server-build-filename', {    
+      describe: 'the file we output the server code to',
+    })
+    .option('build-path', {
+      describe: 'where to write the build',
+    })
+    .option('publish-path', {
+      describe: 'where to write the published website',
+    })
+    .option('static-path', {
+      describe: 'the folder to copy static files from',
+    })
+    .option('media-path', {
+      describe: 'the folder to copy media files to',
+    })
+    .option('base-url', {
+      describe: 'the base URL the website will be served from',
+    })
+    .option('buildinfo-filename', {
+      describe: 'the filename we write the build info to',
+    })
+    .option('externals-path', {
+      describe: 'what folder do we write externals to',
+    })
+  return cli
+}
+
 module.exports = {
   check,
   get,
+  process: processOptions,
+  addCli,
 }
 
   
