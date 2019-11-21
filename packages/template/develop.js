@@ -21,6 +21,24 @@ const Develop = ({
 
   const app = express()
 
+  const proxy = httpProxy.createProxyServer({
+    
+  })
+
+  proxy.on('error', (err, req, res) => {
+    res.status(500).json({ message: err.message || err.toString() });
+  })
+
+  app.all('/builder/api/:id/*', (req, res, next) => {
+    const authHeaders = getAuthHeaders()
+    req.headers.Authorization = authHeaders.Authorization
+    proxy.web(req, res, {
+      target: `${options.nocodeApiHostname}${req.url}`,
+      secure: false,
+      ignorePath: true,
+    })
+  })
+
   PreviewServer({
     app,
     options,
