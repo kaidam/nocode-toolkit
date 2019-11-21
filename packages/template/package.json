@@ -2,9 +2,7 @@
   "name": "@nocode-toolkit/template",
   "version": "1.0.9",
   "description": "Tools for developing nocode templates",
-  "scripts": {
-    
-  },
+  "scripts": {},
   "bin": {
     "nocode-template": "./cli.js"
   },
@@ -15,10 +13,9 @@
     "@nocode-toolkit/builder": "^1.0.9",
     "async": "^3.1.0",
     "express": "^4.16.4",
+    "pino": "^5.14.0",
     "yargs": "^15.0.2"
   },
-  "devDependencies": {
-    
-  },
+  "devDependencies": {},
   "license": "MIT"
 }

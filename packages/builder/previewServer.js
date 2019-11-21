@@ -12,11 +12,13 @@ const DevPreviewServer = ({
   options,
   mountPath,
   devModeWebpackOptions,
+  devModeOnCompile,
 }) => {
   const webpackOptions = devModeWebpackOptions(options)
   const serveHTML = WebpackDevServer({
     app,
     options: webpackOptions,
+    onCompile: devModeOnCompile,
   })
 
   app.get(`${mountPath}`, serveHTML)
@@ -121,6 +123,9 @@ const PreviewServer = ({
   // build?
   devMode,
   devModeWebpackOptions,
+  // this is called when webpack has compiled
+  // used to print a "the server is ready" message AFTER the build
+  devModeOnCompile,
 
 }) => {
 
@@ -171,6 +176,7 @@ const PreviewServer = ({
       options,
       mountPath,
       devModeWebpackOptions,
+      devModeOnCompile,
     })
   }
   else {

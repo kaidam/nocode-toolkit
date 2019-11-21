@@ -1,22 +1,32 @@
 #!/usr/bin/env node
 const Build = require('@nocode-toolkit/builder/build')
 const Options = require('./options')
+const Develop = require('./develop')
 
 const cli = require('yargs')
   .command({
     command: 'develop',
     desc: 'Run a development server for your template',
     handler: (argv) => {
-      console.log('--------------------------------------------')
-      console.dir(Options.process(argv), 'develop')
+      const options = Options.process(argv, 'develop')
+      Develop({
+        options,
+        logger: console.log,
+      }, (err) => {
+        if(err) {
+          console.error(err)
+          process.exit(1)
+        }
+      })
     },
   })
   .command({
     command: 'build',
     desc: 'Build your template',
     handler: (argv) => {
+      const options = Options.process(argv, 'build')
       Build({
-        options: Options.process(argv),
+        options,
         logger: console.log,
       }, (err) => {
         if(err) {

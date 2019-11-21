@@ -9,6 +9,7 @@ const BuildInfo = require('./buildInfo')
 const WebpackDevServer = ({
   app,
   options,
+  onCompile,
 }) => {
 
   const {
@@ -18,6 +19,10 @@ const WebpackDevServer = ({
   const webpackConfig = WebpackConfig(options, false)
 
   const compiler = webpack(webpackConfig)
+
+  if(onCompile) {
+    compiler.hooks.afterCompile.tap('compileMessage', onCompile)
+  }
 
   const devMiddleware = DevMiddleware(compiler, {
     publicPath: webpackConfig.output.publicPath,
