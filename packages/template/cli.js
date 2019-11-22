@@ -16,7 +16,7 @@ const cli = require('yargs')
         logger: console.log,
       }, (err) => {
         if(err) {
-          console.error(err)
+          console.error(process.env.NODE_ENV == 'development' ? err : err.toString())
           process.exit(1)
         }
       })
@@ -33,7 +33,7 @@ const cli = require('yargs')
           logger: console.log,
         })
       } catch(err) {
-        console.error(err.toString())
+        console.error(process.env.NODE_ENV == 'development' ? err : err.toString())
         process.exit(1)
       }
     },
@@ -49,7 +49,7 @@ const cli = require('yargs')
           logger: console.log,
         })
       } catch(err) {
-        console.error(err.toString())
+        console.error(process.env.NODE_ENV == 'development' ? err : err.toString())
         process.exit(1)
       }
     },
@@ -65,7 +65,7 @@ const cli = require('yargs')
           logger: console.log,
         })
       } catch(err) {
-        console.error(err.toString())
+        console.error(process.env.NODE_ENV == 'development' ? err : err.toString())
         process.exit(1)
       }
     },
