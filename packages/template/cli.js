@@ -3,6 +3,7 @@ const Options = require('./options')
 const Build = require('./build')
 const Preview = require('./preview')
 const Develop = require('./develop')
+const Publish = require('./publish')
 
 const cli = require('yargs')
   .command({
@@ -56,9 +57,17 @@ const cli = require('yargs')
   .command({
     command: 'publish',
     desc: 'Publish your template to nocode',
-    handler: (argv) => {
-      console.log('--------------------------------------------')
-      console.dir(Options.process(argv), 'publish')
+    handler: async (argv) => {
+      const options = Options.process(argv, 'publish')
+      try {
+        await Publish({
+          options,
+          logger: console.log,
+        })
+      } catch(err) {
+        console.error(err.toString())
+        process.exit(1)
+      }
     },
   })
   

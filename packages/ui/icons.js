@@ -1,3 +1,15 @@
+/*
+
+  to add icons to here - first visit:
+  
+  https://material.io/resources/icons/?style=baseline
+
+  the icon name is converted to camelCase
+
+  e.g. power_settings_new -> PowerSettingsNew
+  
+*/
+
 import React from 'react'
 
 import AddIcon from '@material-ui/icons/Add'
