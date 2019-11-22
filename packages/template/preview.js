@@ -149,17 +149,11 @@ const Preview = async ({
   logger,
 }) => {
 
-  if(options.build) {
-    await Build({
-      options,
-      logger,
-    })
-  }
-
-  if(!fs.existsSync(path.join(options.projectFolder, options.buildPath))) {
-    throw new Error(`build folder not found - please add the '--build' flag or run 'nocode-template build'`)
-  }
-
+  await Build({
+    options,
+    logger,
+  })
+  
   const collection = await waitForPublishJob({
     options,
     logger,
