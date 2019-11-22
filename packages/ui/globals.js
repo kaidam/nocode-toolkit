@@ -1,7 +1,7 @@
 import utils from '@nocode-toolkit/website/store/utils'
 
 const hasNocodeData = () => {
-  if(utils.isNode) return false
+  if(utils.isNode) return true
   return window._nocodeData ? true : false
 }
 
