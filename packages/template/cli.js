@@ -1,6 +1,7 @@
 #!/usr/bin/env node
-const Build = require('./build')
 const Options = require('./options')
+const Build = require('./build')
+const Preview = require('./preview')
 const Develop = require('./develop')
 
 const cli = require('yargs')
@@ -27,6 +28,22 @@ const cli = require('yargs')
       const options = Options.process(argv, 'build')
       try {
         await Build({
+          options,
+          logger: console.log,
+        })
+      } catch(err) {
+        console.error(err)
+        process.exit(1)
+      }
+    },
+  })
+  .command({
+    command: 'preview',
+    desc: 'Build your website locally for testing',
+    handler: async (argv) => {
+      const options = Options.process(argv, 'preview')
+      try {
+        await Preview({
           options,
           logger: console.log,
         })

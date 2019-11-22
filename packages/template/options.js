@@ -5,7 +5,7 @@ const BuilderOptions = require('@nocode-toolkit/builder/options')
 const DEFAULT_OPTIONS = {
   accessToken: process.env.ACCESS_TOKEN,
   websiteId: process.env.WEBSITE_ID,
-  nocodeApiHostname: process.env.NOCODE_API_HOSTNAME || 'https://www.nocode.sites',
+  nocodeApiHostname: process.env.NOCODE_API_HOSTNAME || 'https://www.nocode.works',
   aliasLinks:  process.env.ALIAS_LINKS,
 }
 
@@ -14,6 +14,17 @@ const DEFAULT_OPTIONS = {
   externalsServerPort
 
 */
+
+const REQUIRE_ACCESS_TOKEN_METHODS = [
+  'develop',
+  'preview',
+  'publish',
+]
+
+const REQUIRE_WEBSITE_ID_METHODS = [
+  'develop',
+  'preview',
+]
 
 // check the options for errors
 const check = (options, command) => {
@@ -25,10 +36,10 @@ const check = (options, command) => {
     entryPointServer,
   } = options
 
-  if(command == 'develop' || command == 'publish') {
+  if(REQUIRE_ACCESS_TOKEN_METHODS.indexOf(command) >= 0) {
     if(!accessToken || typeof(accessToken) === 'boolean') return `no access token found - please provide either a ACCESS_TOKEN env variable or --access-token argument`
   }
-  if(command == 'develop') {
+  if(REQUIRE_WEBSITE_ID_METHODS.indexOf(command) >= 0) {
     if(!websiteId || typeof(websiteId) === 'boolean') return `no website id found - please provide either a WEBSITE_ID env variable or --website-id argument`
   }
   if(!fs.existsSync(path.resolve(projectFolder, entryPointBrowser))) return `the browser entry point: ${ entryPointBrowser } was not found`
