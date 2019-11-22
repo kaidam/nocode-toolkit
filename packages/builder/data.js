@@ -33,7 +33,10 @@ const factory = ({
 }
 
 const script = (data) => {
-  return `window._nocodeData = ${ JSON.stringify(data) }`
+  return `
+window._nocodeData = ${ JSON.stringify(data) }
+window._nocodeBaseUrl = '${data.config.baseUrl}'
+`
 }
 
 const processInitialState = (initialState) => {

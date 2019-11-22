@@ -41,7 +41,7 @@ const BuildPreviewServer = ({
   // otherwise - serve the file from the build folder
   const serveBuildFile = (req, res, next) => {
     const filename = req.params[0]
-    const websiteId = getWebsiteId(req)
+    const websiteId = getWebsiteId(req)    
     getBuildFolder(websiteId, (err, buildFolder) => {
       if(err) return next(err)
       const filePath = path.join(buildFolder, filename)
@@ -136,7 +136,7 @@ const PreviewServer = ({
   } = options
 
   app = app || express()
-  
+
   const serveNocodeData = (req, res, next) => {
     const id = getWebsiteId(req)
     getData({
