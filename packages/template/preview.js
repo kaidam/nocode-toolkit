@@ -1,5 +1,7 @@
 const axios = require('axios')
 const Promise = require('bluebird')
+const Publish = require('@nocode-toolkit/builder/publish')
+const Options = require('@nocode-toolkit/builder/options')
 const Build = require('./build')
 
 const Api = require('./api')
@@ -30,6 +32,16 @@ const loadJob = ({
 })
   .then(res => res.data)
 
+const loadResults = ({
+  api,
+  filename,
+}) => axios({
+  method: 'get',
+  url: api.getUrl(`/file/job/${filename}`),
+  headers: api.getAuthHeaders(),
+})
+  .then(res => res.data)
+
 const waitForPublishJob = async ({
   options,
   logger,
@@ -53,7 +65,65 @@ const waitForPublishJob = async ({
     lastLogId = job.lastLogId
     logger(job.logs.join("\n"))
     await Promise.delay(1000)
-  }  
+  }
+
+  job = await loadJob({
+    api,
+    id,
+    lastLogId,
+  })
+
+  const {
+    filename,
+  } = job.result
+
+  logger(`downloading results: ${filename}`)
+
+  const collection = await loadResults({
+    api,
+    filename,
+  })
+
+  return collection
+}
+
+const publishWebsite = async ({
+  collection: {
+    items,
+    sections,
+    singletons,
+    config,
+    routes,
+    externals,
+  },
+  logger,
+}) => {
+  await new Promise((resolve, reject) => {
+    Publish({
+      options: Options.get({}),
+      plugins: () => [
+        (context, next) => {
+          context.data = {
+            items: {
+              content: items,
+              sections,
+              singletons,
+            },
+            config,
+            routes,
+            externals,
+          }
+          next()
+        }
+      ],
+      onProgress: (data) => {},
+      logger,
+      concurrency: 5,
+    }, (err) => {
+      if(err) return reject(err)
+      resolve()
+    })
+  })
 }
 
 const Preview = async ({
@@ -66,10 +136,17 @@ const Preview = async ({
   //   logger,
   // })
 
-  await waitForPublishJob({
+  const collection = await waitForPublishJob({
     options,
     logger,
   })
+
+  await publishWebsite({
+    collection,
+    logger,
+  })
+
+  
 }
 
 module.exports = Preview
