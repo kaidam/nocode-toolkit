@@ -77,6 +77,12 @@ const addCli = (cli) => {
     .option('alias-links', {
       describe: 'used if you have a linked version of @nocode-toolkit/ui (mainly for internal development)',
     })
+    .option('build', {
+      describe: 'Build the template before doing a preview?',
+    })
+    .option('serve', {
+      describe: 'Start a local webserver to view a preview?',
+    })
   BuilderOptions.addCli(cli)
   return cli
 }

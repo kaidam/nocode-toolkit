@@ -32,7 +32,7 @@ const cli = require('yargs')
           logger: console.log,
         })
       } catch(err) {
-        console.error(err)
+        console.error(err.toString())
         process.exit(1)
       }
     },
@@ -48,7 +48,7 @@ const cli = require('yargs')
           logger: console.log,
         })
       } catch(err) {
-        console.error(err)
+        console.error(err.toString())
         process.exit(1)
       }
     },

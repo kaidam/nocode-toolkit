@@ -1,4 +1,7 @@
+const fs = require('fs')
+const path = require('path')
 const axios = require('axios')
+const express = require('express')
 const Promise = require('bluebird')
 const Publish = require('@nocode-toolkit/builder/publish')
 const Options = require('@nocode-toolkit/builder/options')
@@ -126,15 +129,36 @@ const publishWebsite = async ({
   })
 }
 
+const serveWebsite = ({
+  options
+}) => {
+  const app = express()
+  const documentRoot = path.join(options.projectFolder, options.publishPath)
+
+  app.use(express.static(documentRoot))
+
+  app.listen(options.devserverPort, () => {
+    console.log(`webserver is listening to port ${options.devserverPort}`)
+    console.log('')
+    console.log(`you can now view your published website at http://localhost:${options.devserverPort}`)
+  })
+}
+
 const Preview = async ({
   options,
   logger,
 }) => {
 
-  // await Build({
-  //   options,
-  //   logger,
-  // })
+  if(options.build) {
+    await Build({
+      options,
+      logger,
+    })
+  }
+
+  if(!fs.existsSync(path.join(options.projectFolder, options.buildPath))) {
+    throw new Error(`build folder not found - please add the '--build' flag or run 'nocode-template build'`)
+  }
 
   const collection = await waitForPublishJob({
     options,
@@ -146,7 +170,13 @@ const Preview = async ({
     logger,
   })
 
-  
+  logger(`your website has been built in the ${options.publishPath} folder`)
+
+  if(options.serve) {
+    serveWebsite({
+      options,
+    })
+  }
 }
 
 module.exports = Preview
