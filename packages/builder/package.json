@@ -1,6 +1,6 @@
 {
   "name": "@nocode-toolkit/builder",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Build static websites using React and dynamic data sources.",
   "main": "index.js",
   "scripts": {
@@ -49,5 +49,5 @@
     "tape": "^4.10.1"
   },
   "license": "MIT",
-  "gitHead": "603d909b959c0f07efede8078141e98e93a41290"
+  "gitHead": "2a59326a1daf8ae60420ffee3b9e9fc09cc01740"
 }
