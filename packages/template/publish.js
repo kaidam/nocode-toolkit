@@ -138,7 +138,7 @@ const publishTemplate = async ({
 
   logger(`publishing template`)
 
-  const publishResult = await axios({
+  await axios({
     method: 'post',
     url: api.getApiUrl(`/templates/${name}/publish/${version}`),
     headers: api.getAuthHeaders(),
@@ -157,18 +157,6 @@ const Publish = async ({
   logger,
 }) => {
 
-  if(options.build) {
-    await Build({
-      options,
-      logger,
-    })
-  }
-
-  const buildFolder = path.join(options.projectFolder, options.buildPath)
-  if(!fs.existsSync(buildFolder)) {
-    throw new Error(`build folder not found - please add the '--build' flag or run 'nocode-template build'`)
-  }
-
   const templateData = await getTemplateData({
     options,
   })
@@ -179,12 +167,17 @@ const Publish = async ({
     data: templateData,
   })
 
+  await Build({
+    options,
+    logger,
+  })
+
   await uploadFiles({
     options,
     logger,
     name: template.name,
     version: templateData.version,
-    folder: buildFolder,
+    folder: path.join(options.projectFolder, options.buildPath),
   })
 
   await publishTemplate({
