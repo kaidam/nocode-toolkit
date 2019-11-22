@@ -1,6 +1,6 @@
 {
   "name": "@nocode-toolkit/website",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Frontend utilities for building a nocode website.",
   "scripts": {},
   "publishConfig": {
