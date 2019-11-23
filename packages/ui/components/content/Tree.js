@@ -21,11 +21,16 @@ const RenderRoot = ({
       style={{
         display: 'flex',
         flexDirection: 'column',
+        height: '100%',
       }}
     >
       <div
         style={{
-          flexFGrow: 1,
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          flexGrow: 1,
+          paddingTop: '10px',
+          paddingBottom: '10px',
         }}
       >
         { content }
@@ -34,7 +39,8 @@ const RenderRoot = ({
         editor && (
           <div
             style={{
-              flexFGrow: 0,
+              flexGrow: 0,
+              padding: '10px',
             }}
           >
             { editor }
@@ -90,6 +96,7 @@ const RendererItem = ({
       style={{
         display: 'flex',
         flexDirection: 'row',
+        alignItems: 'center',
         cursor: 'pointer',
       }}
       onClick={ onClick }
@@ -99,7 +106,7 @@ const RendererItem = ({
           <div
             style={{
               flexGrow: 0,
-              marginRight: '20px',
+              marginRight: '10px',
             }}
           >
             { itemOptions }
