@@ -7,6 +7,7 @@ const Publish = require('./publish')
 const loggers = require('./loggers')
 
 const errorLogger = (err) => {
+  if(!err) return
   const errorMessage = process.env.NODE_ENV == 'development' ? err : err.toString()
   console.error(loggers.error(errorMessage))
   process.exit(1)

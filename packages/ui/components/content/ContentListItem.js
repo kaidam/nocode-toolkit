@@ -1,4 +1,4 @@
-import React, { lazy } from 'react'
+import React, { lazy, useState, useCallback } from 'react'
 
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 
@@ -52,19 +52,40 @@ const useStyles = makeStyles(theme => createStyles({
   },
 }))
 
+const eventSink = (e) => {
+  e.preventDefault()
+  e.stopPropagation()
+  return false
+}
+
 const ContentListItem = ({
+  showUI,
   item,
   itemRoute,
   isCurrentPage,
   isOpen,
-  parentAnchorEl,
   children,
   onClick,
-  onContextMenu,
   onMenuOpen,
   onMenuClose,
 }) => {
   const classes = useStyles()
+
+  const [ rightClickEl, setRightClickEl ] = useState(null)
+
+  const onRightClickHandler = useCallback((e) => {
+    if(!showUI) return true
+    e.stopPropagation()
+    e.preventDefault()
+    setRightClickEl(e.target)
+    if(onMenuOpen) onMenuOpen()
+    return false
+  }, [showUI, item, onMenuOpen])
+
+  const onMenuCloseHandler = useCallback(() => {
+    setRightClickEl(null)
+    if(onMenuClose) onMenuClose()
+  }, [onMenuClose])
 
   const itemType = itemTypes(item)
 
@@ -89,22 +110,18 @@ const ContentListItem = ({
         className={ listItemClassname }
         selected={ isCurrentPage }
         onClick={ onClick }
-        onContextMenu={ onContextMenu }
+        onContextMenu={ onRightClickHandler }
       >
         <Suspense>
           <ListItemIcon 
             className={ classes.menuIcon }
-            onClick={ (e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              return false
-            }}
+            onClick={ eventSink }
           >
             <ItemOptions
               item={ item }
-              parentAnchorEl={ parentAnchorEl }
+              parentAnchorEl={ rightClickEl }
               onOpen={ onMenuOpen }
-              onClose={ onMenuClose }
+              onClose={ onMenuCloseHandler }
             />
           </ListItemIcon>
         </Suspense>
@@ -139,7 +156,7 @@ const ContentListItem = ({
     return (
       <a
         href={ item.url }
-        onContextMenu={ onContextMenu }
+        onContextMenu={ onRightClickHandler }
         target="_blank"
       >
         { listItem } 
@@ -150,7 +167,7 @@ const ContentListItem = ({
     return (
       <Link
         name={ itemRoute.name }
-        onContextMenu={ onContextMenu }
+        onContextMenu={ onRightClickHandler }
       >
         { listItem }
       </Link>

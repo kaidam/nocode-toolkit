@@ -2,7 +2,6 @@ import React, { lazy, useState, useEffect, useCallback, useMemo } from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
 
-import { withStyles } from '@material-ui/core/styles'
 import List from '@material-ui/core/List'
 import Collapse from '@material-ui/core/Collapse'
 
@@ -43,17 +42,14 @@ const useStyles = makeStyles(theme => createStyles({
 const DEFAULT_ARRAY = []
 
 const TreeItem = ({
+  showUI,
   item,
   path,
   currentItemId,
   routeMap,
-  rightClickEl,
-  rightClickItem,
   pathToItem,
   onToggleFolder,
   onOpenFolder,
-  onRightClick,
-  onItemMenuClose,
   onClick,
 }) => {
   const classes = useStyles()
@@ -65,26 +61,19 @@ const TreeItem = ({
   const isCurrentPage = currentItemId == item.id
   const itemRoute = routeMap[item.id]
 
-  const parentAnchorEl = rightClickItem && rightClickItem.id == item.id ?
-    rightClickEl : 
-    null
-
   const children = useMemo(() => {
     return hasChildren ? (
       <Collapse in={ isOpen } timeout="auto" unmountOnExit>
         <div className={ classes.sublist }>
           <TreeItems
+            showUI={ showUI }
             items={ item.children }
             path={ path.concat([item.id]) }
             currentItemId={ currentItemId }
             routeMap={ routeMap }
-            rightClickEl={ rightClickEl }
-            rightClickItem={ rightClickItem }
             pathToItem={ pathToItem }
             onToggleFolder={ onToggleFolder }
             onOpenFolder={ onOpenFolder }
-            onRightClick={ onRightClick }
-            onItemMenuClose={ onItemMenuClose }
             onClick={ onClick }
           />
         </div>
@@ -99,34 +88,27 @@ const TreeItem = ({
 
   const onClickHandler = useCallback(() => {
     if(hasChildren) {
-      onToggleFolder(path, item)
+      onToggleFolder(item)
     }
     else if(hasRoute) {
       onClick()
     }
-  }, [hasChildren, hasRoute, path, item])
+  }, [hasChildren, hasRoute, item, onToggleFolder, onClick])
 
   // open the folder when the item options are clicked
   const onOpenMenuHandler = useCallback(() => {
-    if(hasChildren) onOpenFolder(path, item)
-  }, [path, item, hasChildren])
-
-  const onContextMenuHandler = useCallback((e) => {
-    if(hasChildren) onOpenFolder(path, item)
-    onRightClick(e, item)
-  }, [path, item, hasChildren])
+    if(hasChildren) onOpenFolder(item)
+  }, [item, hasChildren, onOpenFolder])
 
   return (
     <ContentListItem
+      showUI={ showUI }
       item={ item }
       itemRoute={ itemRoute }
       isCurrentPage={ isCurrentPage }
       isOpen={ isOpen }
-      parentAnchorEl={ parentAnchorEl }
       onClick={ onClickHandler }
-      onContextMenu={ onContextMenuHandler }
       onMenuOpen={ onOpenMenuHandler }
-      onMenuClose={ onItemMenuClose }
     >
       { children }
     </ContentListItem>
@@ -134,17 +116,14 @@ const TreeItem = ({
 }
 
 const TreeItems = ({
+  showUI,
   path,
   items = DEFAULT_ARRAY,
   currentItemId,
   routeMap,
-  rightClickEl,
-  rightClickItem,
   pathToItem,
   onToggleFolder,
   onOpenFolder,
-  onRightClick,
-  onItemMenuClose,
   onClick,
 }) => {
   const list = useMemo(() => {
@@ -155,17 +134,14 @@ const TreeItems = ({
             return (
               <TreeItem
                 key={ i }
+                showUI={ showUI }
                 item={ item }
                 path={ path }
                 currentItemId={ currentItemId }
                 routeMap={ routeMap }
-                rightClickEl={ rightClickEl }
-                rightClickItem={ rightClickItem }
                 pathToItem={ pathToItem }
                 onToggleFolder={ onToggleFolder }
                 onOpenFolder={ onOpenFolder }
-                onRightClick={ onRightClick }
-                onItemMenuClose={ onItemMenuClose }
                 onClick={ onClick }
               />
             )
@@ -173,7 +149,7 @@ const TreeItems = ({
         }
       </List>
     )
-  }, [items])
+  }, [items, pathToItem, currentItemId])
 
   return list
 }
@@ -184,50 +160,29 @@ const Tree = ({
 }) => {
 
   const classes = useStyles()
-  const sectionTreeSelector = useMemo(selectors.content.sectionTree, [])
   const route = useSelector(selectors.router.route)
   const currentItemId = route.item
+  const sectionTreeSelector = useMemo(selectors.content.sectionTree, [])
   const sectionTree = useSelector(state => sectionTreeSelector(state, section))
   const routeMap = useSelector(selectors.nocode.routeMap)
   const items = sectionTree ? sectionTree.children : DEFAULT_ARRAY
   const storePathToItem = useSelector(selectors.content.routeItemPath)
-  const { showUI } = useSelector(state => selectors.nocode.config)
-
-  const [ rightClickEl, setRightClickEl ] = useState(null)
-  const [ rightClickItem, setRightClickItem ] = useState(null)
+  const { showUI } = useSelector(selectors.nocode.config)
   const [ pathToItem, setPathToItem ] = useState(storePathToItem)
 
-  const onToggleFolderHandler = useCallback((path, item) => {
-    const isOpen = (pathToItem || DEFAULT_ARRAY).indexOf(item.id) >= 0
+  const onToggleFolderHandler = useCallback((item) => {
+    const isOpen = pathToItem.indexOf(item.id) >= 0
     const newPath = isOpen ? 
-      path :
-      path.concat(item.id)
+      pathToItem.filter(id => id != item.id) :
+      pathToItem.concat(item.id)
     setPathToItem(newPath)
   }, [pathToItem])
 
-  const onOpenFolderHandler = useCallback((path, item) => {
-    const isOpen = (pathToItem || DEFAULT_ARRAY).indexOf(item.id) >= 0
+  const onOpenFolderHandler = useCallback((item) => {
+    const isOpen = pathToItem.indexOf(item.id) >= 0
     if(isOpen) return
-    setPathToItem(path.concat(item.id))
+    setPathToItem(pathToItem.concat(item.id))
   }, [pathToItem])
-
-  const onRightClickHandler = useCallback((e, item) => {
-    if(!showUI) return true
-    e.stopPropagation()
-    e.preventDefault()
-    setRightClickEl(e.target)
-    setRightClickItem(item)
-    return false
-  }, [showUI])
-
-  const onItemMenuCloseHandler = useCallback(() => {
-    setRightClickEl(null)
-    setRightClickItem(null)
-  }, [])
-
-  const onClickHandler = useCallback(() => {
-    onClick && onClick()
-  }, [onClick])
 
   useEffect(() => {
     setPathToItem(storePathToItem)
@@ -237,21 +192,18 @@ const Tree = ({
     if(items.length <= 0) return null
     return (
       <TreeItems
+        showUI={ showUI }
         path={ DEFAULT_ARRAY }
         items={ items }
         currentItemId={ currentItemId }
         routeMap={ routeMap }
-        rightClickEl={ rightClickEl }
-        rightClickItem={ rightClickItem }
         pathToItem={ pathToItem }
         onToggleFolder={ onToggleFolderHandler }
         onOpenFolder={ onOpenFolderHandler }
-        onRightClick={ onRightClickHandler }
-        onItemMenuClose={ onItemMenuCloseHandler }
-        onClick={ onClickHandler }
+        onClick={ onClick }
       />
     )
-  }, [items])
+  }, [items, pathToItem, currentItemId])
 
   const parentFilter = useCallback((parentFilter) => parentFilter.indexOf('section') >= 0)
   
