@@ -37,7 +37,7 @@ const DEFAULT_OPTIONS = {
   // a file that contains a module that will transform the webpack options
   nocodeWebpack: process.env.NOCODE_WEBPACK || 'nocode-webpack.js',
   // whether we should generate a webpack-bundle-analyzer file
-  analyzeBundle: process.env.ANALYZE_BUNDLE,
+  analyze: process.env.ANALYZE,
 }
 
 /*
@@ -125,7 +125,7 @@ const addCli = (cli) => {
     .option('nocode-webpack', {
       describe: 'a file with a module that will transform the webpack options',
     })
-    .option('analyze-bundle', {
+    .option('analyze', {
       describe: 'analyze the modules used in your build',
     })
   return cli

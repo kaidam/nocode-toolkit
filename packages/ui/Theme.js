@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React, { lazy, Suspense } from 'react'
 import { useSelector } from 'react-redux'
 import selectors from './store/selectors'
 

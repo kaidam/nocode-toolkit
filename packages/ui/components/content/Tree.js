@@ -1,6 +1,6 @@
 import React, { lazy, useState, useEffect, useCallback, useMemo } from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
-import { useSelector, shallowEqual } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import List from '@material-ui/core/List'
 import Collapse from '@material-ui/core/Collapse'

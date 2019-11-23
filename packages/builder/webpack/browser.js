@@ -18,7 +18,7 @@ const BaseConfig = (options, production) => {
     mediaPath,
     baseUrl,
     entryPointBrowser,
-    analyzeBundle,
+    analyze,
   } = options
 
   const config = {
@@ -76,7 +76,7 @@ const BaseConfig = (options, production) => {
     )
   }
 
-  if(analyzeBundle) {
+  if(analyze) {
     config.plugins.push(
       new BundleAnalyzerPlugin({
         analyzerMode: 'server',

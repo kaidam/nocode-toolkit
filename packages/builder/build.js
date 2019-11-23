@@ -45,7 +45,6 @@ const Build = ({
     buildPath,
     mediaPath,
     buildinfoFilename,
-    analyzeBundle,
   } = options
 
   const webpackConfigProcessor = WebpackConfigProcessor({
