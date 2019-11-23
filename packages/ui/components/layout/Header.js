@@ -7,7 +7,7 @@ import selectors from '../../store/selectors'
 const SiteHeader = ({
 
 }) => {
-  const settings = useSelector(selectors.layout.settings)
+  const settings = useSelector(selectors.ui.settings)
   return (
     <Header
       title={ settings.title || 'Website Title' } 

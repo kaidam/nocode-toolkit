@@ -1,5 +1,6 @@
 import React, { Suspense } from 'react'
-import globals from '../../globals'
+import { useSelector } from 'react-redux'
+import selectors from '../../store/selectors'
 
 const SuspenseWrapper = ({
   Component,
@@ -7,7 +8,9 @@ const SuspenseWrapper = ({
   children,
   fallback = null,
 }) => {
-  if(!globals.isUIActivated()) return fallback
+
+  const showUI = useSelector(selectors.ui.showUI)
+  if(!showUI) return fallback
 
   return (
     <Suspense fallback={<div />}>

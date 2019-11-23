@@ -184,7 +184,7 @@ const Tree = ({
   const routeMap = useSelector(selectors.nocode.routeMap)
   const items = sectionTree ? sectionTree.children : DEFAULT_ARRAY
   const storePathToItem = useSelector(selectors.content.routeItemPath)
-  const { showUI } = useSelector(selectors.nocode.config)
+  const showUI = useSelector(selectors.ui.showUI)
   const [ pathToItem, setPathToItem ] = useState(storePathToItem)
 
   const onToggleFolderHandler = useCallback((item, path) => {

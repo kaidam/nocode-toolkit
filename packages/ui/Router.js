@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import CoreRouter from '@nocode-toolkit/website/Router'
-import selectors from '@nocode-toolkit/website/selectors'
+import selectors from './store/selectors'
 
 import Loading from './components/system/Loading'
 
@@ -19,7 +19,7 @@ const Router = ({
     initialise: actionLoader('ui', 'initialise'),
   })
 
-  const { showUI } = useSelector(selectors.nocode.config)
+  const showUI = useSelector(selectors.ui.showUI)
   const initialised = useSelector(state => {
     return globals.isWindowInitialised() || state.ui.initialised
   })

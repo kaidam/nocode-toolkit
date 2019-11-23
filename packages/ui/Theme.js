@@ -17,7 +17,7 @@ const Theme = ({
   children,
 }) => {
 
-  const {showUI} = useSelector(selectors.nocode.config)
+  const showUI = useSelector(selectors.ui.showUI)
 
   if(showUI) {
     return (

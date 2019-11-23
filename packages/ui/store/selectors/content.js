@@ -35,6 +35,16 @@ const contentAll = core.nocode.itemGroup('content')
 const sectionAll = core.nocode.itemGroup('sections')
 const singletonAll = core.nocode.itemGroup('singletons')
 
+const DEFAULT_ITEM = {
+  data: {},
+  children: [],
+}
+
+const contentItem = (id) => createSelector(
+  contentAll,
+  (content) => content[id] || DEFAULT_ITEM,
+)
+
 const queryItem = createSelector(
   contentAll,
   core.router.queryParams,
@@ -99,6 +109,7 @@ const selectors = {
   previousQueryParams,
   itemOptions,
   contentAll,
+  contentItem,
   sectionAll,
   singletonAll,
   queryItem,

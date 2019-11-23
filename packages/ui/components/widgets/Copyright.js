@@ -28,7 +28,7 @@ const Copyright = ({
 
 }) => {
   const classes = useStyles()
-  const settings = useSelector(selectors.layout.settings)
+  const settings = useSelector(selectors.ui.settings)
 
   const copyright_message = settings.data.copyright_message || '&copy; &year; My Company Name'
   const copyrightMessage = (copyright_message || '').replace(/\&year;?/, () => new Date().getFullYear())

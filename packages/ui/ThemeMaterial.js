@@ -59,7 +59,7 @@ const Theme = ({
   children,
 }) => {
   const config = useSelector(selectors.nocode.config)
-  const settings = useSelector(selectors.layout.settings)
+  const settings = useSelector(selectors.ui.settings)
 
   const theme = useMemo(() => {
     const themeSettings = processedThemeSettings({

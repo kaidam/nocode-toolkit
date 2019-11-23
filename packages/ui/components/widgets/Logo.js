@@ -42,7 +42,7 @@ const Logo = ({
 
 }) => {
   const classes = useStyles()
-  const logo = useSelector(selectors.layout.logo)
+  const logo = useSelector(selectors.ui.logo)
 
   let logoTitle = logo.data.title
   const imageUrl = logo.data.image ?
