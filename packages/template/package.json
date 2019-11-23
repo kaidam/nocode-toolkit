@@ -1,6 +1,6 @@
 {
   "name": "@nocode-toolkit/template",
-  "version": "1.0.17",
+  "version": "1.0.18",
   "description": "Tools for developing nocode templates",
   "scripts": {},
   "bin": {
@@ -10,7 +10,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@nocode-toolkit/builder": "^1.0.17",
+    "@nocode-toolkit/builder": "^1.0.18",
     "archiver": "^3.1.1",
     "async": "^3.1.0",
     "axios": "^0.19.0",
