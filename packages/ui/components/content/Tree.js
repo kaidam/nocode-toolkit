@@ -1,47 +1,133 @@
 import React, { lazy, useState, useEffect, useCallback, useMemo } from 'react'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
 
-import List from '@material-ui/core/List'
-import Collapse from '@material-ui/core/Collapse'
-
+import Link from '@nocode-toolkit/website/Link'
 import selectors from '../../store/selectors'
 
 import itemTypes from '../../types/item'
 import Suspense from '../system/Suspense'
-import ContentListItem from './ContentListItem'
 
 const SectionEditor = lazy(() => import(/* webpackChunkName: "ui" */ '../buttons/SectionEditor'))
-
-const useStyles = makeStyles(theme => createStyles({
-  root: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  menu: {
-    overflowY: 'auto',
-    overflowX: 'hidden',
-    flexGrow: 1,
-  },
-  sectionEditor: {
-    flexGrow: 0,
-    borderTop: '1px solid #ccc',
-    padding: theme.spacing(1),
-    paddingLeft: theme.spacing(3),
-  },
-  sublist: {
-    paddingLeft: theme.spacing(1.5),
-    '& > ul': {
-      paddingTop: ['0px', '!important'],
-      paddingBottom: ['0px', '!important'],
-    }
-  },
-}))
+const ItemOptions = lazy(() => import(/* webpackChunkName: "ui" */ '../buttons/ItemOptions'))
 
 const DEFAULT_ARRAY = []
 
+const RenderRoot = ({
+  content,
+  editor,
+}) => {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
+      <div
+        style={{
+          flexFGrow: 1,
+        }}
+      >
+        { content }
+      </div>
+      {
+        editor && (
+          <div
+            style={{
+              flexFGrow: 0,
+            }}
+          >
+            { editor }
+          </div>
+        )
+      }
+    </div>
+  )
+}
+
+const RendererList = ({
+  children,
+}) => {
+  return (
+    <div>
+      { children }
+    </div>
+  )
+}
+
+const RendererChildItems = ({
+  open,
+  children,
+}) => {
+  return open ? (
+    <div
+      style={{
+        paddingLeft: '20px',
+      }}
+    >
+      { children }
+    </div>
+  ) : null
+}
+
+const RendererItemOptions = ({
+  children,
+}) => {
+  return children
+}
+
+const RendererItem = ({
+  item,
+  itemOptions,
+  isCurrentPage,
+  isOpen,
+  hasChildren,
+  onClick,
+  onRightClick,
+}) => {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        cursor: 'pointer',
+      }}
+      onClick={ onClick }
+    >
+      {
+        itemOptions && (
+          <div
+            style={{
+              flexGrow: 0,
+              marginRight: '20px',
+            }}
+          >
+            { itemOptions }
+          </div>
+        )
+      }
+      <div
+        style={{
+          flexGrow: 1,
+        }}
+      >
+        { item.data.name}
+      </div>
+    </div>
+  )
+}
+
+const defaultRenderers = {
+  root: RenderRoot,
+  list: RendererList,
+  childItems: RendererChildItems,
+  itemOptions: RendererItemOptions,
+  item: RendererItem,
+}
+
 const TreeItem = ({
+  classes,
+  renderers,
   showUI,
   item,
   path,
@@ -52,8 +138,6 @@ const TreeItem = ({
   onOpenFolder,
   onClick,
 }) => {
-  const classes = useStyles()
-
   const itemType = itemTypes(item)
   const hasChildren = itemType.hasChildren(item)
   const hasRoute = itemType.hasRoute(item)
@@ -61,23 +145,27 @@ const TreeItem = ({
   const isCurrentPage = currentItemId == item.id
   const itemRoute = routeMap[item.id]
 
+  const ChildItemsRenderer = renderers.childItems || defaultRenderers.childItems
+  const ItemOptionsRenderer = renderers.itemOptions || defaultRenderers.itemOptions
+  const ItemRenderer = renderers.item || defaultRenderers.item
+
   const children = useMemo(() => {
     return hasChildren ? (
-      <Collapse in={ isOpen } timeout="auto" unmountOnExit>
-        <div className={ classes.sublist }>
-          <TreeItems
-            showUI={ showUI }
-            items={ item.children }
-            path={ path.concat([item.id]) }
-            currentItemId={ currentItemId }
-            routeMap={ routeMap }
-            pathToItem={ pathToItem }
-            onToggleFolder={ onToggleFolder }
-            onOpenFolder={ onOpenFolder }
-            onClick={ onClick }
-          />
-        </div>
-      </Collapse>
+      <ChildItemsRenderer open={ isOpen }>
+        <TreeItems
+          classes={ classes }
+          renderers={ renderers }
+          showUI={ showUI }
+          items={ item.children }
+          path={ path.concat([item.id]) }
+          currentItemId={ currentItemId }
+          routeMap={ routeMap }
+          pathToItem={ pathToItem }
+          onToggleFolder={ onToggleFolder }
+          onOpenFolder={ onOpenFolder }
+          onClick={ onClick }
+        />
+      </ChildItemsRenderer>
     ) : null
   }, [
     hasChildren,
@@ -93,36 +181,92 @@ const TreeItem = ({
     onClick,
   ])
 
-  const onClickHandler = useCallback(() => {
-    if(hasChildren) {
-      onToggleFolder(item, path)
-    }
-    else if(hasRoute) {
-      onClick()
-    }
-  }, [hasChildren, hasRoute, item, onToggleFolder, onClick])
+  const [ rightClickEl, setRightClickEl ] = useState(null)
+
+  const onMenuCloseHandler = useCallback(() => {
+    setRightClickEl(null)
+  }, [])
 
   // open the folder when the item options are clicked
   const onOpenMenuHandler = useCallback(() => {
     if(hasChildren) onOpenFolder(item, path)
   }, [item, hasChildren, onOpenFolder])
 
-  return (
-    <ContentListItem
-      showUI={ showUI }
-      item={ item }
-      itemRoute={ itemRoute }
-      isCurrentPage={ isCurrentPage }
-      isOpen={ isOpen }
-      onClick={ onClickHandler }
-      onMenuOpen={ onOpenMenuHandler }
-    >
-      { children }
-    </ContentListItem>
+  const onClickHandler = useCallback(() => {
+    if(hasChildren) {
+      onToggleFolder(item, path)
+    }
+    else if(hasRoute && onClick) {
+      onClick()
+    }
+  }, [hasChildren, hasRoute, item, onToggleFolder, onClick])
+
+  const onRightClickHandler = useCallback((e) => {
+    if(!showUI) return true
+    e.stopPropagation()
+    e.preventDefault()
+    setRightClickEl(e.target)
+    onOpenMenuHandler()
+    return false
+  }, [showUI, item, onOpenMenuHandler])
+
+  const itemOptions = (
+    <Suspense>
+      <ItemOptionsRenderer>
+        <ItemOptions
+          item={ item }
+          parentAnchorEl={ rightClickEl }
+          onOpen={ onOpenMenuHandler }
+          onClose={ onMenuCloseHandler }
+        />
+      </ItemOptionsRenderer>
+    </Suspense>
   )
+
+  const renderedItem = (
+    <React.Fragment>
+      <ItemRenderer
+        item={ item }
+        itemOptions={ itemOptions }
+        isCurrentPage={ isCurrentPage }
+        isOpen={ isOpen }
+        hasChildren={ hasChildren }
+        onClick={ onClickHandler }
+        onRightClick={ onRightClickHandler }
+      />
+      { children }
+    </React.Fragment>
+  )
+
+  if(itemType.isLink(item)) {
+    return (
+      <a
+        href={ item.data.url }
+        onContextMenu={ onRightClickHandler }
+        target="_blank"
+      >
+        { renderedItem } 
+      </a>
+    )
+  }
+  else if(itemType.hasRoute(item) && itemRoute) {
+    return (
+      <Link
+        name={ itemRoute.name }
+        onContextMenu={ onRightClickHandler }
+      >
+        { renderedItem }
+      </Link>
+    )
+  }
+  else {
+    return renderedItem
+  }
 }
 
 const TreeItems = ({
+  classes,
+  renderers,
   showUI,
   path,
   items = DEFAULT_ARRAY,
@@ -133,14 +277,17 @@ const TreeItems = ({
   onOpenFolder,
   onClick,
 }) => {
+  const ListRenderer = renderers.list || defaultRenderers.list
   const list = useMemo(() => {
     return (
-      <List>
+      <ListRenderer>
         {
           items.map((item, i) => {
             return (
               <TreeItem
                 key={ i }
+                classes={ classes }
+                renderers={ renderers }
                 showUI={ showUI }
                 item={ item }
                 path={ path }
@@ -154,7 +301,7 @@ const TreeItems = ({
             )
           })
         }
-      </List>
+      </ListRenderer>
     )
   }, [
     showUI,
@@ -172,11 +319,12 @@ const TreeItems = ({
 }
 
 const Tree = ({
+  classes = {},
+  renderers = {},
   section,
   onClick,
 }) => {
 
-  const classes = useStyles()
   const route = useSelector(selectors.router.route)
   const currentItemId = route.item
   const sectionTreeSelector = useMemo(selectors.content.sectionTree, [])
@@ -203,10 +351,12 @@ const Tree = ({
     setPathToItem(storePathToItem)
   }, [storePathToItem])
 
-  const list = useMemo(() => {
+  const content = useMemo(() => {
     if(items.length <= 0) return null
     return (
       <TreeItems
+        classes={ classes }
+        renderers={ renderers }
         showUI={ showUI }
         path={ DEFAULT_ARRAY }
         items={ items }
@@ -230,26 +380,26 @@ const Tree = ({
   ])
 
   const parentFilter = useCallback((parentFilter) => parentFilter.indexOf('section') >= 0)
-  
+
+  const editor = (
+    <Suspense>
+      <SectionEditor
+        id={ section }
+        tiny
+        filter={ parentFilter }
+        location={ `section:${section}` }
+        structure="tree"
+      />
+    </Suspense>
+  )
+
+  const RootRenderer = renderers.root || defaultRenderers.root
+
   return (
-    <div
-      className={ classes.root }
-    >
-      <div className={ classes.menu }>
-        { list }
-      </div>
-      <Suspense>
-        <div className={ classes.sectionEditor }>
-          <SectionEditor
-            id={ section }
-            tiny
-            filter={ parentFilter }
-            location={ `section:${section}` }
-            structure="tree"
-          />
-        </div>
-      </Suspense>
-    </div>
+    <RootRenderer
+      content={ content }
+      editor={ editor }
+    />
   )
 }
 

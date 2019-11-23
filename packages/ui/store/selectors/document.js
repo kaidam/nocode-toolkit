@@ -25,6 +25,19 @@ const data = createSelector(
   contentSelectors.contentAll,
   (externals, route, content) => {
     const item = content[route.item]
+    if(!item) {
+      return {
+        item: {
+          data: {
+            name: 'notfound',
+          }
+        },
+        externals: [],
+        layout: [],
+        disableLayoutEditor: true,
+      }
+    }
+
     const data = item.type == 'defaultHome' ?
       {
         item: {
