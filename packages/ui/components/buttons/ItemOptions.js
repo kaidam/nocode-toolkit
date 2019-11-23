@@ -71,10 +71,8 @@ const ItemMenuButtonContent = ({
   onClose,
 }) => {
 
-  const ghostParent = useSelector(state => {
-    if(!item.location.ghostParent) return null
-    return selectors.nocode.item(state, 'content', item.location.ghostParent)
-  })
+  const ghostParentSelector = useMemo(selectors.content.ghostParent, [])
+  const ghostParent = useSelector(state => ghostParentSelector(state, item))
 
   const menuItems = useMemo(
     () => {

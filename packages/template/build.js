@@ -1,5 +1,6 @@
 const Promise = require('bluebird')
 const NocodeBuild = require('@nocode-toolkit/builder/build')
+const loggers = require('./loggers')
 
 const Build = async ({
   options,
@@ -17,6 +18,7 @@ const Build = async ({
       logger,
     }, (err) => {
       if(err) return reject(err)
+      logger(loggers.success(`your code has compiled succesfully`))
       resolve()
     })
   })

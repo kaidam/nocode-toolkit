@@ -12,11 +12,17 @@ import {
   DEFAULT_HOME,
 } from '../../config'
 
-const content = state => core.nocode.items(state).content
+import contentSelectors from './content'
+
+const NETWORK_NAMES = networkProps('document', [
+  'editLayout',
+  'saveContent',
+])
+
 const data = createSelector(
   core.nocode.externals,
   core.router.route,
-  content,
+  contentSelectors.contentAll,
   (externals, route, content) => {
     const item = content[route.item]
     const data = item.type == 'defaultHome' ?
@@ -50,15 +56,12 @@ const data = createSelector(
   },
 )
 
-const NETWORK_NAMES = networkProps('document', [
-  'editLayout',
-  'saveContent',
-])
+
 
 const selectors = {
-  data,
   errors: props(networkErrors, NETWORK_NAMES),
   loading: props(networkLoading, NETWORK_NAMES),
+  data,
 }
 
 export default selectors

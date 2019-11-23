@@ -15,7 +15,6 @@ import finderActions from './finder'
 import snackbarActions from './snackbar'
 
 import library from '../../types/library'
-import typeUtils from '../../types/utils'
 import itemTypes from '../../types/item'
 
 const prefix = 'content'
@@ -92,13 +91,7 @@ const sideEffects = {
   },
 
   calculateItemOptions: () => (dispatch, getState) => {
-    const queryParams = selectors.router.queryParams(getState())
-
-    const itemOptions = selectors.types.itemEditOptions(getState(), {
-      driver: queryParams.driver,
-      type: queryParams.type,
-      id: queryParams.id,
-    })
+    const itemOptions = selectors.types.itemEditOptions(getState())
 
     // copy the item options into the store for the form to use
     dispatch(actions.setItemOptions(itemOptions))
@@ -162,11 +155,13 @@ const sideEffects = {
     // where the id might be 'settings' for example
     if(id != 'new') {
       if(driver == 'local' && type == 'section') {
-        existingItem = selectors.nocode.item(getState(), 'sections', id)
+        const sections = selectors.content.sectionAll(getState())
+        existingItem = sections[id]
         itemId = `section:${id}`
       }
       else {
-        existingItem = selectors.nocode.item(getState(), 'content', id)
+        const content = selectors.content.contentAll(getState())
+        existingItem = content[id]
         itemId = id
       }
     }
@@ -240,9 +235,12 @@ const sideEffects = {
       const {
         ghostParent,
       } = item.location
-      const ghostParentItem = selectors.nocode.item(getState(), 'content', ghostParent)
-      title = `Remove ${ghostParentItem.data.name} and all children?`
-      message = `This item is included as part of it's parent (${ghostParentItem.data.name}) - are you sure you want to remove ${ghostParentItem.data.name} and all it's children from the website?`
+      const content = selectors.content.contentAll(getState())
+      const ghostParentItem = content[ghostParent]
+      if(ghostParentItem) {
+        title = `Remove ${ghostParentItem.data.name} and all children?`
+        message = `This item is included as part of it's parent (${ghostParentItem.data.name}) - are you sure you want to remove ${ghostParentItem.data.name} and all it's children from the website?`
+      }
     }
     const confirmed = await dispatch(uiActions.waitForConfirmation({
       title,
@@ -294,7 +292,9 @@ const sideEffects = {
       'content'
 
     // get the existing data
-    const existingData = selectors.nocode.item(getState(), contentType, location.id)
+    const existingData = contentType == 'sections' ?
+      selectors.content.sectionAll(getState())[location.id] :
+      selectors.content.contentAll(getState())[location.id]
 
     // switch the two ids based on the from and to indexes
     const childIds = existingData.children || []
@@ -320,17 +320,15 @@ const sideEffects = {
   commitSort: ({
     location,
   }) => wrapper('commitSort', async (dispatch, getState) => {
-    const contentType = location.type == 'section' ?
-      'sections' :
-      'content'
-
     const id = location.type == 'section' ?
       `section:${location.id}` :
       location.id
 
     // get the existing data
-    const existingData = selectors.nocode.item(getState(), contentType, location.id)
-
+    const existingData = location.type == 'section' ?
+      selectors.content.sectionAll(getState())[location.id] :
+      selectors.content.contentAll(getState())[location.id]
+    
     // get the child ids
     const childIds = existingData.children || []
 

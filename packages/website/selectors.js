@@ -1,43 +1,76 @@
 import { createSelector } from 'reselect'
 const DEFAULT_OBJECT = {}
+const DEFAULT_ARRAY = []
 
-const routes = (state) => state.nocode.routes || DEFAULT_OBJECT
-const routeMap = createSelector(
-  routes,
+/*
+
+  nocode selectors
+
+*/
+const nocodeRoutes = (state) => state.nocode.routes || DEFAULT_ARRAY
+const nocodeRouteMap = createSelector(
+  nocodeRoutes,
   routes => routes.reduce((all, route) => {
     all[route.item] = route
     return all
   }, {})
 )
+const nocodeConfig = (state) => state.nocode.config || DEFAULT_OBJECT
+const nocodeItems = (state) => state.nocode.items || DEFAULT_OBJECT
+const nocodeExternals = (state) => state.nocode.externals || DEFAULT_OBJECT
+const nocodeItemGroup = (type) => createSelector(
+  nocodeItems,
+  (items) => items[type] || DEFAULT_OBJECT,
+)
+
+
+/*
+
+  router selectors
+
+*/
+const routerStoreRoute = (state) => state.router.route || DEFAULT_OBJECT
+const routerPreviousRoute = (state) => state.router.previousRoute
+const routerName = createSelector(
+  routerStoreRoute,
+  (route) => route.name,
+)
+const routerPath = createSelector(
+  routerStoreRoute,
+  (route) => route.path,
+)
+const routerParams = createSelector(
+  routerStoreRoute,
+  (route) => route.params || DEFAULT_OBJECT,
+)
+const routerRoute = createSelector(
+  nocodeRoutes,
+  routerName,
+  (routes, name) => routes.find(r => r.name == name)
+)
+
+
 
 const selectors = {
 
+  DEFAULT_OBJECT,
+  DEFAULT_ARRAY,
+  
   nocode: {
-    items: (state) => state.nocode.items || DEFAULT_OBJECT,
-    itemGroup: (state, type) => selectors.nocode.items(state)[type] || DEFAULT_OBJECT,
-    item: (state, type, id) => selectors.nocode.itemGroup(state, type)[id],
-    externals: (state) => state.nocode.externals || DEFAULT_OBJECT,
-    external: (state, id) => selectors.nocode.externals(state)[id],
-    routes,
-    routeMap,
-    config: (state, name) => {
-      const base = state.nocode.config || DEFAULT_OBJECT
-      return name ? base[name] : base
-    },
+    config: nocodeConfig,
+    items: nocodeItems,
+    externals: nocodeExternals,
+    routes: nocodeRoutes,
+    routeMap: nocodeRouteMap,
+    itemGroup: nocodeItemGroup,
   },
   
   router: {
-    name: (state) => (state.router.route || DEFAULT_OBJECT).name,
-    path: (state) => (state.router.route || DEFAULT_OBJECT).path,
-    queryParams: (state) => {
-      return (state.router.route || DEFAULT_OBJECT).params || DEFAULT_OBJECT
-    },
-    route: (state) => {
-      const routes = selectors.nocode.routes(state)
-      const name = selectors.router.name(state)
-      return routes.find(r => r.name == name)
-    },
-    previousRoute: (state) => state.router.previousRoute,
+    name: routerName,
+    path: routerPath,
+    queryParams: routerParams,
+    route: routerRoute,
+    previousRoute: routerPreviousRoute,
   },
 
 }

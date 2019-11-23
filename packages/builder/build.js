@@ -17,6 +17,8 @@ const runBuild = ({
 }, done) => {
   logger(`building ${name}`)
   const compiler = webpack(config)
+  let compileErrors = []
+  compiler.hooks.afterCompile.tap('compileMessage', (data) => compileErrors = data.errors)
   compiler.run((err, stats) => {
     if(err) return done(err)
     logger(`done - ${name} build stats:`)
@@ -25,7 +27,11 @@ const runBuild = ({
       colors: true
     }))
     logger('')
-    done(null, stats)
+    const returnError = compileErrors && compileErrors.length > 0 ? `
+there was an problem building your website
+please check above for errors
+` : null
+    done(returnError, stats)
   })
 }
 

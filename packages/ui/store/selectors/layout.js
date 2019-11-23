@@ -1,14 +1,16 @@
+import { createSelector } from 'reselect'
 import core from '@nocode-toolkit/website/selectors'
+import content from './content'
 
-const settings = state => {
-  const settingsItem = core.nocode.item(state, 'content', 'settings') || {}
-  return settingsItem ? (settingsItem.data || {}) : {}
-}
+const settings = createSelector(
+  content.contentAll,
+  (content) => content.settings || core.DEFAULT_OBJECT,
+)
 
-const logo = state => {
-  const logoItem = core.nocode.item(state, 'content', 'logo') || {}
-  return logoItem ? (logoItem.data || {}) : {}
-}
+const logo = createSelector(
+  content.contentAll,
+  (content) => content.logo || core.DEFAULT_OBJECT,
+)
 
 const selectors = {
   settings,

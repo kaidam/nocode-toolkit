@@ -256,7 +256,9 @@ const NavBar = ({
   children,
 }) => {
   const classes = useStyles()
-  const sectionList = useSelector(state => selectors.content.sectionList(state, section))
+
+  const sectionListSelector = useMemo(selectors.content.sectionList, [])
+  const sectionList = useSelector(state => sectionListSelector(state, section))
 
   const sectionFilter = useCallback((parentFilter, schemaDefinition) => {
     if(parentFilter.indexOf('section') < 0) return false

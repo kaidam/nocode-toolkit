@@ -5,19 +5,19 @@ import {
   networkLoading,
 } from './utils'
 
-const inProgress = state => state.fileupload.inProgress
-const status = state => state.fileupload.status
-
 const NETWORK_NAMES = networkProps('fileupload', [
   'uploadFiles',
   'syncFiles',
 ])
 
+const inProgress = state => state.fileupload.inProgress
+const status = state => state.fileupload.status
+
 const selectors = {
-  inProgress,
-  status,
   errors: props(networkErrors, NETWORK_NAMES),
   loading: props(networkLoading, NETWORK_NAMES),
+  inProgress,
+  status,
 }
 
 export default selectors

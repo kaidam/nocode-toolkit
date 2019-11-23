@@ -93,8 +93,8 @@ const ContentFormDialog = ({
     id,
   }
   
-  const itemOptions = useSelector(selectors.types.itemOptions)
-  const allItems = useSelector(state => selectors.nocode.itemGroup(state, 'content'))
+  const itemOptions = useSelector(selectors.content.itemOptions)
+  const allItems = useSelector(selectors.content.contentAll)
   const loading = useSelector(selectors.content.loading.save)
   const error = useSelector(selectors.content.errors.save)
 

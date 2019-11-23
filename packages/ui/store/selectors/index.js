@@ -1,6 +1,5 @@
 import core from '@nocode-toolkit/website/selectors'
 import network from './network'
-import dialog from './dialog'
 import types from './types'
 import job from './job'
 import content from './content'
@@ -18,7 +17,6 @@ const selectors = {
   router: core.router,
   nocode: core.nocode,
   network,
-  dialog,
   types,
   job,
   content,

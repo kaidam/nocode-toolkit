@@ -164,10 +164,10 @@ const sideEffects = {
   // if yes - then let's start a loop of loading it until it's
   // of status complete or error
   waitForPreviewJob: () => async (dispatch, getState) => {
-    const jobId = selectors.nocode.config(getState(), 'previewJobId')
-    if(jobId) {
+    const { previewJobId } = selectors.nocode.config(getState())
+    if(previewJobId) {
       dispatch(actions.waitForJob({
-        id: jobId,
+        id: previewJobId,
         showWindow: true,
       }))
     }

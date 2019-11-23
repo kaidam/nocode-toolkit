@@ -7,64 +7,82 @@ import {
   networkLoading,
 } from './utils'
 
-const contentAll = state => core.nocode.itemGroup(state, 'content')
-const sectionAll = state => core.nocode.itemGroup(state, 'sections')
-const singletonAll = state => core.nocode.itemGroup(state, 'singletons')
-
-const contentItem = (state, id) => contentAll(state)[id]
-const sectionItem = (state, name) => sectionAll(state)[name]
-const singletonItem = (state, name) => singletonAll(state)[name]
-
-const itemTree = (state, item) => {
+const _createTree = (content, item) => {
   if(!item) return null
   const returnItem = Object.assign({}, item)
   returnItem.children = (item.children || [])
-    .map(id => contentItem(state, id))
-    .map(childItem => itemTree(state, childItem))
+    .map(id => content[id])
+    .map(childItem => _createTree(content, childItem))
     .filter(i => i)
   return returnItem
 }
 
-const itemList = (state, item) => {
+const _createList = (content, item) => {
   if(!item) return []
   return (item.children || [])
-    .map(id => contentItem(state, id))
+    .map(id => content[id])
     .filter(i => i)
 }
 
-const contentTree = (state, id) => itemTree(state, contentItem(state, id))
-const sectionTree = (state, name) => itemTree(state, sectionItem(state, name))
-const singletonTree = (state, name) => itemTree(state, contentItem(state, singletonItem(state, name)))
+const NETWORK_NAMES = networkProps('content', [
+  'save',
+])
 
-const sectionList = (state, name) => itemList(state, sectionItem(state, name))
+const previousQueryParams = state => state.content.previousQueryParams
+const itemOptions = state => state.content.itemOptions
 
-const parentIds = createSelector(
+const contentAll = core.nocode.itemGroup('content')
+const sectionAll = core.nocode.itemGroup('sections')
+const singletonAll = core.nocode.itemGroup('singletons')
+
+const queryItem = createSelector(
   contentAll,
-  (allItems) => Object.keys(allItems).reduce((all, id) => {
-    const item = allItems[id]
-    const childrenIds = item.children || []
-    childrenIds.forEach(childId => {
-      all[childId] = id
-    })
-    return all
-  }, {})
+  core.router.queryParams,
+  (content, {id}) => content[id],
 )
 
-const routeItemId = createSelector(
-  core.router.route,
-  route => route.item,
+const sectionTree = () => createSelector(
+  sectionAll,
+  contentAll,
+  (_, name) => name,
+  (sections, content, name) => {
+    const section = sections[name]
+    return _createTree(content, section)
+  }
 )
 
-const routeItem = createSelector(
-  routeItemId,
+const sectionList = () => createSelector(
+  sectionAll,
   contentAll,
-  (id, items) => items[id],
+  (_, name) => name,
+  (sections, content, name) => {
+    const section = sections[name]
+    return _createList(content, section)
+  }
+)
+
+const ghostParent = () => createSelector(
+  contentAll,
+  (_, item) => item,
+  (content, item) => {
+    if(!item) return item
+    return content[item.location.ghostParent]
+  }
 )
 
 const routeItemPath = createSelector(
-  routeItemId,
-  parentIds,
-  (id, parentIds) => {
+  core.router.route,
+  contentAll,
+  (route, content) => {
+    const id = route.item
+    const parentIds = Object.keys(content).reduce((all, id) => {
+      const item = content[id]
+      const childrenIds = item.children || []
+      childrenIds.forEach(childId => {
+        all[childId] = id
+      })
+      return all
+    }, {})
     const pathToItem = []
     let nextParentId = parentIds[id]
     while(nextParentId != null) {
@@ -75,32 +93,19 @@ const routeItemPath = createSelector(
   },
 )
 
-const previousQueryParams = state => state.content.previousQueryParams
-
-const NETWORK_NAMES = networkProps('content', [
-  'save',
-])
-
 const selectors = {
+  errors: props(networkErrors, NETWORK_NAMES),
+  loading: props(networkLoading, NETWORK_NAMES),
+  previousQueryParams,
+  itemOptions,
   contentAll,
   sectionAll,
   singletonAll,
-  contentItem,
-  sectionItem,
-  singletonItem,
-  itemTree,
-  itemList,
-  contentTree,
+  queryItem,
   sectionTree,
-  singletonTree,
   sectionList,
-  parentIds,
-  routeItemId,
-  routeItem,
+  ghostParent,
   routeItemPath,
-  previousQueryParams,
-  errors: props(networkErrors, NETWORK_NAMES),
-  loading: props(networkLoading, NETWORK_NAMES),
 }
 
 export default selectors

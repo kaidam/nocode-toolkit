@@ -6,6 +6,11 @@ import {
   networkLoading,
 } from './utils'
 
+const NETWORK_NAMES = networkProps('job', [
+  'deploy',
+  'loadHistory',
+])
+
 const data = state => state.job.data
 const list = state => state.job.list
 const publishStatus = state => state.job.publishStatus
@@ -42,12 +47,9 @@ const canCloseWindow = createSelector(
   }
 )
 
-const NETWORK_NAMES = networkProps('job', [
-  'deploy',
-  'loadHistory',
-])
-
 const selectors = {
+  errors: props(networkErrors, NETWORK_NAMES),
+  loading: props(networkLoading, NETWORK_NAMES),
   data,
   list,
   publishStatus,
@@ -56,8 +58,6 @@ const selectors = {
   error,
   logs,
   canCloseWindow,
-  errors: props(networkErrors, NETWORK_NAMES),
-  loading: props(networkLoading, NETWORK_NAMES),
 }
 
 export default selectors

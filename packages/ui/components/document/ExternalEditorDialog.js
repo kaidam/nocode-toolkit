@@ -11,8 +11,7 @@ import uiActions from '../../store/modules/ui'
 const EditorExternalDialog = ({
   
 }) => {
-  const queryParams = useSelector(selectors.router.queryParams)
-  const item = useSelector(state => selectors.nocode.item(state, 'content', queryParams.id))
+  const item = useSelector(selectors.content.queryItem)
 
   const actions = Actions(useDispatch(), {
     onSubmit: documentActions.saveExternalContent,

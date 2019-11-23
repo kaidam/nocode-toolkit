@@ -1,52 +1,30 @@
-import React from 'react'
-import { connect } from 'react-redux'
+import React, { useCallback } from 'react'
+import { useDispatch } from 'react-redux'
 import utils from './store/utils'
 import routerActions from './store/moduleRouter'
 
-@connect(
-  state => ({}),
-  {
-    openPage: routerActions.navigateTo,
-  },
-)
-class NocodeLink extends React.Component {
-
-  constructor(props) {
-    super(props)
-    this.onClick = this.onClickHandler.bind(this)
-  }
-
-  onClickHandler(e) {
-    const {
-      path,
-      name,
-      openPage,
-      onClick,
-    } = this.props
+const NocodeLink = ({
+  path,
+  name,
+  children,
+  onClick,
+  ...other
+}) => {
+  const dispatch = useDispatch()
+  const openPage = useCallback((e) => {
     e.preventDefault()
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
     const routeName = name || utils.routePathToName(path)
-    openPage(routeName)
+    dispatch(routerActions.navigateTo(routeName))
     if(onClick) onClick()
     return false
-  }
-
-  render() {
-    const {
-      path,
-      openPage,
-      children,
-      onClick,
-      ...other
-    } = this.props
-    
-    return (
-      <a href={ path } onClick={ this.onClick } {...other}>
-        { children }
-      </a>
-    )
-  }
+  }, [path, name])
+  return (
+    <a href={ path } onClick={ openPage } {...other}>
+      { children }
+    </a>
+  )
 }
 
 export default NocodeLink

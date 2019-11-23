@@ -29,8 +29,8 @@ const dialogs = {
 const UIElements = ({
 
 }) => {
-  const confirmWindow = useSelector(state => state.ui.confirmWindow, [])
-  let dialog = useSelector(state => selectors.router.queryParams(state).dialog, [])
+  const confirmWindow = useSelector(state => state.ui.confirmWindow)
+  let { dialog } = useSelector(selectors.router.queryParams)
 
   if(confirmWindow) dialog = 'confirm'
 

@@ -5,6 +5,7 @@ const httpProxy = require('http-proxy')
 const PreviewServer = require('@nocode-toolkit/builder/previewServer')
 
 const Api = require('./api')
+const loggers = require('./loggers')
 
 const pino = require('pino')({
   name: 'developmentServer',
@@ -12,8 +13,8 @@ const pino = require('pino')({
 
 const Develop = ({
   options,
+  logger,
 }, callback) => {
-
   const api = Api({
     options,
   })
@@ -105,22 +106,7 @@ const Develop = ({
         done(err)
       }
     },
-    getBuildInfo: (id, done) => {
-      done('tbc')
-      // getBuildFolder(id, (err, buildFolder) => {
-      //   if(err) return done(err)
-      //   const buildInfoPath = path.resolve(buildFolder, options.buildinfoFilename)
-      //   let buildInfo = buildInfoCache[buildInfoPath]
-      //   if(buildInfo) return done(null, buildInfo)
-      //   try {
-      //     buildInfo = require(buildInfoPath)
-      //   } catch(e) {
-      //     return done(`error loading buildinfo: ${e.toString()}`)
-      //   }
-      //   buildInfoCache[buildInfoPath] = buildInfo
-      //   done(null, buildInfo)
-      // })
-    },
+    getBuildInfo: (id, done) => done(null, {}),
     webpackProcessors: [
       (webpackConfig, options, env) => {
         if(options.aliasLinks) {
@@ -134,11 +120,21 @@ const Develop = ({
       },
     ],
     webpackCompilerHook: (compiler) => {
-      compiler.hooks.afterCompile.tap('compileMessage', () => {
+      compiler.hooks.afterCompile.tap('compileMessage', (data) => {
         setTimeout(() => {
-          console.log('')
-          console.log(`the server is now ready!!!!`)
-          console.log(`you can view your website at: http://localhost:${options.devserverPort}`)
+          if(data.errors && data.errors.length > 0) {
+            logger(loggers.error(`
+there was an problem building your website
+please check above for errors
+            `))
+          }
+          else {
+            logger(loggers.success(`
+the server is now ready
+you can view your website at: http://localhost:${options.devserverPort}
+            `))
+          }
+          
         }, 500)
       })
     },
@@ -161,8 +157,10 @@ const Develop = ({
   })
 
   app.listen(options.devserverPort, () => {
-    console.log(`webserver will listen to port ${options.devserverPort}`)
-    console.log(`your preview is now building...`)
+    logger(loggers.info(`
+webserver will listen to port ${options.devserverPort}
+your preview is now building...
+    `))
   })
 
   callback()

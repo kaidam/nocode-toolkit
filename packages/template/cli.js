@@ -4,6 +4,13 @@ const Build = require('./build')
 const Preview = require('./preview')
 const Develop = require('./develop')
 const Publish = require('./publish')
+const loggers = require('./loggers')
+
+const errorLogger = (err) => {
+  const errorMessage = process.env.NODE_ENV == 'development' ? err : err.toString()
+  console.error(loggers.error(errorMessage))
+  process.exit(1)
+}
 
 const cli = require('yargs')
   .command({
@@ -14,12 +21,7 @@ const cli = require('yargs')
       Develop({
         options,
         logger: console.log,
-      }, (err) => {
-        if(err) {
-          console.error(process.env.NODE_ENV == 'development' ? err : err.toString())
-          process.exit(1)
-        }
-      })
+      }, errorLogger)
     },
   })
   .command({
@@ -33,8 +35,7 @@ const cli = require('yargs')
           logger: console.log,
         })
       } catch(err) {
-        console.error(process.env.NODE_ENV == 'development' ? err : err.toString())
-        process.exit(1)
+        errorLogger(err)
       }
     },
   })
@@ -49,8 +50,7 @@ const cli = require('yargs')
           logger: console.log,
         })
       } catch(err) {
-        console.error(process.env.NODE_ENV == 'development' ? err : err.toString())
-        process.exit(1)
+        errorLogger(err)
       }
     },
   })
@@ -65,8 +65,7 @@ const cli = require('yargs')
           logger: console.log,
         })
       } catch(err) {
-        console.error(process.env.NODE_ENV == 'development' ? err : err.toString())
-        process.exit(1)
+        errorLogger(err)
       }
     },
   })

@@ -19,7 +19,7 @@ const DocumentLayout = ({
 
 }) => {
   const classes = useStyles()
-  const showUI = useSelector(state => selectors.nocode.config(state, 'showUI'))
+  const {showUI} = useSelector(selectors.nocode.config)
   const data = useSelector(selectors.document.data)
 
   return (

@@ -182,14 +182,16 @@ const Tree = ({
   section,
   onClick,
 }) => {
+
   const classes = useStyles()
+  const sectionTreeSelector = useMemo(selectors.content.sectionTree, [])
   const route = useSelector(selectors.router.route)
   const currentItemId = route.item
-  const sectionTree = useSelector(state => selectors.content.sectionTree(state, section))
+  const sectionTree = useSelector(state => sectionTreeSelector(state, section))
   const routeMap = useSelector(selectors.nocode.routeMap)
   const items = sectionTree ? sectionTree.children : DEFAULT_ARRAY
   const storePathToItem = useSelector(selectors.content.routeItemPath)
-  const showUI = useSelector(state => selectors.nocode.config(state, 'showUI'))
+  const { showUI } = useSelector(state => selectors.nocode.config)
 
   const [ rightClickEl, setRightClickEl ] = useState(null)
   const [ rightClickItem, setRightClickItem ] = useState(null)

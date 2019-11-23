@@ -6,6 +6,7 @@ const Promise = require('bluebird')
 const Publish = require('@nocode-toolkit/builder/publish')
 const Options = require('@nocode-toolkit/builder/options')
 const Build = require('./build')
+const loggers = require('./loggers')
 
 const Api = require('./api')
 
@@ -53,9 +54,10 @@ const waitForPublishJob = async ({
     options,
   })
 
-  logger(`creating remote publish job`)
+  logger(loggers.info(`creating remote publish job`))
   const { id } = await createJob({api})
-  logger(`job created: ${id}`)
+  logger(loggers.info(`job created: ${id}`))
+
   let job = await loadJob({api, id})
   let lastLogId = ''
 
@@ -80,17 +82,21 @@ const waitForPublishJob = async ({
     filename,
   } = job.result
 
-  logger(`downloading results: ${filename}`)
+  logger(loggers.success(`job complete`))
+  logger(loggers.info(`downloading results: ${filename}`))
 
   const collection = await loadResults({
     api,
     filename,
   })
 
+  logger(loggers.success(`download complete`))
+
   return collection
 }
 
 const publishWebsite = async ({
+  options,
   collection: {
     items,
     sections,
@@ -101,6 +107,7 @@ const publishWebsite = async ({
   },
   logger,
 }) => {
+  logger(loggers.info(`building website HTML`))
   await new Promise((resolve, reject) => {
     Publish({
       options: Options.get({}),
@@ -127,6 +134,7 @@ const publishWebsite = async ({
       resolve()
     })
   })
+  logger(loggers.success(`your website has been built in the ${options.publishPath} folder`))
 }
 
 const serveWebsite = ({
@@ -138,9 +146,11 @@ const serveWebsite = ({
   app.use(express.static(documentRoot))
 
   app.listen(options.devserverPort, () => {
-    console.log(`webserver is listening to port ${options.devserverPort}`)
-    console.log('')
-    console.log(`you can now view your published website at http://localhost:${options.devserverPort}`)
+    logger(loggers.success(`
+webserver is listening to port ${options.devserverPort}
+
+you can now view your published website at http://localhost:${options.devserverPort}
+    `))
   })
 }
 
@@ -160,11 +170,10 @@ const Preview = async ({
   })
 
   await publishWebsite({
+    options,
     collection,
     logger,
   })
-
-  logger(`your website has been built in the ${options.publishPath} folder`)
 
   if(options.serve) {
     serveWebsite({

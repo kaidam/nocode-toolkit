@@ -4,6 +4,7 @@ const request = require('request')
 const path = require('path')
 const archiver = require('archiver')
 const Build = require('./build')
+const loggers = require('./loggers')
 
 const Api = require('./api')
 
@@ -57,7 +58,7 @@ const getTemplate = async ({
     options,
   })
 
-  logger(`checking versions`)
+  logger(loggers.info(`checking versions`))
 
   const templateInfo = await axios({
     method: 'get',
@@ -89,7 +90,7 @@ const uploadFiles = async ({
     options,
   })
 
-  logger(`uploading files`)
+  logger(loggers.info(`uploading files`))
 
   await new Promise((resolve, reject) => {
     const uploadRequest = request.post(api.getApiUrl(`/templates/${name}/upload/${version}`), {
@@ -120,6 +121,8 @@ const uploadFiles = async ({
     archive.finalize()
   })
 
+  logger(loggers.success(`all files uploaded`))
+
 }
 
 const publishTemplate = async ({
@@ -136,7 +139,7 @@ const publishTemplate = async ({
     version,
   } = data
 
-  logger(`publishing template`)
+  logger(loggers.info(`publishing template`))
 
   await axios({
     method: 'post',
@@ -148,8 +151,7 @@ const publishTemplate = async ({
   })
     .then(res => res.data)
 
-  console.log('')
-  console.log(`version ${version} of your template ${name} has been published!`)
+  logger(loggers.success(`version ${version} of your template ${name} has been published!`))
 }
 
 const Publish = async ({
