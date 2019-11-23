@@ -3,6 +3,7 @@ const path = require('path')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const shared = require('./shared')
 
@@ -17,6 +18,7 @@ const BaseConfig = (options, production) => {
     mediaPath,
     baseUrl,
     entryPointBrowser,
+    analyzeBundle,
   } = options
 
   const config = {
@@ -71,6 +73,15 @@ const BaseConfig = (options, production) => {
         from: mediaPath,
         to: mediaPath,
       }])
+    )
+  }
+
+  if(analyzeBundle) {
+    config.plugins.push(
+      new BundleAnalyzerPlugin({
+        analyzerMode: 'server',
+        openAnalyzer: true,
+      })
     )
   }
 

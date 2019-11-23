@@ -30,7 +30,7 @@ const Copyright = ({
   const classes = useStyles()
   const settings = useSelector(selectors.layout.settings)
 
-  const copyright_message = settings.copyright_message || '&copy; &year; My Company Name'
+  const copyright_message = settings.data.copyright_message || '&copy; &year; My Company Name'
   const copyrightMessage = (copyright_message || '').replace(/\&year;?/, () => new Date().getFullYear())
 
   return (
@@ -48,7 +48,6 @@ const Copyright = ({
       </Suspense>
       <Typography
         variant="body1"
-        color="textSecondary"
         className={ classes.copyrightText }
       >
         <span dangerouslySetInnerHTML={{__html: copyrightMessage}}>

@@ -44,9 +44,9 @@ const Logo = ({
   const classes = useStyles()
   const logo = useSelector(selectors.layout.logo)
 
-  let logoTitle = logo.title
-  const imageUrl = logo.image ?
-    logo.image.url :
+  let logoTitle = logo.data.title
+  const imageUrl = logo.data.image ?
+    logo.data.image.url :
     null
 
   if(!logoTitle && !imageUrl) logoTitle = 'My Website'

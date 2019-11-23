@@ -45,6 +45,7 @@ const Build = ({
     buildPath,
     mediaPath,
     buildinfoFilename,
+    analyzeBundle,
   } = options
 
   const webpackConfigProcessor = WebpackConfigProcessor({
@@ -69,6 +70,16 @@ const Build = ({
       fsextra.emptyDir(buildFolder, next)
     },
 
+    // build server
+    next => runBuild({
+      name: 'server',
+      logger,
+      config: webpackConfigProcessor(WebpackConfigServer(options), options, {
+        environment: 'production',
+        target: 'server',
+      }),
+    }, next),
+
     // build client
     next => runBuild({
       name: 'browser',
@@ -86,16 +97,6 @@ const Build = ({
       const buildInfo = BuildInfo(webpackStats, options)
       fs.writeFile(path.join(outputDir, buildinfoFilename), JSON.stringify(buildInfo), 'utf8', next)
     }),
-    
-    // build server
-    next => runBuild({
-      name: 'server',
-      logger,
-      config: webpackConfigProcessor(WebpackConfigServer(options), options, {
-        environment: 'production',
-        target: 'server',
-      }),
-     }, next),
 
   ], done)
 }
