@@ -34,7 +34,8 @@ const Render = ({
   
   */
   const render = () => {
-    createRouter()
+    const router = createRouter()
+    router.start()
     renderFunction((
       <Provider store={ store }>
         <HelmetProvider>

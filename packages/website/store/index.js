@@ -46,7 +46,6 @@ const Store = ({
     })
     currentRouter.setDependency('store', store)
     currentRouter.usePlugin(reduxPlugin(store.dispatch))
-    currentRouter.start()
     return currentRouter
   }
 

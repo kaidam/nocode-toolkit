@@ -26,13 +26,15 @@ const Server = ({
 
   const {
     store,
-    router,
+    createRouter,
   } = Store({
     reducers,
     globals,
     errorLog,
     setRouteResult: result => routeResult = result,
   })
+
+  const router = createRouter()
 
   router.start(route, (err) => {
     if(err) return done(err)
