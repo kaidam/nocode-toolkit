@@ -41,8 +41,13 @@ const Publish = ({
     serverBuildFilename,
   ]
 
-  const buildFolder = path.join(projectFolder, buildPath)
-  const publishFolder = path.join(projectFolder, publishPath)
+  // allow absolute filepaths
+  const buildFolder = buildPath.indexOf('/') == 0 ?
+    buildPath :
+    path.join(projectFolder, buildPath)
+  const publishFolder = publishPath.indexOf('/') == 0 ?
+    publishPath :
+    path.join(projectFolder, publishPath)
   const mediaSourceFolder = path.join(projectFolder, mediaPath)
   const mediaDestFolder = path.join(publishFolder, mediaPath)
   const externalsFolder = path.join(publishFolder, externalsPath)

@@ -2,6 +2,7 @@ const fs = require('fs')
 const path = require('path')
 const axios = require('axios')
 const express = require('express')
+const expressStaticGzip = require("express-static-gzip")
 const Promise = require('bluebird')
 const Publish = require('@nocode-toolkit/builder/publish')
 const Options = require('@nocode-toolkit/builder/options')
@@ -138,12 +139,15 @@ const publishWebsite = async ({
 }
 
 const serveWebsite = ({
-  options
+  options,
+  logger,
 }) => {
   const app = express()
   const documentRoot = path.join(options.projectFolder, options.publishPath)
 
-  app.use(express.static(documentRoot))
+  app.use(expressStaticGzip(documentRoot, {
+    enableBrotli: true,
+  }))
 
   app.listen(options.devserverPort, () => {
     logger(loggers.success(`
@@ -159,10 +163,10 @@ const Preview = async ({
   logger,
 }) => {
 
-  await Build({
-    options,
-    logger,
-  })
+  // await Build({
+  //   options,
+  //   logger,
+  // })
   
   const collection = await waitForPublishJob({
     options,
@@ -178,6 +182,7 @@ const Preview = async ({
   if(options.serve) {
     serveWebsite({
       options,
+      logger,
     })
   }
 }
