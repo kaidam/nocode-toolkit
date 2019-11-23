@@ -1,6 +1,6 @@
 import React, { lazy, useState, useEffect, useCallback, useMemo } from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
-import { useSelector } from 'react-redux'
+import { useSelector, shallowEqual } from 'react-redux'
 
 import List from '@material-ui/core/List'
 import Collapse from '@material-ui/core/Collapse'
@@ -82,13 +82,20 @@ const TreeItem = ({
   }, [
     hasChildren,
     isOpen,
-    path,
+    showUI,
     item,
+    path,
+    currentItemId,
+    routeMap,
+    pathToItem,
+    onToggleFolder,
+    onOpenFolder,
+    onClick,
   ])
 
   const onClickHandler = useCallback(() => {
     if(hasChildren) {
-      onToggleFolder(item)
+      onToggleFolder(item, path)
     }
     else if(hasRoute) {
       onClick()
@@ -97,7 +104,7 @@ const TreeItem = ({
 
   // open the folder when the item options are clicked
   const onOpenMenuHandler = useCallback(() => {
-    if(hasChildren) onOpenFolder(item)
+    if(hasChildren) onOpenFolder(item, path)
   }, [item, hasChildren, onOpenFolder])
 
   return (
@@ -149,7 +156,17 @@ const TreeItems = ({
         }
       </List>
     )
-  }, [items, pathToItem, currentItemId])
+  }, [
+    showUI,
+    items,
+    path,
+    currentItemId,
+    routeMap,
+    pathToItem,
+    onToggleFolder,
+    onOpenFolder,
+    onClick
+  ])
 
   return list
 }
@@ -170,18 +187,16 @@ const Tree = ({
   const { showUI } = useSelector(selectors.nocode.config)
   const [ pathToItem, setPathToItem ] = useState(storePathToItem)
 
-  const onToggleFolderHandler = useCallback((item) => {
-    const isOpen = pathToItem.indexOf(item.id) >= 0
-    const newPath = isOpen ? 
-      pathToItem.filter(id => id != item.id) :
-      pathToItem.concat(item.id)
+  const onToggleFolderHandler = useCallback((item, path) => {
+    const newPath = pathToItem.indexOf(item.id) >= 0 ? 
+      path :
+      path.concat(item.id)
     setPathToItem(newPath)
   }, [pathToItem])
 
-  const onOpenFolderHandler = useCallback((item) => {
-    const isOpen = pathToItem.indexOf(item.id) >= 0
-    if(isOpen) return
-    setPathToItem(pathToItem.concat(item.id))
+  const onOpenFolderHandler = useCallback((item, path) => {
+    if(pathToItem.indexOf(item.id) >= 0) return
+    setPathToItem(path)
   }, [pathToItem])
 
   useEffect(() => {
@@ -203,7 +218,16 @@ const Tree = ({
         onClick={ onClick }
       />
     )
-  }, [items, pathToItem, currentItemId])
+  }, [
+    showUI,
+    items,
+    currentItemId,
+    routeMap,
+    pathToItem,
+    onToggleFolderHandler,
+    onOpenFolderHandler,
+    onClick
+  ])
 
   const parentFilter = useCallback((parentFilter) => parentFilter.indexOf('section') >= 0)
   

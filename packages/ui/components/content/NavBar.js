@@ -151,7 +151,7 @@ const NavBarPageLink = ({
 
   return isLink(item) ? (
     <a
-      href={ item.url }
+      href={ item.data.url }
       className={ highLightClassName }
       target="_external"
     >

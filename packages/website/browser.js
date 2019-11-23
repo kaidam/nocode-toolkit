@@ -18,31 +18,35 @@ const Render = ({
   App,
 }) => {
 
-  const render = () => {
-    const {
-      store,
-      router,
-    } = Store({
-      reducers,
-    })
+  const {
+    store,
+    createRouter,
+    reloadStore,
+  } = Store({
+    reducers,
+  })
 
-    router.start()
+  /*
   
-    const container = (
+    this function renders the app - it is called each
+    time we have new server loaded nocode data
+    we replace the router to cope with the routes potentially having updated
+  
+  */
+  const render = () => {
+    createRouter()
+    renderFunction((
       <Provider store={ store }>
         <HelmetProvider>
           <App />
         </HelmetProvider>
       </Provider>
-    )
-    renderFunction(container, rootEl)
+    ), rootEl)
   }
 
   window._reloadNocodeApp = () => {
-    render({
-      reducers,
-      App,
-    })
+    reloadStore()
+    render()
   }
 
   return render

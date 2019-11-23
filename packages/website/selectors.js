@@ -31,25 +31,14 @@ const nocodeItemGroup = (type) => createSelector(
 */
 const routerStoreRoute = (state) => state.router.route || DEFAULT_OBJECT
 const routerPreviousRoute = (state) => state.router.previousRoute
-const routerName = createSelector(
-  routerStoreRoute,
-  (route) => route.name,
-)
-const routerPath = createSelector(
-  routerStoreRoute,
-  (route) => route.path,
-)
-const routerParams = createSelector(
-  routerStoreRoute,
-  (route) => route.params || DEFAULT_OBJECT,
-)
+const routerName = (state) => routerStoreRoute(state).name
+const routerPath = (state) => routerStoreRoute(state).path
+const routerParams = (state) => routerStoreRoute(state).params || DEFAULT_OBJECT
 const routerRoute = createSelector(
   nocodeRoutes,
   routerName,
   (routes, name) => routes.find(r => r.name == name)
 )
-
-
 
 const selectors = {
 

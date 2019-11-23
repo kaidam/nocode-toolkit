@@ -150,6 +150,7 @@ const form = createSelector(
   item,
   (queryParams, existingItem) => {
     const {
+      controller,
       driver,
       type,
     } = queryParams
@@ -182,7 +183,7 @@ const form = createSelector(
         })
       }
 
-      if(mode != 'finder') {
+      if(controller != 'finder') {
         // we don't want sorting in the finder
         if(schemaDefinition.metadata.hasChildren) {
           tabs.push({

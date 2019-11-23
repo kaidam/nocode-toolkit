@@ -155,7 +155,7 @@ const ContentListItem = ({
   if(itemType.isLink(item)) {
     return (
       <a
-        href={ item.url }
+        href={ item.data.url }
         onContextMenu={ onRightClickHandler }
         target="_blank"
       >

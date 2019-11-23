@@ -19,7 +19,7 @@ const Router = ({
     initialise: actionLoader('ui', 'initialise'),
   })
 
-  const showUI = useSelector(state => selectors.nocode.config(state, 'showUI'))
+  const { showUI } = useSelector(selectors.nocode.config)
   const initialised = useSelector(state => {
     return globals.isWindowInitialised() || state.ui.initialised
   })

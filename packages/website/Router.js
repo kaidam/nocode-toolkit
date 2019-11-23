@@ -10,7 +10,7 @@ const Router = ({
   templates,
 }) => {
   const route = useSelector(selectors.router.route)
-
+  
   if(!route) {
     return (
       <ErrorPage

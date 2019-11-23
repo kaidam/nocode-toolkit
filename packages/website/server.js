@@ -76,7 +76,7 @@ const Server = ({
       results.injectedHTML = getInjectedHTML ? getInjectedHTML() : ''
     }
 
-    results.helmet =helmetContext.helmet
+    results.helmet = helmetContext.helmet
     
     done(null, results)
   })

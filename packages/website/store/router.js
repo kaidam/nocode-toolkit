@@ -36,9 +36,9 @@ const externalsMiddleware = ({
       [route.externals]
 
     externals.map(external => {
-      const hasData = selectors.nocode.external(store.getState(), external)
-      const reloadExternals = selectors.nocode.config(store.getState(), 'reloadExternals')
-      if(!hasData || reloadExternals) {
+      const config = selectors.nocode.config(store.getState())
+      const externals = selectors.nocode.externals(store.getState())
+      if(!externals[external] || config.reloadExternals) {
         all.push(nocodeActions.loadExternal(external)(store.dispatch, store.getState))
       }
     })

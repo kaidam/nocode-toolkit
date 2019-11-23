@@ -12,6 +12,18 @@ const initialState = {
 }
 
 const reducers = {
+  reload: (state, action) => {
+    const {
+      config,
+      items,
+      externals,
+      routes,
+    } = action.payload
+    state.config = config
+    state.items = items
+    state.externals = externals
+    state.routes = routes
+  },
   setConfig: (state, action) => {
     const {
       name,
@@ -20,7 +32,7 @@ const reducers = {
     state.config[name] = data
   },
   setItems: (state, action) => {
-    state.items = actions.payload
+    state.items = action.payload
   },
   setItem: (state, action) => {
     const {
