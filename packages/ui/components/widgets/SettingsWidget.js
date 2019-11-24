@@ -42,25 +42,40 @@ const RenderRoot = ({
 }
 
 const RenderContent = ({
-  settings,
+  value,
+}) => {
+  return value
+}
+
+const RenderHTML = ({
+  value,
 }) => {
   return (
-    <div></div>
+    <span dangerouslySetInnerHTML={{__html: value}}>
+    </span>
   )
 }
 
 const defaultRenderers = {
   root: RenderRoot,
   content: RenderContent,
+  html: RenderHTML,
 }
 
 const SettingsWidget = ({
-  renderers,
+  renderers = {},
+  getValue,
+  html,
 }) => {
   const settings = useSelector(selectors.ui.settings)
 
   const RootRenderer = renderers.root || defaultRenderers.root
-  const ContentRenderer = renderers.content || defaultRenderers.content
+  let ContentRenderer = defaultRenderers.content
+
+  if(renderers.content) ContentRenderer = renderers.content
+  else if(html) ContentRenderer = defaultRenderers.html
+
+  const value = getValue ? getValue(settings) : null
 
   const editor = (
     <Suspense>
@@ -77,6 +92,7 @@ const SettingsWidget = ({
   const content = (
     <ContentRenderer
       settings={ settings }
+      value={ value }
     />
   )
 

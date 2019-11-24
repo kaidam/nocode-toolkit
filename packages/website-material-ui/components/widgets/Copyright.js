@@ -1,7 +1,7 @@
 import React from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import SettingsWidget from '@nocode-toolkit/ui/components/widgets/SettingsWidget'
+import BaseCopyright from '@nocode-toolkit/ui/components/widgets/Copyright'
 
 const useStyles = makeStyles(theme => createStyles({  
   container: {
@@ -37,17 +37,15 @@ const RenderRoot = ({
 }
 
 const RenderContent = ({
-  settings,
+  value,
 }) => {
   const classes = useStyles()
-  const copyright_message = settings.data.copyright_message || '&copy; &year; My Company Name'
-  const copyrightMessage = (copyright_message || '').replace(/\&year;?/, () => new Date().getFullYear())
   return (
     <Typography
       variant="body1"
       className={ classes.copyrightText }
     >
-      <span dangerouslySetInnerHTML={{__html: copyrightMessage}}>
+      <span dangerouslySetInnerHTML={{__html: value}}>
       </span>
     </Typography>
   )
@@ -62,7 +60,7 @@ const Copyright = ({
 
 }) => {
   return (
-    <SettingsWidget
+    <BaseCopyright
       renderers={ renderers }
     />
   )
