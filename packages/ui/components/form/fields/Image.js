@@ -22,6 +22,7 @@ import fileuploadActions from '../../../store/modules/fileupload'
 import selectors from '../../../store/selectors'
 
 import icons from '../../../icons'
+import typeUI from '../../../types/ui'
 
 const EditIcon = icons.edit
 const UploadIcon = icons.upload
@@ -63,7 +64,7 @@ const ImageField = ({
     reset: fileuploadActions.reset,
   })
 
-  const [ finderOpen, setFinderOpen ] = useState(false)
+  const [ finderDriver, setFinderDriver ] = useState(null)
 
   const onAddFinderContent = useCallback(({id}) => {
     onCloseFinder()
@@ -95,48 +96,50 @@ const ImageField = ({
     multiple: false,
   })
 
-  const onOpenFinder = useCallback(() => setFinderOpen(true))
-  const onCloseFinder = useCallback(() => setFinderOpen(false))
+  const onOpenFinder = useCallback((driver) => setFinderDriver(driver))
+  const onCloseFinder = useCallback(() => setFinderDriver(null))
   const onOpenUploader = useCallback(() => {
     inputRef.current.click()
   }, [])
-
 
   const onResetValue = useCallback(() => {
     setFieldValue(name, null)
   }, [setFieldValue, name])
 
   const finderDialog = useMemo(() => {
-    if(!finderOpen) return null
+    if(!finderDriver) return null
     return (
       <EmbeddedFinder
         open
-        driver="drive"
+        driver={ finderDriver }
         addFilter="image"
         listFilter="folder,image"
         onAddContent={ onAddFinderContent }
         onCancel={ onCloseFinder }
       />
     )
-  }, [finderOpen])
+  }, [finderDriver])
 
   const menuItems = useMemo(() => {
+
+    const remoteImageTypes = typeUI.addContentOptionsWithCallback({
+      filter: (parentFilter) => parentFilter.indexOf('image') >= 0,
+      handler: (type, schema) => onOpenFinder(schema.driver),
+    })
+
     return [{
       title: 'Upload',
       help: 'Upload an image from your computer',
       icon: UploadIcon,
       handler: onOpenUploader,
-    },{
-      title: 'Google Drive',
-      help: 'Choose an image from Google drive',
-      icon: DriveIcon,
-      handler: onOpenFinder,
-    },{
-      title: 'Reset',
-      help: 'Clear this image',
-      icon: DeleteIcon,
-      handler: onResetValue
     }]
+      .concat(remoteImageTypes)
+      .concat({
+        title: 'Reset',
+        help: 'Clear this image',
+        icon: DeleteIcon,
+        handler: onResetValue
+      })
   }, [onOpenFinder, onOpenUploader, onResetValue])
 
   const getButton = useCallback(onClick => (
@@ -150,23 +153,23 @@ const ImageField = ({
     </Button>
   ), [])
 
-  if(syncLoading) {
-    return (
-      <Loading />
-    )
-  }
-
   const description = item.helperText
 
-  return uploadInProgress ? (
+  return uploadInProgress || syncLoading ? (
     <div className={ classes.container }>
       <Grid container spacing={4}>
         <Grid item xs={12}>
-          <UploadStatus
-            inProgress={ uploadInProgress }
-            error={ uploadError }
-            status={ uploadStatus }
-          />
+          {
+            uploadInProgress ? (
+              <UploadStatus
+                inProgress={ uploadInProgress }
+                error={ uploadError }
+                status={ uploadStatus }
+              />
+            ) : (
+              <Loading />
+            )
+          }
         </Grid>
       </Grid>
     </div>

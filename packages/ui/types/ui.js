@@ -90,7 +90,8 @@ const addContentOptionsWithCallback = ({
         title: schemaDefinition.title,
         icon: icons[schemaDefinition.icon],
         type: schemaDefinition.type,
-        handler: () => handler(schemaDefinition.type),
+        help: schemaDefinition.help,
+        handler: () => handler(schemaDefinition.type, schemaDefinition),
       }
     })
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 
 import Actions from '../../utils/actions'
@@ -14,6 +15,17 @@ import Loading from '../system/Loading'
 import FinderHeader from './Header'
 import FinderList from './List'
 
+const useStyles = makeStyles(theme => createStyles({
+  buttonsContainer: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  button: {
+    marginLeft: theme.spacing(2),
+  },
+}))
+
 const onOpenTab = (id) => uiActions.updateQueryParams({
   tab: id,
   parent: id,
@@ -23,14 +35,22 @@ const onOpenFolder = (id) => uiActions.updateQueryParams({
   parent: id,
 })
 
+const onOpenPage = (page) => uiActions.updateQueryParams({
+  page,
+})
+
 const FinderDialog = ({
 
 }) => {
+
+  const classes = useStyles()
+
   const actions = Actions(useDispatch(), {
     onLoadList: finderActions.getList,
     onCancel: uiActions.resetQueryParams,
     onOpenTab,
     onOpenFolder,
+    onOpenPage,
     onUpdateQueryParams: uiActions.updateQueryParams,
     onAddContent: finderActions.addContent,
     onUpdateSearch: finderActions.updateSearch,
@@ -43,6 +63,7 @@ const FinderDialog = ({
     parent,
     tab,
     addFilter,
+    page = 1,
   } = queryParams
 
   const items = useSelector(selectors.finder.list)
@@ -51,6 +72,15 @@ const FinderDialog = ({
 
   const schemaDefinition = library.get(`${driver}.finder`)
   const finderConfig = schemaDefinition.finder
+
+  const onLastPage = useCallback(() => {
+    if(page <= 1) return
+    actions.onOpenPage(page-1)
+  }, [page])
+
+  const onNextPage = useCallback(() => {
+    actions.onOpenPage(page+1)
+  }, [page])
 
   useEffect(() => {
     if(parent) actions.onLoadList()
@@ -81,16 +111,41 @@ const FinderDialog = ({
   ])
 
   const leftButtons = useMemo(() => {
-    return (
-      <Button
-        type="button"
-        variant="contained"
-        onClick={ () => window.history.back() }
-      >
-        Back
-      </Button>
+    const paginationButtons = finderConfig.hasPagination() && (
+      <React.Fragment>
+        <Button
+          className={ classes.button }
+          type="button"
+          variant="contained"
+          onClick={ onLastPage }
+        >
+          Last Page
+        </Button>
+        <Button
+          className={ classes.button }
+          type="button"
+          variant="contained"
+          onClick={ onNextPage }
+        >
+          Next Page
+        </Button>
+      </React.Fragment>
     )
-  }, [])
+
+    return (
+      <div className={ classes.buttonContainer }>
+        <Button
+          className={ classes.button }
+          type="button"
+          variant="contained"
+          onClick={ () => window.history.back() }
+        >
+          Back
+        </Button>
+        { paginationButtons }
+      </div>
+    )
+  }, [finderConfig])
 
   return (
     <Window

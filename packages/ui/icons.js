@@ -56,6 +56,9 @@ import LogsIcon from '@material-ui/icons/Reorder'
 import UndoIcon from '@material-ui/icons/Undo'
 import MoveIcon from '@material-ui/icons/OpenWith'
 
+import UnsplashLogo from './styles/UnsplashLogo'
+import GoogleDriveLogo from './styles/GoogleDriveLogo'
+
 const icons = {
   add: AddIcon,
   edit: EditIcon,
@@ -70,7 +73,8 @@ const icons = {
   folder: FolderIcon,
   document: DocumentIcon,
   item: DocumentIcon,
-  drive: CloudUploadIcon,
+  drive: GoogleDriveLogo,
+  unsplash: UnsplashLogo,
   link: LinkIcon,
   video: VideoIcon,
   expandMore: ExpandMoreIcon,

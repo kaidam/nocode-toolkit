@@ -67,6 +67,15 @@ const document = {
   }
 }
 
+const image = {
+  driver: 'drive',
+  type: 'image',
+  title: 'Google Drive Image',
+  help: 'Choose an image from Google drive',
+  icon: 'drive',
+  parentFilter: ['image'],
+}
+
 const finder = {
   driver: 'drive',
   title: 'Google Drive Content',
@@ -82,6 +91,7 @@ const finder = {
   finder: {
     // the search is active for google drive
     canSearch: () => true,
+    hasPagination: () => false,
     // tells you if you can add things to the given parent
     // in this case we can add to any parent apart from
     // the root shared with me folder
@@ -147,6 +157,7 @@ const finder = {
 const schemas = {
   folder,
   document,
+  image,
   finder,
 }
 

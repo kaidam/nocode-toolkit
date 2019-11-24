@@ -52,10 +52,12 @@ const loaders = {
   getList: (getState, {
     driver,
     parent = 'root',
-    filter
+    filter,
+    page,
   } = {}) => axios.get(apiUtils.websiteUrl(getState, `/remote/${driver}/list/${parent}`), {
     params: {
       filter,
+      page,
     }
   })
     .then(apiUtils.process),
@@ -63,11 +65,13 @@ const loaders = {
   getSearch: (getState, {
     driver,
     query,
-    filter
+    filter,
+    page,
   } = {}) => axios.get(apiUtils.websiteUrl(getState, `/remote/${driver}/search`), {
     params: {
       query,
       filter,
+      page,
     }
   })
     .then(apiUtils.process),
@@ -110,12 +114,14 @@ const sideEffects = {
     driver,
     search,
     listFilter,
+    page,
   } = {}) => wrapper('getList', async (dispatch, getState) => {
     const queryParams = selectors.router.queryParams(getState())
 
     parent = parent || queryParams.parent
     driver = driver || queryParams.driver
     listFilter = listFilter || queryParams.listFilter
+    page = page || queryParams.page
     search = search || selectors.finder.search(getState())
 
     dispatch(actions.setList({
@@ -128,6 +134,7 @@ const sideEffects = {
         driver,
         query: search,
         filter: listFilter,
+        page,
       })
     }
     else {
@@ -135,6 +142,7 @@ const sideEffects = {
         driver,
         parent,
         filter: listFilter,
+        page,
       })
     }
     

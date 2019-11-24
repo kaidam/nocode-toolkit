@@ -1,5 +1,7 @@
 import React, { useEffect, useCallback, useState, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
 
 import Actions from '../../utils/actions'
 import selectors from '../../store/selectors'
@@ -16,6 +18,17 @@ import {
   SEARCH_DELAY,
 } from '../../config'
 
+const useStyles = makeStyles(theme => createStyles({
+  buttonsContainer: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  button: {
+    marginLeft: theme.spacing(2),
+  },
+}))
+
 const EmbeddedFinder = ({
   driver,
   listFilter,
@@ -23,6 +36,9 @@ const EmbeddedFinder = ({
   onCancel,
   onAddContent,
 }) => {
+
+  const classes = useStyles()
+
   const actions = Actions(useDispatch(), {
     onLoadList: finderActions.getList,
     onUpdateSearch: finderActions.updateSearch,
@@ -36,7 +52,17 @@ const EmbeddedFinder = ({
 
   const [ parent, setParent ] = useState('root')
   const [ tab, setTab ] = useState('root')
+  const [ page, setPage ] = useState(1)
   const [ search, setSearch ] = useState('')
+
+  const onLastPage = useCallback(() => {
+    if(page <= 1) return
+    setPage(page-1)
+  }, [page])
+
+  const onNextPage = useCallback(() => {
+    setPage(page+1)
+  }, [page])
 
   const onOpenTab = useCallback((id) => {
     setParent(id)
@@ -55,12 +81,14 @@ const EmbeddedFinder = ({
       driver,
       listFilter,
       search,
+      page,
     })
   }, [
     parent,
     driver,
     listFilter,
     search,
+    page,
   ])
 
   let searchTimeout = null
@@ -77,6 +105,10 @@ const EmbeddedFinder = ({
   useEffect(() => {
     onLoadList()
   }, [parent])
+
+  useEffect(() => {
+    onLoadList()
+  }, [page])
 
   const header = useMemo(() => {
     return (
@@ -100,11 +132,36 @@ const EmbeddedFinder = ({
     onUpdateSearch,
   ])
 
+  const leftButtons = useMemo(() => {
+    if(!finderConfig.hasPagination()) return null
+    return (
+      <div className={ classes.buttonContainer }>
+        <Button
+          className={ classes.button }
+          type="button"
+          variant="contained"
+          onClick={ onLastPage }
+        >
+          Last Page
+        </Button>
+        <Button
+          className={ classes.button }
+          type="button"
+          variant="contained"
+          onClick={ onNextPage }
+        >
+          Next Page
+        </Button>
+      </div>
+    )
+  }, [finderConfig, onLastPage, onNextPage])
+
   return (
     <Window
       open
       size="lg"
       title={ header }
+      leftButtons={ leftButtons }
       withCancel
       onCancel={ onCancel }
     >

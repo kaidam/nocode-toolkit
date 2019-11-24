@@ -36,7 +36,6 @@ const FinderHeader = ({
   search,
   finderConfig,
   tab,
-  canAddToFinder,
   onOpenTab,
   onUpdateSearch,
 }) => {
@@ -66,23 +65,25 @@ const FinderHeader = ({
     if(activeTabIndex < 0) activeTabIndex = 0
 
     return (
-      <Tabs
-        value={ activeTabIndex }
-        indicatorColor="primary"
-        textColor="primary"
-        onChange={ onOpenTabHandler }
-      >
-        {
-          tabs.map((tab, i) => {
-            return (
-              <Tab
-                key={ i }
-                label={ tab.title }
-              />
-            )
-          })
-        }
-      </Tabs>
+      <div className={ classes.tabsContainer }>
+        <Tabs
+          value={ activeTabIndex }
+          indicatorColor="primary"
+          textColor="primary"
+          onChange={ onOpenTabHandler }
+        >
+          {
+            tabs.map((tab, i) => {
+              return (
+                <Tab
+                  key={ i }
+                  label={ tab.title }
+                />
+              )
+            })
+          }
+        </Tabs>
+      </div>
     )
   }, [
     tabs,
@@ -90,18 +91,22 @@ const FinderHeader = ({
   ])
 
   const searchComponent = useMemo(() => {
+    if(!finderConfig.canSearch()) return null
     return (
-      <TextField
-        fullWidth
-        id='search'
-        name='search'
-        label='Search'
-        helperText='Search for content'
-        value={ search }
-        onChange={ onUpdateSearchHandler }
-      />
+      <div className={ classes.searchContainer }>
+        <TextField
+          fullWidth
+          id='search'
+          name='search'
+          label='Search'
+          helperText='Search for content'
+          value={ search }
+          onChange={ onUpdateSearchHandler }
+        />
+      </div>
     )
   }, [
+    finderConfig,
     search,
   ])
 
@@ -111,33 +116,30 @@ const FinderHeader = ({
     if(search) return null
 
     // ask the finder config if we can add to where we are
-    if(!canAddToFinder) return null
+    if(!finderConfig.canAddToFinder(tab)) return null
 
     return (
-      <AddContentButton
-        stashQueryParams
-        filter={ (parentFilter) => parentFilter.indexOf(`${driver}.finder`) >= 0 }
-        location={ `finder:${parent}` }
-      />
+      <div className={ classes.buttonContainer }>
+        <AddContentButton
+          stashQueryParams
+          filter={ (parentFilter) => parentFilter.indexOf(`${driver}.finder`) >= 0 }
+          location={ `finder:${parent}` }
+        />
+      </div>
+      
     )
   }, [
     search,
-    canAddToFinder,
+    finderConfig,
     driver,
     parent,
   ])
 
   return (
     <div className={ classes.toolbarContainer }>
-      <div className={ classes.tabsContainer }>
-        { tabComponent }
-      </div>
-      <div className={ classes.searchContainer }>
-        { searchComponent }
-      </div>
-      <div className={ classes.buttonContainer }>
-        { addButtonComponent }
-      </div>
+      { tabComponent }
+      { searchComponent }
+      { addButtonComponent }
     </div>
   )
 }
