@@ -1,67 +1,160 @@
-import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import React, { lazy } from 'react'
 import { useSelector } from 'react-redux'
-import Paper from '@material-ui/core/Paper'
-import Grid from '@material-ui/core/Grid'
 import selectors from '../../store/selectors'
-import LayoutCell from './LayoutCell'
+import Suspense from '../system/Suspense'
 
-const useStyles = makeStyles({
-  paper: {
-    minHeight: '200px',
-  },
-  row: {
-    
-  },
-})
+import cellTypes from './cellTypes'
 
-const DocumentLayout = ({
+const CellOptions = lazy(() => import(/* webpackChunkName: "ui" */ './CellOptions'))
 
+const RenderRoot = ({
+  children,
 }) => {
-  const classes = useStyles()
-  const showUI = useSelector(selectors.ui.showUI)
-  const data = useSelector(selectors.document.data)
-
   return (
-    <Paper className={ classes.paper }>
+    <div>
+      { children }
+    </div>
+  )
+}
+
+const RenderRow = ({
+  cells,
+}) => {
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+      }}
+    >
       {
-        data.layout.map((row, i) => {
-          const gridSize = Math.floor(12 / row.length)
+        cells.map((cell, i) => {
           return (
-            <div key={ i } className={ classes.row }>
-              <Grid
-                container
-                direction="row"
-                justify="space-evenly"
-                alignItems="stretch"
-              >
-                {
-                  row.map((cell, j) => {
-                    return (
-                      <Grid
-                        key={ j }
-                        item
-                        xs={ 12 }
-                        sm={ gridSize }
-                      >
-                        <LayoutCell
-                          rowIndex={ i }
-                          cellIndex={ j }
-                          data={ data }
-                          cell={ cell }
-                          showUI={ showUI }
-                          disableEditor={ data.disableLayoutEditor }
-                        />
-                      </Grid>
-                    )
-                  })
-                }
-              </Grid>
+            <div
+              style={{
+                flexGrow: 1,
+              }}
+              key={ i }
+            >
+              { cell }
             </div>
           )
         })
       }
-    </Paper>
+    </div>
+  )
+}
+
+const RenderCell = ({
+  showUI,
+  cellConfig,
+  editor,
+  content,
+}) => {
+  return (
+    <div
+      style={{
+        height: '100%',
+        position: 'relative',
+        minHeight: '45px',
+        border: showUI ? '1px solid #f5f5f5' : '',
+      }}
+    >
+      {
+        editor && (
+          <div
+            style={{
+              position: 'absolute',
+              top: '0px',
+              right: '0px',
+              padding: '8px',
+            }}
+          >
+            { editor }
+          </div>
+        )
+      }
+      <div
+        style={{
+          padding: `${(cellConfig.padding || 0) * 8}px`,
+        }}
+      >
+        { content }
+      </div>
+    </div>
+  )
+}
+
+const defaultRenderers = {
+  root: RenderRoot,
+  row: RenderRow,
+  cell: RenderCell,
+}
+
+const DocumentLayout = ({
+  renderers = {},
+}) => {
+  const showUI = useSelector(selectors.ui.showUI)
+  const data = useSelector(selectors.document.data)
+
+  const RootRenderer = renderers.root || defaultRenderers.root
+  const RowRenderer = renderers.row || defaultRenderers.row
+  const CellRenderer = renderers.cell || defaultRenderers.cell
+
+  const rows = data.layout.map((row, i) => {
+
+    const cells = row.map((cell, j) => {
+
+      const cellConfig = cellTypes.getCellConfig(cell.component)
+      const RenderComponent = cellConfig.component
+      const cellContent = cellTypes.getContent({
+        cell,
+        data,
+      })
+
+      const editor = data.disableLayoutEditor ? null : (
+        <Suspense>
+          <CellOptions
+            data={ data }
+            cell={ cell }
+            rowIndex={ i }
+            cellIndex={ j }
+          />
+        </Suspense>
+      )
+
+      const content = (
+        <RenderComponent
+          showUI={ showUI }
+          content={ cellContent }
+        />
+      )
+
+      return (
+        <CellRenderer
+          key={ j }
+          showUI={ showUI }
+          cellConfig={ cellConfig }
+          editor={ editor }
+          content={ content }
+        />
+      )
+
+    })
+
+    return (
+      <RowRenderer
+        key={ i }
+        cells={ cells}
+      />
+    )             
+  })
+
+  return (
+    <RootRenderer>
+      { rows }
+    </RootRenderer>
   )
 }
 

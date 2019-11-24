@@ -1,3 +1,10 @@
+// cells we will render in documents
+// based on the cellConfig of the schema
+import Title from '../../components/cells/Title'
+import RichText from '../../components/cells/RichText'
+import Image from '../../components/cells/Image'
+import Video from '../../components/cells/Video'
+
 const folder = {
   driver: 'local',
   type: 'folder',
@@ -59,7 +66,7 @@ const externalLink = {
         ['url', 'Must be a valid url - e.g. http://google.com'],
       ],
     }
-  }]
+  }],
 }
 
 const youtube = {
@@ -97,7 +104,10 @@ const youtube = {
         ['url', 'Must be a valid youtube url - e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ'],
       ],
     }
-  }]
+  }],
+  cellConfig: {
+    component: Video,
+  },
 }
 
 const title = {
@@ -114,7 +124,11 @@ const title = {
     id: 'title',
     title: 'title',
     helperText: 'Enter the text for the title',
-  }]
+  }],
+  cellConfig: {
+    component: Title,
+    padding: 1,
+  },
 }
 
 const richtext = {
@@ -131,7 +145,14 @@ const richtext = {
     id: 'text',
     noTitle: true,
     component: 'richtext',
-  }]
+  }],
+  cellConfig:  {
+    component: RichText,
+    padding: 1,
+    compactEditor: true,
+    noScrollEditor: true,
+    fullHeightEditor: true,
+  },
 }
 
 const image = {
@@ -149,7 +170,10 @@ const image = {
     title: 'Image',
     helperText: 'Upload an image',
     component: 'image',
-  }]
+  }],
+  cellConfig: {
+    component: Image,
+  },
 }
 
 const settings = {

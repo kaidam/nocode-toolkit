@@ -1,33 +1,12 @@
-import React from 'react'
-import Title from './Title'
-import HTML from './HTML'
-import RichText from './RichText'
-import Image from './Image'
-import Video from './Video'
+import HTML from '../cells/HTML'
+import library from '../../types/library'
 
 const BlankContent = () => ''
 
-const CELLS = {
-  title: {
-    component: Title,
-    padding: 1,
-  },
+const DEFAULT_CELL_CONFIG = {
   html:  {
     component: HTML,
     padding: 2,
-  },
-  richtext:  {
-    component: RichText,
-    padding: 1,
-    compactEditor: true,
-    noScrollEditor: true,
-    fullHeightEditor: true,
-  },
-  image:  {
-    component: Image,
-  },
-  youtube:  {
-    component: Video,
   },
   blank:  {
     component: BlankContent,
@@ -35,7 +14,17 @@ const CELLS = {
   },
 }
 
-const getType = cell => CELLS[cell.component] || CELLS.blank
+const getCellSchema = type => {
+  return library.get(['local', type].join('.'))
+}
+
+const getCellConfig = type => {
+  const schema = getCellSchema(type)
+  return schema && schema.cellConfig ?
+    schema.cellConfig :
+    DEFAULT_CELL_CONFIG[type] || DEFAULT_CELL_CONFIG.blank
+}
+
 const getContent = ({
   cell,
   data,
@@ -49,7 +38,8 @@ const getContent = ({
 }
 
 const cellTypes = {
-  getType,
+  getCellSchema,
+  getCellConfig,
   getContent,
 }
 

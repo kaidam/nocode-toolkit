@@ -1,5 +1,4 @@
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles'
 import YouTube from 'react-youtube-embed'
 
 const youtubeId = (url) => {
@@ -13,26 +12,21 @@ const youtubeId = (url) => {
   }
 }
 
-const useStyles = makeStyles({
-  video: {
-    maxWidth: '100%',
-  },
-  uiVideo: {
-    maxWidth: 'calc(100% - 42px)',
-  },
-})
-
 const DocumentVideo = ({
   content,
   showUI,
 }) => {
-  const classes = useStyles()
   if(!content) return null
 
   const id = youtubeId(content.url)
+  const useStyle = showUI ? {
+    maxWidth: 'calc(100% - 42px)',
+  } : {
+    maxWidth: '100%',
+  }
 
   return (
-    <div className={ showUI ? classes.uiVideo : classes.video }>
+    <div style={ useStyle }>
       <YouTube id={ id } />
     </div>
   )

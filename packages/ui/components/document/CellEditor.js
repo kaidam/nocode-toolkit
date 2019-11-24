@@ -4,7 +4,6 @@ import classnames from 'classnames'
 import Window from '../system/Window'
 import Loading from '../system/Loading'
 import FormWrapper from '../form/Wrapper'
-import library from '../../types/library'
 
 import cellTypes from './cellTypes'
 import ExternalEditor from './ExternalEditor'
@@ -31,12 +30,12 @@ const CellEditorInternal = ({
 
   const type = cell.component
 
-  const schemaDefinition = library.get(['local', type].join('.'))
-  const cellType = cellTypes.getType(cell)
+  const cellConfig = cellTypes.getCellConfig(type)
+  const schemaDefinition = cellTypes.getCellSchema(type)
 
   const formContainerClassname = classnames({
     [classes.formContainer]: true,
-    [classes.formContainerPadding]: cellType.compactEditor ? false : true,
+    [classes.formContainerPadding]: cellConfig.compactEditor ? false : true,
   })
 
   const onSubmitForm = useCallback(values => {
@@ -48,8 +47,8 @@ const CellEditorInternal = ({
     <FormWrapper
       schema={ schemaDefinition.schema }
       initialValues={ cell.data || schemaDefinition.initialValues }
-      compact={ cellType.compactEditor ? true : false }
-      fullHeight={ cellType.fullHeightEditor ? true : false }
+      compact={ cellConfig.compactEditor ? true : false }
+      fullHeight={ cellConfig.fullHeightEditor ? true : false }
       onSubmit={ onSubmitForm }
       renderForm={
         ({
@@ -60,10 +59,10 @@ const CellEditorInternal = ({
             <Window
               open
               size="md"
-              compact={ cellType.compactEditor ? true : false }
-              noScroll={ cellType.noScrollEditor ? true : false }
+              compact={ cellConfig.compactEditor ? true : false }
+              noScroll={ cellConfig.noScrollEditor ? true : false }
               withCancel
-              fullHeight={ cellType.fullHeightEditor ? true : false }
+              fullHeight={ cellConfig.fullHeightEditor ? true : false }
               loading={ loading }
               onSubmit={ handleSubmit }
               onCancel={ onCancel }

@@ -5,7 +5,7 @@ import classnames from 'classnames'
 import Suspense from '../system/Suspense'
 import cellTypes from './cellTypes'
 
-const CellOptions = lazy(() => import(/* webpackChunkName: "ui" */ './CellOptions'))
+
 
 const useStyles = makeStyles(theme => createStyles({
   cell: {
@@ -46,8 +46,13 @@ const LayoutCell = ({
 }) => {
   const classes = useStyles()
 
-  const cellSettings = cellTypes.getType(cell)
-  const RenderComponent = cellSettings.component
+  const cellConfig = cellTypes.getCellConfig(cell.component)
+  const RenderComponent = cellConfig.component
+
+  const cellContent = cellTypes.getContent({
+    cell,
+    data,
+  })
 
   const cellClassname = classnames({
     [classes.cell]: true,
@@ -78,10 +83,7 @@ const LayoutCell = ({
       <div className={ contentClassname }>
         <RenderComponent
           showUI={ showUI }
-          content={ cellTypes.getContent({
-            cell,
-            data,
-          }) }
+          content={ cellContent }
         />
       </div>
     </div>
