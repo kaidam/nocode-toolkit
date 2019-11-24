@@ -195,7 +195,9 @@ const TreeItem = ({
   }, [])
 
   // open the folder when the item options are clicked
-  const onOpenMenuHandler = useCallback(() => {
+  const onOpenMenuHandler = useCallback((e) => {
+    e.stopPropagation()
+    e.preventDefault()
     if(hasChildren) onOpenFolder(item, path)
   }, [item, hasChildren, onOpenFolder])
 

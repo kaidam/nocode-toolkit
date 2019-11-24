@@ -77,15 +77,21 @@ const MenuButton = ({
   const [subItems, setSubItems] = useState(null)
 
   const handleMenu = useCallback(
-    event => {
-      if(onOpen) onOpen()
-      setSubAnchorEl(event.currentTarget)
+    e => {
+      e.stopPropagation()
+      e.preventDefault()
+      if(onOpen) onOpen(e)
+      setSubAnchorEl(e.currentTarget)
     },
     [onOpen]
   )
 
   const handleClose = useCallback(
-    () => {
+    (e) => {
+      if(e) {
+        e.stopPropagation()
+        e.preventDefault()
+      }
       if(onClose) onClose()
       setSubAnchorEl(null)
       setSubItems(null)
@@ -94,7 +100,9 @@ const MenuButton = ({
   )
 
   const handleItemClick = useCallback(
-    (event, item) => {
+    (e, item) => {
+      e.stopPropagation()
+      e.preventDefault()
       if(item.items) {
         //setSubAnchorEl(event.currentTarget)
         setSubItems(item.items)
