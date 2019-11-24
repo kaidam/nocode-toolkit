@@ -66,16 +66,19 @@ const ImageField = ({
 
   const [ finderDriver, setFinderDriver ] = useState(null)
 
-  const onAddFinderContent = useCallback(({id}) => {
+  const onAddFinderContent = useCallback(({id, data}) => {
     onCloseFinder()
     actions.onSyncFiles({
-      driver: 'drive',
+      driver: finderDriver,
       fileid: id,
       onComplete: (file) => {
-        setFieldValue(name, file)
+        const finalData = Object.assign({}, data, file, {
+          driver: finderDriver,
+        })
+        setFieldValue(name, finalData)
       }
     })
-  }, [setFieldValue, name])
+  }, [setFieldValue, finderDriver, name])
 
   const onAddUploaderContent = useCallback((files) => {
     setFieldValue(name, files[0])

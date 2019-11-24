@@ -7,6 +7,10 @@ import Tab from '@material-ui/core/Tab'
 import AddContentButton from '../buttons/AddContent'
 
 const useStyles = makeStyles(theme => createStyles({
+  titleContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
   toolbarContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -36,6 +40,7 @@ const FinderHeader = ({
   search,
   finderConfig,
   tab,
+  title,
   onOpenTab,
   onUpdateSearch,
 }) => {
@@ -54,6 +59,15 @@ const FinderHeader = ({
   const onUpdateSearchHandler = useCallback((ev) => {
     onUpdateSearch(ev.target.value)
   }, [onUpdateSearch])
+
+  const titleComponent = useMemo(() => {
+    if(!title) return null
+    return (
+      <div className={ classes.titleContainer }>
+        { title }
+      </div>
+    )
+  }, [title])
 
   const tabComponent = useMemo(() => {
     if(tabs.length <= 0) return null
@@ -136,10 +150,13 @@ const FinderHeader = ({
   ])
 
   return (
-    <div className={ classes.toolbarContainer }>
-      { tabComponent }
-      { searchComponent }
-      { addButtonComponent }
+    <div>
+      { titleComponent }
+      <div className={ classes.toolbarContainer }>
+        { tabComponent }
+        { searchComponent }
+        { addButtonComponent }
+      </div>
     </div>
   )
 }

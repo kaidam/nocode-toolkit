@@ -92,6 +92,11 @@ const finder = {
     // the search is active for google drive
     canSearch: () => true,
     hasPagination: () => false,
+    renderStyle: () => 'list',
+    getFinderTitle: () => null,
+    getItemTitle: (item) => item.name,
+    getItemSubtitle: (item) => null,
+    getItemAdditionalData: (item) => null,
     // tells you if you can add things to the given parent
     // in this case we can add to any parent apart from
     // the root shared with me folder

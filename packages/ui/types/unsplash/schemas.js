@@ -1,3 +1,4 @@
+import React from 'react'
 import utils from './utils'
 
 const image = {
@@ -25,6 +26,35 @@ const finder = {
     // the search is active for google drive
     canSearch: () => true,
     hasPagination: () => true,
+    renderStyle: () => 'grid',
+    getFinderTitle: () => {
+      return (
+        <div>
+          images by <a
+            style={{
+              color: '#000000',
+            }}
+            target="_blank"
+            href="https://unsplash.com/?utm_source=nocode&utm_medium=referral"
+          >Unsplash</a>
+        </div>
+      )
+    },
+    getItemTitle: (item) => `by: ${item.user.name}`,
+    getItemSubtitle: (item) => item.user.location || ' ',
+    getItemAdditionalData: (item) => {
+      return {
+        unsplash: {
+          image: {
+            id: item.id,
+          },
+          user: {
+            fullname: item.user.name,
+            username: item.user.username,
+          }
+        }
+      }
+    },
     // tells you if you can add things to the given parent
     // in this case we can add to any parent apart from
     // the root shared with me folder

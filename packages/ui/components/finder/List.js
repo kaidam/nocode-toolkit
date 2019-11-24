@@ -139,6 +139,9 @@ const FinderList = ({
       const showOpenRemotelyButton = finderSchema.finder.canOpenRemotely(item)
       const showAddButton = finderSchema.finder.canAddFromFinder(addFilter, item)
       const addGhostMode = finderSchema.finder.canAddGhostFolder(item)
+      const itemTitle = finderSchema.finder.getItemTitle(item)
+      const itemSubtitle = finderSchema.finder.getItemSubtitle(item)
+      const itemData = finderSchema.finder.getItemAdditionalData(item)
       
       const icon = finderSchema.finder.getItemIcon(item)
       const thumbnail = finderSchema.finder.getItemThumbnail(item)
@@ -155,7 +158,7 @@ const FinderList = ({
                 onOpenFolder(item.id)
               }
               else {
-                onAddContent({id:item.id})
+                onAddContent({id:item.id, data:itemData})
               }
             }}
           >
@@ -179,7 +182,10 @@ const FinderList = ({
                 )
               }
             </div>
-            { item.name }
+            { itemTitle }
+            {
+              itemSubtitle ? ` (${itemSubtitle})` : null
+            }
           </a>
         ),
         item,

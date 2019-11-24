@@ -1,33 +1,16 @@
-import React, { useEffect, useCallback, useState, useMemo } from 'react'
+import React, { useEffect, useCallback, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
-import Button from '@material-ui/core/Button'
 
 import Actions from '../../utils/actions'
 import selectors from '../../store/selectors'
 import finderActions from '../../store/modules/finder'
 
 import library from '../../types/library'
-
-import Window from '../system/Window'
-import Loading from '../system/Loading'
-import FinderHeader from './Header'
-import FinderList from './List'
+import FinderUI from './UI'
 
 import {
   SEARCH_DELAY,
 } from '../../config'
-
-const useStyles = makeStyles(theme => createStyles({
-  buttonsContainer: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  button: {
-    marginLeft: theme.spacing(2),
-  },
-}))
 
 const EmbeddedFinder = ({
   driver,
@@ -36,8 +19,6 @@ const EmbeddedFinder = ({
   onCancel,
   onAddContent,
 }) => {
-
-  const classes = useStyles()
 
   const actions = Actions(useDispatch(), {
     onLoadList: finderActions.getList,
@@ -110,75 +91,25 @@ const EmbeddedFinder = ({
     onLoadList()
   }, [page])
 
-  const header = useMemo(() => {
-    return (
-      <FinderHeader
-        driver={ driver }
-        parent={ parent }
-        finderConfig={ finderConfig }
-        search={ search }
-        tab={ tab }
-        onOpenTab={ onOpenTab }
-        onUpdateSearch={ onUpdateSearch }
-      />
-    )
-  }, [
-    driver,
-    parent,
-    finderConfig,
-    search,
-    tab,
-    onOpenTab,
-    onUpdateSearch,
-  ])
-
-  const leftButtons = useMemo(() => {
-    if(!finderConfig.hasPagination()) return null
-    return (
-      <div className={ classes.buttonContainer }>
-        <Button
-          className={ classes.button }
-          type="button"
-          variant="contained"
-          onClick={ onLastPage }
-        >
-          Last Page
-        </Button>
-        <Button
-          className={ classes.button }
-          type="button"
-          variant="contained"
-          onClick={ onNextPage }
-        >
-          Next Page
-        </Button>
-      </div>
-    )
-  }, [finderConfig, onLastPage, onNextPage])
-
   return (
-    <Window
-      open
-      size="lg"
-      title={ header }
-      leftButtons={ leftButtons }
-      withCancel
+    <FinderUI
+      driver={ driver }
+      parent={ parent }
+      finderConfig={ finderConfig }
+      search={ search }
+      tab={ tab }
+      items={ items }
+      addFilter={ addFilter }
+      withBack={ false }
+      loading={ loading }
+      onOpenTab={ onOpenTab }
+      onUpdateSearch={ onUpdateSearch }
+      onLastPage={ onLastPage }
+      onNextPage={ onNextPage }
+      onOpenFolder={ onOpenFolder }
+      onAddContent={ onAddContent }
       onCancel={ onCancel }
-    >
-      {
-        loading ? (
-          <Loading />
-        ) : (
-          <FinderList
-            driver={ driver }
-            addFilter={ addFilter }
-            items={ items }
-            onOpenFolder={ onOpenFolder }
-            onAddContent={ onAddContent }
-          />
-        )
-      }
-    </Window>
+    />
   )
 }
 
