@@ -219,7 +219,7 @@ const TreeItem = ({
     return false
   }, [showUI, item, onOpenMenuHandler])
 
-  const itemOptions = (
+  const itemOptions = showUI && (
     <Suspense>
       <ItemOptionsRenderer>
         <ItemOptions
@@ -390,7 +390,7 @@ const Tree = ({
 
   const parentFilter = useCallback((parentFilter) => parentFilter.indexOf('section') >= 0)
 
-  const editor = (
+  const editor = showUI && (
     <Suspense>
       <SectionEditor
         id={ section }
