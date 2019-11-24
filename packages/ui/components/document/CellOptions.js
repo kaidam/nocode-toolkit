@@ -17,6 +17,7 @@ import documentActions from '../../store/modules/document'
 const SettingsIcon = icons.settings
 const EditIcon = icons.edit
 const AddIcon = icons.add
+const MoveIcon = icons.move
 const DeleteIcon = icons.delete
 const RowIcon = icons.row
 const CellIcon = icons.cell
@@ -111,6 +112,20 @@ const CellOptions = ({
     })
   }, [onOpenEditor, setAddingCell])
 
+  const getEditLayoutHandler = useCallback(({
+    method,
+    params,
+  }) => () => {
+    actions.editLayout({
+      data,
+      rowIndex,
+      cellIndex,
+      method,
+      params,
+      cell,
+    })
+  }, [data, rowIndex, cellIndex, cell])
+
   const menuItems = useMemo(() => {
     let editOptions = {
       title: 'Edit',
@@ -166,6 +181,87 @@ const CellOptions = ({
       }]
     }
 
+    const moveOptions = {
+      title: 'Move',
+      help: 'Move this cell',
+      icon: MoveIcon,
+      items: [{
+        title: 'Up',
+        help: 'Move this cell up a row',
+        icon: IconCombo(UpIcon, RowIcon),
+        items: [{
+          title: 'Up: New Row',
+          help: 'New row above',
+          icon: IconCombo(UpIcon, RowIcon),
+          handler: getEditLayoutHandler({
+            method: 'moveCell',
+            params: {
+              location: 'up',
+              merge: false,
+            },
+          })
+        }, {
+          title: 'Up: Merge',
+          help: 'Merge into row above',
+          icon: IconCombo(UpIcon, RowIcon),
+          handler: getEditLayoutHandler({
+            method: 'moveCell',
+            params: {
+              location: 'up',
+              merge: true,
+            },
+          })
+        }]
+      }, {
+        title: 'Down',
+        help: 'Move this cell down a row',
+        icon: IconCombo(DownIcon, RowIcon),
+        items: [{
+          title: 'Down: New Row',
+          help: 'New row below',
+          icon: IconCombo(DownIcon, RowIcon),
+          handler: getEditLayoutHandler({
+            method: 'moveCell',
+            params: {
+              location: 'down',
+              merge: false,
+            },
+          })
+        }, {
+          title: 'Down: Merge',
+          help: 'Merge into row below',
+          icon: IconCombo(DownIcon, RowIcon),
+          handler: getEditLayoutHandler({
+            method: 'moveCell',
+            params: {
+              location: 'down',
+              merge: true,
+            },
+          })
+        }]
+      }, {
+        title: 'Left',
+        help: 'Move this cell left',
+        icon: IconCombo(LeftIcon, CellIcon),
+        handler: getEditLayoutHandler({
+          method: 'moveCell',
+          params: {
+            location: 'left',
+          },
+        })
+      }, {
+        title: 'Right',
+        help: 'Move this cell right',
+        icon: IconCombo(RightIcon, CellIcon),
+        handler: getEditLayoutHandler({
+          method: 'moveCell',
+          params: {
+            location: 'right',
+          },
+        })
+      }]
+    }
+
     const deleteOption = {
       title: 'Delete',
       help: 'Delete this cell',
@@ -176,9 +272,10 @@ const CellOptions = ({
     return [
       editOptions,
       insertOptions,
+      moveOptions,
       deleteOption,
     ]
-  }, [])
+  }, [getEditLayoutHandler, getContentTypeOptions])
 
   const getButton = useCallback((onClick) => {
     return (

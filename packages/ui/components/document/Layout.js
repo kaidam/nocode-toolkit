@@ -33,7 +33,7 @@ const RenderRow = ({
           return (
             <div
               style={{
-                flexGrow: 1,
+                flexBasis: '100%',
               }}
               key={ i }
             >

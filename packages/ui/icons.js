@@ -54,6 +54,7 @@ import NumberedListIcon from '@material-ui/icons/FormatListNumbered'
 import QuoteIcon from '@material-ui/icons/FormatQuote'
 import LogsIcon from '@material-ui/icons/Reorder'
 import UndoIcon from '@material-ui/icons/Undo'
+import MoveIcon from '@material-ui/icons/OpenWith'
 
 const icons = {
   add: AddIcon,
@@ -99,6 +100,7 @@ const icons = {
   logs: LogsIcon,
   undo: UndoIcon,
   look: LookIcon,
+  move: MoveIcon,
 }
 
 export default icons

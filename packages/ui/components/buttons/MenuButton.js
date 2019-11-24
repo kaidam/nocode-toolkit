@@ -162,6 +162,7 @@ const MenuButton = ({
       useParentEl,
       subItems,
       subMenuOpen,
+      items,
     ]
   )
 
