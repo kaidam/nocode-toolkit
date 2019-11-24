@@ -1,90 +1,77 @@
-import React, { lazy } from 'react'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
-import { useSelector } from 'react-redux'
-
-import Typography from '@material-ui/core/Typography'
+import React from 'react'
 import Link from '@nocode-toolkit/website/Link'
+import SingletonWidget from './SingletonWidget'
 
-import Suspense from '../system/Suspense'
-
-const EditButton = lazy(() => import(/* webpackChunkName: "ui" */ '../buttons/EditButton'))
-
-import selectors from '../../store/selectors'
-
-const useStyles = makeStyles(theme => createStyles({  
-  link: {
-    color: theme.palette.primary.contrastText,
-    textDecoration: ['none', '!important'],
-  },
-  container: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  logoText: {
-    color: theme.palette.primary.contrastText,
-    whiteSpace: 'nowrap',
-  },
-  logoImage: {
-    height: `${theme.layout.logoHeight}px`,
-    padding: '3px',
-    marginRight: theme.spacing(2),
-  },
-  editButton: {
-    marginRight: theme.spacing(2),
-  },
-  logoEditButton: {
-    marginLeft: theme.spacing(2),
-  },
-}))
-
-const Logo = ({
-
-}) => {
-  const classes = useStyles()
-  const logo = useSelector(selectors.ui.logo)
-
-  let logoTitle = logo.data.title
-  const imageUrl = logo.data.image ?
-    logo.data.image.url :
+const getValue = (logo) => {
+  let title = logo.title
+  const imageUrl = logo.image ?
+    logo.image.url :
     null
+  if(!title && !imageUrl) title = 'My Website'
+  return {
+    title,
+    imageUrl,
+  }
+}
 
-  if(!logoTitle && !imageUrl) logoTitle = 'My Website'
-
+const RenderContent = ({
+  value: {
+    title,
+    imageUrl,
+  }
+}) => {
   return (
     <Link
       path="/"
-      className={ classes.link }
+      style={{
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+      }}
     >
-      <div className={ classes.container }>
-        <Suspense>
-          <div className={ classes.editButton }>
-            <EditButton 
-              id="logo"
-              driver="local"
-              type="logo"
-              location="singleton:logo"
-              tiny
-            />
-          </div>
-        </Suspense>
-        {
-          imageUrl && (
-            <img className={ classes.logoImage } src={ imageUrl } />
-          )
-        }
-        {
-          logoTitle && (
-            <Typography
-              variant="h5"
-              className={ classes.logoText }
-            >
-              { logoTitle }
-            </Typography>
-          )
-        }
-      </div>
+      {
+        imageUrl && (
+          <img
+            style={{
+              height: '40px',
+              marginRight: '20px',
+              marginTop: '10px',
+              marginBottom: '10px',
+            }}
+            src={ imageUrl }
+          />
+        )
+      }
+      {
+        title && (
+          <h5
+            style={{
+              whiteSpace: 'nowrap',
+            }}
+          >
+            { title }
+          </h5>
+        )
+      }
     </Link>
+  )
+}
+
+const defaultRenderers = {
+  content: RenderContent,
+}
+
+const Logo = ({
+  renderers,
+}) => {
+  const useRenderers = Object.assign({}, defaultRenderers, renderers)
+  return (
+    <SingletonWidget
+      id="logo"
+      type="logo"
+      getValue={ getValue }
+      renderers={ useRenderers }
+    />
   )
 }
 
