@@ -163,10 +163,10 @@ const Preview = async ({
   logger,
 }) => {
 
-  // await Build({
-  //   options,
-  //   logger,
-  // })
+  await Build({
+    options,
+    logger,
+  })
   
   const collection = await waitForPublishJob({
     options,
