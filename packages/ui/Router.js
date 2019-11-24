@@ -1,14 +1,16 @@
-import React, { useEffect } from 'react'
+import React, { lazy, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import CoreRouter from '@nocode-toolkit/website/Router'
 import selectors from './store/selectors'
 
-import Loading from './components/system/Loading'
+import Suspense from './components/system/Suspense'
 
 import Actions from './utils/actions'
 import globals from './globals'
 import actionLoader from './store/actionLoader'
+
+const Loading = lazy(() => import(/* webpackChunkName: "ui" */ './components/system/Loading'))
 
 const Router = ({
   templates,
@@ -46,7 +48,9 @@ const Router = ({
   const ThemeModule = themeModule
 
   return showUI && !initialised ? (
-    <Loading />
+    <Suspense>
+      <Loading />
+    </Suspense>
   ) : (
     <ThemeModule
       processor={ themeProcessor }
