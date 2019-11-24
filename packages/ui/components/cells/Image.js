@@ -5,12 +5,7 @@ const DocumentImage = ({
   showUI,
 }) => {
   if(!content) return null
-  const useStyle = showUI ? {
-    maxWidth: 'calc(100% - 42px)',
-  } : {
-    width: '100%',
-  }
-
+  
   const {
     url,
     driver,
@@ -18,9 +13,6 @@ const DocumentImage = ({
   } = content.image
 
   let copyrightContent = null
-
-  console.log('--------------------------------------------')
-  console.log(content)
 
   if(driver == 'unsplash') {
     const {
@@ -53,8 +45,8 @@ const DocumentImage = ({
     <div
       style={{
         position: 'absolute',
-        bottom: '10px',
-        right: showUI ? '52px' : '10px',
+        bottom: '15px',
+        right: '10px',
         backgroundColor: 'rgba(255,255,255,0.7)',
         padding: '7px',
         fontSize: '0.8em',
@@ -68,10 +60,12 @@ const DocumentImage = ({
     <div
       style={{
         position: 'relative',
+        width: showUI ? 'calc(100% - 42px)' : '100%',
+        maxWidth: showUI ? 'calc(100% - 42px)' : '100%',
       }}
     >
       <img
-        style={ useStyle }
+        width="100%"
         src={ url }
       />
       { copyright }

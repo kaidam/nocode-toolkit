@@ -56,12 +56,15 @@ const EmbeddedFinder = ({
     setSearch('')
   })
 
-  const onLoadList = useCallback(() => {
+  const onLoadList = useCallback((params = {}) => {
+    const useSearch = typeof(params.search) !== 'undefined' ?
+      params.search :
+      search
     actions.onLoadList({
       parent,
       driver,
       listFilter,
-      search,
+      search: useSearch,
       page,
     })
   }, [
@@ -72,15 +75,19 @@ const EmbeddedFinder = ({
     page,
   ])
 
-  let searchTimeout = null
-
   const onUpdateSearch = useCallback((newSearch) => {
     setSearch(newSearch)
-    if(searchTimeout) clearTimeout(searchTimeout)
-    searchTimeout = setTimeout(() => {
-      onLoadList()
-      searchTimeout = null
-    }, SEARCH_DELAY)
+  }, [])
+
+  const onSearch = useCallback((newSearch) => {
+    onLoadList()
+  }, [onLoadList])
+
+  const onResetSearch = useCallback((newSearch) => {
+    setSearch('')
+    onLoadList({
+      search: '',
+    })
   }, [onLoadList])
 
   useEffect(() => {
@@ -104,6 +111,8 @@ const EmbeddedFinder = ({
       loading={ loading }
       onOpenTab={ onOpenTab }
       onUpdateSearch={ onUpdateSearch }
+      onSearch={ onSearch }
+      onResetSearch={ onResetSearch}
       onLastPage={ onLastPage }
       onNextPage={ onNextPage }
       onOpenFolder={ onOpenFolder }

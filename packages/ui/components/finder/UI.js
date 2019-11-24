@@ -31,6 +31,8 @@ const FinderUI = ({
   loading,
   onOpenTab,
   onUpdateSearch,
+  onSearch,
+  onResetSearch,
   onLastPage,
   onNextPage,
   onOpenFolder,
@@ -52,6 +54,8 @@ const FinderUI = ({
         tab={ tab }
         onOpenTab={ onOpenTab }
         onUpdateSearch={ onUpdateSearch }
+        onSearch={ onSearch }
+        onResetSearch={ onResetSearch }
       />
     )
   }, [
@@ -62,6 +66,8 @@ const FinderUI = ({
     tab,
     onOpenTab,
     onUpdateSearch,
+    onSearch,
+    onResetSearch,
   ])
 
   const leftButtons = useMemo(() => {

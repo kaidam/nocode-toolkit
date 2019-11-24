@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
@@ -23,6 +24,9 @@ const useStyles = makeStyles(theme => createStyles({
   searchContainer: {
     flexGrow: 1,
     marginRight: theme.spacing(2),
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   buttonContainer: {
     flexGrow: 0,
@@ -30,6 +34,9 @@ const useStyles = makeStyles(theme => createStyles({
   search: {
     marginBottom: theme.spacing(2),
   },
+  searchButton: {
+    marginLeft: theme.spacing(1),
+  }
 }))
 
 const DEFAULT_ARRAY = []
@@ -43,6 +50,8 @@ const FinderHeader = ({
   title,
   onOpenTab,
   onUpdateSearch,
+  onSearch,
+  onResetSearch,
 }) => {
 
   const classes = useStyles()
@@ -117,11 +126,31 @@ const FinderHeader = ({
           value={ search }
           onChange={ onUpdateSearchHandler }
         />
+        <Button
+          className={ classes.searchButton }
+          variant="contained"
+          color="secondary"
+          size="small"
+          onClick={ onSearch }
+        >
+          Search
+        </Button>
+        <Button
+          className={ classes.searchButton }
+          variant="contained"
+          size="small"
+          onClick={ onResetSearch }
+        >
+          Clear
+        </Button>
       </div>
     )
   }, [
     finderConfig,
     search,
+    onUpdateSearchHandler,
+    onSearch,
+    onResetSearch,
   ])
 
   const addButtonComponent = useMemo(() => {

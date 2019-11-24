@@ -5,7 +5,7 @@ export const RELOAD_APP_JOBS = [
   'removeContent',
 ]
 
-export const SEARCH_DELAY = 300
+export const SEARCH_DELAY = 1000
 
 export const DEFAULT_HOME = `
 <div style="font-family: Roboto;">

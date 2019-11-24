@@ -91,8 +91,6 @@ const loaders = {
     .then(apiUtils.process),
 }
 
-let currentSearchTimeout = null
-
 const sideEffects = {
 
   openDialogFinder: ({
@@ -160,12 +158,13 @@ const sideEffects = {
   */
   updateSearch: (value) => (dispatch, getState) => {
     dispatch(actions.setSearchValue(value))
-    if(currentSearchTimeout) clearTimeout(currentSearchTimeout)
-    currentSearchTimeout = setTimeout(() => {
-      dispatch(actions.getList())
-    }, SEARCH_DELAY)
   },
-  
+
+  resetSearch: () => (dispatch, getState) => {
+    dispatch(actions.setSearchValue(''))
+    dispatch(actions.getList())
+  },
+
   /*
   
     when the user clicks the "Add" button in finder meaning they

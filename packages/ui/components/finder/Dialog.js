@@ -22,6 +22,8 @@ const onOpenPage = (page) => uiActions.updateQueryParams({
   page,
 })
 
+const onResetSearch = () => finderActions.updateSearch('')
+
 const FinderDialog = ({
 
 }) => {
@@ -35,6 +37,7 @@ const FinderDialog = ({
     onUpdateQueryParams: uiActions.updateQueryParams,
     onAddContent: finderActions.addContent,
     onUpdateSearch: finderActions.updateSearch,
+    onResetSearch: finderActions.resetSearch,
   })
 
   const queryParams = useSelector(selectors.router.queryParams)
@@ -64,13 +67,12 @@ const FinderDialog = ({
   }, [page])
 
   useEffect(() => {
-    if(parent) actions.onLoadList()
+    actions.onLoadList()
   }, [parent])
 
   useEffect(() => {
     actions.onUpdateSearch('')
   }, [parent])
-
 
   return (
     <FinderUI
@@ -85,6 +87,8 @@ const FinderDialog = ({
       loading={ loading }
       onOpenTab={ actions.onOpenTab }
       onUpdateSearch={ actions.onUpdateSearch }
+      onResetSearch={ actions.onResetSearch }
+      onSearch={ actions.onLoadList }
       onLastPage={ onLastPage }
       onNextPage={ onNextPage }
       onOpenFolder={ actions.onOpenFolder }
