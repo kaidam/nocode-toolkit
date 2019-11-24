@@ -32,6 +32,9 @@ const reducers = {
       state.confirmWindow.accepted = false
     }
   },
+  setPreviewMode: (state, action) => {
+    state.previewMode = action.payload
+  }
 }
 
 const loaders = {

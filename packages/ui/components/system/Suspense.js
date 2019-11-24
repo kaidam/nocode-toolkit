@@ -5,13 +5,14 @@ import selectors from '../../store/selectors'
 const SuspenseWrapper = ({
   Component,
   props = {},
+  coreEnabled,
   children,
   fallback = null,
 }) => {
-
   const showUI = useSelector(selectors.ui.showUI)
-  if(!showUI) return fallback
-
+  const showCoreUI = useSelector(selectors.ui.showCoreUI)
+  const useShowUIValue = coreEnabled ? showCoreUI : showUI
+  if(!useShowUIValue) return fallback
   return (
     <Suspense fallback={<div />}>
       {

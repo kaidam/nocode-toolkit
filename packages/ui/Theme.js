@@ -17,11 +17,11 @@ const Theme = ({
   children,
 }) => {
 
-  const showUI = useSelector(selectors.ui.showUI)
+  const showUI = useSelector(selectors.ui.showCoreUI)
 
   if(showUI) {
     return (
-      <Suspense fallback={<div />}>
+      <Suspense coreEnabled fallback={<div />}>
         <ThemeMaterial
           processor={ processor}
         >

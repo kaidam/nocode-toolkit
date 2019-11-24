@@ -1,8 +1,16 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
+import { useSelector, useDispatch } from 'react-redux'
 
+import FormGroup from '@material-ui/core/FormGroup'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Switch from '@material-ui/core/Switch'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
+
+import Actions from '../../utils/actions'
+import selectors from '../../store/selectors'
+import uiActions from '../../store/modules/ui'
 
 import GlobalOptions from '../buttons/GlobalOptions'
 
@@ -32,15 +40,28 @@ const useStyles = makeStyles(theme => createStyles({
     marginRight: 20,
     color: '#000',
   },
-  globalOptions: {
+  options: {
     paddingRight: theme.spacing(1.5),
-  }
+  },
+  previewModeLabel: {
+    color: theme.palette.text.primary,
+  },
 }))
 
 const NocodeTopbar = ({
 
 }) => {
   const classes = useStyles()
+
+  const actions = Actions(useDispatch(), {
+    onSetPreviewMode: uiActions.setPreviewMode,
+  })
+
+  const previewMode = useSelector(selectors.ui.previewMode)
+
+  const handleChange = useCallback(event => {
+    actions.onSetPreviewMode(event.target.checked)
+  }, [actions.onSetPreviewMode])
 
   return (
     <AppBar 
@@ -57,7 +78,24 @@ const NocodeTopbar = ({
             <img src="images/favicon.png" className={ classes.logo } />
           </a>
         </div>
-        <div className={ classes.globalOptions }>
+        <div className={ classes.options }>
+          <FormGroup row>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={ previewMode }
+                  onChange={ handleChange }
+                  color="secondary"
+                />
+              }
+              label="preview"
+              classes={{
+                label: classes.previewModeLabel,
+              }}
+            />
+          </FormGroup>
+        </div>
+        <div className={ classes.options }>
           <GlobalOptions />
         </div>
       </Toolbar>

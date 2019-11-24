@@ -4,6 +4,7 @@ export const ui = {
   initialised: false,
   config: utils.isNode ? {} : window._uiConfigData || {},
   confirmWindow: null,
+  previewMode: false,
 }
 
 export const content = {
