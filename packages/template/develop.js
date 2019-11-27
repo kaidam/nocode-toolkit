@@ -1,7 +1,7 @@
 const path = require('path')
 const express = require('express')
-const bodyParser = require('body-parser')
 const axios = require('axios')
+const request = require('request')
 const PreviewServer = require('@nocode-toolkit/builder/previewServer')
 
 const Api = require('./api')
@@ -20,23 +20,16 @@ const Develop = ({
   })
 
   const app = express()
-  app.use(bodyParser.json())
 
   const requestProxy = async (req, res, next) => {
-    try {
-      const proxyRes = await axios({
+    const targetUrl = api.getUrl(req.originalUrl, 'raw')
+    req
+      .pipe(request({
         method: req.method,
-        url: api.getUrl(req.url, 'raw'),
+        url: targetUrl,
         headers: api.getAuthHeaders(),
-        params: req.query,
-        data: req.body,
-      })
-      res.status(proxyRes.status)
-      res.header(proxyRes.headers)
-      res.json(proxyRes.data)
-    } catch(e) {
-      next(e)
-    }
+      }))
+      .pipe(res)
   }
 
   const getPreviewData = async (rebuild) => {
