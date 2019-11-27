@@ -108,6 +108,15 @@ const isLink = (item) => {
   return itemType.isLink(item)
 }
 
+const NativeLinkComponent = ({
+  children,
+  ...props
+}) => {
+  return (
+    <a {...props}>{children}</a>
+  )
+}
+
 const NavBarItem = ({
   item,
   renderers,
@@ -134,7 +143,7 @@ const NavBarItem = ({
   const isItemLink = isLink(item)
 
   const LinkComponent = isItemLink ?
-    a :
+    NativeLinkComponent :
     Link
 
   const linkProps = isItemLink ?
