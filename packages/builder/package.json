@@ -1,6 +1,6 @@
 {
   "name": "@nocode-toolkit/builder",
-  "version": "1.0.26",
+  "version": "1.0.27",
   "description": "Build static websites using React and dynamic data sources.",
   "main": "index.js",
   "scripts": {
