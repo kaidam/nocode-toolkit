@@ -1,7 +1,7 @@
 const path = require('path')
 const express = require('express')
+const bodyParser = require('body-parser')
 const axios = require('axios')
-const httpProxy = require('http-proxy')
 const PreviewServer = require('@nocode-toolkit/builder/previewServer')
 
 const Api = require('./api')
@@ -20,14 +20,24 @@ const Develop = ({
   })
 
   const app = express()
+  app.use(bodyParser.json())
 
-  const proxy = httpProxy.createProxyServer({
-    
-  })
-
-  proxy.on('error', (err, req, res) => {
-    res.status(500).json({ message: err.message || err.toString() });
-  })
+  const requestProxy = async (req, res, next) => {
+    try {
+      const proxyRes = await axios({
+        method: req.method,
+        url: api.getUrl(req.url, 'raw'),
+        headers: api.getAuthHeaders(),
+        params: req.query,
+        data: req.body,
+      })
+      res.status(proxyRes.status)
+      res.header(proxyRes.headers)
+      res.json(proxyRes.data)
+    } catch(e) {
+      next(e)
+    }
+  }
 
   const getPreviewData = async (rebuild) => {
     const res = await axios({
@@ -58,15 +68,7 @@ const Develop = ({
     }
   })
 
-  app.all('/builder/api/:id/*', (req, res, next) => {
-    const authHeaders = api.getAuthHeaders()
-    req.headers.Authorization = authHeaders.Authorization
-    proxy.web(req, res, {
-      target: `${options.nocodeApiHostname}${req.url}`,
-      secure: false,
-      ignorePath: true,
-    })
-  })
+  app.all('/builder/api/:id/*', requestProxy)
 
   PreviewServer({
     app,
