@@ -5,7 +5,7 @@ const BuilderOptions = require('@nocode-toolkit/builder/options')
 const DEFAULT_OPTIONS = {
   accessToken: process.env.ACCESS_TOKEN,
   websiteId: process.env.WEBSITE_ID,
-  nocodeApiHostname: process.env.NOCODE_API_HOSTNAME || 'https://www.nocode.works',
+  nocodeApiHostname: process.env.NOCODE_API_HOSTNAME || 'https://app.nocode.works',
   aliasLinks:  process.env.ALIAS_LINKS,
 }
 
