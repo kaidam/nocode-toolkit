@@ -10,9 +10,9 @@
     "react-dom": "^16.8.6"
   },
   "scripts": {
-    "develop": "nocode develop",
-    "build": "nocode build",
-    "publish": "nocode publish"
+    "nocode:develop": "nocode develop",
+    "nocode:build": "nocode build",
+    "nocode:publish": "nocode publish"
   },
   "author": "",
   "license": "ISC"

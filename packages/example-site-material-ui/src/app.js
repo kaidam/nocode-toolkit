@@ -1,53 +1,32 @@
 import React from 'react'
 import { hot } from 'react-hot-loader'
-import { connect } from 'react-redux'
 
-import Router from '@nocode-toolkit/website/src/Router'
-import Theme from '@nocode-toolkit/website-material-ui/src/Theme'
+import Router from '@nocode-toolkit/ui/Router'
+import Theme from '@nocode-toolkit/ui/ThemeMaterial'
 
-import themeFactory from './theme'
-import LayoutDefault from './components/Layout'
-import PageDefault from './components/Page'
-import PageOranges from './components/Oranges'
+import themeProcessor from './theme'
+import LayoutDefault from './pages/Layout'
+import PageDefault from './pages/Page'
+import PageOther from './pages/OtherPage'
 
-// exmple app
 const templates = {
   layouts: {
     default: LayoutDefault,
   },
   pages: {
     default: PageDefault,
-    oranges: PageOranges,
+    other: PageOther,
   },
 }
 
-@connect(
-  state => {
-    return {
-      state,
-    }
-  }
-)
-class App extends React.Component {
-  render() {
-    const {
-      state,
-      themeContext,
-    } = this.props
-
-    const theme = themeFactory(state)
-
-    return (
-      <Theme
-        theme={ theme }
-        context={ themeContext }
-      >
-        <Router
-          templates={ templates }
-        />
-      </Theme>
-    )
-  }
+const App = ({}) => {
+  return (
+    <Router
+      templates={ templates }
+      themeModule={ Theme }
+      themeProcessor={ themeProcessor }
+    />
+  )
 }
 
 export default hot(module)(App)

@@ -8,15 +8,14 @@
     "@material-ui/icons": "^4.2.1",
     "@material-ui/styles": "^4.4.1",
     "@nocode-toolkit/builder": "^1.0.28",
-    "@nocode-toolkit/website": "^1.0.28",
-    "@nocode-toolkit/website-material-ui": "^1.0.28",
+    "@nocode-toolkit/ui": "^1.0.28",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
   },
   "scripts": {
-    "develop": "nocode develop",
-    "build": "nocode build",
-    "publish": "nocode publish"
+    "nocode:develop": "nocode develop",
+    "nocode:build": "nocode build",
+    "nocode:publish": "nocode publish"
   },
   "author": "",
   "license": "ISC"

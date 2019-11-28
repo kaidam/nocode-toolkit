@@ -9,6 +9,7 @@ import selectors from './store/selectors'
 
 const baseThemeSettings = ({
   config,
+  route,
   settings,
 }) => {
   const palette = {}
@@ -16,6 +17,11 @@ const baseThemeSettings = ({
   if(settings.color && settings.color.color) {
     palette.primary = {
       main: settings.color.color,
+    }
+  }
+  else {
+    palette.primary = {
+      main: null,
     }
   }
   
@@ -37,17 +43,20 @@ const baseThemeSettings = ({
 
 const processedThemeSettings = ({
   config,
+  route,
   settings,
   processor,
 }) => {
   const theme = baseThemeSettings({
     config,
+    route,
     settings,
   })
 
   return processor ?
     processor({
       config,
+      route,
       settings,
       theme,
     }) :
@@ -59,16 +68,17 @@ const Theme = ({
   children,
 }) => {
   const config = useSelector(selectors.nocode.config)
+  const route = useSelector(selectors.router.route)
   const settings = useSelector(selectors.ui.settings)
-
   const theme = useMemo(() => {
     const themeSettings = processedThemeSettings({
       config,
+      route,
       settings,
       processor,
     })
     return createMuiTheme(themeSettings)
-  }, [config, settings])
+  }, [config, route, settings])
 
   useEffect(() => {
     const jssStyles = document.getElementById('jss-server-side')

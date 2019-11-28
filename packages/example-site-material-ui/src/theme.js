@@ -1,22 +1,12 @@
-import ThemeFactory from '@nocode-toolkit/website-material-ui/src/themeFactory'
-import selectors from '@nocode-toolkit/website/src/selectors'
-
-const themeFactory = ThemeFactory(state => {
-  const config = selectors.nocode.config(state)
-  const route = selectors.router.route(state)
-
+const themeProcessor = ({
+  config,
+  route,
+  settings,
+  theme,
+}) => {
   const usePrimaryColor = route.primaryColor || config.primaryColor
+  if(usePrimaryColor) theme.palette.primary.main = usePrimaryColor
+  return theme
+}
 
-  const palette = {}
-  if(usePrimaryColor) {
-    palette.primary = {
-      main: usePrimaryColor,
-    }
-  }
-
-  return {
-    palette,
-  }
-})
-
-export default themeFactory
+export default themeProcessor

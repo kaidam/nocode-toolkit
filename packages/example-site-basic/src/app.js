@@ -1,10 +1,12 @@
 import React from 'react'
 import { hot } from 'react-hot-loader'
-import Router from '@nocode-toolkit/website/src/Router'
 
-import LayoutDefault from './components/Layout'
-import PageDefault from './components/Page'
-import PageOranges from './components/Oranges'
+import Router from '@nocode-toolkit/ui/Router'
+import Theme from '@nocode-toolkit/ui/Theme'
+
+import LayoutDefault from './pages/Layout'
+import PageDefault from './pages/Page'
+import PageOranges from './pages/Oranges'
 
 const templates = {
   layouts: {
@@ -16,14 +18,13 @@ const templates = {
   },
 }
 
-class App extends React.Component {
-  render() {
-    return (
-      <Router
-        templates={ templates }
-      />
-    )
-  }
+const App = ({}) => {
+  return (
+    <Router
+      templates={ templates }
+      themeModule={ Theme }
+    />
+  )
 }
 
 export default hot(module)(App)
