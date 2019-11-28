@@ -6,10 +6,8 @@ import {
 } from '@material-ui/styles'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import selectors from '@nocode-toolkit/website/selectors'
-
 const Theme = ({
   processor,
-  settings,
   children,
 }) => {
   const config = useSelector(selectors.nocode.config)
@@ -18,10 +16,9 @@ const Theme = ({
     const themeSettings = processor ? processor({
       config,
       route,
-      settings,
     }) : {}
     return createMuiTheme(themeSettings)
-  }, [config, route, settings, processor])
+  }, [config, route, processor])
 
   useEffect(() => {
     const jssStyles = document.getElementById('jss-server-side')

@@ -1,22 +1,39 @@
-import React, { lazy, Suspense, useCallback } from 'react'
-import deepmerge from 'deepmerge'
+import React, { lazy, useCallback } from 'react'
 import { useSelector } from 'react-redux'
+import deepmerge from 'deepmerge'
+
+import Suspense from './components/system/Suspense'
 import selectors from './store/selectors'
 
-const Theme = lazy(() => import(/* webpackChunkName: "ui" */ '@nocode-toolkit/website-material-ui/Theme'))
+const ThemeUI = lazy(() => import(/* webpackChunkName: "ui" */ '@nocode-toolkit/website-material-ui/Theme'))
 
-const themeProcessor = (processor) => (args) => {
+const ThemeUIRender = (props) => {
+  return (
+    <Suspense coreEnabled>
+      <ThemeUI {...props} />
+    </Suspense>
+  )
+}
+
+const themeProcessor = ({
+  processor,
+  settings,
+}) => (args) => {
+  const useArgs = Object.assign({}, args, {
+    settings: settings && settings.data ? settings.data : {},
+  })
   const {
     config,
   } = args
   const updates = {
-    showUI: config.showUI,
-    uiTopbarHeight: config.showUI ? 60 : 0,
-    uiLogoHeight: 30,
+    layout: {
+      showUI: config.showUI,
+      uiTopbarHeight: config.showUI ? 60 : 0,
+      uiLogoHeight: 30,
+    }
   }
-  const updates = processor ? processor(args) : {}
   return processor ?
-    deepmerge(processor(args), updates) :
+    deepmerge(processor(useArgs), updates) :
     updates
 }
 /*
@@ -28,29 +45,19 @@ const themeProcessor = (processor) => (args) => {
 
 */
 const Theme = ({
+  ThemeModule = ThemeUIRender,
   processor,
   children,
 }) => {
-
-  const showUI = useSelector(selectors.ui.showCoreUI)
-  const settings = useSelector(selectors.ui.settings)
-  const useThemeProcessor = useCallback(themeProcessor(processor), [processor])
-
-  if(showUI) {
-    return (
-      <Suspense coreEnabled fallback={<div />}>
-        <Theme
-          processor={ useThemeProcessor}
-          settings={ settings }
-        >
-          { children }
-        </Theme>
-      </Suspense>
-    )
-  }
-  else {
-    return children
-  }
+  const settings = useSelector(selectors.ui.settings) 
+  const useThemeProcessor = useCallback(themeProcessor({processor,settings}), [processor,settings])
+  return (
+    <ThemeModule
+      processor={ useThemeProcessor }
+    >
+      { children }
+    </ThemeModule>
+  )
 }
 
 export default Theme

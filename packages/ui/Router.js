@@ -10,11 +10,13 @@ import Actions from './utils/actions'
 import globals from './globals'
 import actionLoader from './store/actionLoader'
 
+import Theme from './Theme'
+
 const Loading = lazy(() => import(/* webpackChunkName: "ui" */ './components/system/Loading'))
 
 const Router = ({
   templates,
-  themeModule,
+  ThemeModule,
   themeProcessor,
 }) => {
   const actions = Actions(useDispatch(), {
@@ -45,20 +47,19 @@ const Router = ({
     </div>
   )
 
-  const ThemeModule = themeModule
-
   return showUI && !initialised ? (
     <Suspense>
       <Loading />
     </Suspense>
   ) : (
-    <ThemeModule
+    <Theme
+      ThemeModule={ ThemeModule }
       processor={ themeProcessor }
     >
       <CoreRouter
         templates={ templates }
       />
-    </ThemeModule>
+    </Theme>
   )
 }
 
