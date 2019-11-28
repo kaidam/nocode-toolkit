@@ -4,11 +4,11 @@ import { makeStyles, createStyles } from '@material-ui/core/styles'
 import {
   useDispatch,
   nocodeActions,
-} from '@nocode-toolkit/ui/actions'
+} from '@nocode-toolkit/website/actions'
 
 import {
   useRoute,
-} from '@nocode-toolkit/ui/selectors'
+} from '@nocode-toolkit/website/selectors'
 
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'

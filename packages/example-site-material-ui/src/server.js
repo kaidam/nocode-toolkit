@@ -1,9 +1,7 @@
-import Server from '@nocode-toolkit/ui/ServerMaterial'
-import reducers from '@nocode-toolkit/ui/store/reducers'
+import Server from '@nocode-toolkit/website-material-ui/server'
 import App from './app'
 
 const server = Server({
-  reducers,
   App,
 })
 

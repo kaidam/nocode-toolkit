@@ -1,12 +1,15 @@
 const themeProcessor = ({
   config,
   route,
-  settings,
-  theme,
 }) => {
-  const usePrimaryColor = route.primaryColor || config.primaryColor
-  if(usePrimaryColor) theme.palette.primary.main = usePrimaryColor
-  return theme
+  const primaryColor = route.primaryColor || config.primaryColor
+  return primaryColor ? {
+    palette: {
+      primary: {
+        main: primaryColor,
+      }
+    }
+  } : {}
 }
 
 export default themeProcessor

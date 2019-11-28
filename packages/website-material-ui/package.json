@@ -12,6 +12,7 @@
     "@material-ui/styles": "^4.4.1",
     "@nocode-toolkit/website": "^1.0.30",
     "classnames": "^2.2.6",
+    "dotty": "^0.1.0",
     "react": "^16.8.6"
   },
   "license": "MIT",

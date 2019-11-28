@@ -2,7 +2,7 @@ import React from 'react'
 import {
   useRoute,
   useConfig,
-} from '@nocode-toolkit/ui/selectors'
+} from '@nocode-toolkit/website/selectors'
 
 const Page = ({
 

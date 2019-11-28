@@ -1,8 +1,7 @@
 import React from 'react'
 import { hot } from 'react-hot-loader'
 
-import Router from '@nocode-toolkit/ui/Router'
-import Theme from '@nocode-toolkit/ui/Theme'
+import Router from '@nocode-toolkit/website/Router'
 
 import LayoutDefault from './pages/Layout'
 import PageDefault from './pages/Page'
@@ -22,7 +21,6 @@ const App = ({}) => {
   return (
     <Router
       templates={ templates }
-      themeModule={ Theme }
     />
   )
 }

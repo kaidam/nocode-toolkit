@@ -1,4 +1,6 @@
 import { createSelector } from 'reselect'
+import { useSelector } from 'react-redux'
+
 const DEFAULT_OBJECT = {}
 const DEFAULT_ARRAY = []
 
@@ -39,6 +41,22 @@ const routerRoute = createSelector(
   routerName,
   (routes, name) => routes.find(r => r.name == name)
 )
+const routerFullRoute = createSelector(
+  routerRoute,
+  nocodeExternals,
+  (route, externals) => {
+    const externalIds = route.externals || []
+    const externalContent = externalIds.map(id => externals[id] || '')
+    const pageContent = externalContent[0] || ''
+    return Object.assign({}, route, {
+      externalContent,
+      pageContent,
+    })
+  }
+)
+
+export const useConfig = () => useSelector(nocodeConfig)
+export const useRoute = () => useSelector(routerFullRoute)
 
 const selectors = {
 
@@ -59,9 +77,9 @@ const selectors = {
     path: routerPath,
     queryParams: routerParams,
     route: routerRoute,
+    fullRoute: routerFullRoute,
     previousRoute: routerPreviousRoute,
   },
-
 }
 
 export default selectors

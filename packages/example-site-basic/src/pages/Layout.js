@@ -1,10 +1,10 @@
 import React from 'react'
 import {
   useRoute,
-} from '@nocode-toolkit/ui/selectors'
+} from '@nocode-toolkit/website/selectors'
 
-import Header from '@nocode-toolkit/ui/components/core/Header'
-import Link from '@nocode-toolkit/ui/components/core/Link'
+import Header from '@nocode-toolkit/website/Header'
+import Link from '@nocode-toolkit/website/Link'
 
 const Layout = ({
   children,

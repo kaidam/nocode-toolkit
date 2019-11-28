@@ -1,8 +1,8 @@
 import React from 'react'
 import { hot } from 'react-hot-loader'
 
-import Router from '@nocode-toolkit/ui/Router'
-import Theme from '@nocode-toolkit/ui/ThemeMaterial'
+import Router from '@nocode-toolkit/website/Router'
+import Theme from '@nocode-toolkit/website-material-ui/Theme'
 
 import themeProcessor from './theme'
 import LayoutDefault from './pages/Layout'
@@ -21,11 +21,13 @@ const templates = {
 
 const App = ({}) => {
   return (
-    <Router
-      templates={ templates }
-      themeModule={ Theme }
-      themeProcessor={ themeProcessor }
-    />
+    <Theme
+      processor={ themeProcessor }
+    >
+      <Router
+        templates={ templates }
+      />
+    </Theme>
   )
 }
 
