@@ -13,8 +13,8 @@ import {
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
-import Header from '@nocode-toolkit/ui/components/core/Header'
-import Link from '@nocode-toolkit/ui/components/core/Link'
+import Header from '@nocode-toolkit/website/Header'
+import Link from '@nocode-toolkit/website/Link'
 
 const useStyles = makeStyles(theme => createStyles({
   root: {
