@@ -166,7 +166,7 @@ const FinderHeader = ({
         <AddContentButton
           stashQueryParams
           filter={ (parentFilter) => parentFilter.indexOf(`${driver}.finder`) >= 0 }
-          location={ `finder:${parent}` }
+          location={ `finder:${parent || 'root'}` }
         />
       </div>
       
