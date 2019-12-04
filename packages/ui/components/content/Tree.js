@@ -24,17 +24,6 @@ const RenderRoot = ({
         height: '100%',
       }}
     >
-      <div
-        style={{
-          overflowY: 'auto',
-          overflowX: 'hidden',
-          flexGrow: 1,
-          paddingTop: '10px',
-          paddingBottom: '10px',
-        }}
-      >
-        { content }
-      </div>
       {
         editor && (
           <div
@@ -47,6 +36,17 @@ const RenderRoot = ({
           </div>
         )
       }
+      <div
+        style={{
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          flexGrow: 1,
+          paddingTop: '10px',
+          paddingBottom: '10px',
+        }}
+      >
+        { content }
+      </div>
     </div>
   )
 }

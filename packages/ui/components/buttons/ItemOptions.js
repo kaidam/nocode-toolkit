@@ -1,6 +1,5 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { createSelector } from 'reselect'
 
 import IconButton from '@material-ui/core/IconButton'
 
@@ -24,9 +23,21 @@ const HideIcon = icons.hide
 const ItemMenuButtonHome = ({
   iconClassName,
   actions,
+  getButton,
   onOpen,
   onClose,
 }) => {
+
+  const defaultGetButton = useCallback(onClick => (
+    <IconButton
+      size="small"
+      onClick={ onClick }
+    >
+      <MoreVertIcon
+        className={ iconClassName }
+      />
+    </IconButton>
+  ), [iconClassName])
 
   const menuItems = useMemo(
     () => {
@@ -43,19 +54,12 @@ const ItemMenuButtonHome = ({
     ]
   )
 
+  getButton = getButton || defaultGetButton
+
   return (
     <MenuButton
       items={ menuItems }
-      getButton={ onClick => (
-        <IconButton
-          size="small"
-          onClick={ onClick }
-        >
-          <MoreVertIcon
-            className={ iconClassName }
-          />
-        </IconButton>
-      )}
+      getButton={ getButton }
       onOpen={ onOpen }
       onClose={ onClose }
     />
@@ -67,6 +71,7 @@ const ItemMenuButtonContent = ({
   iconClassName,
   parentAnchorEl,
   actions,
+  getButton,
   onOpen,
   onClose,
 }) => {
@@ -166,6 +171,19 @@ const ItemMenuButtonContent = ({
     ]
   )
 
+  const defaultGetButton = useCallback(onClick => (
+    <IconButton
+      size="small"
+      onClick={ onClick }
+    >
+      <MoreVertIcon
+        className={ iconClassName }
+      />
+    </IconButton>
+  ), [iconClassName])
+
+  getButton = getButton || defaultGetButton
+
   return (
     <MenuButton
       items={ menuItems }
@@ -173,16 +191,7 @@ const ItemMenuButtonContent = ({
         <strong>{ item.data.name }</strong>
       )}
       parentAnchorEl={ parentAnchorEl }
-      getButton={ onClick => (
-        <IconButton
-          size="small"
-          onClick={ onClick }
-        >
-          <MoreVertIcon
-            className={ iconClassName }
-          />
-        </IconButton>
-      )}
+      getButton={ getButton }
       onOpen={ onOpen }
       onClose={ onClose }
     />
@@ -193,6 +202,7 @@ const ItemMenuButton = ({
   item,
   parentAnchorEl,
   iconClassName,
+  getButton,
   onOpen,
   onClose,
 }) => {
@@ -210,6 +220,7 @@ const ItemMenuButton = ({
       <ItemMenuButtonHome
         iconClassName={ iconClassName }
         actions={ actions }
+        getButton={ getButton }
         onOpen={ onOpen }
         onClose={ onClose }
       />
@@ -221,6 +232,7 @@ const ItemMenuButton = ({
         item={ item }
         iconClassName={ iconClassName }
         parentAnchorEl={ parentAnchorEl }
+        getButton={ getButton }
         actions={ actions }
         onOpen={ onOpen }
         onClose={ onClose }

@@ -6,6 +6,7 @@ import Suspense from '../system/Suspense'
 import cellTypes from './cellTypes'
 
 const CellOptions = lazy(() => import(/* webpackChunkName: "ui" */ './CellOptions'))
+const RenderDefaultHomeUI = lazy(() => import(/* webpackChunkName: "ui" */ './RenderDefaultHomeUI'))
 
 const RenderRoot = ({
   children,
@@ -86,10 +87,58 @@ const RenderCell = ({
   )
 }
 
+const RenderDefaultHome = ({
+  children,
+}) => {
+  return (
+    <div
+      style={{
+        fontFamily: 'Roboto'
+      }}
+    >
+      <h3>Welcome to your new website!</h3>
+      { children }
+    </div>
+  )
+}
+
 const defaultRenderers = {
   root: RenderRoot,
   row: RenderRow,
   cell: RenderCell,
+  defaultHome: RenderDefaultHome,
+}
+
+// gives us a chance to override the cell renderer
+// based on the item and cell config
+const CellContentRenderer = ({
+  data,
+  cellConfig,
+  cell,
+  cellContent,
+  renderers,
+  showUI,
+}) => {
+  
+  if(data.defaultHome && cell.mainDocumentContent) {
+    const RenderComponent = renderers.defaultHome || defaultRenderers.defaultHome
+    return (
+      <RenderComponent>
+        <Suspense>
+          <RenderDefaultHomeUI />
+        </Suspense>
+      </RenderComponent> 
+    )
+  }
+  else {
+    const RenderComponent = cellConfig.component 
+    return (
+      <RenderComponent
+        showUI={ showUI }
+        content={ cellContent }
+      />
+    )
+  } 
 }
 
 const DocumentLayout = ({
@@ -107,7 +156,7 @@ const DocumentLayout = ({
     const cells = row.map((cell, j) => {
 
       const cellConfig = cellTypes.getCellConfig(cell.component)
-      const RenderComponent = cellConfig.component
+      
       const cellContent = cellTypes.getContent({
         cell,
         data,
@@ -124,20 +173,22 @@ const DocumentLayout = ({
         </Suspense>
       )
 
-      const content = (
-        <RenderComponent
-          showUI={ showUI }
-          content={ cellContent }
-        />
-      )
-
       return (
         <CellRenderer
           key={ j }
           showUI={ showUI }
           cellConfig={ cellConfig }
           editor={ editor }
-          content={ content }
+          content={(
+            <CellContentRenderer
+              showUI={ showUI }
+              cellContent={ cellContent }
+              data={ data }
+              cell={ cell }
+              cellConfig={ cellConfig }
+              renderers={ renderers }
+            />
+          )}
         />
       )
 

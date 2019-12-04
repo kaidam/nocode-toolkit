@@ -8,10 +8,6 @@ import {
   networkLoading,
 } from './utils'
 
-import {
-  DEFAULT_HOME,
-} from '../../config'
-
 import contentSelectors from './content'
 
 const NETWORK_NAMES = networkProps('document', [
@@ -45,8 +41,9 @@ const data = createSelector(
             name: 'Home',
           }
         },
-        externals: [DEFAULT_HOME],
+        externals: [],
         disableLayoutEditor: true,
+        defaultHome: true,
       } : {
         item,
         externals: (route.externals || []).map(id => externals[id]),
@@ -63,6 +60,7 @@ const data = createSelector(
         source: 'external',
         editor: 'external',
         index: 0,
+        mainDocumentContent: true,
       }]]
 
     return data

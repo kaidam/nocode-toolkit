@@ -29,9 +29,8 @@ const useStyles = makeStyles(theme => createStyles({
   },
   sectionEditor: {
     flexGrow: 0,
-    borderTop: '1px solid #ccc',
+    borderBottom: '1px solid #ccc',
     padding: theme.spacing(1),
-    paddingLeft: theme.spacing(3),
   },
   sublist: {
     paddingLeft: theme.spacing(1.5),
@@ -88,9 +87,6 @@ const RenderRoot = ({
     <div
       className={ classes.root }
     >
-      <div className={ classes.menu }>
-        { content }
-      </div>
       {
         editor && (
           <div className={ classes.sectionEditor }>
@@ -98,6 +94,9 @@ const RenderRoot = ({
           </div>
         )
       }
+      <div className={ classes.menu }>
+        { content }
+      </div>
     </div>
   )
 }
