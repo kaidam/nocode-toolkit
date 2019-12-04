@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { useDispatch } from 'react-redux'
 import Fab from '@material-ui/core/Fab'
 
@@ -26,8 +26,8 @@ const DownIcon = icons.down
 const LeftIcon = icons.left
 const RightIcon = icons.right
 
-const useStyles = makeStyles({
-  tinyRoot: {
+const useStyles = makeStyles(theme => createStyles({
+  smallOptionButton: {
     width: '24px',
     height: '24px',
     minHeight: '24px',
@@ -35,10 +35,7 @@ const useStyles = makeStyles({
       fontSize: '1rem',
     }
   },
-  overlay: {
-    zIndex: '20000',
-  },
-})
+}))
 
 const IconCombo = (Left, Right) => () => (
   <div>
@@ -281,13 +278,13 @@ const CellOptions = ({
     return (
       <Fab
         size="small"
-        className={ classes.tinyRoot }
+        className={ classes.smallOptionButton }
         onClick={ onClick }
       >
         <SettingsIcon />
       </Fab>
     )
-  }, [])
+  }, [classes])
 
   const onDeleteSubmit = useCallback(() => {
     onCloseDeleteConfirm()
