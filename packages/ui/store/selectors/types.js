@@ -171,7 +171,7 @@ const form = createSelector(
 
     if(schemaDefinition) {
 
-      initialValues = initialValues || schemaDefinition.initialValues
+      initialValues = Object.assign({}, schemaDefinition.initialValues, initialValues)
       typeTitle = schemaDefinition.title
 
       if(schemaDefinition.schema && !schemaDefinition.tabs) {

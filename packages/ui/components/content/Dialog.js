@@ -129,6 +129,10 @@ const ContentFormDialog = ({
     )
   }
 
+  console.log('--------------------------------------------')
+  console.log('--------------------------------------------')
+  console.dir(initialValues)
+
   return (
     <FormWrapper
       schema={ tab.schema || [] }

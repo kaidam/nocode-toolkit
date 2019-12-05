@@ -24,12 +24,26 @@ const getItemSchema = (item) => {
   return get(name)
 }
 
+const addPlugin = (plugin) => {
+  if(plugin.settingsTab) {
+    const settingsSchema = get('local.settings')
+    const tab = {
+      id: plugin.id,
+      title: plugin.title,
+      schema: plugin.settingsTab.schema,
+    }
+    settingsSchema.tabs.push(tab)
+    settingsSchema.initialValues = Object.assign({}, settingsSchema.initialValues, plugin.settingsTab.initialValues)
+  }
+}
+
 const types = {
   add,
   set,
   get,
   list,
   getItemSchema,
+  addPlugin,
 }
 
 export default types
