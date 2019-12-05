@@ -183,41 +183,55 @@ const settings = {
   icon: 'settings',
   metadata: {
     nodeType: 'system',
+    detailsTitle: 'Website',
   },
   // settings cannot be added they are a global singleton
   parentFilter: [],
   initialValues: {
     title: 'Website Title',
+    test: 'hello',
     copyright_message: '&copy; &year; My Company Name',
     description: '',
     keywords: '',
     color: {color: "#3f51b5"},
   },
-  schema: [{
-    id: 'color',
-    title: 'Color',
-    helperText: 'Choose your color',
-    component: 'color',
+  tabs: [{
+    id: 'main',
+    title: 'Website',
+    schema: [{
+      id: 'color',
+      title: 'Color',
+      helperText: 'Choose your color',
+      component: 'color',
+    }, {
+      id: 'title',
+      title: 'Title',
+      helperText: 'Enter the title for your website',
+    }, {
+      id: 'copyright_message',
+      title: 'Copyright Message',
+      helperText: 'Enter the copyright message to appear in the footer',
+    }, {
+      id: 'description',
+      title: 'Description',
+      component: 'textarea',
+      rows: 3,
+      helperText: 'Enter the description for your website',
+    }, {
+      id: 'keywords',
+      title: 'Keywords',
+      component: 'textarea',
+      rows: 3,
+      helperText: 'Enter some keywords for search engines to find your website',
+    }]
   }, {
-    id: 'title',
-    title: 'Title',
-    helperText: 'Enter the title for your website',
-  }, {
-    id: 'copyright_message',
-    title: 'Copyright Message',
-    helperText: 'Enter the copyright message to appear in the footer',
-  }, {
-    id: 'description',
-    title: 'Description',
-    component: 'textarea',
-    rows: 3,
-    helperText: 'Enter the description for your website',
-  }, {
-    id: 'keywords',
-    title: 'Keywords',
-    component: 'textarea',
-    rows: 3,
-    helperText: 'Enter some keywords for search engines to find your website',
+    id: 'other',
+    title: 'Other',
+    schema: [{
+      id: 'test',
+      title: 'Test',
+      helperText: 'Enter a value',
+    }]
   }]
 }
 

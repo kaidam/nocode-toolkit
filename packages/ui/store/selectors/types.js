@@ -159,8 +159,6 @@ const form = createSelector(
     const schemaDefinition = library.get(schemaName)
 
     let typeTitle = 'Content'
-
-    let schema = []
     let initialValues = null
 
     if(existingItem) {
@@ -172,31 +170,36 @@ const form = createSelector(
     const tabs = []
 
     if(schemaDefinition) {
-      schema = schemaDefinition.schema
+
       initialValues = initialValues || schemaDefinition.initialValues
       typeTitle = schemaDefinition.title
 
-      if(schema.length > 0) {
+      if(schemaDefinition.schema && !schemaDefinition.tabs) {
+        const detailsTitle = schemaDefinition.metadata.detailsTitle || 'Details'
         tabs.push({
-          id: 'details',
-          title: 'Details',
+          id: 'main',
+          title: detailsTitle,
+          schema: schemaDefinition.schema,
+        })
+      }
+      else if(schemaDefinition.tabs) {
+        schemaDefinition.tabs.forEach(tab => {
+          tabs.push(tab)
         })
       }
 
-      if(controller != 'finder') {
-        // we don't want sorting in the finder
-        if(schemaDefinition.metadata.hasChildren) {
-          tabs.push({
-            id: 'sorting',
-            title: 'Sorting',
-          })
-        }
+      // we inject the sorting tab here
+      if(controller != 'finder' && schemaDefinition.metadata.hasChildren) {
+        tabs.push({
+          id: 'sorting',
+          title: 'Sorting',
+          renderer: 'sorting',
+        })
       }    
     }
 
     return {
       typeTitle,
-      schema,
       initialValues,
       tabs,
     }

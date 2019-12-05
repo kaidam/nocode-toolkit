@@ -81,7 +81,6 @@ const ContentFormDialog = ({
   const {
     typeTitle,
     initialValues,
-    schema,
     tabs,
   } = useSelector(selectors.types.form)
 
@@ -98,21 +97,17 @@ const ContentFormDialog = ({
   const loading = useSelector(selectors.content.loading.save)
   const error = useSelector(selectors.content.errors.save)
 
-  const [ currentTab, setCurrentTab ] = useState(null)
+  const [ currentTab, setCurrentTab ] = useState('main')
+  const resetTabs = () => setCurrentTab(tabs && tabs.length > 0 ? tabs[0].id : 'main')
 
-  const resetTabs = () => setCurrentTab(tabs && tabs.length > 0 ? tabs[0].id : null)
-
-  const getTabContent = (formElem) => {
+  const getTabContent = (tab, formElem) => {
     if(loading) {
       return (
         <Loading />
       )
     }
 
-    if(currentTab == 'details') {
-      return formElem
-    }
-    else if(currentTab == 'sorting') {
+    if(tab.renderer == 'sorting') {
       return (
         <SortingEditor
           itemOptions={ itemOptions }
@@ -122,15 +117,21 @@ const ContentFormDialog = ({
       )
     }
     else {
-      return (
-        <div>unknown tab { currentTab }</div>
-      )
+      return formElem
     }
+  }
+
+  const tab = tabs.find(t => t.id == currentTab)
+
+  if(!tab) {
+    return (
+      <div>error no tab found for { currentTab }</div>
+    )
   }
 
   return (
     <FormWrapper
-      schema={ schema }
+      schema={ tab.schema || [] }
       initialValues={ initialValues }
       error={ error }
       onSubmit={ (data) => actions.onSubmit({params, data}) }
@@ -170,7 +171,7 @@ const ContentFormDialog = ({
               </Tabs>
               <div className={ classes.content }>
                 {
-                  getTabContent(formElem)
+                  getTabContent(tab, formElem)
                 }
               </div>
               
