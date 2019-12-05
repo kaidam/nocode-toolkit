@@ -224,14 +224,6 @@ const settings = {
       rows: 3,
       helperText: 'Enter some keywords for search engines to find your website',
     }]
-  }, {
-    id: 'other',
-    title: 'Other',
-    schema: [{
-      id: 'test',
-      title: 'Test',
-      helperText: 'Enter a value',
-    }]
   }]
 }
 
