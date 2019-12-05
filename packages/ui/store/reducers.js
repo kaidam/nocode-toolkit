@@ -33,4 +33,8 @@ const reducers = {
   document: GetReducer('document'),
 }
 
+export const mergeReducers = (appReducers) => {
+  return Object.assign({}, appReducers, reducers)
+}
+
 export default reducers

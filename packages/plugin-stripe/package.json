@@ -9,10 +9,13 @@
     "serve": "node api/index.js"
   },
   "dependencies": {
+    "@nocode-toolkit/website": "^1.0.36",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "minimist": "^1.2.0",
-    "pino": "^5.14.0"
+    "pino": "^5.14.0",
+    "react-redux": "^7.0.1",
+    "redux": "^4.0.4"
   },
   "license": "MIT",
   "gitHead": "ae334fa2d134144460d60927f55f939b1aad516c"
