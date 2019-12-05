@@ -1,6 +1,6 @@
 {
   "name": "@nocode-toolkit/plugin-stripe",
-  "version": "1.0.35",
+  "version": "1.0.36",
   "description": "Stripe plugin for nocode templates",
   "publishConfig": {
     "access": "public"

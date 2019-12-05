@@ -1,6 +1,6 @@
 {
   "name": "@nocode-toolkit/ui",
-  "version": "1.0.35",
+  "version": "1.0.36",
   "description": "React/Redux library for nocode website editors",
   "scripts": {},
   "publishConfig": {
@@ -9,8 +9,8 @@
   "dependencies": {
     "@material-ui/core": "^4.3.3",
     "@material-ui/icons": "^4.2.1",
-    "@nocode-toolkit/website": "^1.0.35",
-    "@nocode-toolkit/website-material-ui": "^1.0.35",
+    "@nocode-toolkit/website": "^1.0.36",
+    "@nocode-toolkit/website-material-ui": "^1.0.36",
     "axios": "0.19.0",
     "bluebird": "^3.5.4",
     "classnames": "^2.2.6",
