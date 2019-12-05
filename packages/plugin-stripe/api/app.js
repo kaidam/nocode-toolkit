@@ -1,5 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const jwt = require('jsonwebtoken')
 
 const pino = require('pino')({
   name: 'stripe-plugin',
@@ -12,7 +13,16 @@ const App = ({
   const app = express()
   app.use(bodyParser.json({limit: '50mb'}))
 
-  app.use((req, res, next) => {
+  app.get('/connect/:websiteid', (req, res, next) => {
+
+    const jwtPayload = {
+      websiteid: req.params.websiteid,
+      access_token: req.params
+    }
+
+    console.log('--------------------------------------------')
+    console.log('--------------------------------------------')
+    console.log('running connect!')
     res.json({
       ok: true,
     })

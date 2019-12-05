@@ -23,10 +23,10 @@ const reducers = {
 // }
 
 const sideEffects = {
-  test: (value) => (dispatch, getState) => {
-    console.log('--------------------------------------------')
-    console.log('we are here in the stripe module')
-    dispatch(actions.setValue(value))
+  connect: () => (dispatch, getState) => {
+    const systemConfig = getState().nocode.config
+    const pluginUrl = `/api/v1/plugin/stripe/connect/${systemConfig.websiteId}`
+    document.location = pluginUrl
   },
 }
 

@@ -1,5 +1,5 @@
 const required_env = [
-  
+  ''
 ]
 
 const missing_env = required_env.filter(name => process.env[name] ? false : true)
