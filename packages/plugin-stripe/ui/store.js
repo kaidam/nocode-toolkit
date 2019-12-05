@@ -1,4 +1,4 @@
-// import axios from 'axios'
+import axios from 'axios'
 // import Promise from 'bluebird'
 import CreateReducer from '@nocode-toolkit/website/store/utils/createReducer'
 import CreateActions from '@nocode-toolkit/website/store/utils/createActions'
@@ -17,16 +17,17 @@ const reducers = {
   },
 }
 
-// const loaders = {
-//   test: (getState) => axios.get(apiUtils.websiteUrl(getState, `/config`))
-//     .then(apiUtils.process),
-// }
-
 const sideEffects = {
-  connect: () => (dispatch, getState) => {
-    const systemConfig = getState().nocode.config
-    const pluginUrl = `/api/v1/plugin/stripe/connect/${systemConfig.websiteId}`
-    document.location = pluginUrl
+  connect: () => async (dispatch, getState) => {
+    try {
+      const systemConfig = getState().nocode.config
+      const data = await axios.get(`/api/v1/plugin/stripe/connect/${systemConfig.websiteId}`)
+        .then(res => res.data)
+      document.location = data.url
+    } catch(e) {
+      alert('there was an error: ' + e.toString())
+    }
+    
   },
 }
 
