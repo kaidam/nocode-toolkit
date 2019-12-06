@@ -211,7 +211,7 @@ const App = ({
       })
 
       // save the stripe secret id into the website settings
-      const results = await updateWebsiteSettings({
+      await updateWebsiteSettings({
         apiUrl,
         accessToken,
         websiteid,
@@ -223,10 +223,7 @@ const App = ({
         })
       })
 
-      res.json({
-        results,
-        ok: true,
-      })
+      res.redirect(`/builder/website/${websiteid}/?trigger=stripe_connect`)
     } catch(e) {
       next(e)
     }
