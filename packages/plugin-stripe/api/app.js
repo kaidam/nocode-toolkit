@@ -63,6 +63,27 @@ const getWebsiteSettings = ({
   })
 })
 
+const updateWebsiteSettings = ({
+  apiUrl,
+  accessToken,
+  websiteid,
+  data,
+}) => new Promise((resolve, reject) => {
+  request({
+    method: 'POST',
+    url: `${apiUrl}/builder/api/${websiteid}/content/settings`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    json: true,
+    body: {data},
+  }, (err, res, body) => {
+    if(err) return reject(err)
+    if(res.statusCode >= 400) return reject(body.error)
+    resolve(body)
+  })
+})
+
 const createWebsiteSecret = ({
   apiUrl,
   accessToken,
@@ -132,7 +153,7 @@ const App = ({
       const redirect_url = `${req.protocol}://${req.hostname}/api/v1/plugin/stripe/connect_response`
 
       res.json({
-        url: `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${client_id}&scope=read_write&&redirect_uri=${redirect_url}&state=${token}`
+        url: `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${client_id}&scope=read_write&redirect_uri=${redirect_url}&state=${token}`
       })
     } catch(e) {
       next(e)
@@ -152,6 +173,8 @@ const App = ({
 
       if(!accessToken || !apiUrl) throw new Error(`access token or nocode api address missing`)
 
+      // decode the state param passed to us from stripe
+      // this is a JWT token that contains the website id
       const payload = await new Promise((resolve, reject) => {
         jwt.verify(state, jwt_secret_key, (err, result) => {
           if(err) return reject(err)
@@ -165,17 +188,21 @@ const App = ({
 
       if(!websiteid) throw new Error(`no website id found in stripe payload`)
 
+      // get the oauth details from stripe using the secret key
+      // and the code passed to us from the connect session
       const connectionData = await getStripeConnection({
         secret_key,
         code,
       })
 
+      // load the existing website settings from the builder api
       const websiteSettings = await getWebsiteSettings({
         apiUrl,
         accessToken,
         websiteid,
       })
 
+      // create a stripe secret for the website
       const stripeSecret = await createWebsiteSecret({
         apiUrl,
         accessToken,
@@ -183,11 +210,22 @@ const App = ({
         data: connectionData,
       })
 
-      res.json({
+      // save the stripe secret id into the website settings
+      const results = await updateWebsiteSettings({
+        apiUrl,
+        accessToken,
         websiteid,
-        connectionData,
-        websiteSettings,
-        stripeSecret,
+        data: Object.assign({}, websiteSettings.data, {
+          stripe: {
+            connected: true,
+            secret: stripeSecret.id,
+          }
+        })
+      })
+
+      res.json({
+        results,
+        ok: true,
       })
     } catch(e) {
       next(e)
