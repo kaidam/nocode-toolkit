@@ -1,9 +1,87 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const jwt = require('jsonwebtoken')
+const request = require('request')
 
 const pino = require('pino')({
   name: 'stripe-plugin',
+})
+
+/*
+  
+    curl https://connect.stripe.com/oauth/token \
+     -d client_secret=sk_test_dmVS0SC82bSHzdlm4yOQyY9O \
+     -d code="{AUTHORIZATION_CODE}" \
+     -d grant_type=authorization_code
+    
+  */
+const getStripeConnection = ({
+  secret_key,
+  code,
+}) => new Promise((resolve, reject) => {
+  request({
+    method: 'POST',
+    url: 'https://connect.stripe.com/oauth/token',
+    formData: {
+      client_secret: secret_key,
+      code,
+      grant_type: 'authorization_code',
+    }
+  }, (err, res, body) => {
+    if(err) return reject(err)
+
+    let data = null
+    try {
+      data = JSON.parse(body)
+    } catch(e) {
+      return reject(e.toString())
+    }
+    resolve(data)
+  })
+})
+
+const getWebsiteSettings = ({
+  apiUrl,
+  accessToken,
+  websiteid,
+}) => new Promise((resolve, reject) => {
+  request({
+    method: 'GET',
+    url: `${apiUrl}/builder/api/${websiteid}/content/settings`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    }
+  }, (err, res, body) => {
+    if(err) return reject(err)
+    let data = null
+    try {
+      data = JSON.parse(body)
+    } catch(e) {
+      return reject(e.toString())
+    }
+    resolve(data)
+  })
+})
+
+const createWebsiteSecret = ({
+  apiUrl,
+  accessToken,
+  websiteid,
+  data,
+}) => new Promise((resolve, reject) => {
+  request({
+    method: 'POST',
+    url: `${apiUrl}/api/v1/secrets/${websiteid}/stripe`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    json: true,
+    body: data,
+  }, (err, res, body) => {
+    if(err) return reject(err)
+    if(res.statusCode >= 400) return reject(body.error)
+    resolve(body)
+  })
 })
 
 const App = ({
@@ -36,16 +114,10 @@ const App = ({
   const app = express()
   app.use(bodyParser.json({limit: '50mb'}))
 
-  app.use((req, res, next) => {
-    console.log('--------------------------------------------')
-    console.log('--------------------------------------------')
-    console.log('have url')
-    console.log(req.url)
-    next()
-  })
-
   app.get('/connect/:websiteid', async (req, res, next) => {
     try {
+
+      // anything we want to know about the connection can go into the JWT payload here
       const payload = {
         websiteid: req.params.websiteid,
       }
@@ -69,16 +141,53 @@ const App = ({
 
   app.get('/connect_response', async (req, res, next) => {
     try {
+
+      const {
+        state,
+        code,
+      } = req.query
+
+      const accessToken = req.headers['x-nocode-access-token']
+      const apiUrl = req.headers['x-nocode-api']
+
+      if(!accessToken || !apiUrl) throw new Error(`access token or nocode api address missing`)
+
       const payload = await new Promise((resolve, reject) => {
-        jwt.verify(req.query.state, jwt_secret_key, (err, result) => {
+        jwt.verify(state, jwt_secret_key, (err, result) => {
           if(err) return reject(err)
           resolve(result)
         })
       })
+
+      const {
+        websiteid
+      } = payload
+
+      if(!websiteid) throw new Error(`no website id found in stripe payload`)
+
+      const connectionData = await getStripeConnection({
+        secret_key,
+        code,
+      })
+
+      const websiteSettings = await getWebsiteSettings({
+        apiUrl,
+        accessToken,
+        websiteid,
+      })
+
+      const stripeSecret = await createWebsiteSecret({
+        apiUrl,
+        accessToken,
+        websiteid,
+        data: connectionData,
+      })
+
       res.json({
-        payload,
-        query: req.query,
-        headers: req.headers,
+        websiteid,
+        connectionData,
+        websiteSettings,
+        stripeSecret,
       })
     } catch(e) {
       next(e)

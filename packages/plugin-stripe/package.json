@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@nocode-toolkit/website": "^1.0.37",
-    "axios": "^0.19.0",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
@@ -20,5 +19,5 @@
     "redux": "^4.0.4"
   },
   "license": "MIT",
-  "gitHead": "ae334fa2d134144460d60927f55f939b1aad516c"
+  "gitHead": "d7c0193947c5a8d1392378790c338a2674a3693d"
 }
