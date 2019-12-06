@@ -10,7 +10,8 @@ import { ui as initialState } from '../initialState'
 import networkWrapper from '../networkWrapper'
 import apiUtils from '../../utils/api'
 import jobActions from './job'
-import snackbarActions from './snackbar'
+
+import library from '../../types/library'
 
 const prefix = 'ui'
 
@@ -18,6 +19,9 @@ const reducers = {
   setConfig: (state, action) => {
     state.initialised = true
     state.config = action.payload
+  },
+  setInitialiseCalled: (state, action) => {
+    state.initialiseCalled = true
   },
   setConfirmWindow: (state, action) => {
     state.confirmWindow = action.payload
@@ -51,10 +55,18 @@ const sideEffects = {
     name: 'initialise',
     snackbarError: false,
     handler: async (dispatch, getState) => {
+      if(getState().ui.initialiseCalled) return
+      dispatch(actions.setInitialiseCalled())
       const data = await loaders.config(getState)
       dispatch(actions.setConfig(data))
       dispatch(jobActions.waitForPreviewJob())
       globals.setWindowInitialised()
+      const plugins = library.plugins
+      plugins.forEach(plugin => {
+        if(plugin.actions.initialize) {
+          dispatch(plugin.actions.initialize())
+        }
+      })
     }
   }),
   viewWebsites: () => (dispatch, getState) => {
@@ -90,16 +102,23 @@ const sideEffects = {
       ...params,
     }))
   },
+  openDialogPayload: (payload) => (dispatch, getState) => {
+    dispatch(actions.openDialog(payload.name, payload.params))
+  },
   closeDialogs: () => (dispatch, getState) => {
     dispatch(actions.resetQueryParams())
   },
-  openDialogSingleton: (id, type) => (dispatch, getState) => {
+  openDialogSingleton: (id, type, tab = '') => (dispatch, getState) => {
     dispatch(actions.openDialog('contentForm', {
       driver: 'local',
       type,
       location: `singleton:${id}`,
       id,
+      tab,
     }))
+  },
+  openDialogSingletonPayload: (payload) => (dispatch, getState) => {
+    dispatch(actions.openDialogSingleton(payload.id, payload.type, payload.tab))
   },
   waitForConfirmation: (confirmOptions) => async (dispatch, getState) => {
     dispatch(actions.setConfirmWindow(confirmOptions))

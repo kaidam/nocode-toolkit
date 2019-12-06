@@ -1,6 +1,7 @@
 import utils from '@nocode-toolkit/website/store/utils'
 
 export const ui = {
+  initialiseCalled: false,
   initialised: false,
   config: utils.isNode ? {} : window._uiConfigData || {},
   confirmWindow: null,

@@ -8,6 +8,7 @@ import Tab from '@material-ui/core/Tab'
 import Actions from '../../utils/actions'
 import selectors from '../../store/selectors'
 import contentActions from '../../store/modules/content'
+import uiActions from '../../store/modules/ui'
 
 import Window from '../system/Window'
 import Loading from '../system/Loading'
@@ -63,10 +64,10 @@ const ContentFormDialog = ({
     onCancel: contentActions.closeDialogContentForm,
     onSetItemOption: contentActions.setItemOption,
     calculateItemOptions: contentActions.calculateItemOptions,
+    updateQueryParams:  uiActions.updateQueryParams,
   })
 
   useEffect(() => {
-    resetTabs()
     actions.calculateItemOptions()
   }, [])
 
@@ -76,6 +77,7 @@ const ContentFormDialog = ({
     type,
     location,
     id,
+    tab,
   } = useSelector(selectors.router.queryParams)
 
   const {
@@ -96,9 +98,6 @@ const ContentFormDialog = ({
   const allItems = useSelector(selectors.content.contentAll)
   const loading = useSelector(selectors.content.loading.save)
   const error = useSelector(selectors.content.errors.save)
-
-  const [ currentTab, setCurrentTab ] = useState('main')
-  const resetTabs = () => setCurrentTab(tabs && tabs.length > 0 ? tabs[0].id : 'main')
 
   const getTabContent = (tab, formElem) => {
     if(loading) {
@@ -121,17 +120,19 @@ const ContentFormDialog = ({
     }
   }
 
-  const tab = tabs.find(t => t.id == currentTab)
+  const activeTab = tab || 'main'
 
-  if(!tab) {
+  const tabConfig = tabs.find(t => t.id == activeTab)
+
+  if(!tabConfig) {
     return (
-      <div>error no tab found for { currentTab }</div>
+      <div>error no tab found for { activeTab }</div>
     )
   }
 
   return (
     <FormWrapper
-      schema={ tab.schema || [] }
+      schema={ tabConfig.schema || [] }
       initialValues={ initialValues }
       error={ error }
       onSubmit={ (data) => actions.onSubmit({params, data}) }
@@ -147,11 +148,9 @@ const ContentFormDialog = ({
               withCancel
               loading={ loading }
               onSubmit={ () => {
-                resetTabs()
                 handleSubmit()
               }}
               onCancel={ () => {
-                resetTabs()
                 actions.onCancel()
               }}
             >
@@ -160,18 +159,18 @@ const ContentFormDialog = ({
                   {id == 'new' ? 'Add' : 'Edit'} {typeTitle}
                 </Typography>
               </div>
-              <Tabs value={ currentTab } onChange={ (e, value) => setCurrentTab(value) } aria-label="simple tabs example">
+              <Tabs value={ activeTab } onChange={ (e, value) => actions.updateQueryParams({tab:value}) } aria-label="simple tabs example">
                 {
-                  tabs.map((tab, i) => {
+                  tabs.map((tabConfig, i) => {
                     return (
-                      <Tab key={ i } label={ tab.title } value={ tab.id } />
+                      <Tab key={ i } label={ tabConfig.title } value={ tabConfig.id } />
                     )
                   })
                 }
               </Tabs>
               <div className={ classes.content }>
                 {
-                  getTabContent(tab, formElem)
+                  getTabContent(tabConfig, formElem)
                 }
               </div>
               

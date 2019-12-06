@@ -4,6 +4,7 @@ import CreateReducer from '@nocode-toolkit/website/store/utils/createReducer'
 import CreateActions from '@nocode-toolkit/website/store/utils/createActions'
 // import selectors from '@nocode-toolkit/website/selectors'
 // import routerActions from '@nocode-toolkit/website/store/moduleRouter'
+import actionLoader from '@nocode-toolkit/ui/store/actionLoader'
 
 const initialState = {
   value: null,
@@ -28,6 +29,20 @@ const sideEffects = {
       alert('there was an error: ' + e.toString())
     }
     
+  },
+
+  initialize: () => async (dispatch, getState) => {
+    const params = getState().router.route.params
+    if(params.trigger == 'stripe_connect') {
+      const openDialog = actionLoader('ui', 'openDialogSingletonPayload')
+      const setSuccess = actionLoader('snackbar', 'setSuccess')
+      dispatch(openDialog({
+        id: 'settings',
+        type: 'settings',
+        tab: 'stripe',
+      }))
+      dispatch(setSuccess(`Your stripe account is now connected`))
+    }
   },
 }
 

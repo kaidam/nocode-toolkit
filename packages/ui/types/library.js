@@ -1,5 +1,6 @@
 const library = {}
 const names = []
+const plugins = []
 
 const add = (type, schema) => {
   if(typeof(type) === 'string' && typeof(schema) === 'object') {
@@ -35,6 +36,7 @@ const addPlugin = (plugin) => {
     settingsSchema.tabs.push(tab)
     settingsSchema.initialValues = Object.assign({}, settingsSchema.initialValues, plugin.settingsTab.initialValues)
   }
+  plugins.push(plugin)
 }
 
 const types = {
@@ -44,6 +46,7 @@ const types = {
   list,
   getItemSchema,
   addPlugin,
+  plugins,
 }
 
 export default types
