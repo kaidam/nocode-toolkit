@@ -36,6 +36,9 @@ const addPlugin = (plugin) => {
     settingsSchema.tabs.push(tab)
     settingsSchema.initialValues = Object.assign({}, settingsSchema.initialValues, plugin.settingsTab.initialValues)
   }
+  if(plugin.schema) {
+    add(plugin.schema)
+  }
   plugins.push(plugin)
 }
 

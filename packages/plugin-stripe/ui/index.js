@@ -1,5 +1,6 @@
-import settingsTab from './settingsTab'
 import actions, { reducer } from './store'
+import settingsTab from './settingsTab'
+import schema from './schema'
 
 const stripePlugin = {
   id: 'stripe',
@@ -7,6 +8,7 @@ const stripePlugin = {
   actions,
   reducer,
   settingsTab,
+  schema,
 }
 
 export default stripePlugin

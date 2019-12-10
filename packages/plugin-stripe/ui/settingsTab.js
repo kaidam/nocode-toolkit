@@ -3,7 +3,7 @@ import SettingsConnect from './components/SettingsConnect'
 const settingsTab = {
   initialValues: {
     stripe: {
-      test: 'hello',
+      
     },
   },
   schema: [{

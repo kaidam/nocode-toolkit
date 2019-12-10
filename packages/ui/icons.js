@@ -55,6 +55,7 @@ import QuoteIcon from '@material-ui/icons/FormatQuote'
 import LogsIcon from '@material-ui/icons/Reorder'
 import UndoIcon from '@material-ui/icons/Undo'
 import MoveIcon from '@material-ui/icons/OpenWith'
+import PaymentIcon from '@material-ui/icons/AttachMoney'
 
 import UnsplashLogo from './styles/UnsplashLogo'
 import GoogleDriveLogo from './styles/GoogleDriveLogo'
@@ -105,6 +106,7 @@ const icons = {
   undo: UndoIcon,
   look: LookIcon,
   move: MoveIcon,
+  payment: PaymentIcon,
 }
 
 export default icons
