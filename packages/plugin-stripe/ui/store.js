@@ -22,7 +22,11 @@ const sideEffects = {
   connect: () => async (dispatch, getState) => {
     try {
       const systemConfig = getState().nocode.config
-      const data = await axios.get(`/api/v1/plugin/stripe/connect/${systemConfig.websiteId}`)
+      const payload = {
+        stripe_connect_url: `${document.location.protocol}//${document.location.host}/plugin/stripe/connect_response`,
+        finalize_url: document.location.href.replace(document.location.search, ''),
+      }
+      const data = await axios.post(`/plugin/stripe/connect/${systemConfig.websiteId}`, payload)
         .then(res => res.data)
       document.location = data.url
     } catch(e) {

@@ -34,7 +34,7 @@ const getStripeConnection = ({
     try {
       data = JSON.parse(body)
     } catch(e) {
-      return reject(e.toString())
+      return reject(`there was an error getting the oauth token from stripe: ${e.toString()}`)
     }
     resolve(data)
   })
@@ -54,12 +54,40 @@ const getWebsiteSettings = ({
   }, (err, res, body) => {
     if(err) return reject(err)
     let data = null
-    try {
-      data = JSON.parse(body)
-    } catch(e) {
-      return reject(e.toString())
+    if(body) {
+      try {
+        data = JSON.parse(body)
+      } catch(e) {
+        return reject(`there was an error getting the website settings: ${e.toString()}`)
+      }
     }
     resolve(data)
+  })
+})
+
+const createWebsiteSettings = ({
+  apiUrl,
+  accessToken,
+  websiteid,
+  data,
+}) => new Promise((resolve, reject) => {
+  request({
+    method: 'POST',
+    url: `${apiUrl}/builder/api/${websiteid}/content`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+    json: true,
+    body: {
+      driver: 'local',
+      content_id: 'settings',
+      location: 'singleton:settings',
+      data
+    },
+  }, (err, res, body) => {
+    if(err) return reject(err)
+    if(res.statusCode >= 400) return reject(body.error)
+    resolve(body)
   })
 })
 
@@ -135,12 +163,16 @@ const App = ({
   const app = express()
   app.use(bodyParser.json({limit: '50mb'}))
 
-  app.get('/connect/:websiteid', async (req, res, next) => {
+  app.post('/connect/:websiteid', async (req, res, next) => {
     try {
+      const {
+        stripe_connect_url,
+        finalize_url,
+      } = req.body
 
-      // anything we want to know about the connection can go into the JWT payload here
       const payload = {
         websiteid: req.params.websiteid,
+        finalize_url,
       }
   
       const token = await new Promise((resolve, reject) => {
@@ -150,10 +182,8 @@ const App = ({
         })
       })
 
-      const redirect_url = `${req.protocol}://${req.hostname}/api/v1/plugin/stripe/connect_response`
-
       res.json({
-        url: `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${client_id}&scope=read_write&redirect_uri=${redirect_url}&state=${token}`
+        url: `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${client_id}&scope=read_write&redirect_uri=${stripe_connect_url}&state=${token}`
       })
     } catch(e) {
       next(e)
@@ -183,7 +213,8 @@ const App = ({
       })
 
       const {
-        websiteid
+        websiteid,
+        finalize_url,
       } = payload
 
       if(!websiteid) throw new Error(`no website id found in stripe payload`)
@@ -210,20 +241,39 @@ const App = ({
         data: connectionData,
       })
 
-      // save the stripe secret id into the website settings
-      await updateWebsiteSettings({
-        apiUrl,
-        accessToken,
-        websiteid,
-        data: Object.assign({}, websiteSettings.data, {
-          stripe: {
-            connected: true,
-            secret: stripeSecret.id,
+      if(websiteSettings) {
+        // save the stripe secret id into the website settings
+        await updateWebsiteSettings({
+          apiUrl,
+          accessToken,
+          websiteid,
+          data: Object.assign({}, websiteSettings.data, {
+            stripe: {
+              connected: true,
+              secret: stripeSecret.id,
+            }
+          })
+        })
+      }
+      else {
+        await createWebsiteSettings({
+          apiUrl,
+          accessToken,
+          websiteid,
+          data: {
+            stripe: {
+              connected: true,
+              secret: stripeSecret.id,
+            }
           }
         })
-      })
+      }
 
-      res.redirect(`/builder/website/${websiteid}/?trigger=stripe_connect`)
+      res.end(`
+<script>
+  document.location = '${finalize_url}?trigger=stripe_connect'
+</script>
+`)
     } catch(e) {
       next(e)
     }
