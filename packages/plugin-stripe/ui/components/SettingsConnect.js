@@ -37,7 +37,7 @@ const SettingsNeedToConnect = () => {
 
 const SettingsConnect = () => {
   const settings = useSelector(state => state.nocode.items.content.settings)
-  const stripeSettings = settings.data.stripe
+  const stripeSettings = settings && settings.data ? settings.data.stripe : null
 
   return stripeSettings && stripeSettings.connected ? (
     <SettingsConnected />
