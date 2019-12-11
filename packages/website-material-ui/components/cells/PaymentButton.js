@@ -1,25 +1,18 @@
 import React from 'react'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-
-const useStyles = makeStyles(theme => createStyles({
-  
-}))
 
 const PaymentButton = ({
   content,
+  onClick,
 }) => {
-
-  console.log('--------------------------------------------')
-  console.log('--------------------------------------------')
-  console.dir(content)
-
-  const classes = useStyles()
-  
   return (
-    <div>
-      MUI PAYMENT
-    </div> 
+    <Button
+      variant="contained"
+      color="primary"
+      onClick={ onClick }
+    >
+      { content.buttonTitle } ({content.currencySymbol} {content.price})
+    </Button>    
   )
 }
 

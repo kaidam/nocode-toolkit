@@ -19,7 +19,8 @@
     "react": "^16.8.6",
     "react-redux": "^7.0.1",
     "redux": "^4.0.4",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "stripe": "^7.14.0"
   },
   "license": "MIT",
   "gitHead": "d7c0193947c5a8d1392378790c338a2674a3693d"

@@ -1,8 +1,15 @@
 import React from 'react'
 
-const PaymentButton = () => {
+const PaymentButton = ({
+  content,
+  onClick,
+}) => {
   return (
-    <div>default payment button</div>
+    <button
+      onClick={ onClick }
+    >
+      { content.buttonTitle } ({content.currencySymbol} {content.price})
+    </button>
   )
 }
 

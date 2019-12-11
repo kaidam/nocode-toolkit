@@ -2,6 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const jwt = require('jsonwebtoken')
 const request = require('request')
+const Stripe = require('stripe')
 
 const pino = require('pino')({
   name: 'stripe-plugin',
@@ -160,8 +161,38 @@ const App = ({
     process.exit(1)
   }
 
+  const stripe = Stripe(secret_key)
+
   const app = express()
   app.use(bodyParser.json({limit: '50mb'}))
+
+  app.get('/publicKey', async (req, res, next) => {
+    res.json({
+      publicKey: public_key,
+    })
+  })
+
+  app.post('/session', async (req, res, next) => {
+    try {
+      const {
+        line_items,
+        success_url,
+        cancel_url,
+      } = req.body
+
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items,
+        success_url,
+        cancel_url,
+      })
+
+      res.json(session)
+
+    } catch(e) {
+      next(e)
+    }
+  })
 
   app.post('/connect/:websiteid', async (req, res, next) => {
     try {

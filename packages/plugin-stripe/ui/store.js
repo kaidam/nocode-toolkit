@@ -16,7 +16,21 @@ const reducers = {
   
 }
 
+/*
+
+  [{
+        name: 'T-shirt',
+        description: 'Comfortable cotton t-shirt',
+        amount: 500,
+        currency: 'gbp',
+        quantity: 1,
+      }],
+
+*/
+
 const sideEffects = {
+  // request a stripe connect redirect URL from the backend
+  // then send the browser off to Stripe
   connect: () => async (dispatch, getState) => {
     try {
       const systemConfig = getState().nocode.config
@@ -30,9 +44,51 @@ const sideEffects = {
     } catch(e) {
       alert('there was an error: ' + e.toString())
     }
-    
   },
 
+  purchase: (content) => async (dispatch, getState) => {
+    try {
+      const keyData = await axios.get(`/plugin/stripe/publicKey`)
+        .then(res => res.data)
+      const publicKey = keyData.publicKey
+      const line_items = [{
+        name: content.name,
+        description: content.description,
+        quantity: 1,
+        amount: content.price * 100,
+        currency: content.currency.toLowerCase(),
+      }]
+
+      const success_url = document.location.search ? 
+        document.location.href.replace(document.location.search, '?trigger=stripe_success') :
+        document.location.href + '?trigger=stripe_success'
+
+      const cancel_url = document.location.search ? 
+        document.location.href.replace(document.location.search, '') :
+        document.location.href
+      
+      const session_data = await axios.post(`/plugin/stripe/session`, {
+        line_items,
+        success_url,
+        cancel_url,
+      })
+        .then(res => res.data)
+
+      var stripe = Stripe(publicKey)
+
+      stripe.redirectToCheckout({
+        sessionId: session_data.id
+      }).then(function (result) {
+        alert('there was an error: ' + result.error.message)
+      })
+    } catch(e) {
+      alert('there was an error: ' + e.toString())
+    }
+  },
+
+  // upon returning from a stripe connect session
+  // we want to open the settings window and alert the user
+  // their stripe account is now connected
   initialize: () => async (dispatch, getState) => {
     const params = getState().router.route.params
     if(params.trigger == 'stripe_connect') {

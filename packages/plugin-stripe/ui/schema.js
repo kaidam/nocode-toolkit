@@ -1,8 +1,11 @@
+import React from 'react'
 import PaymentButton from './components/PaymentButton'
+import PaymentButtonWrapper from './components/PaymentButtonWrapper'
 
 const Schemas = ({
   renderers = {},
 } = {}) => {
+  const PaymentButtonRender = renderers.paymentButton || PaymentButton
   const paymentButton = {
     driver: 'local',
     type: 'paymentButton',
@@ -74,8 +77,17 @@ const Schemas = ({
       }
     }],
     cellConfig: {
-      component: renderers.paymentButton || PaymentButton,
       padding: 1,
+      component: ({
+        content,
+      }) => {
+        return (
+          <PaymentButtonWrapper
+            content={ content }
+            Renderer={ PaymentButtonRender }
+          />
+        )
+      },
     },
     // we should not show the payment button if
     // there is not a connected stripe account
