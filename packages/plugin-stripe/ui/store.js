@@ -48,6 +48,7 @@ const sideEffects = {
 
   purchase: (content) => async (dispatch, getState) => {
     try {
+      const systemConfig = getState().nocode.config
       const keyData = await axios.get(`/plugin/stripe/publicKey`)
         .then(res => res.data)
       const publicKey = keyData.publicKey
@@ -67,7 +68,7 @@ const sideEffects = {
         document.location.href.replace(document.location.search, '') :
         document.location.href
       
-      const session_data = await axios.post(`/plugin/stripe/session`, {
+      const session_data = await axios.post(`/plugin/stripe/session/${systemConfig.websiteId}`, {
         line_items,
         success_url,
         cancel_url,

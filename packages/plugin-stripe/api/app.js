@@ -134,6 +134,31 @@ const createWebsiteSecret = ({
   })
 })
 
+const getWebsiteSecret = ({
+  apiUrl,
+  accessToken,
+  websiteid,
+}) => new Promise((resolve, reject) => {
+  request({
+    method: 'GET',
+    url: `${apiUrl}/api/v1/secrets/${websiteid}/stripe`,
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+    },
+  }, (err, res, body) => {
+    if(err) return reject(err)
+    let data = null
+    if(body) {
+      try {
+        data = JSON.parse(body)
+      } catch(e) {
+        return reject(`there was an error getting the website secret: ${e.toString()}`)
+      }
+    }
+    resolve(data)
+  })
+})
+
 const App = ({
   jwt_secret_key,
   public_key,
@@ -172,7 +197,7 @@ const App = ({
     })
   })
 
-  app.post('/session', async (req, res, next) => {
+  app.post('/session/:websiteid', async (req, res, next) => {
     try {
       const {
         line_items,
@@ -180,11 +205,32 @@ const App = ({
         cancel_url,
       } = req.body
 
+      const accessToken = req.headers['x-nocode-access-token']
+      const apiUrl = req.headers['x-nocode-api']
+
+      if(!accessToken || !apiUrl) throw new Error(`access token or nocode api address missing`)
+
+      const stripeSecret = await getWebsiteSecret({
+        websiteid: req.params.websiteid,
+        accessToken,
+        apiUrl,
+      })
+
+      if(!stripeSecret || !stripeSecret.data || !stripeSecret.data.stripe_user_id) throw new Error(`connected stripe secret not found`)
+
+      const connectedStripeId = stripeSecret.data.stripe_user_id
+
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items,
         success_url,
         cancel_url,
+        payment_intent_data: {
+          on_behalf_of: connectedStripeId,
+          transfer_data: {
+            destination: connectedStripeId,
+          },
+        },
       })
 
       res.json(session)
