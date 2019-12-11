@@ -1,14 +1,16 @@
 import actions, { reducer } from './store'
 import settingsTab from './settingsTab'
-import schema from './schema'
+import Schema from './schema'
 
-const stripePlugin = {
-  id: 'stripe',
-  title: 'Stripe',
-  actions,
-  reducer,
-  settingsTab,
-  schema,
+const stripePlugin = (opts) => {
+  return {
+    id: 'stripe',
+    title: 'Stripe',
+    actions,
+    reducer,
+    settingsTab,
+    schema: Schema(opts),
+  }
 }
 
 export default stripePlugin

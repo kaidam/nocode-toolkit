@@ -7,15 +7,13 @@ import CreateActions from '@nocode-toolkit/website/store/utils/createActions'
 import actionLoader from '@nocode-toolkit/ui/store/actionLoader'
 
 const initialState = {
-  value: null,
+
 }
 
 const prefix = 'stripe'
 
 const reducers = {
-  setValue: (state, action) => {
-    state.value = action.payload
-  },
+  
 }
 
 const sideEffects = {
