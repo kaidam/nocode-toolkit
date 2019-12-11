@@ -61,8 +61,8 @@ const sideEffects = {
       }]
 
       const success_url = document.location.search ? 
-        document.location.href.replace(document.location.search, '?trigger=stripe_success') :
-        document.location.href + '?trigger=stripe_success'
+        document.location.href.replace(document.location.search, `?trigger=stripe_success&product_name=${encodeURIComponent(content.name)}`) :
+        document.location.href + `?trigger=stripe_success&product_name=${encodeURIComponent(content.name)}`
 
       const cancel_url = document.location.search ? 
         document.location.href.replace(document.location.search, '') :
