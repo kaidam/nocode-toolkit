@@ -19,6 +19,12 @@ const paymentButton = {
     component: () => (<div>payment button</div>),
     padding: 1,
   },
+  // we should not show the payment button if
+  // there is not a connected stripe account
+  addCellFilter: (settings) => {
+    if(!settings || !settings.data || !settings.data.stripe) return false
+    return settings.data.stripe.connected ? true : false
+  },
 }
 
 const schemas = {

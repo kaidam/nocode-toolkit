@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Fab from '@material-ui/core/Fab'
 
 import Actions from '../../utils/actions'
@@ -12,6 +12,7 @@ import CellEditor from './CellEditor'
 import typeUI from '../../types/ui'
 import icons from '../../icons'
 
+import selectors from '../../store/selectors'
 import documentActions from '../../store/modules/document'
 
 const EditIcon = icons.edit
@@ -77,6 +78,8 @@ const CellOptions = ({
     saveContent: documentActions.saveContent,
   })
 
+  const settings = useSelector(selectors.ui.settings)
+
   const [ deleteConfirmOpen, setDeleteConfirmOpen ] = useState(false)
   const [ editorOpen, setEditorOpen ] = useState(false)
   const [ addingCell, setAddingCell ] = useState(null)
@@ -91,7 +94,17 @@ const CellOptions = ({
     params,
   }) => {
     return typeUI.addContentOptionsWithCallback({
-      filter: parentFilter => parentFilter.indexOf('cell') >= 0,
+      filter: (parentFilter, schemaDefinition) => {
+        const hasCellParent = parentFilter.indexOf('cell') >= 0
+        if(!hasCellParent) return false
+
+        if(schemaDefinition.addCellFilter) {
+          return schemaDefinition.addCellFilter(settings)
+        }
+        else {
+          return true
+        }
+      },
       handler: (type) => {
         setAddingCell({
           cell: {
@@ -106,7 +119,7 @@ const CellOptions = ({
         onOpenEditor()
       }
     })
-  }, [onOpenEditor, setAddingCell])
+  }, [onOpenEditor, setAddingCell, settings])
 
   const getEditLayoutHandler = useCallback(({
     method,
