@@ -125,6 +125,12 @@ const sideEffects = {
       dispatch(actions.setPurchasedProductId(productId))
     }
   },
+
+  closeConfirmationWindow: () => async (dispatch, getState) => {
+    const resetQueryParams = actionLoader('ui', 'resetQueryParams')
+    dispatch(actions.setPurchasedProductId(null))
+    dispatch(resetQueryParams())
+  },
 }
 
 const reducer = CreateReducer({

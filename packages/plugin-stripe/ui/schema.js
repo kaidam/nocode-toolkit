@@ -1,11 +1,13 @@
 import React from 'react'
 import PaymentButton from './components/PaymentButton'
+import PaymentConfirmation from './components/PaymentConfirmation'
 import PaymentButtonWrapper from './components/PaymentButtonWrapper'
 
 const Schemas = ({
   renderers = {},
 } = {}) => {
   const PaymentButtonRender = renderers.paymentButton || PaymentButton
+  const PaymentConfirmationRender = renderers.paymentConfirmation || PaymentConfirmation
   const paymentButton = {
     driver: 'local',
     type: 'paymentButton',
@@ -88,9 +90,10 @@ const Schemas = ({
           <PaymentButtonWrapper
             content={ content }
             cell={ cell }
-            Renderer={ PaymentButtonRender }
             rowIndex={ rowIndex }
             cellIndex={ cellIndex }
+            Renderer={ PaymentButtonRender }
+            ConfirmRenderer={ PaymentConfirmationRender }
           />
         )
       },

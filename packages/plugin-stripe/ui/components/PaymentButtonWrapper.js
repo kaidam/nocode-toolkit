@@ -9,6 +9,7 @@ const CURRENCY_SYMBOLS = {
 
 const PaymentButtonWrapper = ({
   Renderer,
+  ConfirmRenderer,
   content,
   cell,
   rowIndex,
@@ -39,10 +40,14 @@ const PaymentButtonWrapper = ({
   const purchasedProductId = useSelector(state => state.stripe.purchasedProductId)
   let confirmWindow = null
   if(purchasedProductId == `${rowIndex}-${cellIndex}`) {
+    const onClose = () => {
+      dispatch(actions.closeConfirmationWindow())
+    }
     confirmWindow =  (
-      <div>
-        CONFIRM WINDOW!!!
-      </div>
+      <ConfirmRenderer
+        content={ passContent }
+        onClose={ onClose }
+      />
     )
   }
   return (
