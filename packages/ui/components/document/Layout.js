@@ -115,6 +115,8 @@ const CellContentRenderer = ({
   data,
   cellConfig,
   cell,
+  rowIndex,
+  cellIndex,
   cellContent,
   renderers,
   showUI,
@@ -135,7 +137,10 @@ const CellContentRenderer = ({
     return (
       <RenderComponent
         showUI={ showUI }
+        cell={ cell }
         content={ cellContent }
+        rowIndex={ rowIndex }
+        cellIndex={ cellIndex }
       />
     )
   } 
@@ -185,6 +190,8 @@ const DocumentLayout = ({
               cellContent={ cellContent }
               data={ data }
               cell={ cell }
+              rowIndex={ i }
+              cellIndex={ j }
               cellConfig={ cellConfig }
               renderers={ renderers }
             />

@@ -7,13 +7,15 @@ import CreateActions from '@nocode-toolkit/website/store/utils/createActions'
 import actionLoader from '@nocode-toolkit/ui/store/actionLoader'
 
 const initialState = {
-
+  purchasedProductId: null,
 }
 
 const prefix = 'stripe'
 
 const reducers = {
-  
+  setPurchasedProductId: (state, action) => {
+    state.purchasedProductId = action.payload
+  },
 }
 
 /*
@@ -46,23 +48,31 @@ const sideEffects = {
     }
   },
 
-  purchase: (content) => async (dispatch, getState) => {
+  purchase: ({
+    id,
+    name,
+    description,
+    price,
+    currency,
+  }) => async (dispatch, getState) => {
     try {
       const systemConfig = getState().nocode.config
       const keyData = await axios.get(`/plugin/stripe/publicKey`)
         .then(res => res.data)
       const publicKey = keyData.publicKey
       const line_items = [{
-        name: content.name,
-        description: content.description,
+        name,
+        description,
         quantity: 1,
-        amount: content.price * 100,
-        currency: content.currency.toLowerCase(),
+        amount: price * 100,
+        currency: currency.toLowerCase(),
       }]
 
+      const redirect_query = `?trigger=stripe_success&product_id=${id}`
+
       const success_url = document.location.search ? 
-        document.location.href.replace(document.location.search, `?trigger=stripe_success&product_name=${encodeURIComponent(content.name)}`) :
-        document.location.href + `?trigger=stripe_success&product_name=${encodeURIComponent(content.name)}`
+        document.location.href.replace(document.location.search, redirect_query) :
+        document.location.href + redirect_query
 
       const cancel_url = document.location.search ? 
         document.location.href.replace(document.location.search, '') :
@@ -87,11 +97,13 @@ const sideEffects = {
     }
   },
 
-  // upon returning from a stripe connect session
-  // we want to open the settings window and alert the user
-  // their stripe account is now connected
+  
   initialize: () => async (dispatch, getState) => {
     const params = getState().router.route.params
+
+    // upon returning from a stripe connect session
+    // we want to open the settings window and alert the user
+    // their stripe account is now connected
     if(params.trigger == 'stripe_connect') {
       const openDialog = actionLoader('ui', 'openDialogSingletonPayload')
       const setSuccess = actionLoader('snackbar', 'setSuccess')
@@ -101,6 +113,16 @@ const sideEffects = {
         tab: 'stripe',
       }))
       dispatch(setSuccess(`Your stripe account is now connected`))
+    }
+    // once a product is purchased - we want to show a confirmation window
+    // the product_id is the row-cell index that a button will
+    // identify as it's own and display the confirmation
+    // we always redirect back to the same page so expect
+    // these indexes to remain constant between clicking the stripe
+    // button and returning back to the page
+    else if(params.trigger == 'stripe_success') {
+      const productId = params.product_id
+      dispatch(actions.setPurchasedProductId(productId))
     }
   },
 }

@@ -8,7 +8,7 @@ const PaymentButton = ({
     <button
       onClick={ onClick }
     >
-      { content.buttonTitle } ({content.currencySymbol} {content.price})
+      { content.buttonTitle } ({content.currencySymbol}{content.price})
     </button>
   )
 }

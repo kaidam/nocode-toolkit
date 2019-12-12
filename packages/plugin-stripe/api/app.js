@@ -191,12 +191,17 @@ const App = ({
   const app = express()
   app.use(bodyParser.json({limit: '50mb'}))
 
+  // get the stripe public key
   app.get('/publicKey', async (req, res, next) => {
     res.json({
       publicKey: public_key,
     })
   })
 
+  // create a stripe session and return it
+  // the frontend will redirect to stripe with this session id
+  // we load the website secret so we know the users stripe user id
+  // to attribute the payment to it
   app.post('/session/:websiteid', async (req, res, next) => {
     try {
       const {
@@ -240,6 +245,8 @@ const App = ({
     }
   })
 
+  // we need a URL to redirect to stripe so a user can connect
+  // their Stripe account to a website
   app.post('/connect/:websiteid', async (req, res, next) => {
     try {
       const {
@@ -267,6 +274,9 @@ const App = ({
     }
   })
 
+  // the redirect back from Stripe arrives here
+  // we use the code they give us to get the customers OAuth
+  // details and create a website secret with them
   app.get('/connect_response', async (req, res, next) => {
     try {
 

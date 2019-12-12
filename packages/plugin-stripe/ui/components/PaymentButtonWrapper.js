@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import actions from '../store'
 
 const CURRENCY_SYMBOLS = {
@@ -10,7 +10,11 @@ const CURRENCY_SYMBOLS = {
 const PaymentButtonWrapper = ({
   Renderer,
   content,
+  cell,
+  rowIndex,
+  cellIndex,
 }) => {
+  const productId = `${rowIndex}-${cellIndex}`
   useEffect(() => {
     if(window.Stripe) return
     const script = document.createElement("script")
@@ -27,13 +31,30 @@ const PaymentButtonWrapper = ({
     buttonTitle,
   })
   const onClick = () => {
-    dispatch(actions.purchase(content))
+    dispatch(actions.purchase({
+      id: productId,
+      ...content,
+    }))
+  }
+  const purchasedProductId = useSelector(state => state.stripe.purchasedProductId)
+  let confirmWindow = null
+  if(purchasedProductId == `${rowIndex}-${cellIndex}`) {
+    confirmWindow =  (
+      <div>
+        CONFIRM WINDOW!!!
+      </div>
+    )
   }
   return (
-    <Renderer
-      content={ passContent }
-      onClick={ onClick }
-    />
+    <div>
+      <Renderer
+        content={ passContent }
+        cell={ cell }
+        onClick={ onClick }
+      />
+      { confirmWindow }
+    </div>
+    
   )
 }
 

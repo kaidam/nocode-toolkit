@@ -11,7 +11,7 @@ const PaymentButton = ({
       color="primary"
       onClick={ onClick }
     >
-      { content.buttonTitle } ({content.currencySymbol} {content.price})
+      { content.buttonTitle } ({content.currencySymbol}{content.price})
     </Button>    
   )
 }

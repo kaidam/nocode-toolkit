@@ -80,11 +80,17 @@ const Schemas = ({
       padding: 1,
       component: ({
         content,
+        cell,
+        rowIndex,
+        cellIndex,
       }) => {
         return (
           <PaymentButtonWrapper
             content={ content }
+            cell={ cell }
             Renderer={ PaymentButtonRender }
+            rowIndex={ rowIndex }
+            cellIndex={ cellIndex }
           />
         )
       },

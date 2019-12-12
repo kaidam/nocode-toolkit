@@ -59,13 +59,14 @@ const FormWrapperItem = ({
 }
 
 const FormWrapperRow = ({
+  rowKey,
   row,
   errors,
   touched,
 }) => {
   if(typeof(row) === 'string') {
     return (
-      <Grid item xs={ 12 }>
+      <Grid item xs={ 12 } key={ rowKey }>
         {
           row !== '-' && (
             <Typography
@@ -87,7 +88,7 @@ const FormWrapperRow = ({
   else if (row.constructor === Array) {
     const colSize = Math.floor(12 / row.length)
     return row.map((item, i) => (
-      <Grid item xs={ 12 } sm={ colSize }>
+      <Grid item xs={ 12 } sm={ colSize } key={ rowKey + '-' + i }>
         <FormWrapperItem
           item={ item }
           errors={ errors }
@@ -98,7 +99,7 @@ const FormWrapperRow = ({
   }
   else {
     return (
-      <Grid item xs={12}>
+      <Grid item xs={12} key={ rowKey }>
         <FormWrapperItem
           item={ row }
           errors={ errors }
@@ -169,6 +170,7 @@ const FormWrapper = ({
                     return (
                       <FormWrapperRow
                         key={ i }
+                        rowKey={ i }
                         row={ row }
                         errors={ errors }
                         touched={ touched }
