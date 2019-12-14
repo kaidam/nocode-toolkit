@@ -147,6 +147,7 @@ const getWebsiteSecret = ({
     },
   }, (err, res, body) => {
     if(err) return reject(err)
+    if(res.statusCode >= 400) return reject(`bad status code loading stripe secret: ${res.statusCode}`)
     let data = null
     if(body) {
       try {
@@ -202,25 +203,21 @@ const App = ({
   // the frontend will redirect to stripe with this session id
   // we load the website secret so we know the users stripe user id
   // to attribute the payment to it
-  app.post('/session/:websiteid', async (req, res, next) => {
+  app.post('/session', async (req, res, next) => {
     try {
       const {
         line_items,
-        base_url,
         success_url,
         cancel_url,
       } = req.body
 
-      const {
-        websiteid,
-      } = req.params
-
       const accessToken = req.headers['x-nocode-access-token']
       const apiUrl = req.headers['x-nocode-api']
+      const websiteid = req.headers['x-nocode-websiteid']
 
       if(!accessToken) throw new Error(`access token missing`)
       if(!apiUrl) throw new Error(`nocode api address missing`)
-      if(!base_url) throw new Error(`base_url missing`)
+      if(!websiteid) throw new Error(`websiteid missing`)
       if(!success_url) throw new Error(`success_url missing`)
       if(!cancel_url) throw new Error(`cancel_url missing`)
 
@@ -233,26 +230,11 @@ const App = ({
       if(!stripeSecret || !stripeSecret.data || !stripeSecret.data.stripe_user_id) throw new Error(`connected stripe secret not found`)
 
       const connectedStripeId = stripeSecret.data.stripe_user_id
-      const encodedSuccessUrl = encodeURI(success_url)
-
-      const payload = {
-        line_items,
-        websiteid,
-      }
-  
-      const token = await new Promise((resolve, reject) => {
-        jwt.sign(payload, jwt_secret_key, (err, token) => {
-          if(err) return reject(err)
-          resolve(token)
-        })
-      })
-
-      const apiSuccessUrl = `${base_url}/plugin/stripe/success/${websiteid}?redirect_url=${encodedSuccessUrl}&token=${token}`
-
+      
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items,
-        success_url: apiSuccessUrl,
+        success_url,
         cancel_url,
         payment_intent_data: {
           on_behalf_of: connectedStripeId,
@@ -269,48 +251,20 @@ const App = ({
     }
   })
 
-  app.get('/success/:websiteid', async (req, res, next) => {
-    try {
-      const {
-        redirect_url,
-        token, 
-      } = req.query
-
-      const {
-        websiteid,
-      } = req.params
-
-      if(!redirect_url) throw new Error(`redirect_url missing`)
-      if(!token) throw new Error(`token missing`)
-
-      const payload = await new Promise((resolve, reject) => {
-        jwt.verify(token, jwt_secret_key, (err, result) => {
-          if(err) return reject(err)
-          resolve(result)
-        })
-      })
-
-      res.json({
-        websiteid,
-        redirect_url,
-        payload,
-      })
-    } catch(e) {
-      return next(e)
-    }
-  })
-
   // we need a URL to redirect to stripe so a user can connect
   // their Stripe account to a website
-  app.post('/connect/:websiteid', async (req, res, next) => {
+  app.post('/connect', async (req, res, next) => {
     try {
       const {
         stripe_connect_url,
         finalize_url,
       } = req.body
 
+      const websiteid = req.headers['x-nocode-websiteid']
+      if(!websiteid) throw new Error(`websiteid missing`)
+
       const payload = {
-        websiteid: req.params.websiteid,
+        websiteid,
         finalize_url,
       }
   
@@ -343,7 +297,8 @@ const App = ({
       const accessToken = req.headers['x-nocode-access-token']
       const apiUrl = req.headers['x-nocode-api']
 
-      if(!accessToken || !apiUrl) throw new Error(`access token or nocode api address missing`)
+      if(!accessToken) throw new Error(`access token missing`)
+      if(!apiUrl) throw new Error(`api address missing`)
 
       // decode the state param passed to us from stripe
       // this is a JWT token that contains the website id

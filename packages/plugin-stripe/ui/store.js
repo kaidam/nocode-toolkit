@@ -1,10 +1,9 @@
 import axios from 'axios'
-// import Promise from 'bluebird'
 import CreateReducer from '@nocode-toolkit/website/store/utils/createReducer'
 import CreateActions from '@nocode-toolkit/website/store/utils/createActions'
-// import selectors from '@nocode-toolkit/website/selectors'
-// import routerActions from '@nocode-toolkit/website/store/moduleRouter'
 import actionLoader from '@nocode-toolkit/ui/store/actionLoader'
+
+import selectors from './selectors'
 
 const initialState = {
   purchasedProductId: null,
@@ -35,12 +34,12 @@ const sideEffects = {
   // then send the browser off to Stripe
   connect: () => async (dispatch, getState) => {
     try {
-      const systemConfig = getState().nocode.config
+      const apiUrl = selectors.apiUrl(getState())
       const payload = {
-        stripe_connect_url: `${document.location.protocol}//${document.location.host}/plugin/stripe/connect_response`,
+        stripe_connect_url: `${document.location.protocol}//${document.location.host}/plugin/api/global/stripe/connect_response`,
         finalize_url: document.location.href.replace(document.location.search, ''),
       }
-      const data = await axios.post(`/plugin/stripe/connect/${systemConfig.websiteId}`, payload)
+      const data = await axios.post(`${apiUrl}/connect`, payload)
         .then(res => res.data)
       document.location = data.url
     } catch(e) {
@@ -62,8 +61,8 @@ const sideEffects = {
     currency,
   }) => async (dispatch, getState) => {
     try {
-      const systemConfig = getState().nocode.config
-      const keyData = await axios.get(`/plugin/stripe/publicKey`)
+      const apiUrl = selectors.apiUrl(getState())
+      const keyData = await axios.get(`${apiUrl}/publicKey`)
         .then(res => res.data)
       const publicKey = keyData.publicKey
       const line_items = [{
@@ -76,8 +75,6 @@ const sideEffects = {
 
       const redirect_query = `?trigger=stripe_success&product_id=${id}`
 
-      const base_url = document.location.protocol + '//' + document.location.host
-
       const success_url = document.location.search ? 
         document.location.href.replace(document.location.search, redirect_query) :
         document.location.href + redirect_query
@@ -86,9 +83,8 @@ const sideEffects = {
         document.location.href.replace(document.location.search, '') :
         document.location.href
       
-      const session_data = await axios.post(`/plugin/stripe/session/${systemConfig.websiteId}`, {
+      const session_data = await axios.post(`${apiUrl}/session`, {
         line_items,
-        base_url,
         success_url,
         cancel_url,
       })
