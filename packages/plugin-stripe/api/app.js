@@ -206,17 +206,26 @@ const App = ({
     try {
       const {
         line_items,
+        base_url,
         success_url,
         cancel_url,
       } = req.body
 
+      const {
+        websiteid,
+      } = req.params
+
       const accessToken = req.headers['x-nocode-access-token']
       const apiUrl = req.headers['x-nocode-api']
 
-      if(!accessToken || !apiUrl) throw new Error(`access token or nocode api address missing`)
+      if(!accessToken) throw new Error(`access token missing`)
+      if(!apiUrl) throw new Error(`nocode api address missing`)
+      if(!base_url) throw new Error(`base_url missing`)
+      if(!success_url) throw new Error(`success_url missing`)
+      if(!cancel_url) throw new Error(`cancel_url missing`)
 
       const stripeSecret = await getWebsiteSecret({
-        websiteid: req.params.websiteid,
+        websiteid,
         accessToken,
         apiUrl,
       })
@@ -224,11 +233,26 @@ const App = ({
       if(!stripeSecret || !stripeSecret.data || !stripeSecret.data.stripe_user_id) throw new Error(`connected stripe secret not found`)
 
       const connectedStripeId = stripeSecret.data.stripe_user_id
+      const encodedSuccessUrl = encodeURI(success_url)
+
+      const payload = {
+        line_items,
+        websiteid,
+      }
+  
+      const token = await new Promise((resolve, reject) => {
+        jwt.sign(payload, jwt_secret_key, (err, token) => {
+          if(err) return reject(err)
+          resolve(token)
+        })
+      })
+
+      const apiSuccessUrl = `${base_url}/plugin/stripe/success/${websiteid}?redirect_url=${encodedSuccessUrl}&token=${token}`
 
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items,
-        success_url,
+        success_url: apiSuccessUrl,
         cancel_url,
         payment_intent_data: {
           on_behalf_of: connectedStripeId,
@@ -242,6 +266,37 @@ const App = ({
 
     } catch(e) {
       next(e)
+    }
+  })
+
+  app.get('/success/:websiteid', async (req, res, next) => {
+    try {
+      const {
+        redirect_url,
+        token, 
+      } = req.query
+
+      const {
+        websiteid,
+      } = req.params
+
+      if(!redirect_url) throw new Error(`redirect_url missing`)
+      if(!token) throw new Error(`token missing`)
+
+      const payload = await new Promise((resolve, reject) => {
+        jwt.verify(token, jwt_secret_key, (err, result) => {
+          if(err) return reject(err)
+          resolve(result)
+        })
+      })
+
+      res.json({
+        websiteid,
+        redirect_url,
+        payload,
+      })
+    } catch(e) {
+      return next(e)
     }
   })
 

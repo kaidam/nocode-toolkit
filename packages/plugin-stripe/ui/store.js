@@ -48,6 +48,12 @@ const sideEffects = {
     }
   },
 
+  // for purchase we create the line item,
+  // calculate the redirect URL for success
+  // post to the session endpoint to get our session id
+  // use the Stripe library to redirect to the session
+  //
+  // the redirect URL will trigger the confirmation window
   purchase: ({
     id,
     name,
@@ -70,6 +76,8 @@ const sideEffects = {
 
       const redirect_query = `?trigger=stripe_success&product_id=${id}`
 
+      const base_url = document.location.protocol + '//' + document.location.host
+
       const success_url = document.location.search ? 
         document.location.href.replace(document.location.search, redirect_query) :
         document.location.href + redirect_query
@@ -80,6 +88,7 @@ const sideEffects = {
       
       const session_data = await axios.post(`/plugin/stripe/session/${systemConfig.websiteId}`, {
         line_items,
+        base_url,
         success_url,
         cancel_url,
       })
