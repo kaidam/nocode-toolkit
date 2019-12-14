@@ -108,6 +108,7 @@ const Develop = ({
         if(options.aliasLinks) {
           webpackConfig.resolve.alias = {
             '@material-ui/styles': path.resolve(options.projectFolder, 'node_modules', '@material-ui/styles'),
+            '@material-ui/core': path.resolve(options.projectFolder, 'node_modules', '@material-ui/core'),
             'react': path.resolve(options.projectFolder, 'node_modules', 'react'),
             'react-dom': path.resolve(options.projectFolder, 'node_modules', '@hot-loader/react-dom'),
           }
