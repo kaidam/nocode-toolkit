@@ -71,9 +71,6 @@ const sideEffects = {
       }
       const data = await axios.post(`${apiUrl}/submit`, values)
         .then(res => res.data)
-      console.log('--------------------------------------------')
-      console.log('--------------------------------------------')
-      console.dir(data)
       dispatch(setSuccess(`Message sent`))
       dispatch(actions.setErrors({}))
       dispatch(actions.setValues({}))
