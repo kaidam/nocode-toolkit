@@ -33,6 +33,7 @@ const App = ({
       
       res.json({
         ok: true,
+        data: req.body,
       })
     } catch(e) {
       next(e)

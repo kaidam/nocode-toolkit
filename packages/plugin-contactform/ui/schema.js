@@ -4,9 +4,9 @@ import Wrapper from './components/Wrapper'
 const Schemas = ({
   renderers = {},
 } = {}) => {
-  const contactForm = {
+  const contactform = {
     driver: 'local',
-    type: 'contactForm',
+    type: 'contactform',
     title: 'Contact Form',
     icon: 'contact',
     metadata: {},
@@ -34,7 +34,7 @@ const Schemas = ({
   }
 
   return {
-    contactForm,
+    contactform,
   }
 }
 

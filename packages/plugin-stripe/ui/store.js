@@ -33,6 +33,7 @@ const sideEffects = {
   // request a stripe connect redirect URL from the backend
   // then send the browser off to Stripe
   connect: () => async (dispatch, getState) => {
+    const setError = actionLoader('snackbar', 'setError')
     try {
       const apiUrl = selectors.apiUrl(getState())
       const payload = {
@@ -43,7 +44,7 @@ const sideEffects = {
         .then(res => res.data)
       document.location = data.url
     } catch(e) {
-      alert('there was an error: ' + e.toString())
+      dispatch(setError('there was an error: ' + e.toString()))
     }
   },
 
@@ -60,6 +61,7 @@ const sideEffects = {
     price,
     currency,
   }) => async (dispatch, getState) => {
+    const setError = actionLoader('snackbar', 'setError')
     try {
       const apiUrl = selectors.apiUrl(getState())
       const keyData = await axios.get(`${apiUrl}/publicKey`)
@@ -95,10 +97,10 @@ const sideEffects = {
       stripe.redirectToCheckout({
         sessionId: session_data.id
       }).then(function (result) {
-        alert('there was an error: ' + result.error.message)
+        dispatch(setError('there was an error: ' + result.error.message))
       })
     } catch(e) {
-      alert('there was an error: ' + e.toString())
+      dispatch(setError('there was an error: ' + e.toString()))
     }
   },
 

@@ -1,4 +1,5 @@
 const selectors = {
+  formId: (state) => state.contactform.formId,
   values: (state) => state.contactform.values,
   errors: (state) => state.contactform.errors,
   isValid: (state) => {
@@ -11,7 +12,7 @@ const selectors = {
   },
   apiUrl: (state) => {
     const websiteId = selectors.websiteid(state)
-    return `/plugin/api/${websiteId}/contact-form`
+    return `/plugin/api/${websiteId}/contactform`
   }
 }
 

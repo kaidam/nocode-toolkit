@@ -4,6 +4,7 @@ import CreateActions from '@nocode-toolkit/website/store/utils/createActions'
 import actionLoader from '@nocode-toolkit/ui/store/actionLoader'
 
 import selectors from './selectors'
+import fields from './fields'
 
 const initialState = {
 
@@ -28,31 +29,41 @@ const reducers = {
   },
   setValue: (state, action) => {
     const {
-      name,
+      id,
       value,
     } = action.payload
-    state.values[name] = value
+    state.values[id] = value
   },
   setErrors: (state, action) => {
     state.errors = action.payload
   },
   setError: (state, action) => {
     const {
-      name,
+      id,
       value,
     } = action.payload
-    state.errors[name] = value
+    state.errors[id] = value
   },
 }
 
 const sideEffects = {
-  
+
   submit: () => async (dispatch, getState) => {
+    const setSuccess = actionLoader('snackbar', 'setSuccess')
+    const setError = actionLoader('snackbar', 'setError')
     try {
-      const setSuccess = actionLoader('snackbar', 'setSuccess')
-      const setError = actionLoader('snackbar', 'setError')
+      dispatch(actions.setErrors({}))
       const apiUrl = selectors.apiUrl(getState())
       const values = selectors.values(getState())
+      const errors = fields.reduce((all, field) => {
+        if(!field.validate) return all
+        const error = field.validate(values[field.id])
+        if(error) {
+          all[field.id] = error
+        }
+        return all
+      }, {})
+      dispatch(actions.setErrors(errors))
       const isValid = selectors.isValid(getState())
       if(!isValid) {
         dispatch(setError(`the form is not valid`))
@@ -64,8 +75,11 @@ const sideEffects = {
       console.log('--------------------------------------------')
       console.dir(data)
       dispatch(setSuccess(`Message sent`))
+      dispatch(actions.setErrors({}))
+      dispatch(actions.setValues({}))
+      dispatch(actions.setFormId(null))
     } catch(e) {
-      alert('there was an error: ' + e.toString())
+      dispatch(setError('there was an error: ' + e.toString()))
     }
   },
 

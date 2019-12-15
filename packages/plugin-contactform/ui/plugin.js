@@ -3,7 +3,7 @@ import Schema from './schema'
 
 const contactFormPlugin = (opts) => {
   return {
-    id: 'contact-form',
+    id: 'contactform',
     title: 'Contact Form',
     actions,
     reducer,
