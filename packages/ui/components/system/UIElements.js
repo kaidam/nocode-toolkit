@@ -8,7 +8,7 @@ import { useSelector } from 'react-redux'
 */
 import selectors from '../../store/selectors'
 import ContentFormDialog from '../content/Dialog'
-import ExternalEditorDialog from '../document/ExternalEditorDialog'
+import ExternalEditorDialog from '../layout/ExternalEditorDialog'
 import FinderDialog from '../finder/Dialog'
 import JobDialog from '../job/Dialog'
 import JobHistoryDialog from '../job/HistoryDialog'
