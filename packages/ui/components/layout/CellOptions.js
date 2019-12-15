@@ -4,7 +4,6 @@ import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 import Fab from '@material-ui/core/Fab'
 
-import Actions from '../../utils/actions'
 import MenuButton from '../buttons/MenuButton'
 import Window from '../system/Window'
 
@@ -14,7 +13,6 @@ import typeUI from '../../types/ui'
 import icons from '../../icons'
 
 import selectors from '../../store/selectors'
-import documentActions from '../../store/modules/document'
 
 const EditIcon = icons.edit
 const AddIcon = icons.add
@@ -70,15 +68,12 @@ const CellOptions = ({
   cell,
   rowIndex,
   cellIndex,
+  location = 'document',
+  onEditLayout,
+  onSaveContent,
 }) => {
 
   const classes = useStyles()
-
-  const actions = Actions(useDispatch(), {
-    editLayout: documentActions.editLayout,
-    saveContent: documentActions.saveContent,
-  })
-
   const settings = useSelector(selectors.ui.settings)
 
   const [ deleteConfirmOpen, setDeleteConfirmOpen ] = useState(false)
@@ -98,9 +93,10 @@ const CellOptions = ({
       filter: (parentFilter, schemaDefinition) => {
         const hasCellParent = parentFilter.indexOf('cell') >= 0
         if(!hasCellParent) return false
-
         if(schemaDefinition.addCellFilter) {
-          return schemaDefinition.addCellFilter(settings)
+          return schemaDefinition.addCellFilter(settings, {
+            location,
+          })
         }
         else {
           return true
@@ -126,7 +122,7 @@ const CellOptions = ({
     method,
     params,
   }) => () => {
-    actions.editLayout({
+    onEditLayout({
       data,
       rowIndex,
       cellIndex,
@@ -301,7 +297,7 @@ const CellOptions = ({
 
   const onDeleteSubmit = useCallback(() => {
     onCloseDeleteConfirm()
-    actions.editLayout({
+    onEditLayout({
       data,
       rowIndex,
       cellIndex,
@@ -319,7 +315,7 @@ const CellOptions = ({
       } = addingCell
 
       // this updates the cell layout in the store
-      actions.editLayout({
+      onEditLayout({
         data,
         rowIndex,
         cellIndex,
@@ -337,7 +333,7 @@ const CellOptions = ({
     }
     // this is the callback from the form when we are saving an existing cell
     else {
-      actions.saveContent({
+      onSaveContent({
         item: data.item,
         cell,
         rowIndex,

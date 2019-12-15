@@ -1,10 +1,11 @@
 import React, { lazy } from 'react'
 import { useSelector } from 'react-redux'
-import selectors from '../../store/selectors'
 import Suspense from '../system/Suspense'
 import Layout from '../layout/Layout'
+import selectors from '../../store/selectors'
 
 const RenderDefaultHomeUI = lazy(() => import(/* webpackChunkName: "ui" */ './RenderDefaultHomeUI'))
+const CellOptions = lazy(() => import(/* webpackChunkName: "ui" */ './CellOptions'))
 
 const RenderDefaultHome = ({
   children,
@@ -53,6 +54,7 @@ const DocumentLayout = ({
       renderers={ renderers }
       data={ data }
       renderCell={ renderCell }
+      CellOptionsWrapper={ CellOptions }
     />
   )
 }
