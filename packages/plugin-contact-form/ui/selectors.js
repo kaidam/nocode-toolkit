@@ -1,7 +1,10 @@
-const currentValue = state => state.stripe.value
-
 const selectors = {
-  currentValue,
+  values: (state) => state.contactform.values,
+  errors: (state) => state.contactform.errors,
+  isValid: (state) => {
+    const errors = selectors.errors(state)
+    return Object.keys(errors).length <= 0
+  },
   websiteid: (state) => {
     const systemConfig = state.nocode.config
     return systemConfig.websiteId

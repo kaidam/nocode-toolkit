@@ -1,15 +1,18 @@
 import React from 'react'
+import Button from '@material-ui/core/Button'
 
 const ContactButton = ({
   content,
   onClick,
 }) => {
   return (
-    <button
+    <Button
+      variant="contained"
+      color="primary"
       onClick={ onClick }
     >
       { content.buttonTitle || 'Contact Us' }
-    </button>
+    </Button>
   )
 }
 

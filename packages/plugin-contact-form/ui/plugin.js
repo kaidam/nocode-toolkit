@@ -1,5 +1,5 @@
 import actions, { reducer } from './store'
-import schema from './schema'
+import Schema from './schema'
 
 const contactFormPlugin = (opts) => {
   return {
@@ -7,8 +7,7 @@ const contactFormPlugin = (opts) => {
     title: 'Contact Form',
     actions,
     reducer,
-    settingsTab,
-    schema,
+    schema: Schema(opts),
   }
 }
 
