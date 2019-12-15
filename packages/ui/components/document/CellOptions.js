@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react'
+import uuid from 'uuid/v4'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 import Fab from '@material-ui/core/Fab'
@@ -325,6 +326,7 @@ const CellOptions = ({
         method,
         params,
         cell: {
+          id: uuid(),
           component: type,
           source: 'cell',
           editor: 'local',

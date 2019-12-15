@@ -1,13 +1,9 @@
 import React from 'react'
-import PaymentButton from './components/PaymentButton'
-import PaymentConfirmation from './components/PaymentConfirmation'
-import PaymentButtonWrapper from './components/PaymentButtonWrapper'
+import Wrapper from './components/Wrapper'
 
 const Schemas = ({
   renderers = {},
 } = {}) => {
-  const PaymentButtonRender = renderers.paymentButton || PaymentButton
-  const PaymentConfirmationRender = renderers.paymentConfirmation || PaymentConfirmation
   const paymentButton = {
     driver: 'local',
     type: 'paymentButton',
@@ -80,20 +76,11 @@ const Schemas = ({
     }],
     cellConfig: {
       padding: 1,
-      component: ({
-        content,
-        cell,
-        rowIndex,
-        cellIndex,
-      }) => {
+      component: (props) => {
         return (
-          <PaymentButtonWrapper
-            content={ content }
-            cell={ cell }
-            rowIndex={ rowIndex }
-            cellIndex={ cellIndex }
-            Renderer={ PaymentButtonRender }
-            ConfirmRenderer={ PaymentConfirmationRender }
+          <Wrapper
+            renderers={ renderers }
+            {...props}
           />
         )
       },

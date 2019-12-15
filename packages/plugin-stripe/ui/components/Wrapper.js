@@ -2,20 +2,23 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import actions from '../store'
 
+import Button from './Button'
+import Confirmation from './Confirmation'
+
 const CURRENCY_SYMBOLS = {
   GBP: '£',
   USD: '$',
 }
 
 const PaymentButtonWrapper = ({
-  Renderer,
-  ConfirmRenderer,
+  renderers,
   content,
   cell,
-  rowIndex,
-  cellIndex,
 }) => {
-  const productId = `${rowIndex}-${cellIndex}`
+
+  const RenderButton = renderers.button || Button
+  const RenderConfirmation = renderers.confirmation || Confirmation
+
   useEffect(() => {
     if(window.Stripe) return
     const script = document.createElement("script")
@@ -33,18 +36,18 @@ const PaymentButtonWrapper = ({
   })
   const onClick = () => {
     dispatch(actions.purchase({
-      id: productId,
+      id: cell.id,
       ...content,
     }))
   }
   const purchasedProductId = useSelector(state => state.stripe.purchasedProductId)
   let confirmWindow = null
-  if(purchasedProductId == `${rowIndex}-${cellIndex}`) {
+  if(purchasedProductId == cell.id) {
     const onClose = () => {
       dispatch(actions.closeConfirmationWindow())
     }
     confirmWindow =  (
-      <ConfirmRenderer
+      <RenderConfirmation
         content={ passContent }
         onClose={ onClose }
       />
@@ -52,7 +55,7 @@ const PaymentButtonWrapper = ({
   }
   return (
     <div>
-      <Renderer
+      <RenderButton
         content={ passContent }
         cell={ cell }
         onClick={ onClick }

@@ -1,16 +1,15 @@
-import PaymentButton from './components/PaymentButtonMaterial'
-import PaymentConfirmation from './components/PaymentConfirmationMaterial'
+import PaymentButton from './components/MaterialButton'
+import PaymentConfirmation from './components/MaterialConfirmation'
 import plugin from './plugin'
 
 const stripePluginMaterial = (opts = {}) => {
   const renderers = Object.assign({}, opts.renderers, {
-    paymentButton: PaymentButton,
-    paymentConfirmation: PaymentConfirmation,
+    button: PaymentButton,
+    confirmation: PaymentConfirmation,
   })
-  opts = Object.assign({}, opts, {
+  return plugin(Object.assign({}, opts, {
     renderers,
-  })
-  return plugin(opts)
+  }))
 }
 
 export default stripePluginMaterial
