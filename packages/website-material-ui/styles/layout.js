@@ -23,8 +23,11 @@ const styles = theme => {
       boxShadow: 'none',
       borderBottom: 'solid 1px rgba(0, 0, 0, 0.12)',
     },
-    toolbar: {
+    headerToolbar: {
       height: [`${theme.layout.topbarHeight}px`, '!important'],
+    },
+    footerToolbar: {
+      height: [`${theme.layout.footerHeight}px`, '!important'],
     },
     largeNav: {
       display: 'none',
@@ -56,10 +59,18 @@ const styles = theme => {
 
     drawer: {
       height: '100%',
-      width: `${theme.layout.drawerWidth}px`,
-      minWidth: `${theme.layout.drawerWidth}px`,
       borderRight: '1px solid rgba(0, 0, 0, 0.12)',
       backgroundColor: theme.palette.background.paper,
+    },
+
+    smallDrawer: {
+      width: `${theme.layout.drawerWidthSmall}px`,
+      minWidth: `${theme.layout.drawerWidthSmall}px`,
+    },
+
+    largeDrawer: {
+      width: `${theme.layout.drawerWidthLarge}px`,
+      minWidth: `${theme.layout.drawerWidthLarge}px`,
     },
 
     content: {
