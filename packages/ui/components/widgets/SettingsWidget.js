@@ -8,10 +8,11 @@ const SettingsWidget = ({
   getValue,
   htmlMode,
   renderers,
+  props,
 }) => {
   const settings = useSelector(selectors.ui.settings)
   const settingsData = settings.data || {}
-  const value = getValue ? getValue(settingsData) : settingsData
+  const value = getValue ? getValue(settingsData, props) : settingsData
   return (
     <EditWidget
       id="settings"
@@ -20,6 +21,7 @@ const SettingsWidget = ({
       value={ value }
       htmlMode={ htmlMode }
       renderers={ renderers }
+      props={ props }
     />
   )
 }

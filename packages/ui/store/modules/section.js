@@ -97,6 +97,7 @@ const sideEffects = {
     const layout = (annotation[panelName] || []).filter(row => {
       const cell = row[0]
       if(!cell) return false
+      if(method == 'deleteCell') return true
       return cell.placeholder ? false : true
     })
     

@@ -120,6 +120,7 @@ const NativeLinkComponent = ({
 const NavBarItem = ({
   item,
   renderers,
+  props,
 }) => {
   const route = useSelector(selectors.router.route)
 
@@ -162,6 +163,7 @@ const NavBarItem = ({
       isCurrent={ isCurrent }
       linkProps={ linkProps }
       LinkComponent={ LinkComponent }
+      props={ props }
     />
   )
 }
@@ -170,6 +172,7 @@ const NavBar = ({
   section,
   withHome,
   renderers = {},
+  ...props
 }) => {
   const sectionListSelector = useMemo(selectors.content.sectionList, [])
   const sectionList = useSelector(state => sectionListSelector(state, section))
@@ -204,13 +207,14 @@ const NavBar = ({
           key={ i }
           item={ item }
           renderers={ renderers }
+          props={ props }
         />
       )
     })
-  }, [withHome, sectionList])
+  }, [withHome, sectionList, props])
 
   const navbar = (
-    <NavBarRenderer>
+    <NavBarRenderer props={ props }>
       { items }
     </NavBarRenderer>
   )
@@ -231,6 +235,7 @@ const NavBar = ({
     <RootRenderer
       navbar={ navbar }
       editor={ editor }
+      props={ props }
     />
   )
 }

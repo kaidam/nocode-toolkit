@@ -10,6 +10,7 @@ const SingletonWidget = ({
   getValue,
   htmlMode,
   renderers,
+  props,
 }) => {
   const allContent = useSelector(selectors.content.contentAll)
   const item = allContent[id] || {}
@@ -24,6 +25,7 @@ const SingletonWidget = ({
       value={ value }
       htmlMode={ htmlMode }
       renderers={ renderers }
+      props={ props }
     />
   )
 }

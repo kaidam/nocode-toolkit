@@ -1,4 +1,5 @@
-import React, { lazy, useMemo, useState, useCallback } from 'react'
+import React, { lazy, useMemo, useState, useCallback, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 
 import MenuItem from '@material-ui/core/MenuItem'
@@ -6,6 +7,7 @@ import Menu from '@material-ui/core/Menu'
 import IconButton from '@material-ui/core/IconButton'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import BaseNavBar from '@nocode-toolkit/ui/components/content/NavBar'
+import selectors from '@nocode-toolkit/ui/store/selectors'
 
 import MoreVert from '@material-ui/icons/MoreVert'
 
@@ -23,9 +25,6 @@ const useStyles = makeStyles(theme => createStyles({
   },
   editor: {
     flexGrow: 0,
-  },
-  navNormal: {
-
   },
   editorListIcon: {
     minWidth: '10px',
@@ -56,10 +55,10 @@ const useStyles = makeStyles(theme => createStyles({
     overflow: 'hidden',
     fontSize: '1em',
   },
-  navLi: {
+  navWrapper: {
     float: 'left',
   },
-  navLiA: {
+  navItem: {
     ...theme.typography.button,
     display: 'block',
     fontWeight: '500',
@@ -77,7 +76,10 @@ const useStyles = makeStyles(theme => createStyles({
     backgroundColor: [theme.palette.primary.contrastText, '!important'],
     borderRadius: [theme.spacing(1), '!important'],
   },
-  largeNavLi: {
+  navNormal: {
+
+  },
+  navItemLarge: {
     '&:hover': {
       color: theme.palette.primary.main,
       backgroundColor: theme.palette.primary.contrastText,
@@ -103,7 +105,18 @@ const useStyles = makeStyles(theme => createStyles({
     textDecoration: 'none',
     cursor: 'pointer',
   },
+  menuIcon: {
+    minWidth: '40px',
+  },
 }))
+
+const getMergedClasses = (classes, props, names) => {
+  const classOverrides = props.classes || {}
+  return names.reduce((all, name) => {
+    all[name] = classOverrides[name] || classes[name]
+    return all
+  }, {})
+}
 
 const eventSink = (e) => {
   e.preventDefault()
@@ -147,13 +160,24 @@ const RenderNavbarLarge = ({
 
 const RenderNavbarSmall = ({
   children,
+  props,
 }) => {
   const classes = useStyles()
+
+  const route = useSelector(selectors.router.route)
 
   const [ anchorEl, setAnchorEl ] = useState(null)
   const handleMenu = useCallback((event) => setAnchorEl(event.currentTarget), [])
   const handleClose = useCallback((event) => setAnchorEl(null), [])
   const open = Boolean(anchorEl)
+
+  const useClasses = getMergedClasses(classes, props, [
+    'smallNavButton',
+  ])
+
+  useEffect(() => {
+    setAnchorEl(null)
+  }, [route])
 
   return (
     <div>
@@ -162,7 +186,7 @@ const RenderNavbarSmall = ({
         aria-haspopup="true"
         onClick={ handleMenu }
       >
-        <MoreVert className={ classes.smallNavButton } />
+        <MoreVert className={ useClasses.smallNavButton } />
       </IconButton>
       <Menu
         id="menu-appbar"
@@ -193,10 +217,17 @@ const RenderItem = ({
   LinkComponent,
   className,
   editorContainerClassName,
+  props,
+  withHighlight,
 }) => {
 
   const classes = useStyles()
-  const highLightClassName = isCurrent ? `${className} ${classes.navActive}` : `${className} ${classes.navNormal}`
+  const useClasses = getMergedClasses(classes, props, [
+    'navActive',
+    'navNormal',
+  ])
+
+  const highLightClassName = isCurrent && withHighlight ? `${className} ${useClasses.navActive}` : `${className} ${useClasses.navNormal}`
 
   return (
     <LinkComponent
@@ -217,12 +248,21 @@ const RenderItemLarge = ({
   isCurrent,
   linkProps,
   LinkComponent,
+  props,
 }) => {
   const classes = useStyles()
-  const editorContainerClassName = isCurrent ? '' : classes.inactiveEditorContainer
+  
+  const useClasses = getMergedClasses(classes, props, [
+    'navWrapper',
+    'navItem',
+    'navItemLarge',
+  ])
+
+  const editorContainerClassName = isCurrent ? '' : useClasses.inactiveEditorContainer
+    
   return (
     <li
-      className={ classes.navLi }
+      className={ useClasses.navWrapper }
     >
       <RenderItem
         item={ item }
@@ -230,8 +270,10 @@ const RenderItemLarge = ({
         isCurrent={ isCurrent }
         linkProps={ linkProps }
         LinkComponent={ LinkComponent }
-        className={ `${classes.navLiA} ${classes.largeNavLi}` }
+        className={ `${useClasses.navItem} ${useClasses.navItemLarge}` }
         editorContainerClassName={ editorContainerClassName }
+        props={ props }
+        withHighlight
       />
     </li>
   )
@@ -243,8 +285,14 @@ const RenderItemSmall = ({
   isCurrent,
   linkProps,
   LinkComponent,
+  props,
 }) => {
   const classes = useStyles()
+  const useClasses = getMergedClasses(classes, props, [
+    'navItem',
+    'navItemSmall',
+  ])
+
   return (
     <MenuItem>
       <RenderItem
@@ -253,7 +301,8 @@ const RenderItemSmall = ({
         isCurrent={ isCurrent }
         linkProps={ linkProps }
         LinkComponent={ LinkComponent }
-        className={ classes.navLiA }
+        className={ `${useClasses.navItem} ${useClasses.navItemSmall}` }
+        props={ props }
       />
     </MenuItem>
   )
@@ -290,6 +339,7 @@ const renderersSmall = {
 const NavBar = ({
   section,
   withHome,
+  ...props
 }) => {
   const classes = useStyles()
   return (
@@ -299,6 +349,7 @@ const NavBar = ({
           section={ section }
           withHome={ withHome }
           renderers={ renderersLarge }
+          {...props}
         />
       </div>
       <div className={ classes.smallNav }>
@@ -306,6 +357,7 @@ const NavBar = ({
           section={ section }
           withHome={ withHome }
           renderers={ renderersSmall }
+          {...props}
         />
       </div>
     </React.Fragment>

@@ -67,6 +67,7 @@ const EditWidget = ({
   value,
   htmlMode,
   renderers = {},
+  props = {},
 }) => {
   const RootRenderer = renderers.root || defaultRenderers.root
   const ContentRenderer = renderers.content ?
@@ -88,6 +89,7 @@ const EditWidget = ({
   const content = (
     <ContentRenderer
       value={ value }
+      props={ props }
     />
   )
 
@@ -95,6 +97,7 @@ const EditWidget = ({
     <RootRenderer
       content={ content }
       editor={ editor }
+      props={ props }
     />
   )
 }

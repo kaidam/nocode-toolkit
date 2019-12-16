@@ -18,7 +18,8 @@ const RenderContent = ({
   value: {
     title,
     imageUrl,
-  }
+  },
+  props,
 }) => {
   return (
     <Link
@@ -63,6 +64,7 @@ const defaultRenderers = {
 
 const Logo = ({
   renderers,
+  ...props
 }) => {
   const useRenderers = Object.assign({}, defaultRenderers, renderers)
   return (
@@ -71,6 +73,7 @@ const Logo = ({
       type="logo"
       getValue={ getValue }
       renderers={ useRenderers }
+      props={ props }
     />
   )
 }

@@ -18,7 +18,6 @@ const styles = theme => {
       position: 'relative',
       zIndex: theme.zIndex.drawer + 1,
       height: [`${theme.layout.topbarHeight}px`, '!important'],
-      backgroundColor: '#fff',
       backgroundColor: theme.palette.primary.main,
       boxShadow: 'none',
       borderBottom: 'solid 1px rgba(0, 0, 0, 0.12)',

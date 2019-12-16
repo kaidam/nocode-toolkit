@@ -37,9 +37,12 @@ const RenderContent = ({
   value: {
     title,
     imageUrl,
-  }
+  },
+  props = {},
 }) => {
   const classes = useStyles()
+  const classOverrides = props.classes || {}
+  const titleClassname = classOverrides.title || ''
   return (
     <Link
       path="/"
@@ -55,7 +58,7 @@ const RenderContent = ({
           title && (
             <Typography
               variant="h5"
-              className={ classes.logoText }
+              className={ `${classes.logoText} ${titleClassname}` }
             >
               { title }
             </Typography>
@@ -70,12 +73,11 @@ const renderers = {
   content: RenderContent,
 }
 
-const Logo = ({
-
-}) => {
+const Logo = (props = {}) => {
   return (
     <BaseLogo
       renderers={ renderers }
+      {...props}
     />
   )
 }
