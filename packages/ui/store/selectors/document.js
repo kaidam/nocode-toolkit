@@ -67,8 +67,6 @@ const data = createSelector(
   },
 )
 
-
-
 const selectors = {
   errors: props(networkErrors, NETWORK_NAMES),
   loading: props(networkLoading, NETWORK_NAMES),

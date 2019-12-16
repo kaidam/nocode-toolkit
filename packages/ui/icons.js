@@ -57,6 +57,8 @@ import UndoIcon from '@material-ui/icons/Undo'
 import MoveIcon from '@material-ui/icons/OpenWith'
 import PaymentIcon from '@material-ui/icons/AttachMoney'
 import ContactIcon from '@material-ui/icons/ContactMail'
+import AddPanelTop from '@material-ui/icons/VerticalAlignTop'
+import AddPanelBottom from '@material-ui/icons/VerticalAlignBottom'
 
 import UnsplashLogo from './styles/UnsplashLogo'
 import GoogleDriveLogo from './styles/GoogleDriveLogo'
@@ -109,6 +111,8 @@ const icons = {
   move: MoveIcon,
   payment: PaymentIcon,
   contact: ContactIcon,
+  addPanelTop: AddPanelTop,
+  addPanelBottom: AddPanelBottom,
 }
 
 export default icons

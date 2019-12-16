@@ -5,6 +5,7 @@ import job from './job'
 import content from './content'
 import finder from './finder'
 import document from './document'
+import section from './section'
 import ui from './ui'
 import fileupload from './fileupload'
 
@@ -22,6 +23,7 @@ const selectors = {
   content,
   finder,
   document,
+  section,
   ui,
   fileupload,
   DEFAULT_ARRAY,

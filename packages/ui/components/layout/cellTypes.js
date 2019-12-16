@@ -29,8 +29,17 @@ const getContent = ({
   cell,
   data,
 }) => {
-  if(cell.source == 'title') return {
-    title: data.item.data.name,
+  if(cell.source == 'title') {
+    if(data.item && data.item.data) {
+      return {
+        title: data.item.data.name,
+      }
+    }
+    else {
+      return {
+        title: '',
+      }
+    }
   }
   if(cell.source == 'external') return data.externals[cell.index]
   if(cell.source == 'cell') return cell.data

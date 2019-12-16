@@ -61,6 +61,12 @@ const sectionTree = () => createSelector(
   }
 )
 
+const sectionItem = () => createSelector(
+  sectionAll,
+  (_, name) => name,
+  (sections, name) => sections[name] || DEFAULT_ITEM,
+)
+
 const sectionList = () => createSelector(
   sectionAll,
   contentAll,
@@ -110,7 +116,9 @@ const selectors = {
   itemOptions,
   contentAll,
   contentItem,
+  sectionItem,
   sectionAll,
+  sectionItem,
   singletonAll,
   queryItem,
   sectionTree,

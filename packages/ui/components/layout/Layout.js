@@ -109,7 +109,6 @@ const Layout = ({
     const cells = row.map((cell, j) => {
 
       const cellConfig = cellTypes.getCellConfig(cell.component)
-      
       const cellContent = cellTypes.getContent({
         cell,
         data,
@@ -159,7 +158,7 @@ const Layout = ({
     return (
       <RowRenderer
         key={ i }
-        cells={ cells}
+        cells={ cells }
       />
     )             
   })

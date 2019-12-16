@@ -32,6 +32,16 @@ const useStyles = makeStyles(theme => createStyles({
     borderBottom: '1px solid #ccc',
     padding: theme.spacing(1),
   },
+  panelTop: {
+    flexGrow: 0,
+    borderBottom: '1px solid #ccc',
+    padding: theme.spacing(1),
+  },
+  panelBottom: {
+    flexGrow: 0,
+    borderTop: '1px solid #ccc',
+    padding: theme.spacing(1),
+  },
   sublist: {
     paddingLeft: theme.spacing(1.5),
     '& > ul': {
@@ -78,8 +88,10 @@ const eventSink = (e) => {
 }
 
 const RenderRoot = ({
-  content,
+  panelTop,
   editor,
+  content,
+  panelBottom,
 }) => {
   const classes = useStyles()
 
@@ -87,6 +99,13 @@ const RenderRoot = ({
     <div
       className={ classes.root }
     >
+      {
+        panelTop && (
+          <div className={ classes.panelTop }>
+            { panelTop }
+          </div>
+        )
+      }
       {
         editor && (
           <div className={ classes.sectionEditor }>
@@ -97,6 +116,13 @@ const RenderRoot = ({
       <div className={ classes.menu }>
         { content }
       </div>
+      {
+        panelBottom && (
+          <div className={ classes.panelBottom }>
+            { panelBottom }
+          </div>
+        )
+      }
     </div>
   )
 }

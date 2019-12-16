@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch } from 'react-redux'
 
 import Fab from '@material-ui/core/Fab'
+import Tooltip from '@material-ui/core/Tooltip'
 
 import Actions from '../../utils/actions'
 
@@ -66,14 +67,16 @@ const SectionEditor = ({
       items={ menuItems }
       tiny
       getButton={ onClick => (
-        <Fab
-          size="small"
-          color="secondary"
-          className={ tiny ? classes.tinyRoot : null }
-          onClick={ onClick }
-        >
-          <AddIcon />
-        </Fab>
+        <Tooltip title="Add Content">
+          <Fab
+            size="small"
+            color="secondary"
+            className={ tiny ? classes.tinyRoot : null }
+            onClick={ onClick }
+          >
+            <AddIcon />
+          </Fab>
+        </Tooltip>
       )}
     />
   )

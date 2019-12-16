@@ -28,6 +28,10 @@ export const document = {
   contentHeight: 0,
 }
 
+export const section = {
+
+}
+
 export const job = {
   list: [],
   publishStatus: {},
@@ -75,6 +79,7 @@ const initialState = {
   finder,
   job,
   document,
+  section,
   fileupload,
   snackbar,
   network,

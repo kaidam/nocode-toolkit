@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch } from 'react-redux'
 
 import Fab from '@material-ui/core/Fab'
+import Tooltip from '@material-ui/core/Tooltip'
+
 
 import Actions from '../../utils/actions'
 
@@ -47,13 +49,16 @@ const SectionSettings = ({
   }), [id, actions])
 
   return (
-    <Fab
-      size="small"
-      className={ tiny ? classes.tinyRoot : null }
-      onClick={ settingsHandler }
-    >
-      <SettingsIcon />
-    </Fab>
+    <Tooltip title="Settings">
+      <Fab
+        size="small"
+        className={ tiny ? classes.tinyRoot : null }
+        onClick={ settingsHandler }
+      >
+        <SettingsIcon />
+      </Fab>
+    </Tooltip>
+    
   )
 }
 

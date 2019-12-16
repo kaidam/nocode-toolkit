@@ -10,6 +10,7 @@ const importPromises = globals.isUIActivated() ?
     snackbar: import(/* webpackChunkName: "ui" */ './modules/snackbar'),
     network: import(/* webpackChunkName: "ui" */ './modules/network'),
     document: import(/* webpackChunkName: "ui" */ './modules/document'),
+    section: import(/* webpackChunkName: "ui" */ './modules/section'),
   } : 
   {}
 

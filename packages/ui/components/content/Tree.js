@@ -6,15 +6,18 @@ import selectors from '../../store/selectors'
 
 import itemTypes from '../../types/item'
 import Suspense from '../system/Suspense'
+import TreePanel from './TreePanel'
 
-const SectionEditor = lazy(() => import(/* webpackChunkName: "ui" */ '../buttons/SectionEditor'))
+const SectionEditor = lazy(() => import(/* webpackChunkName: "ui" */ './TreeSectionEditor'))
 const ItemOptions = lazy(() => import(/* webpackChunkName: "ui" */ '../buttons/ItemOptions'))
 
 const DEFAULT_ARRAY = []
 
 const RenderRoot = ({
-  content,
+  panelTop,
   editor,
+  content,
+  panelBottom,
 }) => {
   return (
     <div
@@ -24,6 +27,18 @@ const RenderRoot = ({
         height: '100%',
       }}
     >
+      {
+        panelTop && (
+          <div
+            style={{
+              flexGrow: 0,
+              padding: '10px',
+            }}
+          >
+            { panelTop }
+          </div>
+        )
+      }
       {
         editor && (
           <div
@@ -47,6 +62,18 @@ const RenderRoot = ({
       >
         { content }
       </div>
+      {
+        panelBottom && (
+          <div
+            style={{
+              flexGrow: 0,
+              padding: '10px',
+            }}
+          >
+            { panelBottom }
+          </div>
+        )
+      }
     </div>
   )
 }
@@ -338,6 +365,8 @@ const Tree = ({
   const currentItemId = route.item
   const sectionTreeSelector = useMemo(selectors.content.sectionTree, [])
   const sectionTree = useSelector(state => sectionTreeSelector(state, section))
+  const sectionPanelSelector = useMemo(selectors.section.panels, [])
+  const panelData = useSelector(state => sectionPanelSelector(state, section))
   const routeMap = useSelector(selectors.nocode.routeMap)
   const items = sectionTree ? sectionTree.children : DEFAULT_ARRAY
   const storePathToItem = useSelector(selectors.content.routeItemPath)
@@ -388,26 +417,30 @@ const Tree = ({
     onClick
   ])
 
-  const parentFilter = useCallback((parentFilter) => parentFilter.indexOf('section') >= 0)
-
-  const editor = showUI && (
+  const editor = showUI ? (
     <Suspense>
       <SectionEditor
-        id={ section }
-        tiny
-        filter={ parentFilter }
-        location={ `section:${section}` }
-        structure="tree"
+        section={ section }
       />
     </Suspense>
-  )
+  ) : null
+
+  const panelTop = panelData.panelTop ? (
+    <div>we have a top panek</div>
+  ) : null
+
+  const panelBottom = panelData.panelBottom ? (
+    <div>we have a bottom panek</div>
+  ) : null
 
   const RootRenderer = renderers.root || defaultRenderers.root
 
   return (
     <RootRenderer
+      panelTop={ panelTop }
       content={ content }
       editor={ editor }
+      panelBottom={ panelBottom }
     />
   )
 }

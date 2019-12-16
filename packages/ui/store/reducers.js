@@ -31,6 +31,7 @@ const reducers = {
   snackbar: GetReducer('snackbar'),
   network: GetReducer('network'),
   document: GetReducer('document'),
+  section: GetReducer('section'),
 }
 
 export const mergeReducers = (appReducers) => {

@@ -12,9 +12,12 @@ const useStyles = makeStyles(theme => createStyles({
     flexGrow: 1,
     paddingRight: theme.spacing(1),
   },
+  children: {
+    flexGrow: 0,
+  },
   add: {
     flexGrow: 0,
-  }
+  },
 }))
 
 const SectionEditor = ({
@@ -24,6 +27,7 @@ const SectionEditor = ({
   structure,
   tiny,
   stashQueryParams,
+  children,
 }) => {
   const classes = useStyles()
   
@@ -35,6 +39,13 @@ const SectionEditor = ({
           tiny={ tiny }
         />
       </div>
+      {
+        children && (
+          <div className={ classes.children }>
+            { children }
+          </div>
+        )
+      }
       <div className={ classes.add }>
         <SectionAdd
           id={ id }
