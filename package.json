@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "build": "lerna run build",
-    "publish": "lerna publish --force-publish"
+    "publish": "lerna publish"
   },
   "devDependencies": {
     "lerna": "^3.13.2"
