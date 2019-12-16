@@ -123,7 +123,7 @@ const sideEffects = {
     payload,
     onComplete,
   }) => wrapper('saveContent', async (dispatch, getState) => {
-    if(cell.editor == 'external') {
+    if(cell.editor == 'external' && dataName == 'data') {
       await dispatch(actions.saveExternalContent({
         driver: item.driver,
         id: item.id,
