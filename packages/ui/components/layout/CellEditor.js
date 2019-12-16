@@ -43,6 +43,8 @@ const CellEditorInternal = ({
     onSubmit(values)
   }, [])
 
+  if(!schemaDefinition) return null
+
   return (
     <FormWrapper
       schema={ schemaDefinition.schema }

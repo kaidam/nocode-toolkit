@@ -7,7 +7,6 @@ import nocodeActions from '@nocode-toolkit/website/store/moduleNocode'
 import { section as initialState } from '../initialState'
 import apiUtils from '../../utils/api'
 import networkWrapper from '../networkWrapper'
-import jobActions from './job'
 import snackbarActions from './snackbar'
 
 import selectors from '../selectors'
@@ -44,7 +43,9 @@ const sideEffects = {
   }) => wrapper('addPanel', async (dispatch, getState) => {
     const cell = {
       component: 'blank',
+      placeholder: true,
     }
+
     const newLayout = layoutUtils.editLayout({
       layout: [],
       method: 'insertRow',
@@ -79,7 +80,8 @@ const sideEffects = {
   }),
 
   editLayout: ({
-    data,
+    section,
+    panelName,
     rowIndex,
     cellIndex,
     method,
@@ -88,8 +90,18 @@ const sideEffects = {
     onComplete,
   }) => wrapper('editLayout', async (dispatch, getState) => {
 
-    const newLayout = layoutUtils.editLayout({
-      layout: data.layout,
+    const sectionData = selectors.content.sectionItem()(getState(), section)
+    const annotation = sectionData.annotation || {}
+
+    // get rid of the placeholder cell as soon as anything is done to the layout
+    const layout = (annotation[panelName] || []).filter(row => {
+      const cell = row[0]
+      if(!cell) return false
+      return cell.placeholder ? false : true
+    })
+    
+    let newLayout = layoutUtils.editLayout({
+      layout,
       method,
       rowIndex,
       cellIndex,
@@ -97,74 +109,68 @@ const sideEffects = {
       params,
     })
 
-    if(!newLayout) return
+    if(newLayout.length <= 0) newLayout = null
 
-    console.log('--------------------------------------------')
-    console.log('--------------------------------------------')
-    console.dir(newLayout)
+    const newAnnotation = Object.assign({}, sectionData.annotation, {
+      [panelName]: newLayout,
+    })
 
-    // const newAnnotation = Object.assign({}, data.item.annotation, {
-    //   layout: newLayout,
-    // })
+    const newSection = Object.assign({}, sectionData, {
+      annotation: newAnnotation,
+    })
 
-    // const newItem = Object.assign({}, data.item, {
-    //   annotation: newAnnotation,
-    // })
+    dispatch(nocodeActions.setItem({
+      type: 'sections',
+      id: section,
+      data: newSection,
+    }))
 
-    // dispatch(nocodeActions.setItem({
-    //   type: 'content',
-    //   id: newItem.id,
-    //   data: newItem,
-    // }))
+    await loaders.update(getState, {
+      section,
+      payload: {
+        annotation: newAnnotation,
+      }
+    })
 
-    // await loaders.update(getState, {
-    //   id: newItem.id,
-    //   payload: {
-    //     annotation: newAnnotation,
-    //   }
-    // })
-
-    // dispatch(snackbarActions.setSuccess(`layout updated`))
-    // if(onComplete) onComplete()
+    dispatch(snackbarActions.setSuccess(`layout updated`))
+    if(onComplete) onComplete()
   }),
 
   saveContent: ({
-    item,
-    cell,
+    section,
+    panelName,
     rowIndex,
     cellIndex,
     payload,
     onComplete,
   }) => wrapper('saveContent', async (dispatch, getState) => {
    
-    console.log('--------------------------------------------')
-    console.log('--------------------------------------------')
-    console.dir(payload)
-    return
+    const sectionData = selectors.content.sectionItem()(getState(), section)
+    const annotation = sectionData.annotation || {}
+    const layout = annotation[panelName] || []
 
-    // const annotation = JSON.parse(JSON.stringify(item.annotation))
-    // const cell = annotation.layout[rowIndex][cellIndex]
-    // cell.data = payload
+    const cell = layout[rowIndex][cellIndex]
+    cell.data = payload
 
-    // const newItem = Object.assign({}, item, {
-    //   annotation,
-    // })
+    const newSection = Object.assign({}, sectionData, {
+      annotation,
+    })
 
-    // dispatch(nocodeActions.setItem({
-    //   type: 'content',
-    //   id: newItem.id,
-    //   data: newItem,
-    // }))
+    dispatch(nocodeActions.setItem({
+      type: 'sections',
+      id: section,
+      data: newSection,
+    }))
 
-    // await loaders.update(getState, {
-    //   id: newItem.id,
-    //   payload: {
-    //     annotation,
-    //   }
-    // })
+    await loaders.update(getState, {
+      section,
+      payload: {
+        annotation,
+      }
+    })
 
-    // dispatch(snackbarActions.setSuccess(`cell updated`))
-    // if(onComplete) onComplete()
+    dispatch(snackbarActions.setSuccess(`cell updated`))
+    if(onComplete) onComplete()
   }),
 }
 

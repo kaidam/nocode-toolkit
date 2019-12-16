@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import Actions from '../../utils/actions'
 import sectionActions from '../../store/modules/section'
@@ -9,10 +9,27 @@ const TreePanelCellOptionsWrapper = (props) => {
     editLayout: sectionActions.editLayout,
     saveContent: sectionActions.saveContent,
   })
+
+  const onEditLayout = useCallback((params) => {
+    actions.editLayout({
+      section: props.section,
+      panelName: props.panelName,
+      ...params
+    })
+  }, [props.section, props.panelName])
+
+  const onSaveContent = useCallback((params) => {
+    actions.saveContent({
+      section: props.section,
+      panelName: props.panelName,
+      ...params
+    })
+  }, [props.section, props.panelName])
+
   return (
     <CellOptions
-      onEditLayout={ actions.editLayout }
-      onSaveContent={ actions.saveContent }
+      onEditLayout={ onEditLayout }
+      onSaveContent={ onSaveContent }
       {...props}
     />
   )

@@ -426,11 +426,19 @@ const Tree = ({
   ) : null
 
   const panelTop = panelData.panelTop ? (
-    <div>we have a top panek</div>
+    <TreePanel
+      layout={ panelData.panelTop }
+      section={ section }
+      panelName="panelTop"
+    />
   ) : null
 
   const panelBottom = panelData.panelBottom ? (
-    <div>we have a bottom panek</div>
+    <TreePanel
+      layout={ panelData.panelBottom }
+      section={ section }
+      panelName="panelBottom"
+    />
   ) : null
 
   const RootRenderer = renderers.root || defaultRenderers.root
