@@ -11,6 +11,15 @@ const pino = require('pino')({
   name: 'developmentServer',
 })
 
+const ALIAS_MODULES = [
+  '@material-ui/styles',
+  '@material-ui/core',
+  'react',
+  ['react-dom', '@hot-loader/react-dom'],
+  'redux',
+  'react-redux',
+]
+
 const Develop = ({
   options,
   logger,
@@ -106,12 +115,14 @@ const Develop = ({
     webpackProcessors: [
       (webpackConfig, options, env) => {
         if(options.aliasLinks) {
-          webpackConfig.resolve.alias = {
-            '@material-ui/styles': path.resolve(options.projectFolder, 'node_modules', '@material-ui/styles'),
-            '@material-ui/core': path.resolve(options.projectFolder, 'node_modules', '@material-ui/core'),
-            'react': path.resolve(options.projectFolder, 'node_modules', 'react'),
-            'react-dom': path.resolve(options.projectFolder, 'node_modules', '@hot-loader/react-dom'),
-          }
+          webpackConfig.resolve.alias = ALIAS_MODULES.reduce((all, alias) => {
+            if(typeof(alias) === 'string') {
+              alias = [alias, alias]
+            }
+            const [ from, to ] = alias
+            all[from] = path.resolve(options.projectFolder, 'node_modules', to)
+            return all
+          }, {})
         }
         return webpackConfig
       },
