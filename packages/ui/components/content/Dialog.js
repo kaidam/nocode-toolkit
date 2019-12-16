@@ -120,7 +120,7 @@ const ContentFormDialog = ({
     }
   }
 
-  const activeTab = tab || 'main'
+  const activeTab = tab || tabs[0].id
 
   const tabConfig = tabs.find(t => t.id == activeTab)
 

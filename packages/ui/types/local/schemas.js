@@ -262,7 +262,6 @@ const section = {
   // settings cannot be added they are a global singleton
   parentFilter: [],
   initialValues: {},
-  schema: [],
 }
 
 const cellSettings = {
