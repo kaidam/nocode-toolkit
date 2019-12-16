@@ -28,13 +28,17 @@ const getItemSchema = (item) => {
 const addPlugin = (plugin) => {
   if(plugin.settingsTab) {
     const settingsSchema = get('local.settings')
-    const tab = {
-      id: plugin.id,
-      title: plugin.title,
-      schema: plugin.settingsTab.schema,
+    const existingTab = settingsSchema.tabs.find(t => t.id == plugin.id)
+    if(!existingTab) {
+      
+      const tab = {
+        id: plugin.id,
+        title: plugin.title,
+        schema: plugin.settingsTab.schema,
+      }
+      settingsSchema.tabs.push(tab)
+      settingsSchema.initialValues = Object.assign({}, settingsSchema.initialValues, plugin.settingsTab.initialValues)
     }
-    settingsSchema.tabs.push(tab)
-    settingsSchema.initialValues = Object.assign({}, settingsSchema.initialValues, plugin.settingsTab.initialValues)
   }
   if(plugin.schema) {
     add(plugin.schema)

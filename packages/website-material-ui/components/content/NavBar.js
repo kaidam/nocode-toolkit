@@ -179,6 +179,8 @@ const RenderNavbarSmall = ({
     setAnchorEl(null)
   }, [route])
 
+  if(!children || children.length <= 0) return null
+
   return (
     <div>
       <IconButton
