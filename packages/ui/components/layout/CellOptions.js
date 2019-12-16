@@ -8,6 +8,7 @@ import MenuButton from '../buttons/MenuButton'
 import Window from '../system/Window'
 
 import CellEditor from './CellEditor'
+import CellSettingsEditor from './CellSettingsEditor'
 
 import typeUI from '../../types/ui'
 import icons from '../../icons'
@@ -24,6 +25,7 @@ const UpIcon = icons.up
 const DownIcon = icons.down
 const LeftIcon = icons.left
 const RightIcon = icons.right
+const SettingsIcon = icons.settings
 
 const useStyles = makeStyles(theme => createStyles({
   smallOptionButton: {
@@ -78,12 +80,15 @@ const CellOptions = ({
 
   const [ deleteConfirmOpen, setDeleteConfirmOpen ] = useState(false)
   const [ editorOpen, setEditorOpen ] = useState(false)
+  const [ settingsEditorOpen, setSettingsEditorOpen ] = useState(false)
   const [ addingCell, setAddingCell ] = useState(null)
 
   const onOpenDeleteConfirm = useCallback(() => setDeleteConfirmOpen(true), [])
   const onCloseDeleteConfirm = useCallback(() => setDeleteConfirmOpen(false), [])
   const onOpenEditor = useCallback(() => setEditorOpen(true), [])
   const onCloseEditor = useCallback(() => setEditorOpen(false), [])
+  const onOpenSettingsEditor = useCallback(() => setSettingsEditorOpen(true), [])
+  const onCloseSettingsEditor = useCallback(() => setSettingsEditorOpen(false), [])
 
   const getContentTypeOptions = useCallback(({
     method,
@@ -133,11 +138,18 @@ const CellOptions = ({
   }, [data, rowIndex, cellIndex, cell])
 
   const menuItems = useMemo(() => {
-    let editOptions = {
+    const editOptions = {
       title: 'Edit',
       help: 'Edit this content',
       icon: EditIcon,
       handler: onOpenEditor,
+    }
+
+    const settingsOptions = {
+      title: 'Settings',
+      help: 'Edit cell settings',
+      icon: SettingsIcon,
+      handler: onOpenSettingsEditor,
     }
 
     const insertOptions = {
@@ -277,6 +289,7 @@ const CellOptions = ({
 
     return [
       editOptions,
+      settingsOptions,
       insertOptions,
       moveOptions,
       deleteOption,
@@ -336,6 +349,7 @@ const CellOptions = ({
       onSaveContent({
         item: data.item,
         cell,
+        dataName: 'data',
         rowIndex,
         cellIndex,
         payload,
@@ -351,6 +365,18 @@ const CellOptions = ({
     rowIndex,
     cellIndex,
   ])
+
+  const onSettingsEditorSubmit = useCallback((payload) => {
+    onSaveContent({
+      item: data.item,
+      cell,
+      dataName: 'settings',
+      rowIndex,
+      cellIndex,
+      payload,
+      onComplete: onCloseSettingsEditor,
+    })
+  })
 
   const onEditorCancel = useCallback(() => {
     onCloseEditor()
@@ -378,6 +404,15 @@ const CellOptions = ({
             cell={ addingCell ? addingCell.cell : cell }
             onSubmit={ onEditorSubmit }
             onCancel={ onEditorCancel }
+          />
+        )
+      }
+      {
+        settingsEditorOpen && (
+          <CellSettingsEditor
+            cell={ cell }
+            onSubmit={ onSettingsEditorSubmit }
+            onCancel={ onCloseSettingsEditor }
           />
         )
       }

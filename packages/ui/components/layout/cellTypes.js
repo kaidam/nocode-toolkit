@@ -6,11 +6,9 @@ const BlankContent = () => ''
 const DEFAULT_CELL_CONFIG = {
   html:  {
     component: HTML,
-    padding: 2,
   },
   blank:  {
     component: BlankContent,
-    padding: 1,
   },
 }
 

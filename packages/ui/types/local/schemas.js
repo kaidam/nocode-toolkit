@@ -127,7 +127,6 @@ const title = {
   }],
   cellConfig: {
     component: Title,
-    padding: 1,
   },
 }
 
@@ -148,7 +147,6 @@ const richtext = {
   }],
   cellConfig:  {
     component: RichText,
-    padding: 1,
     compactEditor: true,
     noScrollEditor: true,
     fullHeightEditor: true,
@@ -267,6 +265,46 @@ const section = {
   schema: [],
 }
 
+const cellSettings = {
+  driver: 'local',
+  type: 'cellSettings',
+  title: 'Cell Settings',
+  icon: 'settings',
+  metadata: {
+    nodeType: 'system',
+  },
+  // settings cannot be added they are a global singleton
+  parentFilter: [],
+  initialValues: {
+    align: 'left',
+    padding: 8,
+  },
+  schema: [{
+    id: 'align',
+    title: 'Alignment',
+    helperText: 'The alignment of content for this cell',
+    component: 'radio',
+    row: true,
+    options: [{
+      title: 'Left',
+      value: 'left',
+    },{
+      title: 'Center',
+      value: 'center',
+    },{
+      title: 'Right',
+      value: 'right',
+    }],
+  },{
+    id: 'padding',
+    title: 'Padding',
+    helperText: 'The padding of content for this cell',
+    inputProps: {
+      type: 'number',
+    },
+  }],
+}
+
 const schemas = {
   folder,
   externalLink,
@@ -277,6 +315,7 @@ const schemas = {
   settings,
   logo,
   section,
+  cellSettings,
 }
 
 export default schemas

@@ -117,6 +117,7 @@ const sideEffects = {
   saveContent: ({
     item,
     cell,
+    dataName,
     rowIndex,
     cellIndex,
     payload,
@@ -132,12 +133,12 @@ const sideEffects = {
     else {
       const annotation = JSON.parse(JSON.stringify(item.annotation))
       const cell = annotation.layout[rowIndex][cellIndex]
-      cell.data = payload
+      cell[dataName] = payload
 
       const newItem = Object.assign({}, item, {
         annotation,
       })
-  
+
       dispatch(nocodeActions.setItem({
         type: 'content',
         id: newItem.id,
@@ -155,7 +156,6 @@ const sideEffects = {
       if(onComplete) onComplete()
     }
   }),
-
 
 }
 

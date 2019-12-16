@@ -32,7 +32,6 @@ const RenderRoot = ({
           <div
             style={{
               flexGrow: 0,
-              padding: '10px',
             }}
           >
             { panelTop }
@@ -67,7 +66,6 @@ const RenderRoot = ({
           <div
             style={{
               flexGrow: 0,
-              padding: '10px',
             }}
           >
             { panelBottom }

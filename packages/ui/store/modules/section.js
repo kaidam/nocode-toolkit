@@ -139,6 +139,7 @@ const sideEffects = {
   saveContent: ({
     section,
     panelName,
+    dataName,
     rowIndex,
     cellIndex,
     payload,
@@ -146,11 +147,11 @@ const sideEffects = {
   }) => wrapper('saveContent', async (dispatch, getState) => {
    
     const sectionData = selectors.content.sectionItem()(getState(), section)
-    const annotation = sectionData.annotation || {}
+    const annotation = JSON.parse(JSON.stringify(sectionData.annotation || {}))
     const layout = annotation[panelName] || []
 
     const cell = layout[rowIndex][cellIndex]
-    cell.data = payload
+    cell[dataName] = payload
 
     const newSection = Object.assign({}, sectionData, {
       annotation,

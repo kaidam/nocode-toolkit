@@ -35,12 +35,10 @@ const useStyles = makeStyles(theme => createStyles({
   panelTop: {
     flexGrow: 0,
     borderBottom: '1px solid #ccc',
-    padding: theme.spacing(1),
   },
   panelBottom: {
     flexGrow: 0,
     borderTop: '1px solid #ccc',
-    padding: theme.spacing(1),
   },
   sublist: {
     paddingLeft: theme.spacing(1.5),

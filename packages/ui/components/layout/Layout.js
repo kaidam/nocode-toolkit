@@ -51,7 +51,15 @@ const RenderCell = ({
   cellConfig,
   editor,
   content,
+  cell,
 }) => {
+
+  const settings = cell.settings || {}
+  const align = settings.align || 'left'
+  const padding = typeof(settings.padding) != 'undefined' ?
+    settings.padding :
+    8
+  
   return (
     <div
       style={{
@@ -77,7 +85,9 @@ const RenderCell = ({
       }
       <div
         style={{
-          padding: `${(cellConfig.padding || 0) * 8}px`,
+          padding: `${padding}px`,
+          textAlign: align,
+          marginRight: showUI ? '40px' : '0px',
         }}
       >
         { content }
@@ -147,6 +157,7 @@ const Layout = ({
         <CellRenderer
           key={ j }
           showUI={ showUI }
+          cell={ cell }
           cellConfig={ cellConfig }
           editor={ editor }
           content={ content }
