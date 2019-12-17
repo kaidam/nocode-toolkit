@@ -53,12 +53,6 @@ const NavBar = ({
     })
   }, [withHome, sectionList, props])
 
-  const navbar = (
-    <NavBarRenderer props={ props }>
-      { items }
-    </NavBarRenderer>
-  )
-
   const editor = showUI && (
     <Suspense>
       <SectionEditor
@@ -73,10 +67,11 @@ const NavBar = ({
 
   return (
     <RootRenderer
-      navbar={ navbar }
       editor={ editor }
       {...props}
-    />
+    >
+      { items }
+    </RootRenderer>
   )
 }
 

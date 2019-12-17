@@ -1,8 +1,8 @@
 import React from 'react'
 
 const RenderRoot = ({
-  navbar,
   editor,
+  children,
   ...props
 }) => {
   return (
@@ -20,7 +20,16 @@ const RenderRoot = ({
           justifyContent: 'flex-end',
         }}
       >
-        { navbar }
+        <nav
+          style={{
+            height: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
+        >
+          { children }
+        </nav>
       </div>
       {
         editor && (
@@ -36,24 +45,6 @@ const RenderRoot = ({
         )
       }
     </div>
-  )
-}
-
-const RenderNavbar = ({
-  children,
-  ...props
-}) => {
-  return (
-    <nav
-      style={{
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-      }}
-    >
-      { children }
-    </nav>
   )
 }
 
@@ -90,7 +81,6 @@ const RendererItemOptions = ({
 
 const defaultRenderers = {
   root: RenderRoot,
-  navbar: RenderNavbar,
   item: RenderItem,
   itemOptions: RendererItemOptions,
 }

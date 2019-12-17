@@ -1,7 +1,12 @@
-export const getMergedClasses = (baseClasses, overridenClasses, names) => {
+export const getMergedClasses = (baseClasses, overridenClasses) => {
   overridenClasses = overridenClasses || {}
-  return names.reduce((all, name) => {
-    all[name] = overridenClasses[name] || baseClasses[name]
+  return Object.keys(baseClasses).reduce((all, name) => {
+    all[name] = [
+      baseClasses[name],
+      overridenClasses[name],
+    ]
+      .filter(c => c)
+      .join(' ')
     return all
   }, {})
 }

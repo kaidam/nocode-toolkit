@@ -1,70 +1,180 @@
 import React from 'react'
-import useStyles from './styles'
-
-import baseRenderers from './renderers'
+import classNames from 'classnames'
+import { makeStyles } from '@material-ui/core/styles'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
 
 import {
   getMergedClasses,
+  eventSink,
 } from './utils'
 
-const RenderItem = baseRenderers.item
+const useStyles = makeStyles(theme => {
+  return {
+    root: {
+      padding: theme.spacing(1.5),
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      width: '100%',
+    },
+    content: {
+      flexGrow: 0,
+    },
+    editor: {
+      flexGrow: 0,
+    },
+    navbar: {
+      listStyleType: 'none',
+      margin: '0',
+      padding: '0',
+      overflow: 'hidden',
+      fontSize: '1em',
+    },
 
-const RenderNavbarLarge = ({
+    itemContainer: {
+      float: 'left',
+    },
+
+    item: props => ({
+      ...theme.typography.button,
+      display: 'block',
+      fontWeight: '500',
+      color: props.contrast ?
+        theme.palette.primary.contrastText :
+        theme.palette.primary.main,
+      textAlign: 'center',
+      padding: theme.spacing(1),
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      marginRight: theme.spacing(1),
+      borderRadius: theme.spacing(1),
+      textDecoration: 'none',
+      cursor: 'pointer',
+      '&:hover': {
+        color: props.contrast ?
+          theme.palette.primary.main :
+          theme.palette.primary.contrastText,
+        backgroundColor: props.contrast ?
+          theme.palette.primary.contrastText :
+          theme.palette.primary.main,
+        '& .navbar-ui-icon': {
+          color: props.contrast ?
+            theme.palette.primary.main :
+            theme.palette.primary.contrastText,
+        },
+      },
+      '& .navbar-ui-icon': {
+        color: props.contrast ?
+          theme.palette.primary.contrastText :
+          theme.palette.primary.main,
+      },
+    }),
+
+    itemActive: props => ({
+      color: props.contrast ?
+        theme.palette.primary.main :
+        theme.palette.primary.contrastText,
+      backgroundColor: props.contrast ?
+        theme.palette.primary.contrastText :
+        theme.palette.primary.main,
+      '& .navbar-ui-icon': {
+        color: props.contrast ?
+          theme.palette.primary.main :
+          theme.palette.primary.contrastText,
+      },
+    }),
+
+    optionsIcon: {
+      minWidth: '40px',
+    },
+  }
+})
+
+const RenderRoot = ({
+  editor,
   children,
   ...props
 }) => {
-  const classes = useStyles()
+  const classes = getMergedClasses(useStyles({
+    contrast: props.contrast,
+  }), props.classes)
+
   return (
-    <nav>
-      <ul className={ classes.navUl }>
-        { children }
-      </ul>
-    </nav>
+    <div className={ classes.root }>
+      <div className={ classes.content }>
+        <nav>
+          <ul className={ classes.navbar }>
+            { children }
+          </ul>
+        </nav>
+      </div>
+      {
+        editor && (
+          <div className={ classes.editor }>
+            { editor }
+          </div>
+        )
+      }
+    </div>
   )
 }
 
-const RenderItemLarge = ({
+const RenderItem = ({
   item,
   editor,
   isCurrent,
   linkProps,
   LinkComponent,
+  withHighlight,
   ...props
 }) => {
-  const baseClasses = useStyles()
-  
-  const useClasses = getMergedClasses(baseClasses, props.classes, [
-    'navWrapper',
-    'navItem',
-    'navItemLarge',
-  ])
+  const classes = getMergedClasses(useStyles({
+    contrast: props.contrast,
+  }), props.classes)
+  const itemClass = classNames({
+    [classes.item]: true,
+    [classes.itemActive]: isCurrent && withHighlight,
+  })
 
-  const editorContainerClassName = isCurrent ? '' : useClasses.inactiveEditorContainer
-    
   return (
     <li
-      className={ useClasses.navWrapper }
+      className={ classes.itemContainer }
     >
-      <RenderItem
-        item={ item }
-        editor={ editor }
-        isCurrent={ isCurrent }
-        linkProps={ linkProps }
-        LinkComponent={ LinkComponent }
-        className={ `${useClasses.navItem} ${useClasses.navItemLarge}` }
-        editorContainerClassName={ editorContainerClassName }
-        withHighlight
-        {...props}
-      />
+      <LinkComponent
+        className={ itemClass }
+        {...linkProps}
+      >
+        <span>
+          { editor }
+        </span>
+        { item.data.name }
+      </LinkComponent>
     </li>
   )
 }
 
+const RendererItemOptions = ({
+  children,
+  ...props
+}) => {
+  const classes = getMergedClasses(useStyles({
+    contrast: props.contrast,
+  }), props.classes)
+  return (
+    <ListItemIcon 
+      className={ classes.optionsIcon }
+      onClick={ eventSink }
+    >
+      { children }
+    </ListItemIcon>
+  )
+}
+
 const renderers = {
-  root: baseRenderers.root,
-  navbar: RenderNavbarLarge,
-  item: RenderItemLarge,
-  itemOptions: baseRenderers.itemOptions,
+  root: RenderRoot,
+  item: RenderItem,
+  itemOptions: RendererItemOptions,
 }
 
 export default renderers
