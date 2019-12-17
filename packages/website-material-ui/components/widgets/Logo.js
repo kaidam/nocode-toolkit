@@ -3,7 +3,6 @@ import { createStyles, makeStyles } from '@material-ui/core/styles'
 
 import Typography from '@material-ui/core/Typography'
 import Link from '@nocode-toolkit/website/Link'
-
 import BaseLogo from '@nocode-toolkit/ui/components/widgets/Logo'
 
 const useStyles = makeStyles(theme => createStyles({  
@@ -33,7 +32,7 @@ const useStyles = makeStyles(theme => createStyles({
   },
 }))
 
-const RenderContent = ({
+const Renderer = ({
   value: {
     title,
     imageUrl,
@@ -69,14 +68,12 @@ const RenderContent = ({
   )
 }
 
-const renderers = {
-  content: RenderContent,
-}
-
 const Logo = (props = {}) => {
   return (
     <BaseLogo
-      renderers={ renderers }
+      renderers={{
+        content: Renderer
+      }}
       {...props}
     />
   )

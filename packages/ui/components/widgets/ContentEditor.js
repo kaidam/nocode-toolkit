@@ -1,4 +1,6 @@
 import React, { lazy } from 'react'
+import { useSelector } from 'react-redux'
+import selectors from '../../store/selectors'
 import Suspense from '../system/Suspense'
 
 const EditButton = lazy(() => import(/* webpackChunkName: "ui" */ '../buttons/EditButton'))
@@ -38,43 +40,23 @@ const RenderRoot = ({
   )
 }
 
-const RenderContent = ({
-  value,
-}) => {
-  return value
-}
-
-const RenderHTML = ({
-  value,
-}) => {
-  return (
-    <span dangerouslySetInnerHTML={{__html: value}}>
-    </span>
-  )
-}
-
 const defaultRenderers = {
   root: RenderRoot,
-  content: RenderContent,
-  html: RenderHTML,
 }
 
-const EditWidget = ({
+const ContentEditor = ({
   id,
   driver = 'local',
   type,
   location,
-  value,
-  htmlMode,
   renderers = {},
-  props = {},
+  children,
 }) => {
-  const RootRenderer = renderers.root || defaultRenderers.root
-  const ContentRenderer = renderers.content ?
-    renderers.content
-    : htmlMode ? defaultRenderers.html : defaultRenderers.content
 
-  const editor = (
+  const showUI = useSelector(selectors.ui.showUI)
+  const RootRenderer = renderers.root || defaultRenderers.root
+  
+  const editor = showUI && (
     <Suspense>
       <EditButton 
         id={ id }
@@ -86,20 +68,12 @@ const EditWidget = ({
     </Suspense>
   )
 
-  const content = (
-    <ContentRenderer
-      value={ value }
-      props={ props }
-    />
-  )
-
   return (
     <RootRenderer
-      content={ content }
+      content={ children }
       editor={ editor }
-      props={ props }
     />
   )
 }
 
-export default EditWidget
+export default ContentEditor

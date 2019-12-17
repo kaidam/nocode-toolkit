@@ -1,6 +1,7 @@
 import React from 'react'
 import Link from '@nocode-toolkit/website/Link'
-import SingletonWidget from './SingletonWidget'
+import ContentEditor from './ContentEditor'
+import useSingleton from '../hooks/useSingleton'
 
 const getValue = (logo) => {
   let title = logo.title
@@ -14,12 +15,12 @@ const getValue = (logo) => {
   }
 }
 
-const RenderContent = ({
+const DefaultRenderer = ({
   value: {
     title,
     imageUrl,
   },
-  props,
+  ...props
 }) => {
   return (
     <Link
@@ -58,23 +59,26 @@ const RenderContent = ({
   )
 }
 
-const defaultRenderers = {
-  content: RenderContent,
-}
-
 const Logo = ({
   renderers,
   ...props
 }) => {
-  const useRenderers = Object.assign({}, defaultRenderers, renderers)
+  const singleton = useSingleton('logo')
+  const Renderer = renderers.content || DefaultRenderer
+
   return (
-    <SingletonWidget
+    <ContentEditor
       id="logo"
       type="logo"
-      getValue={ getValue }
-      renderers={ useRenderers }
+      location={`singleton:logo`}
+      renderers={ renderers }
       props={ props }
-    />
+    >
+      <Renderer
+        value={ getValue(singleton) }
+        {...props}
+      />
+    </ContentEditor>
   )
 }
 

@@ -17,27 +17,9 @@ const useStyles = makeStyles(theme => createStyles({
   },
 }))
 
-const RenderRoot = ({
-  content,
-  editor,
-}) => {
-  const classes = useStyles()
-  return (
-    <div className={ classes.container }>
-      {
-        editor && (
-          <div className={ classes.editButton }>
-            { editor }
-          </div>
-        )
-      }
-      { content }
-    </div>
-  )
-}
-
-const RenderContent = ({
+const Renderer = ({
   value,
+  ...props
 }) => {
   const classes = useStyles()
   return (
@@ -51,17 +33,13 @@ const RenderContent = ({
   )
 }
 
-const renderers = {
-  root: RenderRoot,
-  content: RenderContent,
-}
-
-const Copyright = ({
-
-}) => {
+const Copyright = (props = {}) => {
   return (
     <BaseCopyright
-      renderers={ renderers }
+      renderers={{
+        content: Renderer
+      }}
+      {...props}
     />
   )
 }
