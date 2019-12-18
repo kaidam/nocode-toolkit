@@ -28,13 +28,14 @@ const useStyles = makeStyles({
   }
 })
 
-const SectionEditor = ({
+const SectionAdd = ({
   id,
   filter,
   location,
   structure,
   tiny,
   stashQueryParams,
+  extraItems = [],
 }) => {
   const actions = Actions(useDispatch(), {
     onOpenContentForm: contentActions.openDialogContentForm,
@@ -58,13 +59,15 @@ const SectionEditor = ({
       location,
       structure,
       stashQueryParams,
-      window._nocodeRebuldCount,
+      window._nocodeRebuildCount,
     ]
   )
 
+  const useItems = menuItems.concat(extraItems)
+
   return (
     <MenuButton
-      items={ menuItems }
+      items={ useItems }
       tiny
       getButton={ onClick => (
         <Tooltip title="Add Content">
@@ -82,4 +85,4 @@ const SectionEditor = ({
   )
 }
 
-export default SectionEditor
+export default SectionAdd

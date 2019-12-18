@@ -196,7 +196,7 @@ const sideEffects = {
     devconsole.log('loading preview data from server')
     const previewData = await loaders.getPreviewData(getState)
     devconsole.dir(previewData)
-    window._nocodeRebuldCount = (window._nocodeRebuldCount || 0) + 1
+    window._nocodeRebuildCount = (window._nocodeRebuildCount || 0) + 1
     window._nocodeData = previewData
     window._reloadNocodeApp()
   }),

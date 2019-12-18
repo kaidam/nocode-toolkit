@@ -28,6 +28,43 @@ const TreeSectionEditor = ({
   const hasPanelTop = panelData.panelTop ? true : false
   const hasPanelBottom = panelData.panelBottom ? true : false
 
+  const extraAddItems = useMemo(() => {
+    const panels = []
+
+    if(!hasPanelTop) {
+      panels.push({
+        title: 'Add panel above',
+        icon: AddPanelTopIcon,
+        handler: () => actions.onAddPanel({
+          section,
+          panelName: 'panelTop',
+        })
+      })
+    }
+    if(!hasPanelBottom) {
+      panels.push({
+        title: 'Add panel below',
+        icon: AddPanelBottomIcon,
+        handler: () => actions.onAddPanel({
+          section,
+          panelName: 'panelBottom',
+        })
+      })
+    }
+
+    if(panels.length > 0) {
+      return [{
+        title: 'Panel',
+        icon: AddPanelTopIcon,
+        items: panels,
+      }]
+    }
+  }, [
+    hasPanelTop,
+    hasPanelBottom,
+    section,
+  ])
+
   return (
     <SectionEditor
       id={ section }
@@ -35,44 +72,8 @@ const TreeSectionEditor = ({
       filter={ parentFilter }
       location={ `section:${section}` }
       structure="tree"
-    >
-      {
-        hasPanelTop ? null : (
-          <span style={{
-            paddingRight: '8px',
-          }}>
-            <SmallIconButton
-              tiny
-              color="default"
-              Icon={ AddPanelTopIcon }
-              tooltip="Add Panel Above"
-              onClick={ () => actions.onAddPanel({
-                section,
-                panelName: 'panelTop',
-              }) }
-            />
-          </span>
-        )
-      }
-      {
-        hasPanelBottom ? null : (
-          <span style={{
-            paddingRight: '8px',
-          }}>
-            <SmallIconButton
-              tiny
-              color="default"
-              Icon={ AddPanelBottomIcon }
-              tooltip="Add Panel Below"
-              onClick={ () => actions.onAddPanel({
-                section,
-                panelName: 'panelBottom',
-              }) }
-            />
-          </span>
-        )
-      }
-    </SectionEditor>
+      extraAddItems={ extraAddItems }
+    />
   )
 }
 

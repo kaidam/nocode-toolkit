@@ -28,6 +28,7 @@ const SectionEditor = ({
   tiny,
   stashQueryParams,
   children,
+  extraAddItems,
 }) => {
   const classes = useStyles()
   
@@ -54,6 +55,7 @@ const SectionEditor = ({
           structure={ structure }
           tiny={ tiny }
           stashQueryParams={ stashQueryParams }
+          extraItems={ extraAddItems }
         />
       </div>
     </div>
