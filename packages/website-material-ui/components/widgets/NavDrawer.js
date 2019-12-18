@@ -24,9 +24,11 @@ const useStyles = makeStyles(theme => {
         textDecoration: 'none'
       }
     },
-    button: {
-      color: theme.palette.getContrastText(theme.palette.primary.main),
-    },
+    button: props => ({
+      color: props.contrast ?
+        theme.palette.getContrastText(theme.palette.primary.main) :
+        theme.palette.primary.main,
+    }),
     drawer: {
       height: '100%',
       borderRight: '1px solid rgba(0, 0, 0, 0.12)',
@@ -46,10 +48,13 @@ const useStyles = makeStyles(theme => {
 const NavDrawer = ({
   Component,
   anchor,
+  contrast,
   ...props
 }) => {
   const [drawerOpen, setDrawerOpen] = useState(false)
-  const classes = useStyles()
+  const classes = useStyles({
+    contrast,
+  })
 
   const openDrawer = () => setDrawerOpen(true)
   const closeDrawer = () => setDrawerOpen(false)
