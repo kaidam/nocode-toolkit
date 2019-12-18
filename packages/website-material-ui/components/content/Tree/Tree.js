@@ -39,11 +39,9 @@ const useStyles = makeStyles(theme => createStyles({
   },
   panelTop: {
     flexGrow: 0,
-    borderBottom: '1px solid #ccc',
   },
   panelBottom: {
     flexGrow: 0,
-    borderTop: '1px solid #ccc',
   },
 
   list: {
