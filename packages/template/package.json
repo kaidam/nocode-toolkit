@@ -1,6 +1,6 @@
 {
   "name": "@nocode-toolkit/template",
-  "version": "1.0.45",
+  "version": "1.0.46",
   "description": "Tools for developing nocode templates",
   "scripts": {},
   "bin": {
