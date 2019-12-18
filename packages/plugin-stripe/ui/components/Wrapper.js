@@ -10,6 +10,8 @@ const CURRENCY_SYMBOLS = {
   USD: '$',
 }
 
+let hasInjectedStripeLibrary = false
+
 const PaymentButtonWrapper = ({
   renderers,
   content,
@@ -20,12 +22,13 @@ const PaymentButtonWrapper = ({
   const RenderConfirmation = renderers.confirmation || Confirmation
 
   useEffect(() => {
-    if(window.Stripe) return
+    if(hasInjectedStripeLibrary) return
+    hasInjectedStripeLibrary = true
     const script = document.createElement("script")
     script.src = "https://js.stripe.com/v3/"
     script.async = false
     document.body.appendChild(script)
-  }, [])
+  }, [hasInjectedStripeLibrary])
 
   const dispatch = useDispatch()
   const currencySymbol = CURRENCY_SYMBOLS[content.currency]

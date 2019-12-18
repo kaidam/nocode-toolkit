@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const styles = {
   container: {
@@ -33,9 +33,21 @@ const LINKS = [
   'youtube',
 ]
 
+let hasInjectedCSS = false
+
 const SocialLinks = ({
   content,
 }) => {
+  useEffect(() => {
+    if(hasInjectedCSS) return
+    hasInjectedCSS = true
+    const link = document.createElement("link")
+    link.setAttribute("rel", "stylesheet")
+    link.setAttribute("href", "https://use.fontawesome.com/releases/v5.2.0/css/all.css")
+    link.setAttribute("crossOrigin", "anonymous")
+    document.body.appendChild(link)
+  }, [hasInjectedCSS])
+  
   const links = LINKS
     .filter(name => content[name] ? true : fase)
     .map((name, i) => {

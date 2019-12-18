@@ -2,6 +2,7 @@
 // based on the cellConfig of the schema
 import Title from '../../components/cells/Title'
 import RichText from '../../components/cells/RichText'
+import RawHTML from '../../components/cells/RawHTML'
 import Image from '../../components/cells/Image'
 import Video from '../../components/cells/Video'
 
@@ -155,6 +156,27 @@ const richtext = {
     compactEditor: true,
     noScrollEditor: true,
     fullHeightEditor: true,
+  },
+}
+
+const rawhtml = {
+  driver: 'local',
+  type: 'rawhtml',
+  title: 'HTML',
+  icon: 'code',
+  metadata: {},
+  parentFilter: ['cell'],
+  initialValues: {
+    html: '',
+  },
+  schema: [{
+    id: 'html',
+    noTitle: true,
+    component: 'textarea',
+    rows: 15,
+  }],
+  cellConfig:  {
+    component: RawHTML,
   },
 }
 
@@ -314,6 +336,7 @@ const schemas = {
   externalLink,
   title,
   richtext,
+  rawhtml,
   image,
   youtube,
   settings,
