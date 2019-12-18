@@ -1,7 +1,7 @@
-import { createStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 
-const styles = theme => {
-  return createStyles({
+const styles = makeStyles(theme => {
+  return {
     '@global': {
       'body, html, #_nocode_root': {
         backgroundColor: theme.palette.common.white,
@@ -122,7 +122,7 @@ const styles = theme => {
     footerNavBar: {
       flexGrow: 1,
     },
-  })
-}
+  }
+})
 
 export default styles

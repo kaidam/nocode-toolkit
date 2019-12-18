@@ -87,6 +87,10 @@ const useStyles = makeStyles(theme => createStyles({
     color: theme.palette.primary.main,
     fontWeight: 'bold',
   },
+
+  itemText: {
+    marginLeft: theme.spacing(1),
+  },
 }))
 
 const RenderRoot = ({
@@ -225,6 +229,7 @@ const RendererItem = ({
       { itemOptions }
       { itemIcon }
       <ListItemText
+        className={ classes.itemText }
         classes={{
           primary: colorClassname
         }}

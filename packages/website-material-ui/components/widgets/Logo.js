@@ -20,8 +20,7 @@ const useStyles = makeStyles(theme => createStyles({
     whiteSpace: 'nowrap',
   },
   logoImage: {
-    height: `${theme.layout.logoHeight}px`,
-    padding: '3px',
+    height: `${theme.layout.topbarHeight-40}px`,
     marginRight: theme.spacing(2),
   },
   editButton: {
