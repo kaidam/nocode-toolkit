@@ -64,7 +64,7 @@ import Plus2Icon from '@material-ui/icons/ExposurePlus2'
 import AlignLeftIcon from '@material-ui/icons/FormatAlignLeft'
 import AlignCenterIcon from '@material-ui/icons/FormatAlignCenter'
 import AlignRightIcon from '@material-ui/icons/FormatAlignRight'
-
+import PeopleIcon from '@material-ui/icons/People'
 import UnsplashLogo from './styles/UnsplashLogo'
 import GoogleDriveLogo from './styles/GoogleDriveLogo'
 
@@ -123,6 +123,7 @@ const icons = {
   alignLeft: AlignLeftIcon,
   alignCenter: AlignCenterIcon,
   alignRight: AlignRightIcon,
+  people: PeopleIcon,
 }
 
 export default icons

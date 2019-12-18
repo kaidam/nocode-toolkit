@@ -174,7 +174,7 @@ const sideEffects = {
     const annotation = selectors.types.itemSaveAnnotation(getState())
 
     // we are saving an item
-    if(existingItem) {
+    if(existingItem || type == 'section') {
       let payload = {
         data,
         annotation,

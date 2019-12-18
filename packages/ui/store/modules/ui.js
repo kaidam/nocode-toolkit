@@ -63,7 +63,7 @@ const sideEffects = {
       globals.setWindowInitialised()
       const plugins = library.plugins
       plugins.forEach(plugin => {
-        if(plugin.actions.initialize) {
+        if(plugin.actions && plugin.actions.initialize) {
           dispatch(plugin.actions.initialize())
         }
       })

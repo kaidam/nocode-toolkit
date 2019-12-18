@@ -1,0 +1,17 @@
+{
+  "name": "@nocode-toolkit/plugin-sociallinks",
+  "version": "1.0.47",
+  "description": "Social links plugin for nocode templates",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@nocode-toolkit/ui": "^1.0.47",
+    "@nocode-toolkit/website": "^1.0.47",
+    "react": "^16.8.6",
+    "react-redux": "^7.0.1",
+    "redux": "^4.0.4"
+  },
+  "license": "MIT",
+  "gitHead": "d7c0193947c5a8d1392378790c338a2674a3693d"
+}
