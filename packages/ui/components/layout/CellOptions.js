@@ -74,7 +74,6 @@ const CellOptions = ({
   onEditLayout,
   onSaveContent,
 }) => {
-
   const classes = useStyles()
   const settings = useSelector(selectors.ui.settings)
 
@@ -137,7 +136,26 @@ const CellOptions = ({
     })
   }, [data, rowIndex, cellIndex, cell])
 
-  const menuItems = useMemo(() => {
+  const placeholderMenuItems = useMemo(() => {
+    return [{
+      title: 'Insert',
+      help: 'Insert content',
+      icon: AddIcon,
+      items: getContentTypeOptions({
+        method: 'insertRow',
+        params: {
+          location: 'after',
+        },
+      })
+    }, {
+      title: 'Delete',
+      help: 'Delete this cell',
+      icon: DeleteIcon,
+      handler: onOpenDeleteConfirm,
+    }]
+  }, [getEditLayoutHandler, getContentTypeOptions])
+
+  const fullMenuItems = useMemo(() => {
     const editOptions = {
       title: 'Edit',
       help: 'Edit this content',
@@ -382,6 +400,10 @@ const CellOptions = ({
     onCloseEditor()
     setAddingCell(null)
   }, [])
+
+  const menuItems = cell.placeholder ?
+    placeholderMenuItems :
+    fullMenuItems
 
   return (
     <React.Fragment>
