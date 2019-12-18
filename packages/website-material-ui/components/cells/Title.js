@@ -5,7 +5,7 @@ import Typography from '@material-ui/core/Typography'
 const useStyles = makeStyles(theme => createStyles({
   heading: {
     fontWeight: 'bold',
-    color: theme.palette.primary.dark,
+    color: theme.palette.primary.main,
   },
 }))
 

@@ -138,10 +138,15 @@ const richtext = {
   metadata: {},
   parentFilter: ['cell'],
   initialValues: {
-    text: '',
+    data: [{
+      type: 'paragraph',
+      children: [
+        { text: '' },
+      ],
+    }],
   },
   schema: [{
-    id: 'text',
+    id: 'data',
     noTitle: true,
     component: 'richtext',
   }],

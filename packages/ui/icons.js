@@ -40,7 +40,7 @@ import LeftIcon from '@material-ui/icons/ChevronLeft'
 import RightIcon from '@material-ui/icons/ChevronRight'
 import RowIcon from '@material-ui/icons/ViewStream'
 import CellIcon  from '@material-ui/icons/ViewColumn'
-import TitleIcon from '@material-ui/icons/TextFields'
+import TitleIcon from '@material-ui/icons/Title'
 import TextIcon from '@material-ui/icons/Subject'
 import ImageIcon from '@material-ui/icons/InsertPhoto'
 import ErrorIcon from '@material-ui/icons/Error'
@@ -59,6 +59,11 @@ import PaymentIcon from '@material-ui/icons/AttachMoney'
 import ContactIcon from '@material-ui/icons/ContactMail'
 import AddPanelTop from '@material-ui/icons/VerticalAlignTop'
 import AddPanelBottom from '@material-ui/icons/VerticalAlignBottom'
+import Plus1Icon from '@material-ui/icons/ExposurePlus1'
+import Plus2Icon from '@material-ui/icons/ExposurePlus2'
+import AlignLeftIcon from '@material-ui/icons/FormatAlignLeft'
+import AlignCenterIcon from '@material-ui/icons/FormatAlignCenter'
+import AlignRightIcon from '@material-ui/icons/FormatAlignRight'
 
 import UnsplashLogo from './styles/UnsplashLogo'
 import GoogleDriveLogo from './styles/GoogleDriveLogo'
@@ -113,6 +118,11 @@ const icons = {
   contact: ContactIcon,
   addPanelTop: AddPanelTop,
   addPanelBottom: AddPanelBottom,
+  plus1: Plus1Icon,
+  plus2: Plus2Icon,
+  alignLeft: AlignLeftIcon,
+  alignCenter: AlignCenterIcon,
+  alignRight: AlignRightIcon,
 }
 
 export default icons
