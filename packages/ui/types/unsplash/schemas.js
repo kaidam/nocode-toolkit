@@ -44,6 +44,7 @@ const finder = {
     getItemSubtitle: (item) => item.user.location || ' ',
     getItemAdditionalData: (item) => {
       return {
+        url: item.urls.regular,
         unsplash: {
           image: {
             id: item.id,

@@ -4,7 +4,7 @@ import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { useSelector, useDispatch } from 'react-redux'
 import { useDropzone } from 'react-dropzone'
 
-
+import Tooltip from '@material-ui/core/Tooltip'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -39,6 +39,17 @@ const useStyles = makeStyles(theme => createStyles({
   },
   editIcon: {
     marginRight: theme.spacing(1),
+  },
+  buttonTitle: {
+    display: 'inline-block',
+    paddingRight: '10px',
+  },
+  buttonIcon: {
+    width: '20px',
+    height: '20px',
+  },
+  button: {
+    margin: theme.spacing(1),
   }
 }))
 
@@ -68,16 +79,28 @@ const ImageField = ({
 
   const onAddFinderContent = useCallback(({id, data}) => {
     onCloseFinder()
-    actions.onSyncFiles({
-      driver: finderDriver,
-      fileid: id,
-      onComplete: (file) => {
-        const finalData = Object.assign({}, data, file, {
-          driver: finderDriver,
-        })
-        setFieldValue(name, finalData)
-      }
-    })
+    // some drivers (like unsplash) require us to use
+    // the URLs on their servers
+    if(data && data.url) {
+      const finalData = Object.assign({}, data, {
+        driver: finderDriver,
+      })
+      setFieldValue(name, finalData)
+    }
+    // if we don't have a URL from the driver - it means we need
+    // to sync the image to storage first
+    else {
+      actions.onSyncFiles({
+        driver: finderDriver,
+        fileid: id,
+        onComplete: (file) => {
+          const finalData = Object.assign({}, data, file, {
+            driver: finderDriver,
+          })
+          setFieldValue(name, finalData)
+        }
+      })
+    }
   }, [setFieldValue, finderDriver, name])
 
   const onAddUploaderContent = useCallback((files) => {
@@ -123,13 +146,11 @@ const ImageField = ({
     )
   }, [finderDriver])
 
-  const menuItems = useMemo(() => {
-
+  const buttons = useMemo(() => {
     const remoteImageTypes = typeUI.addContentOptionsWithCallback({
       filter: (parentFilter) => parentFilter.indexOf('image') >= 0,
       handler: (type, schema) => onOpenFinder(schema.driver),
     })
-
     return [{
       title: 'Upload',
       help: 'Upload an image from your computer',
@@ -143,18 +164,23 @@ const ImageField = ({
         icon: DeleteIcon,
         handler: onResetValue
       })
+      .map((item, i) => {
+        const Icon = item.icon
+        return (
+          <Tooltip title={ item.help } key={ i }>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={ item.handler }
+              className={ classes.button }
+            >
+              { item.title }&nbsp;&nbsp;&nbsp;<Icon size={ 16 } className={ classes.buttonIcon } />
+            </Button>
+          </Tooltip>
+          
+        )
+      })
   }, [onOpenFinder, onOpenUploader, onResetValue])
-
-  const getButton = useCallback(onClick => (
-    <Button
-      size="small"
-      variant="contained"
-      onClick={ onClick }
-    >
-      <EditIcon className={ classes.editIcon } />
-      Edit
-    </Button>
-  ), [])
 
   const description = item.helperText
 
@@ -179,7 +205,7 @@ const ImageField = ({
   ) : (
     <div className={ classes.container }>
       <Grid container spacing={4}>
-        <Grid item xs={12} sm={4}>
+        <Grid item xs={12} sm={2}>
           <InputLabel 
             htmlFor={ name }>{ item.title || item.id }</InputLabel>
           {
@@ -192,16 +218,13 @@ const ImageField = ({
         </Grid>
         {
           value && value.url ? (
-            <Grid item xs={12} sm={4}>
+            <Grid item xs={12} sm={3}>
               <img className={ classes.image } src={ value.url } />
               </Grid>
           ) : null
         }
-        <Grid item xs={12} sm={4}>
-          <MenuButton
-            items={ menuItems }
-            getButton={ getButton }
-          />
+        <Grid item xs={12} sm={7}>
+          { buttons }
         </Grid>
         <Grid item xs={12}>
           <div {...getRootProps()}>
