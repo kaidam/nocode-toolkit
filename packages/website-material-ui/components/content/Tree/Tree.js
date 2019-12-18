@@ -8,7 +8,7 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 
-import BaseTree from '@nocode-toolkit/ui/components/content/Tree'
+import BaseTree from '@nocode-toolkit/ui/components/content/Tree/Tree'
 import ContentIcon from '@nocode-toolkit/ui/components/content/Icon'
 
 import icons from '@nocode-toolkit/ui/icons'
@@ -16,18 +16,23 @@ import icons from '@nocode-toolkit/ui/icons'
 const ExpandMoreIcon = icons.expandMore
 const ExpandLessIcon = icons.expandLess
 
+import {
+  getMergedClasses,
+  eventSink,
+} from '../../utils'
+
 const useStyles = makeStyles(theme => createStyles({
   root: {
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
   },
-  menu: {
+  content: {
     overflowY: 'auto',
     overflowX: 'hidden',
     flexGrow: 1,
   },
-  sectionEditor: {
+  editor: {
     flexGrow: 0,
     borderBottom: '1px solid #ccc',
     padding: theme.spacing(1),
@@ -40,13 +45,28 @@ const useStyles = makeStyles(theme => createStyles({
     flexGrow: 0,
     borderTop: '1px solid #ccc',
   },
-  sublist: {
+
+  list: {
+
+  },
+
+  itemChildren: {
     paddingLeft: theme.spacing(1.5),
     '& > ul': {
       paddingTop: ['0px', '!important'],
       paddingBottom: ['0px', '!important'],
     }
   },
+
+  optionsIcon: {
+    marginRight: '0px',
+    minWidth: '40px',
+  },
+  itemIcon: {
+    marginRight: '0px',
+    minWidth: '40px',
+  },
+
   menuItem: {
     paddingLeft: theme.spacing(0.4), 
     paddingRight: theme.spacing(1),
@@ -54,44 +74,30 @@ const useStyles = makeStyles(theme => createStyles({
     marginTop: theme.spacing(0.2),
     marginBottom: theme.spacing(0.2),
     cursor: 'pointer',
-  },
-  menuIcon: {
-    marginRight: '0px',
-    minWidth: '40px',
-  },
-  normalListItem: {
     color: theme.palette.grey[600],
   },
-  highlightListItem: {
+  
+  activeMenuItem: {
+    color: theme.palette.primary.main,
+    fontWeight: 'bold',
+    backgroundColor: ['#fff', '!important'],
+  },
+
+  activeColor: {
     color: theme.palette.primary.main,
     fontWeight: 'bold',
   },
-  highlightListItemBackground: {
-    border: [`1px dotted ${theme.palette.primary.main}`, '!important'],
-    backgroundColor: ['#fff', '!important'],
-    borderTopLeftRadius: '35px',
-    borderBottomLeftRadius: '35px',
-  },
-  normalListItemBackground: {
-    border: [`1px solid #fff`, '!important'],
-    borderTopLeftRadius: '35px',
-    borderBottomLeftRadius: '35px',
-  },
 }))
-
-const eventSink = (e) => {
-  e.preventDefault()
-  e.stopPropagation()
-  return false
-}
 
 const RenderRoot = ({
   panelTop,
   editor,
   content,
   panelBottom,
+  ...props
 }) => {
-  const classes = useStyles()
+
+  const classes = getMergedClasses(useStyles(), props.classes)
 
   return (
     <div
@@ -106,12 +112,12 @@ const RenderRoot = ({
       }
       {
         editor && (
-          <div className={ classes.sectionEditor }>
+          <div className={ classes.editor }>
             { editor }
           </div>
         )
       }
-      <div className={ classes.menu }>
+      <div className={ classes.content }>
         { content }
       </div>
       {
@@ -127,9 +133,15 @@ const RenderRoot = ({
 
 const RendererList = ({
   children,
+  ...props
 }) => {
+
+  const classes = getMergedClasses(useStyles(), props.classes)
+
   return (
-    <List>
+    <List
+      className={ classes.list }
+    >
       { children }
     </List> 
   )
@@ -138,11 +150,12 @@ const RendererList = ({
 const RendererChildItems = ({
   open,
   children,
+  ...props
 }) => {
-  const classes = useStyles()
+  const classes = getMergedClasses(useStyles(), props.classes)
   return (
     <Collapse in={ open } timeout="auto" unmountOnExit>
-      <div className={ classes.sublist }>
+      <div className={ classes.itemChildren }>
         { children }
       </div>
     </Collapse>
@@ -151,11 +164,12 @@ const RendererChildItems = ({
 
 const RendererItemOptions = ({
   children,
+  ...props
 }) => {
-  const classes = useStyles()
+  const classes = getMergedClasses(useStyles(), props.classes)
   return (
     <ListItemIcon 
-      className={ classes.menuIcon }
+      className={ classes.optionsIcon }
       onClick={ eventSink }
     >
       { children }
@@ -169,20 +183,36 @@ const RendererItem = ({
   isCurrentPage,
   isOpen,
   hasChildren,
+  withIcons,
+  uppercase,
   onClick,
   onRightClick,
+  ...props
 }) => {
-  const classes = useStyles()
+  const classes = getMergedClasses(useStyles(), props.classes)
 
   const listItemClassname = classnames([classes.menuItem], {
-    [classes.highlightListItemBackground]: isCurrentPage,
-    [classes.normalListItemBackground]: !isCurrentPage,
+    [classes.activeMenuItem]: isCurrentPage,
   })
 
   const colorClassname = classnames({
-    [classes.highlightListItem]: isCurrentPage,
-    [classes.normalListItem]: !isCurrentPage,
+    [classes.activeColor]: isCurrentPage,
   })
+
+  const itemIcon = withIcons ? (
+    <ListItemIcon
+      className={ classes.itemIcon }
+    >
+      <ContentIcon
+        item={ item }
+        className={ colorClassname }
+      />
+    </ListItemIcon>
+  ) : null
+
+  const text = uppercase ?
+    item.data.name.toUpperCase() : 
+    item.data.name
 
   return (
     <ListItem
@@ -193,19 +223,12 @@ const RendererItem = ({
       onContextMenu={ onRightClick }
     >
       { itemOptions }
-      <ListItemIcon
-        className={ classes.menuIcon }
-      >
-        <ContentIcon
-          item={ item }
-          className={ colorClassname }
-        />
-      </ListItemIcon>
+      { itemIcon }
       <ListItemText
         classes={{
           primary: colorClassname
         }}
-        primary={ item.data.name }
+        primary={ text }
       />
       {
         hasChildren ?
@@ -230,12 +253,14 @@ const renderers = {
 const Tree = ({
   section,
   onClick,
+  ...props
 }) => {
   return (
     <BaseTree
       renderers={ renderers }
       section={ section }
       onClick={ onClick }
+      {...props}
     />
   )
 }

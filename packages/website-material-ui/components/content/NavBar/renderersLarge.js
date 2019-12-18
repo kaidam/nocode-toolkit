@@ -6,7 +6,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import {
   getMergedClasses,
   eventSink,
-} from './utils'
+} from '../../utils'
 
 const useStyles = makeStyles(theme => {
   return {
@@ -126,7 +126,6 @@ const RenderItem = ({
   isCurrent,
   linkProps,
   LinkComponent,
-  withHighlight,
   ...props
 }) => {
   const classes = getMergedClasses(useStyles({
@@ -134,7 +133,7 @@ const RenderItem = ({
   }), props.classes)
   const itemClass = classNames({
     [classes.item]: true,
-    [classes.itemActive]: isCurrent && withHighlight,
+    [classes.itemActive]: isCurrent,
   })
 
   return (

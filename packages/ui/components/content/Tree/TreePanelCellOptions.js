@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import Actions from '../../utils/actions'
-import sectionActions from '../../store/modules/section'
-import CellOptions from '../layout/CellOptions'
+import Actions from '../../../utils/actions'
+import sectionActions from '../../../store/modules/section'
+import CellOptions from '../../layout/CellOptions'
 
 const TreePanelCellOptionsWrapper = (props) => {
   const actions = Actions(useDispatch(), {

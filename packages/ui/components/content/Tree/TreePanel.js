@@ -1,5 +1,5 @@
 import React, { lazy, useMemo, useCallback } from 'react'
-import Layout from '../layout/Layout'
+import Layout from '../../layout/Layout'
 
 const CellOptions = lazy(() => import(/* webpackChunkName: "ui" */ './TreePanelCellOptions'))
 

@@ -1,14 +1,14 @@
 import React, { useCallback, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import selectors from '../../store/selectors'
-import SmallIconButton from '../buttons/SmallIconButton'
-import icons from '../../icons'
+import selectors from '../../../store/selectors'
+import SmallIconButton from '../../buttons/SmallIconButton'
+import icons from '../../../icons'
 
-import Actions from '../../utils/actions'
-import sectionActions from '../../store/modules/section'
+import Actions from '../../../utils/actions'
+import sectionActions from '../../../store/modules/section'
 
-import SectionEditor from '../buttons/SectionEditor'
+import SectionEditor from '../../buttons/SectionEditor'
 
 const AddPanelTopIcon = icons.addPanelTop
 const AddPanelBottomIcon = icons.addPanelBottom

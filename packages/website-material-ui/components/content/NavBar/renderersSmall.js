@@ -13,7 +13,7 @@ import selectors from '@nocode-toolkit/website/selectors'
 import {
   getMergedClasses,
   eventSink,
-} from './utils'
+} from '../../utils'
 
 const useStyles = makeStyles(theme => {
   return {
