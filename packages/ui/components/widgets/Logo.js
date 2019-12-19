@@ -65,14 +65,12 @@ const Logo = ({
 }) => {
   const singleton = useSingleton('logo')
   const Renderer = renderers.content || DefaultRenderer
-
   return (
     <ContentEditor
       id="logo"
       type="logo"
       location={`singleton:logo`}
       renderers={ renderers }
-      props={ props }
     >
       <Renderer
         value={ getValue(singleton) }

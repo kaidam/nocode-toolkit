@@ -1,44 +1,49 @@
 import React from 'react'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 
 import Typography from '@material-ui/core/Typography'
 import Link from '@nocode-toolkit/website/Link'
 import BaseLogo from '@nocode-toolkit/ui/components/widgets/Logo'
 
-const useStyles = makeStyles(theme => createStyles({  
-  link: {
-    color: theme.palette.primary.contrastText,
-    textDecoration: ['none', '!important'],
-  },
-  container: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  logoText: {
-    color: theme.palette.primary.contrastText,
-    whiteSpace: 'nowrap',
-  },
-  logoImage: {
-    height: `${theme.layout.topbarHeight-40}px`,
-    marginRight: theme.spacing(2),
-  },
-  editButton: {
-    marginRight: theme.spacing(2),
-  },
-  logoEditButton: {
-    marginLeft: theme.spacing(2),
-  },
-}))
+const useStyles = makeStyles(theme => {  
+  return {
+    link: {
+      color: theme.palette.primary.contrastText,
+      textDecoration: ['none', '!important'],
+    },
+    container: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    logoText: ({contrast}) => ({
+      color: contrast ? 
+        theme.palette.primary.contrastText :
+        theme.palette.primary.main,
+      whiteSpace: 'nowrap',
+    }),
+    logoImage: {
+      height: `${theme.layout.topbarHeight-40}px`,
+      marginRight: theme.spacing(2),
+    },
+    editButton: {
+      marginRight: theme.spacing(2),
+    },
+    logoEditButton: {
+      marginLeft: theme.spacing(2),
+    },
+  }
+})
 
 const Renderer = ({
   value: {
     title,
     imageUrl,
   },
-  props = {},
+  contrast,
+  ...props
 }) => {
-  const classes = useStyles()
+  const classes = useStyles({contrast})
   const classOverrides = props.classes || {}
   const titleClassname = classOverrides.title || ''
   return (
