@@ -65,8 +65,9 @@ import AlignLeftIcon from '@material-ui/icons/FormatAlignLeft'
 import AlignCenterIcon from '@material-ui/icons/FormatAlignCenter'
 import AlignRightIcon from '@material-ui/icons/FormatAlignRight'
 import PeopleIcon from '@material-ui/icons/People'
-import CodeLogo from '@material-ui/icons/Code'
-
+import CodeIcon from '@material-ui/icons/Code'
+import PluginIcon from '@material-ui/icons/Extension'
+import DomainIcon from '@material-ui/icons/Language'
 
 import UnsplashLogo from './styles/UnsplashLogo'
 import GoogleDriveLogo from './styles/GoogleDriveLogo'
@@ -128,7 +129,9 @@ const icons = {
   alignCenter: AlignCenterIcon,
   alignRight: AlignRightIcon,
   people: PeopleIcon,
-  code: CodeLogo,
+  code: CodeIcon,
+  plugin: PluginIcon,
+  domain: DomainIcon,
 }
 
 export default icons

@@ -13,14 +13,13 @@ import selectors from '../../store/selectors'
 
 const SettingsIcon = icons.settings
 
-const onOpenSettings = () => uiActions.openDialogSingleton('settings', 'settings')
 const onListWebsites = () => document.location = '/'
 
 const GlobalOptions = ({
 
 }) => {
   const actions = Actions(useDispatch(), {
-    onOpenSettings,
+    onOpenSettings: uiActions.openSettings,
     onLogout: uiActions.logout,
     onRebuild: jobActions.rebuild,
     onPublish: jobActions.publish,

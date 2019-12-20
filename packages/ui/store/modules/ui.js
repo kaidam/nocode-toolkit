@@ -117,6 +117,14 @@ const sideEffects = {
       tab,
     }))
   },
+  openSettings: () => (dispatch, getState) => {
+    dispatch(actions.openDialog('settings', {
+      driver: 'local',
+      type: 'settings',
+      location: `singleton:settings`,
+      id: 'settings',
+    }))
+  },
   openDialogSingletonPayload: (payload) => (dispatch, getState) => {
     dispatch(actions.openDialogSingleton(payload.id, payload.type, payload.tab))
   },
