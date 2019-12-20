@@ -26,20 +26,20 @@ const getItemSchema = (item) => {
 }
 
 const addPlugin = (plugin) => {
-  if(plugin.settingsTab) {
-    const settingsSchema = get('local.settings')
-    const existingTab = settingsSchema.tabs.find(t => t.id == plugin.id)
-    if(!existingTab) {
+  // if(plugin.settingsTab) {
+  //   const settingsSchema = get('local.settings')
+  //   const existingTab = settingsSchema.tabs.find(t => t.id == plugin.id)
+  //   if(!existingTab) {
       
-      const tab = {
-        id: plugin.id,
-        title: plugin.title,
-        schema: plugin.settingsTab.schema,
-      }
-      settingsSchema.tabs.push(tab)
-      settingsSchema.initialValues = Object.assign({}, settingsSchema.initialValues, plugin.settingsTab.initialValues)
-    }
-  }
+  //     const tab = {
+  //       id: plugin.id,
+  //       title: plugin.title,
+  //       schema: plugin.settingsTab.schema,
+  //     }
+  //     settingsSchema.tabs.push(tab)
+  //     settingsSchema.initialValues = Object.assign({}, settingsSchema.initialValues, plugin.settingsTab.initialValues)
+  //   }
+  // }
   if(plugin.schema) {
     add(plugin.schema)
   }

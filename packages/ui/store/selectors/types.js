@@ -206,9 +206,48 @@ const form = createSelector(
   }
 )
 
+const pluginsForm = createSelector(
+  item,
+  (existingItem) => {
+    const plugins = library.plugins
+
+    let initialValues = plugins.reduce((all, plugin) => {
+      if(!plugin.settingsTab) return all
+      return Object.assign({}, all, plugin.settingsTab.initialValues)
+    }, {})
+
+    let activePlugins = {}
+
+    if(existingItem) {
+      initialValues = existingItem.data
+      activePlugins = initialValues.activePlugins || {} 
+    }
+
+    const tabs = plugins.reduce((all, plugin) => {
+      if(!plugin.settingsTab) return all
+      if(!activePlugins[plugin.id]) return all
+      return all.concat([{
+        id: plugin.id,
+        title: plugin.title,
+        schema: plugin.settingsTab.schema,
+        withSave: plugin.settingsTab.withSave,
+      }])
+    }, [{
+      id: 'install',
+      title: 'Install',
+    }])
+
+    return {
+      initialValues,
+      tabs,
+    }
+  }
+)
+
 const selectors = {
   item,
   form,
+  pluginsForm,
   itemEditOptions,
   itemSaveAnnotation,
 }

@@ -2,14 +2,18 @@ import axios from 'axios'
 import Promise from 'bluebird'
 import CreateReducer from '@nocode-toolkit/website/store/utils/createReducer'
 import CreateActions from '@nocode-toolkit/website/store/utils/createActions'
-import selectors from '@nocode-toolkit/website/selectors'
+
+import nocodeActions from '@nocode-toolkit/website/store/moduleNocode'
 import routerActions from '@nocode-toolkit/website/store/moduleRouter'
 
 import globals from '../../globals'
 import { ui as initialState } from '../initialState'
+import selectors from '../selectors'
 import networkWrapper from '../networkWrapper'
 import apiUtils from '../../utils/api'
 import jobActions from './job'
+import contentActions from './content'
+import snackbarActions from './snackbar'
 
 import library from '../../types/library'
 
@@ -94,6 +98,51 @@ const sideEffects = {
   setQueryParams: (params) => (dispatch, getState) => {
     const route = selectors.router.route(getState())
     dispatch(routerActions.navigateTo(route.name, params))
+  },
+  togglePlugin: ({
+    id,
+    title,
+    value,
+  }) => async (dispatch, getState) => {
+    const existingItem = selectors.ui.settings(getState())
+    const data = existingItem ? existingItem.data : {}
+    const activePlugins = data.activePlugins || {}
+
+    const newData = Object.assign({}, data, {
+      activePlugins: Object.assign({}, activePlugins, {
+        [id]: value,
+      })
+    })
+
+    const newItem = Object.assign({}, existingItem, {
+      data: newData,
+    })
+
+    dispatch(nocodeActions.setItem({
+      type: 'content',
+      id: 'settings',
+      data: newItem,
+    }))
+    
+    await dispatch(contentActions.saveContent({
+      params: {
+        driver: 'local',
+        type: 'settings',
+        id: 'settings',
+      },
+      data: newData,
+      manualComplete: true,
+    }))
+
+    const actionTitle = value ?
+      `activated` :
+      `deactivated`
+
+    const actionSnackbarHandler = value ?
+      snackbarActions.setSuccess :
+      snackbarActions.setInfo
+
+    dispatch(actionSnackbarHandler(`${title} plugin ${actionTitle}`))
   },
   openDialog: (name, params) => (dispatch, getState) => {
     const route = selectors.router.route(getState())

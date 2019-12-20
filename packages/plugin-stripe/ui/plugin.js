@@ -6,6 +6,7 @@ const stripePlugin = (opts) => {
   return {
     id: 'stripe',
     title: 'Stripe',
+    description: 'Take payments from your website paid directly into your Stripe account',
     actions,
     reducer,
     settingsTab,

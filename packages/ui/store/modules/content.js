@@ -141,6 +141,7 @@ const sideEffects = {
       location,
     },
     data, 
+    manualComplete,
   }) => wrapper('saveContent', async (dispatch, getState) => {
     const schemaName = [driver, type].join('.')
     const schemaDefinition = library.get(schemaName)
@@ -188,6 +189,7 @@ const sideEffects = {
       await dispatch(jobActions.waitForJob({
         throwError: true,
         showWindow: driver != 'local',
+        manualComplete,
         loader: () => loaders.update(getState, {
           id: itemId,
           payload,
@@ -198,6 +200,7 @@ const sideEffects = {
       await dispatch(jobActions.waitForJob({
         throwError: true,
         showWindow: driver != 'local',
+        manualComplete,
         loader: () => loaders.add(getState, {
           driver,
           type,

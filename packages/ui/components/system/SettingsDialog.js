@@ -21,6 +21,7 @@ import uiActions from '../../store/modules/ui'
 import icons from '../../icons'
 
 import SettingsForm from './SettingsForm'
+import SettingsPlugins from './SettingsPlugins'
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />
@@ -72,7 +73,7 @@ const SECTIONS = [{
   id: 'plugins',
   title: 'Plugins',
   icon: icons.plugin,
-  renderer: () => <div>plugins</div>,
+  renderer: SettingsPlugins,
 },{
   id: 'domain',
   title: 'Domains',
@@ -87,7 +88,10 @@ const SettingsDialog = ({
   const classes = useStyles()
 
   const actions = Actions(useDispatch(), {
-    onViewSection: (section) => uiActions.updateQueryParams({section}),
+    onViewSection: (section) => uiActions.updateQueryParams({
+      section,
+      tab: '',
+    }),
     onClose:  uiActions.resetQueryParams,
   })
 
