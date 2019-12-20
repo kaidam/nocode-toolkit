@@ -36,10 +36,13 @@ const useStyles = makeStyles(theme => ({
   grow: {
     flexGrow: 1,
   },
+  button: {
+    marginLeft: theme.spacing(1),
+  },
 }))
 
 const SettingsForm = ({
-  
+  onClose,
 }) => {
 
   const classes = useStyles()
@@ -133,8 +136,17 @@ const SettingsForm = ({
                   <Toolbar>
                     <div className={classes.grow} />
                     <Button
+                      color="default"
+                      variant="contained"
+                      className={classes.button}
+                      onClick={ onClose }
+                    >
+                      Close
+                    </Button>
+                    <Button
                       color="secondary"
                       variant="contained"
+                      className={classes.button}
                       onClick={ handleSubmit }
                     >
                       Save

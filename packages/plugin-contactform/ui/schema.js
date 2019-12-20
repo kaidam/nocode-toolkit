@@ -6,6 +6,7 @@ const Schemas = ({
 } = {}) => {
   const contactform = {
     driver: 'local',
+    plugin: 'contactform',
     type: 'contactform',
     title: 'Contact Form',
     icon: 'contact',

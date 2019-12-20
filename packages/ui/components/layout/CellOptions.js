@@ -95,6 +95,10 @@ const CellOptions = ({
   }) => {
     return typeUI.addContentOptionsWithCallback({
       filter: (parentFilter, schemaDefinition) => {
+        const activePlugins = settings && settings.data && settings.data.activePlugins ?
+          settings.data.activePlugins :
+          {}
+        if(schemaDefinition.plugin && !activePlugins[schemaDefinition.plugin]) return false
         const hasCellParent = parentFilter.indexOf('cell') >= 0
         if(!hasCellParent) return false
         if(schemaDefinition.addCellFilter) {

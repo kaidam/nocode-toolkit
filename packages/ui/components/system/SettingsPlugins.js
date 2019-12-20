@@ -41,7 +41,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const SettingsPlugins = ({
-  
+  onClose,
 }) => {
 
   const classes = useStyles()
@@ -137,12 +137,19 @@ const SettingsPlugins = ({
                   getTabContent(tabConfig, formElem)
                 }
               </div>
-              {
-                tabConfig.withSave && (
-                  <div className={ classes.appbar }>
-                    <AppBar color="default" position="relative">
-                      <Toolbar>
-                        <div className={classes.grow} />
+              <div className={ classes.appbar }>
+                <AppBar color="default" position="relative">
+                  <Toolbar>
+                    <div className={classes.grow} />
+                      <Button
+                        color="default"
+                        variant="contained"
+                        onClick={ onClose }
+                      >
+                        Close
+                      </Button>
+                    {
+                      tabConfig.withSave && (
                         <Button
                           color="secondary"
                           variant="contained"
@@ -150,11 +157,11 @@ const SettingsPlugins = ({
                         >
                           Save
                         </Button>
-                      </Toolbar>
-                    </AppBar>
-                  </div>
-                )
-              }
+                      )
+                    }
+                  </Toolbar>
+                </AppBar>
+              </div>
             </div>
           )
         }

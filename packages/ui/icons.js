@@ -68,6 +68,7 @@ import PeopleIcon from '@material-ui/icons/People'
 import CodeIcon from '@material-ui/icons/Code'
 import PluginIcon from '@material-ui/icons/Extension'
 import DomainIcon from '@material-ui/icons/Language'
+import CloseIcon from '@material-ui/icons/Close'
 
 import UnsplashLogo from './styles/UnsplashLogo'
 import GoogleDriveLogo from './styles/GoogleDriveLogo'
@@ -77,6 +78,7 @@ const icons = {
   add: AddIcon,
   edit: EditIcon,
   delete: DeleteIcon,
+  close: CloseIcon,
   settings: SettingsIcon,
   publish: PublishIcon,
   history: HistoryIcon,

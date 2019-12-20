@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import Typography from '@material-ui/core/Typography'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
-import Slide from '@material-ui/core/Slide'
 import Dialog from '@material-ui/core/Dialog'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -22,10 +21,6 @@ import icons from '../../icons'
 
 import SettingsForm from './SettingsForm'
 import SettingsPlugins from './SettingsPlugins'
-
-const Transition = React.forwardRef(function Transition(props, ref) {
-  return <Slide direction="up" ref={ref} {...props} />
-})
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -109,7 +104,6 @@ const SettingsDialog = ({
       fullScreen
       open
       onClose={ actions.onClose }
-      TransitionComponent={ Transition }
     >
       <div className={ classes.container }>
         <div className={ classes.sidebar }>
@@ -118,13 +112,6 @@ const SettingsDialog = ({
               <Toolbar>
                 <Typography><b>Settings</b></Typography>
                 <div className={classes.grow} />
-                <Button
-                  color="default"
-                  variant="contained"
-                  onClick={ actions.onClose }
-                >
-                  Close
-                </Button>
               </Toolbar>
             </AppBar>
           </div>
@@ -145,7 +132,9 @@ const SettingsDialog = ({
           </div>  
         </div>
         <div className={ classes.content }>
-          <Renderer />
+          <Renderer
+            onClose={ actions.onClose }
+          />
         </div>
       </div>
     </Dialog>

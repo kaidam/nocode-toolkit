@@ -3,6 +3,7 @@ import SocialLinks from './SocialLinks'
 
 const sociallinks = {
   driver: 'local',
+  plugin: 'sociallinks',
   type: 'sociallinks',
   title: 'Social Links',
   icon: 'people',

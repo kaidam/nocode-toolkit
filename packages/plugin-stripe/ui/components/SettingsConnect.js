@@ -7,6 +7,14 @@ const IMAGE_URL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAAAhCAYAAAB
 const SettingsConnected = () => {
   return (
     <div>
+      <div
+        style={{
+          fontSize: '5em',
+          color: '#43a047',
+        }}
+      >
+       ✔
+      </div>
       <p>
         Your Stripe account is now connected and you can add payment buttons!
       </p>

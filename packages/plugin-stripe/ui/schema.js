@@ -6,6 +6,7 @@ const Schemas = ({
 } = {}) => {
   const paymentButton = {
     driver: 'local',
+    plugin: 'stripe',
     type: 'paymentButton',
     title: 'Payment Button',
     icon: 'payment',

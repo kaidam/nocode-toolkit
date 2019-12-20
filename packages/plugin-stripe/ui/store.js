@@ -112,11 +112,10 @@ const sideEffects = {
     // we want to open the settings window and alert the user
     // their stripe account is now connected
     if(params.trigger == 'stripe_connect') {
-      const openDialog = actionLoader('ui', 'openDialogSingletonPayload')
+      const openSettings = actionLoader('ui', 'openSettings')
       const setSuccess = actionLoader('snackbar', 'setSuccess')
-      dispatch(openDialog({
-        id: 'settings',
-        type: 'settings',
+      dispatch(openSettings({
+        section: 'plugins',
         tab: 'stripe',
       }))
       dispatch(setSuccess(`Your stripe account is now connected`))

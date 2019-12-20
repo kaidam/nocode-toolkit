@@ -19,6 +19,13 @@ import library from '../../types/library'
 
 const prefix = 'ui'
 
+const wrapper = (name, handler) => networkWrapper({
+  prefix,
+  name,
+  snackbarError: true,
+  handler,
+})
+
 const reducers = {
   setConfig: (state, action) => {
     state.initialised = true
@@ -103,7 +110,7 @@ const sideEffects = {
     id,
     title,
     value,
-  }) => async (dispatch, getState) => {
+  }) => wrapper('togglePlugin', async (dispatch, getState) => {
     const existingItem = selectors.ui.settings(getState())
     const data = existingItem ? existingItem.data : {}
     const activePlugins = data.activePlugins || {}
@@ -117,21 +124,22 @@ const sideEffects = {
     const newItem = Object.assign({}, existingItem, {
       data: newData,
     })
+    
+    await dispatch(contentActions.saveContentRaw({
+      params: {
+        driver: 'local',
+        type: 'settings',
+        id: 'settings',
+        location: 'singleton:settings',
+      },
+      data: newData,
+      manualComplete: true,
+    }))
 
     dispatch(nocodeActions.setItem({
       type: 'content',
       id: 'settings',
       data: newItem,
-    }))
-    
-    await dispatch(contentActions.saveContent({
-      params: {
-        driver: 'local',
-        type: 'settings',
-        id: 'settings',
-      },
-      data: newData,
-      manualComplete: true,
     }))
 
     const actionTitle = value ?
@@ -143,7 +151,7 @@ const sideEffects = {
       snackbarActions.setInfo
 
     dispatch(actionSnackbarHandler(`${title} plugin ${actionTitle}`))
-  },
+  }),
   openDialog: (name, params) => (dispatch, getState) => {
     const route = selectors.router.route(getState())
     dispatch(routerActions.navigateTo(route.name, {
@@ -166,12 +174,13 @@ const sideEffects = {
       tab,
     }))
   },
-  openSettings: () => (dispatch, getState) => {
+  openSettings: (params = {}) => (dispatch, getState) => {
     dispatch(actions.openDialog('settings', {
       driver: 'local',
       type: 'settings',
       location: `singleton:settings`,
       id: 'settings',
+      ...params
     }))
   },
   openDialogSingletonPayload: (payload) => (dispatch, getState) => {

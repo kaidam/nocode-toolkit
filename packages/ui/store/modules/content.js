@@ -133,7 +133,7 @@ const sideEffects = {
     }
   }),
 
-  saveContent: ({
+  saveContentRaw: ({
     params: {
       driver,
       type,
@@ -142,7 +142,7 @@ const sideEffects = {
     },
     data, 
     manualComplete,
-  }) => wrapper('saveContent', async (dispatch, getState) => {
+  }) => async (dispatch, getState) => {
     const schemaName = [driver, type].join('.')
     const schemaDefinition = library.get(schemaName)
     if(!schemaDefinition) throw new Error(`no schema found for ${schemaName}`)
@@ -211,6 +211,10 @@ const sideEffects = {
         })
       }))
     }
+  },
+
+  saveContent: (params) => wrapper('saveContent', async (dispatch, getState) => {
+    await dispatch(actions.saveContentRaw(params))
   }),
 
   saveAnnotation: ({
