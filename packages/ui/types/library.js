@@ -46,14 +46,24 @@ const addPlugin = (plugin) => {
   plugins.push(plugin)
 }
 
+const addTab = (id, tab, initialValues) => {
+  const schemaDefinition = get(id)
+  if(!schemaDefinition) return
+  const existingTab = (schemaDefinition.tabs || []).find(t => t.id == tab.id)
+  if(existingTab) return
+  schemaDefinition.tabs = (schemaDefinition.tabs || []).concat([tab])
+  schemaDefinition.initialValues = Object.assign({}, schemaDefinition.initialValues, initialValues)
+}
+
 const types = {
   add,
   set,
   get,
   list,
   getItemSchema,
-  addPlugin,
   plugins,
+  addPlugin,
+  addTab,
 }
 
 export default types
