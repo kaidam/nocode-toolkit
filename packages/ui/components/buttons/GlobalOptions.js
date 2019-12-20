@@ -34,17 +34,9 @@ const GlobalOptions = ({
         icon: icons.settings,
         handler: actions.onOpenSettings,
       }, {
-        title: 'Publish Now',
+        title: 'Publish',
         icon: icons.publish,
-        handler: actions.onPublish,
-      }, {
-        title: 'Publish History',
-        icon: icons.history,
         handler: actions.onViewHistory,
-      }, {
-        title: 'Rebuild Preview',
-        icon: icons.refresh,
-        handler: actions.onRebuild,
       }, '-', {
         title: 'List Websites',
         icon: icons.content,

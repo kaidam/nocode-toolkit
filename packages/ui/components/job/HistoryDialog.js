@@ -24,6 +24,7 @@ const OpenIcon = icons.open
 const LogsIcon = icons.logs
 const UndoIcon = icons.undo
 const PublishIcon = icons.publish
+const RebuildIcon = icons.refresh
 const LookIcon = icons.look
 
 const useStyles = makeStyles(theme => createStyles({
@@ -91,6 +92,7 @@ const JobHistoryDialog = ({
     onClose: jobActions.closeWindow,
     onViewLogs: jobActions.viewLogs,
     onPublish: jobActions.publish,
+    onRebuild: jobActions.rebuild,
     onDeploy: jobActions.deploy,
     onLoadHistory: jobActions.loadHistory,
   })
@@ -242,15 +244,26 @@ const JobHistoryDialog = ({
       withCancel
       onCancel={ actions.onClose }
       rightButtons={(
-        <Button
-          type="button"
-          variant="contained"
-          color="secondary"
-          onClick={ actions.onPublish }
-          className={ classes.publishButton }
-        >
-          <PublishIcon /> Publish Now
-        </Button>
+        <React.Fragment>
+          <Button
+            type="button"
+            variant="contained"
+            onClick={ actions.onRebuild }
+            className={ classes.publishButton }
+          >
+            <RebuildIcon /> Rebuild Preview
+          </Button>
+          <Button
+            type="button"
+            variant="contained"
+            color="secondary"
+            onClick={ actions.onPublish }
+            className={ classes.publishButton }
+          >
+            <PublishIcon /> Publish Now
+          </Button>
+        </React.Fragment>
+        
       )}
     >
       {
