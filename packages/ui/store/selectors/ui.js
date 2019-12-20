@@ -7,6 +7,8 @@ const settings = content.contentItem('settings')
 const logo = content.contentItem('logo')
 
 const previewMode = state => state.ui.previewMode
+const config = state => state.ui.config
+const website = state => state.ui.website
 
 // are we in core UI mode
 // this ignores previewMode so we can still
@@ -35,6 +37,8 @@ const selectors = {
   previewMode,
   showCoreUI,
   showUI,
+  config,
+  website,
 }
 
 export default selectors

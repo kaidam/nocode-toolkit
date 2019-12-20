@@ -31,6 +31,9 @@ const reducers = {
     state.initialised = true
     state.config = action.payload
   },
+  setWebsite: (state, action) => {
+    state.website = action.payload
+  },
   setInitialiseCalled: (state, action) => {
     state.initialiseCalled = true
   },
@@ -56,6 +59,15 @@ const loaders = {
   config: (getState) => axios.get(apiUtils.websiteUrl(getState, `/config`))
     .then(apiUtils.process),
 
+  website: (id) => axios.get(apiUtils.apiUrl(`/websites/${id}`))
+    .then(apiUtils.process),
+
+  setSubdomain: (id, subdomain) => axios.put(apiUtils.apiUrl(`/websites/${id}/subdomain`), {subdomain})
+    .then(apiUtils.process),
+
+  addUrl: (id, url) => axios.post(apiUtils.apiUrl(`/websites/${id}/urls`), {url})
+    .then(apiUtils.process),
+
   logout: () => axios.post(apiUtils.apiUrl('/auth/logout'))
     .then(apiUtils.process),
 }
@@ -78,7 +90,29 @@ const sideEffects = {
           dispatch(plugin.actions.initialize())
         }
       })
+      dispatch(actions.loadWebsite())
     }
+  }),
+  loadWebsite: () => networkWrapper({
+    prefix,
+    name: 'loadWebsite',
+    snackbarError: false,
+    handler: async (dispatch, getState) => {
+      const config = selectors.nocode.config(getState())
+      const data = await loaders.website(config.websiteId)
+      data.meta = data.meta || {}
+      dispatch(actions.setWebsite(data))
+    }
+  }),
+  setSubdomain: (subdomain) => wrapper('setSubdomain', async (dispatch, getState) => {
+    const config = selectors.nocode.config(getState())
+    await loaders.setSubdomain(config.websiteId, subdomain)
+    await dispatch(actions.loadWebsite())
+    dispatch(snackbarActions.setSuccess(`subdomain updated`))
+  }),
+  addUrl: (url) => wrapper('addUrl', async (dispatch, getState) => {
+    const config = selectors.nocode.config(getState())
+    await loaders.addUrl(config.websiteId, url)
   }),
   viewWebsites: () => (dispatch, getState) => {
     document.location = '/'

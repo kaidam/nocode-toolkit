@@ -21,6 +21,7 @@ import icons from '../../icons'
 
 import SettingsForm from './SettingsForm'
 import SettingsPlugins from './SettingsPlugins'
+import SettingsDomains from './SettingsDomains'
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -73,7 +74,7 @@ const SECTIONS = [{
   id: 'domain',
   title: 'Domains',
   icon: icons.domain,
-  renderer: () => <div>domain</div>,
+  renderer: SettingsDomains,
 }]
 
 const SettingsDialog = ({

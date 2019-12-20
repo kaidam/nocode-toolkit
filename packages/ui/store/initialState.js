@@ -4,6 +4,9 @@ export const ui = {
   initialiseCalled: false,
   initialised: false,
   config: utils.isNode ? {} : window._uiConfigData || {},
+  website: {
+    meta: {},
+  },
   confirmWindow: null,
   previewMode: false,
 }
