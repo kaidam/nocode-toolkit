@@ -34,6 +34,9 @@ const reducers = {
   setWebsite: (state, action) => {
     state.website = action.payload
   },
+  setDnsInfo: (state, action) => {
+    state.dnsInfo = action.payload
+  },
   setInitialiseCalled: (state, action) => {
     state.initialiseCalled = true
   },
@@ -63,6 +66,9 @@ const loaders = {
     .then(apiUtils.process),
 
   setSubdomain: (id, subdomain) => axios.put(apiUtils.apiUrl(`/websites/${id}/subdomain`), {subdomain})
+    .then(apiUtils.process),
+
+  dnsInfo: () => axios.get(apiUtils.apiUrl(`/websites/dnsInfo`))
     .then(apiUtils.process),
 
   addUrl: (id, url) => axios.post(apiUtils.apiUrl(`/websites/${id}/urls`), {url})
@@ -253,6 +259,10 @@ const sideEffects = {
       }
     }
     return confirmed
+  },
+  loadDnsInfo: () => async (dispatch, getState) => {
+    const data = await loaders.dnsInfo()
+    dispatch(actions.setDnsInfo(data))
   },
 }
 

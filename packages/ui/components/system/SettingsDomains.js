@@ -112,6 +112,11 @@ const SettingsDomains = ({
     <div className={ classes.container }>
       <div className={ classes.content }>
         <Grid container>
+          <Grid item xs={ 12 }>
+            <Typography variant="h6">Nocode Subdomain</Typography>
+          </Grid>
+        </Grid>
+        <Grid container>
           <Grid item xs={ 4 }>
             <TextField
               label="Subdomain"

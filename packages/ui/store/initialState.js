@@ -9,6 +9,7 @@ export const ui = {
   },
   confirmWindow: null,
   previewMode: false,
+  dnsInfo: null,
 }
 
 export const content = {
