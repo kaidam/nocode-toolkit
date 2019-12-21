@@ -68,6 +68,9 @@ const loaders = {
   addUrl: (id, url) => axios.post(apiUtils.apiUrl(`/websites/${id}/urls`), {url})
     .then(apiUtils.process),
 
+  removeUrl: (id, url) => axios.delete(apiUtils.apiUrl(`/websites/${id}/urls/${encodeURIComponent(url)}`))
+    .then(apiUtils.process),
+
   logout: () => axios.post(apiUtils.apiUrl('/auth/logout'))
     .then(apiUtils.process),
 }
@@ -110,9 +113,25 @@ const sideEffects = {
     await dispatch(actions.loadWebsite())
     dispatch(snackbarActions.setSuccess(`subdomain updated`))
   }),
-  addUrl: (url) => wrapper('addUrl', async (dispatch, getState) => {
+  addUrl: ({
+    url,
+    onComplete,
+  }) => wrapper('addUrl', async (dispatch, getState) => {
     const config = selectors.nocode.config(getState())
     await loaders.addUrl(config.websiteId, url)
+    await dispatch(actions.loadWebsite())
+    dispatch(snackbarActions.setSuccess(`subdomain updated`))
+    if(onComplete) onComplete()
+  }),
+  removeUrl: ({
+    url,
+    onComplete,
+  }) => wrapper('removeUrl', async (dispatch, getState) => {
+    const config = selectors.nocode.config(getState())
+    await loaders.removeUrl(config.websiteId, url)
+    await dispatch(actions.loadWebsite())
+    dispatch(snackbarActions.setInfo(`subdomain deleted`))
+    if(onComplete) onComplete()
   }),
   viewWebsites: () => (dispatch, getState) => {
     document.location = '/'
