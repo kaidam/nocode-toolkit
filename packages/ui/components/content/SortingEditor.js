@@ -98,7 +98,7 @@ const SortingEditorDragDropEditor = ({
     name: 'sortIds',
     value: ids,
   }), [onSetItemOption])
-  
+
   return (
     <SortingEditorList
       ids={ itemOptions.sortIds }

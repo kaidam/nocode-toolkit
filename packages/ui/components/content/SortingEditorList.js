@@ -38,7 +38,7 @@ const SortingEditorList = ({
     const [removed] = newIds.splice(startIndex, 1)
     newIds.splice(endIndex, 0, removed)
     onUpdate(newIds)
-  }, [onUpdate])
+  }, [ids, onUpdate])
 
   return (
     <DragDropContext onDragEnd={ onDragEnd }>
