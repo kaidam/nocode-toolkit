@@ -136,7 +136,7 @@ const sideEffects = {
     const config = selectors.nocode.config(getState())
     await loaders.removeUrl(config.websiteId, url)
     await dispatch(actions.loadWebsite())
-    dispatch(snackbarActions.setInfo(`subdomain deleted`))
+    dispatch(snackbarActions.setSuccess(`subdomain deleted`))
     if(onComplete) onComplete()
   }),
   viewWebsites: () => (dispatch, getState) => {

@@ -57,6 +57,12 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
+const getSubdomainError = (subdomain, defaultSubdomain) => {
+  if(!subdomain.match(/^[\w-]+$/)) return `Only letters, numbers and dashes allowed`
+  if(subdomain.match(/^website-\d+$/) && subdomain != defaultSubdomain) return `You cannot use that format`
+  return null
+}
+
 const SettingsDomains = ({
   onClose,
 }) => {
@@ -69,22 +75,24 @@ const SettingsDomains = ({
     onRemoveUrl: uiActions.removeUrl,
   })
 
+  const nocodeConfig = useSelector(selectors.nocode.config)
   const website = useSelector(selectors.ui.website)
-  const [subdomain, setSubdomain] = useState('')
+  const defaultSubdomain = `website-${nocodeConfig.websiteId}`
+  const [subdomain, setSubdomain] = useState(defaultSubdomain)
   const [addDialogOpen, setAddDialogOpen] = useState(false)
   const [deleteDialogUrl, setDeleteDialogUrl] = useState(null)
   const [urls, setUrls] = useState([])
   const config = useSelector(selectors.ui.config)
-  const nocodeConfig = useSelector(selectors.nocode.config)
-  const subdomainValid = subdomain.match(/^[\w-]+$/) ? true : false
-
-  const defaultSubdomain = `website-${nocodeConfig.websiteId}`
-
-  const error = subdomain && !subdomainValid ? true : false
+  
+  const errorText = getSubdomainError(subdomain, defaultSubdomain)
+  
+  const error = subdomain && errorText ? true : false
   const saveDisabled = !subdomain || error
 
   useEffect(() => {
-    setSubdomain(website.meta.subdomain || '')
+    if(website.meta.subdomain) {
+      setSubdomain(website.meta.subdomain || '')
+    }
     setUrls(website.meta.urls || [])
   }, [website])
 
@@ -121,7 +129,7 @@ const SettingsDomains = ({
             <TextField
               label="Subdomain"
               placeholder={ defaultSubdomain }
-              helperText={ error ? "Please only letters and numbers " : "Enter the subdomain your website will be published to" }
+              helperText={ error ? errorText : "Enter the subdomain your website will be published to" }
               fullWidth
               error={ error ? true : false }
               value={subdomain || ''}
