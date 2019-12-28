@@ -102,7 +102,6 @@ const CellOptions = ({
             component: type,
             source: 'cell',
             editor: 'local',
-            snippet,
           },
           type,
           method,

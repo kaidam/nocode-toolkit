@@ -49,7 +49,7 @@ const SocialLinks = ({
   }, [hasInjectedCSS])
   
   const links = LINKS
-    .filter(name => content[name] ? true : fase)
+    .filter(name => content[name] ? true : false)
     .map((name, i) => {
       const value = content[name]
       return (
