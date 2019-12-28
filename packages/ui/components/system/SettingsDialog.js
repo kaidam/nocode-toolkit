@@ -22,6 +22,7 @@ import icons from '../../icons'
 import SettingsForm from './SettingsForm'
 import SettingsPlugins from './SettingsPlugins'
 import SettingsDomains from './SettingsDomains'
+import SettingsSnippets from './SettingsSnippets'
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -75,6 +76,11 @@ const SECTIONS = [{
   title: 'Domains',
   icon: icons.domain,
   renderer: SettingsDomains,
+},{
+  id: 'snippets',
+  title: 'Snippets',
+  icon: icons.code,
+  renderer: SettingsSnippets,
 }]
 
 const SettingsDialog = ({

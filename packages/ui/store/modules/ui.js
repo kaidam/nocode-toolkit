@@ -165,6 +165,39 @@ const sideEffects = {
     const route = selectors.router.route(getState())
     dispatch(routerActions.navigateTo(route.name, params))
   },
+  setSnippets: ({
+    data,
+    onComplete,
+  }) => wrapper('setSnippets', async (dispatch, getState) => {
+    const existingItem = selectors.ui.settings(getState())
+    const newData = Object.assign({}, existingItem ? existingItem.data : {}, {
+      snippets: data,
+    })
+    const newItem = Object.assign({}, existingItem, {
+      data: newData,
+    })
+    
+    await dispatch(contentActions.saveContentRaw({
+      params: {
+        driver: 'local',
+        type: 'settings',
+        id: 'settings',
+        location: 'singleton:settings',
+      },
+      data: newData,
+      manualComplete: true,
+    }))
+
+    dispatch(nocodeActions.setItem({
+      type: 'content',
+      id: 'settings',
+      data: newItem,
+    }))
+
+    dispatch(snackbarActions.setSuccess(`snippets updated`))
+
+    if(onComplete) onComplete()
+  }),
   togglePlugin: ({
     id,
     title,

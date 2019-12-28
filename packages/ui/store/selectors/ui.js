@@ -10,6 +10,13 @@ const previewMode = state => state.ui.previewMode
 const config = state => state.ui.config
 const website = state => state.ui.website
 const dnsInfo = state => state.ui.dnsInfo
+const snippets = createSelector(
+  settings,
+  (settings) => {
+    if(!settings || !settings.data || !settings.data.snippets) return []
+    return settings.data.snippets
+  }
+)
 
 // are we in core UI mode
 // this ignores previewMode so we can still
@@ -41,6 +48,7 @@ const selectors = {
   config,
   website,
   dnsInfo,
+  snippets,
 }
 
 export default selectors
