@@ -11,8 +11,8 @@ import CellEditor from './CellEditor'
 import CellSettingsEditor from './CellSettingsEditor'
 
 import typeUI from '../../types/ui'
+import library from '../../types/library'
 import icons from '../../icons'
-
 import selectors from '../../store/selectors'
 
 const EditIcon = icons.edit
@@ -89,11 +89,27 @@ const CellOptions = ({
   const onOpenSettingsEditor = useCallback(() => setSettingsEditorOpen(true), [])
   const onCloseSettingsEditor = useCallback(() => setSettingsEditorOpen(false), [])
 
+  const cellSchemaDefinition = library.get(`local.${cell.component}`)
+
   const getContentTypeOptions = useCallback(({
     method,
     params,
   }) => {
-    return typeUI.addContentOptionsWithCallback({
+    const baseItems = typeUI.addContentOptionsWithCallback({
+      handler: (type, schema) => {
+        setAddingCell({
+          cell: {
+            component: type,
+            source: 'cell',
+            editor: 'local',
+            snippet,
+          },
+          type,
+          method,
+          params,
+        })
+        onOpenEditor()
+      },
       filter: (parentFilter, schemaDefinition) => {
         const activePlugins = settings && settings.data && settings.data.activePlugins ?
           settings.data.activePlugins :
@@ -110,21 +126,42 @@ const CellOptions = ({
           return true
         }
       },
-      handler: (type) => {
-        setAddingCell({
-          cell: {
-            component: type,
-            source: 'cell',
-            editor: 'local',
-          },
-          type,
-          method,
-          params,
-        })
-        onOpenEditor()
-      }
     })
-  }, [onOpenEditor, setAddingCell, settings])
+
+    const snippets = settings && settings.data && settings.data.snippets ?
+      settings.data.snippets.map(snippet => ({
+        title: snippet.name,
+        icon: icons.code,
+        type: 'snippet',
+        handler: () => {
+          onEditLayout({
+            data,
+            rowIndex,
+            cellIndex,
+            method,
+            params,
+            cell: {
+              id: uuid(),
+              component: 'snippet',
+              source: 'cell',
+              editor: 'local',
+              data: {
+                id: snippet.id,
+              },
+            },
+          })
+        },
+      })) : []
+
+    return baseItems.concat(snippets)
+  }, [
+    onOpenEditor,
+    setAddingCell,
+    settings,
+    data,
+    rowIndex,
+    cellIndex,
+  ])
 
   const getEditLayoutHandler = useCallback(({
     method,
@@ -157,7 +194,10 @@ const CellOptions = ({
       icon: DeleteIcon,
       handler: onOpenDeleteConfirm,
     }]
-  }, [getEditLayoutHandler, getContentTypeOptions])
+  }, [
+    getEditLayoutHandler,
+    getContentTypeOptions,
+  ])
 
   const fullMenuItems = useMemo(() => {
     const editOptions = {
@@ -309,14 +349,29 @@ const CellOptions = ({
       handler: onOpenDeleteConfirm,
     }
 
-    return [
-      editOptions,
+    const canEdit = cellSchemaDefinition && cellSchemaDefinition.metadata && cellSchemaDefinition.metadata.disableCellEdit ?
+      false :
+      true
+
+    let menuItems = []
+
+    if(canEdit) {
+      menuItems = menuItems.concat([editOptions])
+    }
+
+    menuItems = menuItems.concat([
       settingsOptions,
       insertOptions,
       moveOptions,
       deleteOption,
-    ]
-  }, [getEditLayoutHandler, getContentTypeOptions])
+    ])
+
+    return menuItems
+  }, [
+    getEditLayoutHandler,
+    getContentTypeOptions,
+    cellSchemaDefinition,
+  ])
 
   const getButton = useCallback((onClick) => {
     return (

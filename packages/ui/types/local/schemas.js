@@ -5,6 +5,7 @@ import RichText from '../../components/cells/RichText'
 import RawHTML from '../../components/cells/RawHTML'
 import Image from '../../components/cells/Image'
 import Video from '../../components/cells/Video'
+import Snippet from '../../components/cells/Snippet'
 
 const folder = {
   driver: 'local',
@@ -201,6 +202,21 @@ const image = {
   },
 }
 
+const snippet = {
+  driver: 'local',
+  type: 'snippet',
+  title: 'Snippet',
+  icon: 'code',
+  metadata: {
+    disableCellEdit: true,
+  },
+  parentFilter: [],
+  initialValues: {},
+  cellConfig: {
+    component: Snippet,
+  },
+}
+
 const settings = {
   driver: 'local',
   type: 'settings',
@@ -338,6 +354,7 @@ const schemas = {
   richtext,
   rawhtml,
   image,
+  snippet,
   youtube,
   settings,
   logo,
