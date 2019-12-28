@@ -30,10 +30,17 @@ const useStyles = makeStyles(theme => {
       padding: '0',
       overflow: 'hidden',
       fontSize: '1em',
+      textAlign: 'right',
     },
 
-    itemContainer: {
-      float: 'left',
+    itemContainer: ({
+      vertical,
+    }) => {
+      return vertical ? {
+        
+      } : {
+        float: 'left',
+      }
     },
 
     item: props => ({
@@ -43,7 +50,7 @@ const useStyles = makeStyles(theme => {
       color: props.contrast ?
         theme.palette.primary.contrastText :
         theme.palette.primary.main,
-      textAlign: 'center',
+      textAlign: props.align || 'center',
       padding: theme.spacing(1),
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
@@ -98,6 +105,8 @@ const RenderRoot = ({
 }) => {
   const classes = getMergedClasses(useStyles({
     contrast: props.contrast,
+    vertical: props.vertical,
+    align: props.align,
   }), props.classes)
 
   return (
@@ -130,6 +139,8 @@ const RenderItem = ({
 }) => {
   const classes = getMergedClasses(useStyles({
     contrast: props.contrast,
+    vertical: props.vertical,
+    align: props.align,
   }), props.classes)
   const itemClass = classNames({
     [classes.item]: true,
@@ -159,6 +170,8 @@ const RendererItemOptions = ({
 }) => {
   const classes = getMergedClasses(useStyles({
     contrast: props.contrast,
+    vertical: props.vertical,
+    align: props.align,
   }), props.classes)
   return (
     <ListItemIcon 
