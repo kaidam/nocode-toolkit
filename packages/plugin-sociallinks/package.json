@@ -1,12 +1,12 @@
 {
   "name": "@nocode-toolkit/plugin-sociallinks",
-  "version": "1.0.52",
+  "version": "1.0.53",
   "description": "Social links plugin for nocode templates",
   "publishConfig": {
     "access": "public"
   },
   "dependencies": {
-    "@nocode-toolkit/ui": "^1.0.52",
+    "@nocode-toolkit/ui": "^1.0.53",
     "@nocode-toolkit/website": "^1.0.47",
     "react": "^16.8.6",
     "react-redux": "^7.0.1",
