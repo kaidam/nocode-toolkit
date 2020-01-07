@@ -1,4 +1,4 @@
-import React, { lazy } from 'react'
+import React, { lazy, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import Suspense from '../system/Suspense'
 import Layout from '../layout/Layout'
@@ -6,6 +6,7 @@ import selectors from '../../store/selectors'
 
 const RenderDefaultHomeUI = lazy(() => import(/* webpackChunkName: "ui" */ './RenderDefaultHomeUI'))
 const CellOptions = lazy(() => import(/* webpackChunkName: "ui" */ './CellOptions'))
+const DocumentReloadTrigger = lazy(() => import(/* webpackChunkName: "ui" */ './DocumentReloadTrigger'))
 
 const RenderDefaultHome = ({
   children,
@@ -29,7 +30,9 @@ const defaultRenderers = {
 const DocumentLayout = ({
   renderers = {},
 }) => {
+
   const data = useSelector(selectors.document.data)
+
   const renderCell = ({
     data,
     cell,
@@ -50,12 +53,18 @@ const DocumentLayout = ({
   }
 
   return (
-    <Layout
-      renderers={ renderers }
-      data={ data }
-      renderCell={ renderCell }
-      CellOptionsWrapper={ CellOptions }
-    />
+    <React.Fragment>
+      <Layout
+        renderers={ renderers }
+        data={ data }
+        renderCell={ renderCell }
+        CellOptionsWrapper={ CellOptions }
+      />
+      <Suspense>
+        <DocumentReloadTrigger />
+      </Suspense>
+    </React.Fragment>
+    
   )
 }
 
