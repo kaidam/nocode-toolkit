@@ -14,6 +14,7 @@ import uiActions from './ui'
 import finderActions from './finder'
 import snackbarActions from './snackbar'
 
+import driveUtils from '../../types/drive/utils'
 import library from '../../types/library'
 import itemTypes from '../../types/item'
 
@@ -84,10 +85,13 @@ const sideEffects = {
     driver,
     id,
   }) => (dispatch, getState) => {
-    dispatch(uiActions.openDialog('externalEditor', {
-      driver,
-      id,
-    }))
+    if(driver == 'drive') {
+      const url = driveUtils.getGoogleLink(driveUtils.getDocumentLink(id))
+      window.open(url)
+    }
+    else {
+      alert(`unknown external editor ${driver}`)
+    }
   },
 
   calculateItemOptions: () => (dispatch, getState) => {

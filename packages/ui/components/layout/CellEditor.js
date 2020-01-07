@@ -6,7 +6,6 @@ import Loading from '../system/Loading'
 import FormWrapper from '../form/Wrapper'
 
 import cellTypes from './cellTypes'
-import ExternalEditor from './ExternalEditor'
 
 const useStyles = makeStyles(theme => createStyles({
   formContainer: {
@@ -19,14 +18,14 @@ const useStyles = makeStyles(theme => createStyles({
 }))
 
 
-const CellEditorInternal = ({
+const CellEditor = ({
   cell,
-  loading,
-  setLoading,
   onCancel,
   onSubmit,
 }) => {
   const classes = useStyles()
+
+  const [ loading, setLoading ] = useState(false)
 
   const type = cell.component
 
@@ -82,32 +81,6 @@ const CellEditorInternal = ({
           )
         }
       }
-    />
-  )
-}
-
-const CellEditor = ({
-  cell,
-  data,
-  onCancel,
-  onSubmit,
-}) => {
-  const [ loading, setLoading ] = useState(false)
-
-  return cell.editor == 'external' ? (
-    <ExternalEditor
-      item={ data.item }
-      loading={ loading }
-      onCancel={ onCancel }
-      onSubmit={ onSubmit }
-    />
-  ) : (
-    <CellEditorInternal
-      cell={ cell }
-      loading={ loading }
-      setLoading={ setLoading }
-      onCancel={ onCancel }
-      onSubmit={ onSubmit }
     />
   )
 }

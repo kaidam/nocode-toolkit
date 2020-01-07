@@ -1,8 +1,10 @@
 import React, { useState, useCallback, useMemo } from 'react'
 import uuid from 'uuid/v4'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import Fab from '@material-ui/core/Fab'
+
+import Actions from '../../utils/actions'
 
 import MenuButton from '../buttons/MenuButton'
 import Window from '../system/Window'
@@ -14,6 +16,7 @@ import typeUI from '../../types/ui'
 import library from '../../types/library'
 import icons from '../../icons'
 import selectors from '../../store/selectors'
+import contentActions from '../../store/modules/content'
 
 const EditIcon = icons.edit
 const AddIcon = icons.add
@@ -74,6 +77,11 @@ const CellOptions = ({
   onEditLayout,
   onSaveContent,
 }) => {
+
+  const actions = Actions(useDispatch(), {
+    onOpenExternalEditor: contentActions.onOpenExternalEditor,
+  })
+
   const classes = useStyles()
   const settings = useSelector(selectors.ui.settings)
 
@@ -84,7 +92,21 @@ const CellOptions = ({
 
   const onOpenDeleteConfirm = useCallback(() => setDeleteConfirmOpen(true), [])
   const onCloseDeleteConfirm = useCallback(() => setDeleteConfirmOpen(false), [])
-  const onOpenEditor = useCallback(() => setEditorOpen(true), [])
+  const onOpenEditor = useCallback(() => {
+    if(cell.editor == 'external') {
+      const item = data.item
+      actions.onOpenExternalEditor({
+        driver: item.driver,
+        id: item.id,
+      })
+    }
+    else {
+      setEditorOpen(true)
+    }    
+  }, [
+    cell,
+    data,
+  ])
   const onCloseEditor = useCallback(() => setEditorOpen(false), [])
   const onOpenSettingsEditor = useCallback(() => setSettingsEditorOpen(true), [])
   const onCloseSettingsEditor = useCallback(() => setSettingsEditorOpen(false), [])

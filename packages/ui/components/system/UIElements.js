@@ -9,7 +9,6 @@ import { useSelector } from 'react-redux'
 import selectors from '../../store/selectors'
 import ContentFormDialog from '../content/Dialog'
 import SettingsDialog from './SettingsDialog'
-import ExternalEditorDialog from '../layout/ExternalEditorDialog'
 import FinderDialog from '../finder/Dialog'
 import JobDialog from '../job/Dialog'
 import JobHistoryDialog from '../job/HistoryDialog'
@@ -20,7 +19,6 @@ import SnackBar from './Snackbar'
 const dialogs = {
   contentForm: ContentFormDialog,
   settings: SettingsDialog,
-  externalEditor: ExternalEditorDialog,
   finder: FinderDialog,
   jobStatus: JobDialog,
   jobHistory: JobHistoryDialog,
