@@ -216,16 +216,25 @@ const sideEffects = {
     }
   },
 
-  publish: () => wrapper('publish', async (dispatch, getState) => {
+  publish: ({
+    localModeOverride = false,
+  } = {}) => wrapper('publish', async (dispatch, getState) => {
     const nocodeConfig = selectors.nocode.config(getState())
-    if(nocodeConfig.publishDisabled) {
-      dispatch(uiActions.waitForConfirmation({
-        title: 'Publishing disabled',
+    if(nocodeConfig.publishDisabled && !localModeOverride) {
+      const result = await dispatch(uiActions.waitForConfirmation({
+        title: 'Local Development Mode',
         message: `
-          <p>Publishing is disabled because you are running in local development mode</p>
+          <p>Because you are in local development mode - your local template will not be used.</p>
+          <p>Instead the most recently published template will be used instead.</p>
+          <p>Are you sure you want to publish?</p>
         `,
-        confirmTitle: 'OK',
-        hideCancel: true,
+        confirmTitle: "I'm sure - publish anyway",
+      }))
+
+      if(!result) return
+
+      dispatch(actions.publish({
+        localModeOverride: true,
       }))
     }
     else {
