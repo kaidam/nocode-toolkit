@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch } from 'react-redux'
 
@@ -16,6 +16,7 @@ import icons from '../../icons'
 import MenuButton from './MenuButton'
 
 const AddIcon = icons.add
+const SettingsIcon = icons.settings
 
 const useStyles = makeStyles({
   tinyRoot: {
@@ -43,6 +44,17 @@ const SectionAdd = ({
   })
   const classes = useStyles()
 
+  const settingsHandler = useCallback(typeUI.editContentHandler({
+    item: {
+      id,
+      driver: 'local',
+      type: 'section',
+    },
+    location: 'root',
+    structure: 'tree',
+    onOpenContentForm: actions.onOpenContentForm,
+  }), [id, actions])
+
   const menuItems = useMemo(
     () => {
       return typeUI.addContentOptions({
@@ -63,7 +75,15 @@ const SectionAdd = ({
     ]
   )
 
-  const useItems = menuItems.concat(extraItems)
+  const settingsItem = {
+    title: 'Settings',
+    icon: SettingsIcon,
+    handler: settingsHandler,
+  }
+
+  const useItems = menuItems
+    .concat(extraItems)
+    .concat([settingsItem])
 
   return (
     <MenuButton
