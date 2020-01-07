@@ -21,7 +21,7 @@ const PublishProgressTextContent = ({
   else if(stepData.type == 'progress') {
     return (
       <Typography>
-        <strong>{ stepData.current }</strong> of <strong>{ stepData.total }</strong> { stepData.countTitle }
+        <strong>{ stepData.count }</strong> of <strong>{ stepData.total }</strong> { stepData.countTitle }
       </Typography>
     )
   }
@@ -36,7 +36,7 @@ const PublishProgressExtraContent = ({
   if(stepData.type == 'progress') {
 
     const percentDone = stepData.total > 0 ?
-      stepData.current / stepData.total :
+      stepData.count / stepData.total :
       0
 
     return (
