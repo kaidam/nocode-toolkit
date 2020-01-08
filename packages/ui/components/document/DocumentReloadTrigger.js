@@ -16,6 +16,7 @@ const DocumentReloadTrigger = ({
 
   useEffect(() => {
     function handleWindowFocus() {
+      if(!data.item || !data.item.driver || !data.item.id) return
       actions.saveExternalContent({
         driver: data.item.driver,
         id: data.item.id,
