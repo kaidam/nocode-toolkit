@@ -1,6 +1,6 @@
 {
   "name": "@nocode-toolkit/plugin-stripe",
-  "version": "1.0.56",
+  "version": "1.0.57",
   "description": "Stripe plugin for nocode templates",
   "publishConfig": {
     "access": "public"
@@ -9,7 +9,7 @@
     "serve": "node api/index.js"
   },
   "dependencies": {
-    "@nocode-toolkit/ui": "^1.0.56",
+    "@nocode-toolkit/ui": "^1.0.57",
     "@nocode-toolkit/website": "^1.0.48",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
