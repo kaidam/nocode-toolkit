@@ -18,6 +18,13 @@ const nocodeRouteMap = createSelector(
     return all
   }, {})
 )
+const nocodeRoutePathMap = createSelector(
+  nocodeRoutes,
+  routes => routes.reduce((all, route) => {
+    all[route.path] = route
+    return all
+  }, {})
+)
 const nocodeConfig = (state) => state.nocode.config || DEFAULT_OBJECT
 const nocodeItems = (state) => state.nocode.items || DEFAULT_OBJECT
 const nocodeExternals = (state) => state.nocode.externals || DEFAULT_OBJECT
@@ -70,6 +77,7 @@ const selectors = {
     externals: nocodeExternals,
     routes: nocodeRoutes,
     routeMap: nocodeRouteMap,
+    routePathMap: nocodeRoutePathMap,
     itemGroup: nocodeItemGroup,
   },
   
