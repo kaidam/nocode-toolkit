@@ -27,9 +27,7 @@ const DocumentHTML = ({
       internalLink.addEventListener('click', (e) => {
         if (e.ctrlKey) return
         const url = internalLink.getAttribute('data-nocode-internal-route')
-        const findUrl = config.baseUrl == '/' ?
-          url :
-          config.baseUrl + url
+        const findUrl = (config.baseUrl + url).replace(/\/\//g, '/')
         const route = routePathMap[findUrl]
         if(!route) return
         e.preventDefault()
