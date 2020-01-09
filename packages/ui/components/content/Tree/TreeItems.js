@@ -144,6 +144,7 @@ export const TreeItem = ({
   else if(itemType.hasRoute(item) && itemRoute) {
     return (
       <Link
+        path={ itemRoute.path }
         name={ itemRoute.name }
         onContextMenu={ onRightClickHandler }
       >

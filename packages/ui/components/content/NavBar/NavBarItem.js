@@ -65,7 +65,7 @@ const NavBarItem = ({
       target: '_external'
     } :
     {
-      path: item.url,
+      path: ('/' + item.url).replace(/\/\//g, '/'),
     }
 
   return (
