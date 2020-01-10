@@ -93,6 +93,7 @@ const sideEffects = {
       dispatch(actions.setConfig(data))
       dispatch(jobActions.waitForPreviewJob())
       globals.setWindowInitialised()
+      globals.identifyUser(data.user)
       const plugins = library.plugins
       plugins.forEach(plugin => {
         if(plugin.actions && plugin.actions.initialize) {

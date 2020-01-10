@@ -43,8 +43,8 @@ const processHTML = (html, libraryUrl) => {
   const trackingHost = process.env.TRACKING_HOST
   if(!trackingHost) return html
   return `
-${html}
 <script type="text/javascript" src="http://${trackingHost}${libraryUrl}"></script>
+${html}
 `
 }
 

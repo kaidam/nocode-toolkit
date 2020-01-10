@@ -61,12 +61,19 @@ const Store = ({
     store.dispatch(nocodeActions.reload(initialState.nocode))
   }
 
-  const middleware = [
+  let middleware = [
     // create a router middleware that always references the current router object
     // this is so when we replace the router we don't need to replace the middleware
     dynamicRouterMiddleware(() => currentRouter),
     thunk,
   ]
+
+  // if we have a tracking module - allow it to populate the middleware
+  if(!isNode) {
+    if(window._nocodeTrackingGetReduxMiddleware) {
+      middleware = middleware.concat(window._nocodeTrackingGetReduxMiddleware())
+    }
+  }
 
   const storeEnhancers = [
     applyMiddleware(...middleware),

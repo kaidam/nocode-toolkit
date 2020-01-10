@@ -33,11 +33,18 @@ const isWindowInitialised = () => {
     window._uiFirstInitialise
 }
 
+const identifyUser = (user) => {
+  if(utils.isNode) return
+  if(!window._nocodeTrackingIdentifyUser) return
+  window._nocodeTrackingIdentifyUser(user)
+}
+
 const globals = {
   hasNocodeData,
   isUIActivated,
   setWindowInitialised,
   isWindowInitialised,
+  identifyUser,
 }
 
 export default globals
