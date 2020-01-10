@@ -20,6 +20,34 @@ const ALIAS_MODULES = [
   'react-redux',
 ]
 
+const getTrackingLibraryUrl = async () => {
+  const trackingHost = process.env.TRACKING_HOST
+  if(!trackingHost) return null
+  try {
+    // we do not know the build hash so load it from http://frontend/meta.json
+    const result = await axios
+      .get(`http://${trackingHost}/meta.json`)
+      .then(res => res.data)
+    return `/tracking.${result.hash}.bundle.js?${result.hash}`
+  } catch(e) {
+    pino.error({
+      action: 'getTrackingLibraryUrl',
+      error: e.toString()
+    })
+    return null
+  } 
+}
+
+const processHTML = (html, libraryUrl) => {
+  if(!libraryUrl) return html
+  const trackingHost = process.env.TRACKING_HOST
+  if(!trackingHost) return html
+  return `
+${html}
+<script type="text/javascript" src="http://${trackingHost}${libraryUrl}"></script>
+`
+}
+
 const Develop = ({
   options,
   logger,
@@ -147,6 +175,16 @@ you can view your website at: http://localhost:${options.devserverPort}
         }, 500)
       })
     },
+    // when working on the tracking integrations - we need both the tracking code
+    // being served (via the compose stack) as well as hot reloading ui code
+    // so we point to the compose stack to load the tracking code from there
+    // in the same way as the builder does
+    // i.e. first request `/meta.json` so we know the build hash then inject
+    // the tracking script as `/tracking.${result.hash}.bundle.js?${result.hash}`
+    processHTML: async (html) => {
+      const trackingLibraryUrl = await getTrackingLibraryUrl()
+      return processHTML(html, trackingLibraryUrl)
+    }
   })
 
   app.use((req, res, next) => {
