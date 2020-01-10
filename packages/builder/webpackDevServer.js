@@ -13,6 +13,7 @@ const WebpackDevServer = ({
   options,
   webpackProcessors,
   webpackCompilerHook,
+  processHTML,
 }) => {
   const {
     baseUrl,
@@ -47,13 +48,16 @@ const WebpackDevServer = ({
 
   const hotMiddleware = HotMiddleware(compiler)
  
-  const serveHTML = (req, res) => {
+  const serveHTML = async (req, res) => {
     const webpackStats = res.locals.webpackStats
     const buildInfo = BuildInfo(webpackStats, options)
-    const html = HTML({
+    let html = HTML({
       buildInfo,
       baseUrl,
     })
+    if(processHTML) {
+      html = await processHTML(html)
+    }
     res.end(html)
   }
 

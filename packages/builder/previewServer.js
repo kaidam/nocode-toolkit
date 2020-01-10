@@ -13,12 +13,14 @@ const DevPreviewServer = ({
   mountPath,
   webpackProcessors,
   webpackCompilerHook,
+  processHTML,
 }) => {
   const serveHTML = WebpackDevServer({
     app,
     options,
     webpackProcessors,
     webpackCompilerHook,
+    processHTML,
   })
 
   app.get(`${mountPath}`, serveHTML)
@@ -33,6 +35,7 @@ const BuildPreviewServer = ({
   getBuildFolder,
   getBuildInfo,
   getBaseUrl,
+  processHTML,
 }) => {
 
   // serve build files
@@ -55,13 +58,22 @@ const BuildPreviewServer = ({
   // build and send the HTML based on the buildinfo
   const serveHTML = (req, res, next) => {
     const websiteId = getWebsiteId(req)
-    getBuildInfo(websiteId, (err, buildInfo) => {
+
+    // don't cache the HTML response in dev mode
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate')
+    res.header('Expires', '-1')
+    res.header('Pragma', 'no-cache')
+
+    getBuildInfo(websiteId, async (err, buildInfo) => {
       if(err) return next(err)
-      const html = HTML({
+      let html = HTML({
         buildInfo,
         hash: buildInfo.hash,
         baseUrl: getBaseUrl(req),
       })
+      if(processHTML) {
+        html = await processHTML(html)
+      }
       res.end(html)
     }) 
   }
@@ -128,6 +140,9 @@ const PreviewServer = ({
 
   // run this function with the webpack compiler we we can hook into webpack events
   webpackCompilerHook,
+
+  // a function that can modify the page HTML before it's served
+  processHTML,
 }) => {
 
   const {
@@ -178,6 +193,7 @@ const PreviewServer = ({
       mountPath,
       webpackProcessors,
       webpackCompilerHook,
+      processHTML,
     })
   }
   else {
@@ -189,6 +205,7 @@ const PreviewServer = ({
       getBuildFolder,
       getBuildInfo,
       getBaseUrl,
+      processHTML,
     })
   }
 
