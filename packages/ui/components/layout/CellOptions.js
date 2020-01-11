@@ -92,8 +92,8 @@ const CellOptions = ({
 
   const onOpenDeleteConfirm = useCallback(() => setDeleteConfirmOpen(true), [])
   const onCloseDeleteConfirm = useCallback(() => setDeleteConfirmOpen(false), [])
-  const onOpenEditor = useCallback(() => {
-    if(cell.editor == 'external') {
+  const onOpenEditor = useCallback((isAdding) => {
+    if(!isAdding && cell.editor == 'external') {
       const item = data.item
       actions.onOpenExternalEditor({
         driver: item.driver,
@@ -129,7 +129,7 @@ const CellOptions = ({
           method,
           params,
         })
-        onOpenEditor()
+        onOpenEditor(true)
       },
       filter: (parentFilter, schemaDefinition) => {
         const activePlugins = settings && settings.data && settings.data.activePlugins ?
