@@ -1,7 +1,7 @@
 import axios from 'axios'
 import CreateReducer from '@nocode-toolkit/website/store/utils/createReducer'
 import CreateActions from '@nocode-toolkit/website/store/utils/createActions'
-import actionLoader from '@nocode-toolkit/ui/store/actionLoader'
+import routerActions from '@nocode-toolkit/website/store/moduleRouter'
 
 import selectors from './selectors'
 
@@ -10,6 +10,10 @@ const initialState = {
 }
 
 const prefix = 'stripe'
+
+const storeAction = (type, payload) => ({type,payload})
+const setError = (message) => storeAction('snackbar/setError', message)
+const setSuccess = (message) => storeAction('snackbar/setSuccess', message)
 
 const reducers = {
   setPurchasedProductId: (state, action) => {
@@ -33,7 +37,6 @@ const sideEffects = {
   // request a stripe connect redirect URL from the backend
   // then send the browser off to Stripe
   connect: () => async (dispatch, getState) => {
-    const setError = actionLoader('snackbar', 'setError')
     try {
       const apiUrl = selectors.apiUrl(getState())
       const payload = {
@@ -61,7 +64,6 @@ const sideEffects = {
     price,
     currency,
   }) => async (dispatch, getState) => {
-    const setError = actionLoader('snackbar', 'setError')
     try {
       const apiUrl = selectors.apiUrl(getState())
       const keyData = await axios.get(`${apiUrl}/publicKey`)
@@ -104,17 +106,20 @@ const sideEffects = {
     }
   },
 
-  
   initialize: () => async (dispatch, getState) => {
-    const params = getState().router.route.params
+    const params = selectors.router.queryParams(getState())
+    const route = selectors.router.route(getState())
 
     // upon returning from a stripe connect session
     // we want to open the settings window and alert the user
     // their stripe account is now connected
     if(params.trigger == 'stripe_connect') {
-      const openSettings = actionLoader('ui', 'openSettings')
-      const setSuccess = actionLoader('snackbar', 'setSuccess')
-      dispatch(openSettings({
+      dispatch(routerActions.navigateTo(route.name, {
+        dialog: 'settings',
+        driver: 'local',
+        type: 'settings',
+        location: `singleton:settings`,
+        id: 'settings',
         section: 'plugins',
         tab: 'stripe',
       }))
@@ -133,9 +138,9 @@ const sideEffects = {
   },
 
   closeConfirmationWindow: () => async (dispatch, getState) => {
-    const resetQueryParams = actionLoader('ui', 'resetQueryParams')
+    const route = selectors.router.route(getState())
     dispatch(actions.setPurchasedProductId(null))
-    dispatch(resetQueryParams())
+    dispatch(routerActions.navigateTo(route.name))
   },
 }
 

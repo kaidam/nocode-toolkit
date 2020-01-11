@@ -1,7 +1,6 @@
 import axios from 'axios'
 import CreateReducer from '@nocode-toolkit/website/store/utils/createReducer'
 import CreateActions from '@nocode-toolkit/website/store/utils/createActions'
-import actionLoader from '@nocode-toolkit/ui/store/actionLoader'
 
 import selectors from './selectors'
 import fields from './fields'
@@ -19,6 +18,10 @@ const initialState = {
 }
 
 const prefix = 'contactform'
+
+const storeAction = (type, payload) => ({type,payload})
+const setError = (message) => storeAction('snackbar/setError', message)
+const setSuccess = (message) => storeAction('snackbar/setSuccess', message)
 
 const reducers = {
   setFormId: (state, action) => {
@@ -49,8 +52,6 @@ const reducers = {
 const sideEffects = {
 
   submit: () => async (dispatch, getState) => {
-    const setSuccess = actionLoader('snackbar', 'setSuccess')
-    const setError = actionLoader('snackbar', 'setError')
     try {
       dispatch(actions.setErrors({}))
       const apiUrl = selectors.apiUrl(getState())

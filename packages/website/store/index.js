@@ -97,6 +97,10 @@ const Store = ({
     compose(...storeEnhancers)
   )
 
+  if (!isNode) {
+    window._nocodeReduxStore = store
+  }
+
   return {
     store,
     createRouter,

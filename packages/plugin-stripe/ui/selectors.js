@@ -1,3 +1,4 @@
+import coreSelectors from '@nocode-toolkit/website/selectors'
 const currentValue = state => state.stripe.value
 
 const selectors = {
@@ -9,7 +10,8 @@ const selectors = {
   apiUrl: (state) => {
     const websiteId = selectors.websiteid(state)
     return `/plugin/api/${websiteId}/stripe`
-  }
+  },
+  router: coreSelectors.router,
 }
 
 export default selectors
