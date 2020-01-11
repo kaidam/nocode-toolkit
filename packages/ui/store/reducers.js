@@ -28,7 +28,6 @@ const reducers = {
   finder: GetReducer('finder'),
   job: GetReducer('job'),
   fileupload: GetReducer('fileupload'),
-  snackbar: GetReducer('snackbar'),
   network: GetReducer('network'),
   document: GetReducer('document'),
   section: GetReducer('section'),

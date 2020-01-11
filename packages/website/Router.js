@@ -8,6 +8,7 @@ const ErrorPage = ({message}) => (
 
 const Router = ({
   templates,
+  children,
 }) => {
   const route = useSelector(selectors.router.route)
   
@@ -44,6 +45,7 @@ const Router = ({
   return (
     <PageLayout>
       <PageComponent />
+      { children }
     </PageLayout>
   )
 }

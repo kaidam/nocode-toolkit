@@ -43,12 +43,6 @@ export const job = {
   data: null,
 }
 
-export const snackbar = {
-  open: false,
-  text: '',
-  type: 'default',
-}
-
 export const network = {
   loading: {},
   errors: {},
@@ -85,7 +79,6 @@ const initialState = {
   document,
   section,
   fileupload,
-  snackbar,
   network,
 }
 

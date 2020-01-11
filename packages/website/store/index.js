@@ -8,6 +8,7 @@ import {
   reducer as nocodeReducer,
 } from './moduleNocode'
 import { reducer as routerReducer } from './moduleRouter'
+import { reducer as snackbarReducer } from './moduleSnackbar'
 import Router from './router'
 import Data from './data'
 import dynamicRouterMiddleware from './dynamicRouterMiddleware'
@@ -88,6 +89,7 @@ const Store = ({
   const reducer = combineReducers({
     nocode: nocodeReducer,
     router: routerReducer,
+    snackbar: snackbarReducer,
     ...reducers,
   })
 
