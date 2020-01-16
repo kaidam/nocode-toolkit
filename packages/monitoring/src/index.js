@@ -45,7 +45,7 @@
 const client = require('prom-client')
 const onFinished = require('on-finished')
 
-let metricsInterval = 0
+let metricsInterval = null
 
 const initialise = ({
   labels = {},
@@ -107,6 +107,7 @@ const counter = (args) => new client.Counter(args)
 const shutdownHandler = (server) => {
   process.on('SIGTERM', () => {
     clearInterval(metricsInterval)
+    metricsInterval = null
     server.close((err) => {
       if (err) {
         console.error(err)
