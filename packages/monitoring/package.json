@@ -1,6 +1,6 @@
 {
   "name": "@nocode-toolkit/monitoring",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Prometheus client for nocode backend services",
   "main": "src/index.js",
   "publishConfig": {
@@ -10,6 +10,5 @@
     "on-finished": "^2.3.0",
     "prom-client": "^11.5.3"
   },
-  "devDependencies": {},
   "license": "MIT"
 }
