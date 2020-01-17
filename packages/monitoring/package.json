@@ -1,6 +1,6 @@
 {
   "name": "@nocode-toolkit/monitoring",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Prometheus client for nocode backend services",
   "main": "src/index.js",
   "publishConfig": {
