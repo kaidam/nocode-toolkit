@@ -1,5 +1,5 @@
 const Sentry = require('@sentry/node')
-const tools = require('./getUser')
+const tools = require('./tools')
 
 const SENTRY_DSN = process.env.SENTRY_DSN
 const SENTRY_ENABLE = process.env.SENTRY_ENABLE
@@ -21,6 +21,7 @@ const authenticatedHandler = (app, getUser) => {
     Sentry.configureScope((scope) => {
       scope.setUser(user)
     })
+    next()
   })
 }
 

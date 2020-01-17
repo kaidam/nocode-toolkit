@@ -61,8 +61,8 @@ const initialise = ({
 }
 
 const exporter = () => (req, res) => {
-  res.set('Content-Type', Prometheus.register.contentType)
-  res.end(Prometheus.register.metrics())
+  res.set('Content-Type', client.register.contentType)
+  res.end(client.register.metrics())
 }
 
 const middleware = ({
@@ -80,9 +80,10 @@ const middleware = ({
   return (req, res, next) => {
     const startEpoch = Date.now()
     onFinished(res, (err) => {
+      const path = req.path || req.originalUrl
       const responseTime = Date.now() - startEpoch
       httpRequestDurationMicroseconds
-        .labels(req.method, req.route.path, res.statusCode)
+        .labels(req.method, path, res.statusCode)
         .observe(responseTime)
     })
     next()

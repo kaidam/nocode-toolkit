@@ -12,8 +12,6 @@ const processUser = (user) => {
   return userData
 }
 
-const tools = {
+module.exports = {
   processUser,
 }
-
-export default tools
