@@ -97,6 +97,18 @@ const redirectMiddleware = ({
   store.dispatch(routerActions.navigateTo(redirectToName)) 
 }
 
+const trackingMiddleware = (trackFn) => (router, dependencies) => (toState, fromState, done) => {
+  const { store } = dependencies
+  const params = Object.assign({}, toState.params, {
+    website: store.getState().nocode.config.websiteId
+  })
+  const name = params.dialog ?
+    `builder.dialog: ${params.dialog}` :
+    `builder.page: ${toState.name}`
+  trackFn(name, params)
+  done()
+}
+
 const Router = ({
   routes,
   errorLog,
@@ -119,6 +131,20 @@ const Router = ({
     errorLog,
     setRouteResult,
   }))
+
+  // if we have a tracking module - allow it to populate the middleware
+  if(!isNode) {
+    if(window.__nocodeTrackingPage) {
+      router.useMiddleware(trackingMiddleware(window.__nocodeTrackingPage))
+    }
+
+    if(window._nocodeTrackingInitialise) {
+      window._nocodeTrackingInitialise()
+    }
+  }
+
+
+
   return router
 }
 

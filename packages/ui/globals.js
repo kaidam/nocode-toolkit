@@ -39,12 +39,26 @@ const identifyUser = (user) => {
   window._nocodeTrackingIdentifyUser(user)
 }
 
+const trackPage = (name, params) => {
+  if(utils.isNode) return
+  if(!window.__nocodeTrackingPage) return
+  window.__nocodeTrackingPage(name, params)
+}
+
+const trackEvent = (name, params) => {
+  if(utils.isNode) return
+  if(!window.__nocodeTrackingEvent) return
+  window.__nocodeTrackingEvent(name, params)
+}
+
 const globals = {
   hasNocodeData,
   isUIActivated,
   setWindowInitialised,
   isWindowInitialised,
   identifyUser,
+  trackPage,
+  trackEvent,
 }
 
 export default globals
