@@ -3,7 +3,7 @@ const Segment = require('analytics-node')
 const SEGMENT_KEY = process.env.SEGMENT_KEY
 const SEGMENT_ENABLE = process.env.SEGMENT_ENABLE
 
-let analytics = new Segment('YOUR_WRITE_KEY');
+let analytics = null
 let initParams = {}
 
 const isActive = () => SEGMENT_KEY && SEGMENT_ENABLE ? true : false
@@ -15,6 +15,8 @@ const initialise = (params) => {
 
 const identifyUser = (user) => {
   if(!analytics) return
+  user = tools.processUser(user)
+  if(!user) return
   const {
     id,
     name,
