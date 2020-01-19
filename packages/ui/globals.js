@@ -45,10 +45,11 @@ const trackPage = (name, params) => {
   window.__nocodeTrackingPage(name, params)
 }
 
-const trackEvent = (name, params) => {
+const trackEvent = (name, params, getState) => {
   if(utils.isNode) return
   if(!window.__nocodeTrackingEvent) return
-  window.__nocodeTrackingEvent(name, params)
+  const website = getState().nocode.config.websiteId
+  window.__nocodeTrackingEvent(`builder.${name}`, Object.assign({}, params, {website}))
 }
 
 const globals = {

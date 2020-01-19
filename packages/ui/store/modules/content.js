@@ -17,6 +17,7 @@ import snackbarActions from './snackbar'
 import driveUtils from '../../types/drive/utils'
 import library from '../../types/library'
 import itemTypes from '../../types/item'
+import globals from '../../globals'
 
 const prefix = 'content'
 
@@ -66,6 +67,12 @@ const sideEffects = {
     stashQueryParams = false,
     params = {},
   }) => (dispatch, getState) => {
+
+    globals.trackEvent('add_content_button', {
+      location,
+      driver,
+      type,
+    }, getState)
 
     if(stashQueryParams) {
       const queryParams = selectors.router.queryParams(getState())
@@ -180,6 +187,13 @@ const sideEffects = {
 
     // we are saving an item
     if(existingItem || type == 'section') {
+
+      globals.trackEvent('save_content', {
+        location,
+        driver,
+        type,
+      }, getState)
+
       let payload = {
         data,
         annotation,
@@ -201,6 +215,13 @@ const sideEffects = {
       }))
     }
     else {
+
+      globals.trackEvent('add_content', {
+        location,
+        driver,
+        type,
+      }, getState)
+
       await dispatch(jobActions.waitForJob({
         throwError: true,
         showWindow: driver != 'local',
@@ -236,6 +257,13 @@ const sideEffects = {
   removeContent: ({
     item,
   }) => wrapper('removeContent', async (dispatch, getState) => {
+
+    globals.trackEvent('delete_content', {
+      location: item.location,
+      driver: item.driver,
+      type: item.type,
+    }, getState)
+
     const itemType = itemTypes(item)
     const isGhostDescendant = itemType.isGhostDescendant(item)
 

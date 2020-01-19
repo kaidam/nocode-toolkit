@@ -15,10 +15,7 @@ import snackbarActions from './snackbar'
 
 import library from '../../types/library'
 import typeUtils from '../../types/utils'
-
-import {
-  SEARCH_DELAY,
-} from '../../config'
+import globals from '../../globals'
 
 const prefix = 'finder'
 
@@ -98,6 +95,10 @@ const sideEffects = {
     location,
     params = {},
   }) => (dispatch, getState) => {
+    globals.trackEvent('open_finder_button', {
+      location,
+      driver,
+    }, getState)
     dispatch(uiActions.openDialog('finder', {
       driver,
       location,
@@ -245,6 +246,13 @@ const sideEffects = {
 
     // we are creating a new remote item then inserting it
     if(id == 'new') {
+
+      globals.trackEvent('add_finder_content', {
+        location,
+        driver,
+        type,
+      }, getState)
+
       const [ _, parent ] = location.split(':')
 
       // first - create the remote item via the driver
@@ -286,6 +294,12 @@ const sideEffects = {
       await dispatch(jobActions.reload())
     }
     else {
+
+      globals.trackEvent('save_finder_content', {
+        location,
+        driver,
+        type,
+      }, getState)
 
       // first we update the remote item so the next time we
       // rebuild the data is there

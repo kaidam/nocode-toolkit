@@ -1,4 +1,5 @@
 const Segment = require('analytics-node')
+const tools = require('./tools')
 
 const SEGMENT_KEY = process.env.SEGMENT_KEY
 const SEGMENT_ENABLE = process.env.SEGMENT_ENABLE
