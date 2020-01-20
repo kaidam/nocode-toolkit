@@ -19,6 +19,10 @@ const DocumentHTML = ({
 
   // handle internal links by canceling the click event and triggering an internal
   // route refresh (don't do this is ctrl is held down)
+  //
+  // also handle hash links that point to the same page
+  // but prepending the full browser URL before the hash
+  // this will not trigger a router reload
   useEffect(() => {
     const internalLinks = Array.prototype.slice.call(
       contentRef.current.querySelectorAll('a[data-nocode-internal-route]')
@@ -36,6 +40,18 @@ const DocumentHTML = ({
         return false
       })
     })
+
+    const hashLinks = Array.prototype.slice
+      .call(
+        contentRef.current.querySelectorAll('a')
+      )
+      .filter(link => {
+        return (link.getAttribute('href') || '').indexOf('#') == 0
+      })
+      .forEach(link => {
+        const newHref = `${document.location.href}${link.getAttribute('href')}`
+        link.setAttribute('href', newHref)
+      })
   }, [
     content,
   ])
