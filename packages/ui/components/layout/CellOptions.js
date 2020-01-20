@@ -239,47 +239,12 @@ const CellOptions = ({
       title: 'Insert',
       help: 'Insert rows or cells',
       icon: AddIcon,
-      items: [{
-        title: 'Insert Row Before',
-        help: 'Insert a row before this row',
-        icon: IconCombo(UpIcon, RowIcon),
-        items: getContentTypeOptions({
-          method: 'insertRow',
-          params: {
-            location: 'before',
-          },
-        })
-      }, {
-        title: 'Insert Row After',
-        help: 'Insert a row after this row',
-        icon: IconCombo(DownIcon, RowIcon),
-        items: getContentTypeOptions({
-          method: 'insertRow',
-          params: {
-            location: 'after',
-          },
-        })
-      }, {
-        title: 'Insert Cell Before',
-        help: 'Insert a cell before this cell',
-        icon: IconCombo(LeftIcon, CellIcon),
-        items: getContentTypeOptions({
-          method: 'insertCell',
-          params: {
-            location: 'before',
-          },
-        })
-      }, {
-        title: 'Insert Cell After',
-        help: 'Insert a cell after this cell',
-        icon: IconCombo(RightIcon, CellIcon),
-        items: getContentTypeOptions({
-          method: 'insertCell',
-          params: {
-            location: 'after',
-          },
-        })
-      }]
+      items: getContentTypeOptions({
+        method: 'insertRow',
+        params: {
+          location: 'after',
+        },
+      })
     }
 
     const moveOptions = {
@@ -381,10 +346,10 @@ const CellOptions = ({
     }
 
     menuItems = menuItems.concat([
-      settingsOptions,
       insertOptions,
       moveOptions,
       deleteOption,
+      settingsOptions,
     ])
 
     return menuItems
