@@ -71,11 +71,15 @@ const PageSettingsButton = ({
     title: 'Settings',
     icon: SettingsIcon,
     handler: settingsHandler,
-  }, {
-    title: 'Save as template',
-    icon: SaveIcon,
-    handler: openSaveHandler,
   }]
+  
+  if(item.annotation && item.annotation.layout) {
+    menuItems.push({
+      title: 'Save as template',
+      icon: SaveIcon,
+      handler: openSaveHandler,
+    })
+  }
 
   return (
     <div className={ classes.root }>
