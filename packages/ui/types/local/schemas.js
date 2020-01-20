@@ -363,7 +363,6 @@ const cellSettings = {
 }
 
 const schemas = {
-  folder,
   externalLink,
   title,
   richtext,
@@ -371,6 +370,7 @@ const schemas = {
   image,
   snippet,
   youtube,
+  folder,
   settings,
   logo,
   section,
