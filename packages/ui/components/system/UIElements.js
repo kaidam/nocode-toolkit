@@ -14,6 +14,7 @@ import JobDialog from '../job/Dialog'
 import JobHistoryDialog from '../job/HistoryDialog'
 import JobPublishedDialog from '../job/PublishedDialog'
 import ConfirmDialog from './ConfirmDialog'
+import HelpDialog from './HelpDialog'
 import SnackBar from './Snackbar'
 
 const dialogs = {
@@ -24,6 +25,7 @@ const dialogs = {
   jobHistory: JobHistoryDialog,
   jobPublished: JobPublishedDialog,
   confirm: ConfirmDialog,
+  help: HelpDialog,
 }
 
 const UIElements = ({

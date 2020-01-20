@@ -276,6 +276,20 @@ const sideEffects = {
       ...params
     }))
   },
+  openHelp: (params = {}) => (dispatch, getState) => {
+    dispatch(actions.openDialog('help', {
+      ...params
+    }))
+  },
+  closeHelp: () => (dispatch, getState) => {
+    dispatch(actions.closeDialogs())
+  },
+  openLiveChat: () => (dispatch, getState) => {
+    dispatch(actions.closeDialogs())
+    const crisp = globals.getTracker('crisp')
+    if(!crisp) return
+    crisp.open()
+  },
   openDialogSingletonPayload: (payload) => (dispatch, getState) => {
     dispatch(actions.openDialogSingleton(payload.id, payload.type, payload.tab))
   },

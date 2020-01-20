@@ -52,6 +52,12 @@ const trackEvent = (name, params, getState) => {
   window.__nocodeTrackingEvent(`builder.${name}`, Object.assign({}, params, {website}))
 }
 
+const getTracker = (name) => {
+  if(utils.isNode) return
+  if(!window.__nocodeGetTracker) return
+  return window.__nocodeGetTracker(name)
+}
+
 const globals = {
   hasNocodeData,
   isUIActivated,
@@ -60,6 +66,7 @@ const globals = {
   identifyUser,
   trackPage,
   trackEvent,
+  getTracker,
 }
 
 export default globals

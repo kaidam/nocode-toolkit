@@ -24,6 +24,7 @@ const GlobalOptions = ({
     onRebuild: jobActions.rebuild,
     onPublish: jobActions.publish,
     onViewHistory: jobActions.openHistory,
+    onViewHelp: uiActions.openHelp,
   })
 
   const menuItems = useMemo(
@@ -36,6 +37,10 @@ const GlobalOptions = ({
         title: 'Publish',
         icon: icons.publish,
         handler: actions.onViewHistory,
+      }, {
+        title: 'Help',
+        icon: icons.help,
+        handler: actions.onViewHelp,
       }, '-', {
         title: 'List Websites',
         icon: icons.content,

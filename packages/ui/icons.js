@@ -69,6 +69,7 @@ import CodeIcon from '@material-ui/icons/Code'
 import PluginIcon from '@material-ui/icons/Extension'
 import DomainIcon from '@material-ui/icons/Language'
 import CloseIcon from '@material-ui/icons/Close'
+import HelpIcon from '@material-ui/icons/LiveHelp'
 
 import UnsplashLogo from './styles/UnsplashLogo'
 import GoogleDriveLogo from './styles/GoogleDriveLogo'
@@ -134,6 +135,7 @@ const icons = {
   code: CodeIcon,
   plugin: PluginIcon,
   domain: DomainIcon,
+  help: HelpIcon,
 }
 
 export default icons
