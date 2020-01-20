@@ -106,6 +106,7 @@ const FormWrapperRow = ({
       <Grid item xs={12} key={ rowKey }>
         <FormWrapperItem
           item={ row }
+          values={ values }
           errors={ errors }
           touched={ touched }
         />
@@ -147,7 +148,6 @@ const FormWrapper = ({
           errors,
           touched,
         }) => {
-
           const submitWrapper = () => {
             setHasSubmitted(true)
             handleSubmit()

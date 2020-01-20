@@ -133,7 +133,6 @@ const sideEffects = {
     if(params.controller == 'content') {
       if(params.type == 'pageSettings') {
         await dispatch(actions.savePageSettings({params, data}))
-        await dispatch(uiActions.resetQueryParams())
       }
       else {
         await dispatch(actions.saveContent({params, data}))
@@ -175,6 +174,32 @@ const sideEffects = {
       }
     })
     dispatch(snackbarActions.setSuccess(`page settings updated`))
+    dispatch(uiActions.resetQueryParams())
+  },
+
+  resetPageLayout: ({
+    id,
+  }) => async (dispatch, getState) => {
+    const content = selectors.content.contentAll(getState())
+    const item = content[id]
+    const newAnnotation = Object.assign({}, item.annotation)
+    newAnnotation.layout = null
+    const newItem = Object.assign({}, item, {
+      annotation: newAnnotation,
+    })
+    dispatch(nocodeActions.setItem({
+      type: 'content',
+      id: newItem.id,
+      data: newItem,
+    }))
+    await loaders.update(getState, {
+      id: newItem.id,
+      payload: {
+        annotation: newAnnotation,
+      }
+    })
+    dispatch(snackbarActions.setSuccess(`page settings updated`))
+    dispatch(uiActions.resetQueryParams())
   },
 
   saveContentRaw: ({

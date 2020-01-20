@@ -153,6 +153,7 @@ const form = createSelector(
       controller,
       driver,
       type,
+      id,
     } = queryParams
 
     const schemaName = [driver, type].join('.')
@@ -163,7 +164,14 @@ const form = createSelector(
 
     if(existingItem) {
       initialValues = existingItem.data
-      if(type == 'pageSettings' || type == 'section') initialValues = existingItem.annotation || {}
+      if(type == 'pageSettings' || type == 'section') {
+        initialValues = Object.assign({}, existingItem.annotation, {
+          _item: {
+            type,
+            id,
+          }
+        })
+      }
     }
 
     // configure the form with extra sections

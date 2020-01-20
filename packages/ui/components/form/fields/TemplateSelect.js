@@ -1,10 +1,22 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
 import Select from './Select'
 import selectors from '../../../store/selectors'
 
-const TemplateSelectField = (props) => {
+import Actions from '../../../utils/actions'
+import contentActions from '../../../store/modules/content'
 
+const TemplateSelectField = (props) => {
+  const values = props.values
+
+  const editItem = values._item
+
+  const actions = Actions(useDispatch(), {
+    onResetPageLayout: contentActions.resetPageLayout,
+  })
+  
   const templates = useSelector(selectors.ui.templates)
 
   const options = templates.map(template => {
@@ -24,9 +36,32 @@ const TemplateSelectField = (props) => {
     value,
   })
 
-  return (
-    <Select {...props} item={item} field={field} />
-  )
+  if(!values.layout) {
+    return (
+      <Select {...props} item={item} field={field} />
+    )
+  }
+  else {
+    return (
+      <div>
+        <Typography>You are currently using a custom layout.  If you want to use a template - click the button below to reset the layout to the default</Typography>
+        <p>
+          <Button
+            size="small"
+            variant="contained"
+            onClick={ () => {
+              actions.onResetPageLayout({
+                id: editItem.id,
+              })
+            }}
+          >
+            Reset layout
+          </Button>
+        </p>
+      </div>
+    )
+  }
+  
 }
 
 export default TemplateSelectField
