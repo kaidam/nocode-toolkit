@@ -17,7 +17,7 @@ import selectors from '../../store/selectors'
 import uiActions from '../../store/modules/ui'
 
 import SettingsSnippetEditDialog from './SettingsSnippetEditDialog'
-import SettingsSnippetDeleteDialog from './SettingsSnippetDeleteDialog'
+import SettingsDeleteDialog from './SettingsDeleteDialog'
 
 import icons from '../../icons'
 
@@ -192,8 +192,9 @@ const SettingsSnippets = ({
       }
       {
         deleteSnippet && (
-          <SettingsSnippetDeleteDialog
-            snippet={ deleteSnippet }
+          <SettingsDeleteDialog
+            title="Delete Snippet?"
+            message={`Are you sure you want to delete the ${ deleteSnippet.name } snippet?`}
             onSubmit={ onSaveDeleteForm }
             onClose={ onCloseDeleteDialog }
           />

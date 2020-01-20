@@ -268,6 +268,21 @@ const settings = {
   }]
 }
 
+const pageSettings = {
+  driver: 'local',
+  type: 'pageSettings',
+  title: 'Page Settings',
+  icon: 'settings',
+  metadata: {
+    nodeType: 'system',
+    detailsTitle: 'Page',
+  },
+  // settings cannot be added they are a global singleton
+  parentFilter: [],
+  initialValues: {},
+  tabs: [],
+}
+
 const logo = {
   driver: 'local',
   type: 'logo',
@@ -360,6 +375,7 @@ const schemas = {
   logo,
   section,
   cellSettings,
+  pageSettings,
 }
 
 export default schemas

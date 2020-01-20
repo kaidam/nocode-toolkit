@@ -6,6 +6,7 @@ import selectors from '../../store/selectors'
 
 const RenderDefaultHomeUI = lazy(() => import(/* webpackChunkName: "ui" */ './RenderDefaultHomeUI'))
 const CellOptions = lazy(() => import(/* webpackChunkName: "ui" */ './CellOptions'))
+const PageSettingsButton = lazy(() => import(/* webpackChunkName: "ui" */ './PageSettingsButton'))
 const DocumentReloadTrigger = lazy(() => import(/* webpackChunkName: "ui" */ './DocumentReloadTrigger'))
 
 const RenderDefaultHome = ({
@@ -54,6 +55,11 @@ const DocumentLayout = ({
 
   return (
     <React.Fragment>
+      <Suspense>
+        <PageSettingsButton
+          item={ data.item }
+        />
+      </Suspense>
       <Layout
         renderers={ renderers }
         data={ data }

@@ -30,8 +30,9 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const SettingsSnippetDeleteDialog = ({
-  snippet,
+const SettingsDeleteDialog = ({
+  title,
+  message,
   onSubmit,
   onClose,
 }) => {
@@ -49,11 +50,11 @@ const SettingsSnippetDeleteDialog = ({
       }}
     >
       <DialogTitle>
-        Delete Snippet?
+        { title }
       </DialogTitle>
       <DialogContent>
         <DialogContentText id="alert-dialog-description">
-          Are you sure you want to delete the { snippet.name } snippet?
+          { message }
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -83,4 +84,4 @@ const SettingsSnippetDeleteDialog = ({
   )
 }
 
-export default SettingsSnippetDeleteDialog
+export default SettingsDeleteDialog

@@ -2,6 +2,11 @@ import { createSelector } from 'reselect'
 import core from '@nocode-toolkit/website/selectors'
 import utils from '@nocode-toolkit/website/store/utils'
 import content from './content'
+import library from '../../types/library'
+
+import {
+  DEFAULT_TEMPLATE_LAYOUT,
+} from '../../config'
 
 const settings = content.contentItem('settings')
 const logo = content.contentItem('logo')
@@ -15,6 +20,32 @@ const snippets = createSelector(
   (settings) => {
     if(!settings || !settings.data || !settings.data.snippets) return []
     return settings.data.snippets
+  }
+)
+
+const templates = createSelector(
+  settings,
+  (settings) => {
+
+    const defaultTemplate = {
+      id: 'default',
+      name: 'Default',
+      system: true,
+      default: true,
+      layout: DEFAULT_TEMPLATE_LAYOUT,
+    }
+
+    const libraryTemplates = library.templates
+
+    let settingsTemplates = []
+
+    if(settings && settings.data && settings.data.templates) {
+      settingsTemplates = settings.data.templates
+    }
+
+    return [defaultTemplate]
+      .concat(libraryTemplates)
+      .concat(settingsTemplates)
   }
 )
 
@@ -49,6 +80,7 @@ const selectors = {
   website,
   dnsInfo,
   snippets,
+  templates,
 }
 
 export default selectors

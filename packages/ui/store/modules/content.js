@@ -131,7 +131,13 @@ const sideEffects = {
     data,
   }) => wrapper('save', async (dispatch, getState) => {
     if(params.controller == 'content') {
-      await dispatch(actions.saveContent({params, data}))
+      if(params.type == 'pageSettings') {
+        await dispatch(actions.savePageSettings({params, data}))
+      }
+      else {
+        await dispatch(actions.saveContent({params, data}))
+      }
+      
     }
     else if(params.controller == 'finder') {
       await dispatch(finderActions.saveFinderContent({params, data}))
@@ -143,6 +149,32 @@ const sideEffects = {
       throw new Error(`unknown controller for content.save: ${controller}`)
     }
   }),
+
+  savePageSettings: ({
+    params: {
+      id,
+    },
+    data, 
+  }) => async (dispatch, getState) => {
+    const content = selectors.content.contentAll(getState())
+    const item = content[id]
+    const newAnnotation = Object.assign({}, item.annotation, data)
+    const newItem = Object.assign({}, item, {
+      annotation: newAnnotation,
+    })
+    dispatch(nocodeActions.setItem({
+      type: 'content',
+      id: newItem.id,
+      data: newItem,
+    }))
+    await loaders.update(getState, {
+      id: newItem.id,
+      payload: {
+        annotation: newAnnotation,
+      }
+    })
+    dispatch(snackbarActions.setSuccess(`page settings updated`))
+  },
 
   saveContentRaw: ({
     params: {
@@ -201,7 +233,9 @@ const sideEffects = {
 
       // a section has no data just an annotation
       if(driver == 'local' && type == 'section') {
-        delete(payload.data)
+        payload = {
+          annotation: Object.assign({}, data, annotation)
+        }
       }
 
       await dispatch(jobActions.waitForJob({

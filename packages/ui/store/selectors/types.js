@@ -163,6 +163,7 @@ const form = createSelector(
 
     if(existingItem) {
       initialValues = existingItem.data
+      if(type == 'pageSettings' || type == 'section') initialValues = existingItem.annotation || {}
     }
 
     // configure the form with extra sections
@@ -195,7 +196,20 @@ const form = createSelector(
           title: 'Sorting',
           renderer: 'sorting',
         })
-      }    
+      }
+      
+      if(type == 'settings' || type == 'section' || type == 'pageSettings') {
+        tabs.push({
+          id: 'template',
+          title: 'Template',
+          schema: [{
+            id: 'template',
+            title: 'Template',
+            helperText: 'Choose the template to render page content',
+            component: 'templateSelect',
+          }]
+        })
+      }
     }
 
     return {

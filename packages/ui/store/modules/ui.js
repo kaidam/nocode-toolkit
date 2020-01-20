@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Promise from 'bluebird'
+import uuid from 'uuid/v4'
 import CreateReducer from '@nocode-toolkit/website/store/utils/createReducer'
 import CreateActions from '@nocode-toolkit/website/store/utils/createActions'
 
@@ -196,6 +197,66 @@ const sideEffects = {
     }))
 
     dispatch(snackbarActions.setSuccess(`snippets updated`))
+
+    if(onComplete) onComplete()
+  }),
+  addTemplate: ({
+    name,
+    layout,
+    onComplete,
+  }) => wrapper('addTemplate', async (dispatch, getState) => {
+    const settingsData = selectors.ui.settings(getState())
+    const templates = (settingsData.data.templates || []).concat([{
+      id: uuid(),
+      name,
+      layout,
+    }])
+    await dispatch(actions.setTemplates({
+      data: templates,
+      onComplete,
+    }))
+  }),
+  deleteTemplate: ({
+    id,
+    onComplete,
+  }) => wrapper('deleteTemplate', async (dispatch, getState) => {
+    const settingsData = selectors.ui.settings(getState())
+    const templates = (settingsData.data.templates || []).filter(template => template.id != id)
+    await dispatch(actions.setTemplates({
+      data: templates,
+      onComplete,
+    }))
+  }),
+  setTemplates: ({
+    data,
+    onComplete,
+  }) => wrapper('setTemplates', async (dispatch, getState) => {
+    const existingItem = selectors.ui.settings(getState())
+    const newData = Object.assign({}, existingItem ? existingItem.data : {}, {
+      templates: data,
+    })
+    const newItem = Object.assign({}, existingItem, {
+      data: newData,
+    })
+    
+    await dispatch(contentActions.saveContentRaw({
+      params: {
+        driver: 'local',
+        type: 'settings',
+        id: 'settings',
+        location: 'singleton:settings',
+      },
+      data: newData,
+      manualComplete: true,
+    }))
+
+    dispatch(nocodeActions.setItem({
+      type: 'content',
+      id: 'settings',
+      data: newItem,
+    }))
+
+    dispatch(snackbarActions.setSuccess(`templates updated`))
 
     if(onComplete) onComplete()
   }),

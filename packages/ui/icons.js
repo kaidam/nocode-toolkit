@@ -70,6 +70,8 @@ import PluginIcon from '@material-ui/icons/Extension'
 import DomainIcon from '@material-ui/icons/Language'
 import CloseIcon from '@material-ui/icons/Close'
 import HelpIcon from '@material-ui/icons/LiveHelp'
+import SaveIcon from '@material-ui/icons/Save'
+import TemplateIcon from '@material-ui/icons/Dashboard'
 
 import UnsplashLogo from './styles/UnsplashLogo'
 import GoogleDriveLogo from './styles/GoogleDriveLogo'
@@ -136,6 +138,8 @@ const icons = {
   plugin: PluginIcon,
   domain: DomainIcon,
   help: HelpIcon,
+  save: SaveIcon,
+  template: TemplateIcon,
 }
 
 export default icons

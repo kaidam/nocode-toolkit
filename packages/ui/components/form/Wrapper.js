@@ -40,6 +40,7 @@ const useStyles = makeStyles(theme => createStyles({
 
 const FormWrapperItem = ({
   item,
+  values,
   errors,
   touched,
 }) => {
@@ -52,6 +53,7 @@ const FormWrapperItem = ({
       name={ item.id }
       component={ utils.getComponent(item.component) }
       item={ item }
+      values={ values }
       error={ fieldError }
       touched={ fieldTouched }
     />
@@ -61,6 +63,7 @@ const FormWrapperItem = ({
 const FormWrapperRow = ({
   rowKey,
   row,
+  values,
   errors,
   touched,
 }) => {
@@ -91,6 +94,7 @@ const FormWrapperRow = ({
       <Grid item xs={ 12 } sm={ colSize } key={ rowKey + '-' + i }>
         <FormWrapperItem
           item={ item }
+          values={ values }
           errors={ errors }
           touched={ touched }
         />
@@ -172,6 +176,7 @@ const FormWrapper = ({
                         key={ i }
                         rowKey={ i }
                         row={ row }
+                        values={ values }
                         errors={ errors }
                         touched={ touched }
                       />

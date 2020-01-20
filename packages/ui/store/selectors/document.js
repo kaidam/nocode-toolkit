@@ -9,17 +9,83 @@ import {
 } from './utils'
 
 import contentSelectors from './content'
+import uiSelectors from './ui'
+
+const settings = contentSelectors.contentItem('settings')
 
 const NETWORK_NAMES = networkProps('document', [
   'editLayout',
   'saveContent',
 ])
 
+const layoutId = createSelector(
+  settings,
+  core.router.route,
+  contentSelectors.contentAll,
+  contentSelectors.sectionAll,
+  (settings, route, content, sections) => {
+    const page = content[route.item]
+    if(!page) return 'default'
+
+    const section = page.location && page.location.type == 'section' ?
+      sections[page.location.id] :
+      null
+    const settingsId = settings && settings.data && settings.data.template && settings.data.template != 'default' ?
+      settings.data.template :
+      null
+    const sectionId = section && section.annotation && section.annotation.template && section.annotation.template != 'default' ?
+      section.annotation.template :
+      null
+    const pageId = page && page.annotation && page.annotation.template && page.annotation.template != 'default' ?
+      page.annotation.template :
+      null
+
+    if(pageId) {
+      return {
+        type: 'page',
+        id: pageId,
+      }
+    }
+    else if(sectionId) {
+      return {
+        type: 'section',
+        id: sectionId,
+      }
+    }
+    else if(settingsId) {
+      return {
+        type: 'settings',
+        id: settingsId,
+      }
+    }
+    else {
+      return {
+        type: 'default',
+        id: 'default',
+      }
+    }
+  }
+)
+
+const layout = createSelector(
+  layoutId,
+  uiSelectors.templates,
+  (selectedTemplate, templates) => {
+    let template = templates.find(template => template.id == selectedTemplate.id)
+    if(!template) {
+      console.error(`warning - no template found for ${selectedTemplate.type} -> ${selectedTemplate.id}`)
+      template = templates.find(template => template.id == 'default')
+    }
+    return template.layout
+  }
+)
+
 const data = createSelector(
   core.nocode.externals,
   core.router.route,
   contentSelectors.contentAll,
-  (externals, route, content) => {
+  layout,
+  (externals, route, content, layout) => {
     const item = content[route.item]
     if(!item) {
       return {
@@ -51,17 +117,7 @@ const data = createSelector(
 
     data.layout = data.item.annotation && data.item.annotation.layout ?
       data.item.annotation.layout :
-      [[{
-        component: 'title',
-        source: 'title',
-        editor: 'external',
-      }],[{
-        component: 'html',
-        source: 'external',
-        editor: 'external',
-        index: 0,
-        mainDocumentContent: true,
-      }]]
+      layout
 
     return data
   },

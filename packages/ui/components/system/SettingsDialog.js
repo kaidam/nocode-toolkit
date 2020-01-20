@@ -20,6 +20,7 @@ import uiActions from '../../store/modules/ui'
 import icons from '../../icons'
 
 import SettingsForm from './SettingsForm'
+import SettingsTemplates from './SettingsTemplates'
 import SettingsPlugins from './SettingsPlugins'
 import SettingsDomains from './SettingsDomains'
 import SettingsSnippets from './SettingsSnippets'
@@ -66,6 +67,11 @@ const SECTIONS = [{
   title: 'General',
   icon: icons.settings,
   renderer: SettingsForm,
+},{
+  id: 'templates',
+  title: 'Templates',
+  icon: icons.template,
+  renderer: SettingsTemplates,
 },{
   id: 'plugins',
   title: 'Plugins',
