@@ -19,9 +19,10 @@ const SaveIcon = icons.save
 
 const useStyles = makeStyles({
   root: {
+    border: '1px solid #f5f5f5',
     textAlign: 'right',
-    marginBottom: '20px',
-    marginRight: '10px'
+    minHeight: '45px',
+    padding: '8px',
   },
   button: {
     width: '24px',
