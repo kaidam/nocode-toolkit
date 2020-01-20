@@ -66,7 +66,7 @@ const exporter = () => (req, res) => {
 }
 
 const middleware = ({
-  name = 'http_request_duration_ms',
+  name = 'nocode_http_request_duration_ms',
   help = 'Duration of HTTP requests in ms',
   labelNames = ['method', 'route', 'code'],
   buckets,
@@ -80,7 +80,7 @@ const middleware = ({
   return (req, res, next) => {
     const startEpoch = Date.now()
     onFinished(res, (err) => {
-      const path = req.path || req.originalUrl
+      const path = req.monitorpath || req.originalUrl
       const responseTime = Date.now() - startEpoch
       httpRequestDurationMicroseconds
         .labels(req.method, path, res.statusCode)
