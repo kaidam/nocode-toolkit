@@ -72,7 +72,7 @@ const PageSettingsButton = ({
     icon: SettingsIcon,
     handler: settingsHandler,
   }, {
-    title: 'Save Template',
+    title: 'Save as template',
     icon: SaveIcon,
     handler: openSaveHandler,
   }]

@@ -133,6 +133,7 @@ const sideEffects = {
     if(params.controller == 'content') {
       if(params.type == 'pageSettings') {
         await dispatch(actions.savePageSettings({params, data}))
+        await dispatch(uiActions.resetQueryParams())
       }
       else {
         await dispatch(actions.saveContent({params, data}))
