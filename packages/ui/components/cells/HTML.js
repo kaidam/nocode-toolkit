@@ -49,7 +49,7 @@ const DocumentHTML = ({
         return (link.getAttribute('href') || '').indexOf('#') == 0
       })
       .forEach(link => {
-        const newHref = `${document.location.href}${link.getAttribute('href')}`
+        const newHref = `${document.location.href.replace(/#.*/, '')}${link.getAttribute('href')}`
         link.setAttribute('href', newHref)
       })
   }, [
