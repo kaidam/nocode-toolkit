@@ -42,6 +42,7 @@
     
 
 */
+const url = require('url')
 const client = require('prom-client')
 const onFinished = require('on-finished')
 
@@ -80,7 +81,10 @@ const middleware = ({
   return (req, res, next) => {
     const startEpoch = Date.now()
     onFinished(res, (err) => {
-      const path = req.monitorpath || req.originalUrl
+      let path = req.monitorpath
+      if(!path) {
+        path = url.parse(req.originalUrl).pathname
+      }
       const responseTime = Date.now() - startEpoch
       httpRequestDurationMicroseconds
         .labels(req.method, path, res.statusCode)
