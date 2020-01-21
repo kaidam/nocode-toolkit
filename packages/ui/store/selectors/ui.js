@@ -6,6 +6,7 @@ import library from '../../types/library'
 
 import {
   DEFAULT_TEMPLATE_LAYOUT,
+  DOCUMENTATION_TEMPLATE_LAYOUT,
 } from '../../config'
 
 const settings = content.contentItem('settings')
@@ -35,6 +36,14 @@ const templates = createSelector(
       layout: DEFAULT_TEMPLATE_LAYOUT,
     }
 
+    const documentationTemplate = {
+      id: 'documentation',
+      name: 'Documentation',
+      system: true,
+      default: true,
+      layout: DOCUMENTATION_TEMPLATE_LAYOUT,
+    }
+
     const libraryTemplates = library.templates
 
     let settingsTemplates = []
@@ -43,7 +52,7 @@ const templates = createSelector(
       settingsTemplates = settings.data.templates
     }
 
-    return [defaultTemplate]
+    return [defaultTemplate,documentationTemplate]
       .concat(libraryTemplates)
       .concat(settingsTemplates)
   }
