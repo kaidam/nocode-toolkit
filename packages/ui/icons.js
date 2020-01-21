@@ -72,6 +72,8 @@ import CloseIcon from '@material-ui/icons/Close'
 import HelpIcon from '@material-ui/icons/LiveHelp'
 import SaveIcon from '@material-ui/icons/Save'
 import TemplateIcon from '@material-ui/icons/Dashboard'
+import InfoIcon from '@material-ui/icons/Info'
+import BackNextIcon from '@material-ui/icons/SyncAlt'
 
 import UnsplashLogo from './styles/UnsplashLogo'
 import GoogleDriveLogo from './styles/GoogleDriveLogo'
@@ -140,6 +142,8 @@ const icons = {
   help: HelpIcon,
   save: SaveIcon,
   template: TemplateIcon,
+  info: InfoIcon,
+  backnext: BackNextIcon,
 }
 
 export default icons

@@ -30,6 +30,32 @@ const LeftIcon = icons.left
 const RightIcon = icons.right
 const SettingsIcon = icons.settings
 
+const CellGroups = [{
+  id: 'document',
+  title: 'Document Widgets',
+  icon: 'text',
+}, {
+  id: 'text',
+  title: 'Text Widgets',
+  icon: 'title',
+}, {
+  id: 'media',
+  title: 'Media Widgets',
+  icon: 'image',
+}, {
+  id: 'navigation',
+  title: 'Navigation Widgets',
+  icon: 'backnext',
+}, {
+  id: 'plugin',
+  title: 'Plugins',
+  icon: 'plugin',
+}, {
+  id: 'snippet',
+  title: 'Snippets',
+  icon: 'code',
+}]
+
 const useStyles = makeStyles(theme => createStyles({
   smallOptionButton: {
     width: '24px',
@@ -117,64 +143,96 @@ const CellOptions = ({
     method,
     params,
   }) => {
-    const baseItems = typeUI.addContentOptionsWithCallback({
-      handler: (type, schema) => {
-        setAddingCell({
-          cell: {
-            component: type,
-            source: 'cell',
-            editor: 'local',
+
+    const activePlugins = settings && settings.data && settings.data.activePlugins ?
+      settings.data.activePlugins :
+      {}
+
+    const baseHandler = (type, schema) => {
+      setAddingCell({
+        cell: {
+          component: type,
+          source: 'cell',
+          editor: 'local',
+        },
+        type,
+        method,
+        params,
+      })
+      onOpenEditor(true)
+    }
+
+    const snippetHandler = (id) => {
+      onEditLayout({
+        data,
+        rowIndex,
+        cellIndex,
+        method,
+        params,
+        cell: {
+          id: uuid(),
+          component: 'snippet',
+          source: 'cell',
+          editor: 'local',
+          data: {
+            id,
           },
-          type,
-          method,
-          params,
-        })
-        onOpenEditor(true)
-      },
-      filter: (parentFilter, schemaDefinition) => {
-        const activePlugins = settings && settings.data && settings.data.activePlugins ?
-          settings.data.activePlugins :
-          {}
+        },
+      })
+    }
+
+    const groups = library.list()
+      .filter(schemaDefinition => {
+        const parentFilter = schemaDefinition.parentFilter || []
         if(schemaDefinition.plugin && !activePlugins[schemaDefinition.plugin]) return false
         const hasCellParent = parentFilter.indexOf('cell') >= 0
-        if(!hasCellParent) return false
-        if(schemaDefinition.addCellFilter) {
-          return schemaDefinition.addCellFilter(settings, {
-            location,
-          })
-        }
-        else {
-          return true
-        }
-      },
-    })
+          if(!hasCellParent) return false
+          if(schemaDefinition.addCellFilter) {
+            return schemaDefinition.addCellFilter(settings, {
+              location,
+            })
+          }
+          else {
+            return true
+          }
+      })
+      .reduce((all, schemaDefinition) => {
+        const metadata = schemaDefinition.metadata || {}
+        const cellGroup = schemaDefinition.plugin ?
+          'plugin' :
+          metadata.cellGroup
+        if(!cellGroup) return all
+        const group = all[cellGroup] || []
+        group.push({
+          title: schemaDefinition.title,
+          icon: icons[schemaDefinition.icon],
+          type: schemaDefinition.type,
+          help: schemaDefinition.help,
+          handler: () => baseHandler(schemaDefinition.type, schemaDefinition),
+        })
+        all[cellGroup] = group
+        return all
+      }, {})
 
-    const snippets = settings && settings.data && settings.data.snippets ?
+    groups.snippet = settings && settings.data && settings.data.snippets ?
       settings.data.snippets.map(snippet => ({
         title: snippet.name,
         icon: icons.code,
         type: 'snippet',
-        handler: () => {
-          onEditLayout({
-            data,
-            rowIndex,
-            cellIndex,
-            method,
-            params,
-            cell: {
-              id: uuid(),
-              component: 'snippet',
-              source: 'cell',
-              editor: 'local',
-              data: {
-                id: snippet.id,
-              },
-            },
-          })
-        },
+        handler: () => snippetHandler(snippet.id),
       })) : []
 
-    return baseItems.concat(snippets)
+    return CellGroups
+      .filter(group => {
+        return groups[group.id] && groups[group.id].length > 0
+      })
+      .map(group => {
+        return {
+          title: group.title,
+          icon: icons[group.icon],
+          items: groups[group.id],
+        }
+      })
   }, [
     onOpenEditor,
     setAddingCell,

@@ -79,6 +79,7 @@ const youtube = {
   metadata: {
     nodeType: 'externalLink',
     contentType: 'video',
+    cellGroup: 'media',
   },
   parentFilter: ['section', 'local.folder', 'cell'],
   initialValues: {
@@ -117,7 +118,9 @@ const title = {
   type: 'title',
   title: 'Title',
   icon: 'title',
-  metadata: {},
+  metadata: {
+    cellGroup: 'text',
+  },
   parentFilter: ['cell'],
   initialValues: {
     title: '',
@@ -137,7 +140,9 @@ const richtext = {
   type: 'richtext',
   title: 'Text',
   icon: 'text',
-  metadata: {},
+  metadata: {
+    cellGroup: 'text',
+  },
   parentFilter: ['cell'],
   initialValues: {
     data: [{
@@ -165,7 +170,9 @@ const rawhtml = {
   type: 'rawhtml',
   title: 'HTML',
   icon: 'code',
-  metadata: {},
+  metadata: {
+    cellGroup: 'text',
+  },
   parentFilter: ['cell'],
   initialValues: {
     html: '',
@@ -186,7 +193,9 @@ const image = {
   type: 'image',
   title: 'Image',
   icon: 'image',
-  metadata: {},
+  metadata: {
+    cellGroup: 'media',
+  },
   parentFilter: ['cell'],
   initialValues: {
     image: null,
@@ -362,6 +371,76 @@ const cellSettings = {
   }],
 }
 
+const documentTitle = {
+  driver: 'local',
+  type: 'documentTitle',
+  title: 'Title',
+  icon: 'title',
+  metadata: {
+    cellGroup: 'document',
+    auto: true,
+  },
+  parentFilter: ['cell'],
+  initialValues: {},
+  schema: [],
+}
+
+const documentInfo = {
+  driver: 'local',
+  type: 'documentInfo',
+  title: 'Info',
+  icon: 'info',
+  metadata: {
+    cellGroup: 'document',
+    auto: true,
+  },
+  parentFilter: ['cell'],
+  initialValues: {},
+  schema: [],
+}
+
+const documentContent = {
+  driver: 'local',
+  type: 'documentContent',
+  title: 'Content',
+  icon: 'text',
+  metadata: {
+    cellGroup: 'document',
+    auto: true,
+  },
+  parentFilter: ['cell'],
+  initialValues: {},
+  schema: [],
+}
+
+const breadcrumbs = {
+  driver: 'local',
+  type: 'breadcrumbs',
+  title: 'Breadcrumbs',
+  icon: 'text',
+  metadata: {
+    cellGroup: 'navigation',
+    auto: true,
+  },
+  parentFilter: ['cell'],
+  initialValues: {},
+  schema: [],
+}
+
+const backnextButtons = {
+  driver: 'local',
+  type: 'backnextButtons',
+  title: 'Back/Next buttons',
+  icon: 'backnext',
+  metadata: {
+    cellGroup: 'navigation',
+    auto: true,
+  },
+  parentFilter: ['cell'],
+  initialValues: {},
+  schema: [],
+}
+
 const schemas = {
   externalLink,
   title,
@@ -376,6 +455,11 @@ const schemas = {
   section,
   cellSettings,
   pageSettings,
+  documentTitle,
+  documentInfo,
+  documentContent,
+  breadcrumbs,
+  backnextButtons,
 }
 
 export default schemas

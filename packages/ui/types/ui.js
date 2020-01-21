@@ -96,10 +96,35 @@ const addContentOptionsWithCallback = ({
     })
 }
 
+
+
+const addCellOptionsWithCallback = ({
+  filter,
+  handler,
+}) => {
+
+  return library.list()
+    .filter(schemaDefinition => {
+      if(!filter) return true
+      const parentFilter = schemaDefinition.parentFilter || []
+      return filter(parentFilter, schemaDefinition)
+    })
+    .map(schemaDefinition => {
+      return {
+        title: schemaDefinition.title,
+        icon: icons[schemaDefinition.icon],
+        type: schemaDefinition.type,
+        help: schemaDefinition.help,
+        handler: () => handler(schemaDefinition.type, schemaDefinition),
+      }
+    })
+}
+
 const ui = {
   editContentHandler,
   addContentOptions,
   addContentOptionsWithCallback,
+  addCellOptionsWithCallback,
 }
 
 export default ui
