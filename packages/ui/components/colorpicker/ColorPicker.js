@@ -122,7 +122,7 @@ const ColorTool = ({
 
   const changeValues = useCallback(
     (updates) => onUpdate(Object.assign({}, value, updates)),
-    [onUpdate]
+    [onUpdate,value]
   )
 
   const handleChangeColor = useCallback(
@@ -153,11 +153,16 @@ const ColorTool = ({
         inputColor: color,
       })
     },
-    []
+    [
+      shades,
+      values,
+    ]
   )
 
   const handleChangeShade = useCallback(
     (event, shade) => {
+      console.log('--------------------------------------------')
+      console.dir(values.hue)
       const color = colors[values.hue][shades[shade]]
       changeValues({
         shade,
@@ -165,7 +170,11 @@ const ColorTool = ({
         inputColor: color,
       })
     },
-    []
+    [
+      colors,
+      values,
+      shades,
+    ]
   )
 
   const colorBar = useMemo(
