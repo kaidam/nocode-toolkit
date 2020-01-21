@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import FormGroup from '@material-ui/core/FormGroup'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
+import Button from '@material-ui/core/Button'
 import Switch from '@material-ui/core/Switch'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -11,8 +12,13 @@ import Toolbar from '@material-ui/core/Toolbar'
 import Actions from '../../utils/actions'
 import selectors from '../../store/selectors'
 import uiActions from '../../store/modules/ui'
+import jobActions from '../../store/modules/job'
+
+import icons from '../../icons'
 
 import GlobalOptions from '../buttons/GlobalOptions'
+
+const RefreshIcon = icons.refresh
 
 const useStyles = makeStyles(theme => createStyles({
   appBar: {
@@ -42,9 +48,15 @@ const useStyles = makeStyles(theme => createStyles({
   },
   options: {
     paddingRight: theme.spacing(1.5),
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   previewModeLabel: {
     color: theme.palette.text.primary,
+  },
+  button: {
+    marginRight: theme.spacing(3),
   },
 }))
 
@@ -55,6 +67,7 @@ const NocodeTopbar = ({
 
   const actions = Actions(useDispatch(), {
     onSetPreviewMode: uiActions.setPreviewMode,
+    onRebuild: jobActions.rebuild,
   })
 
   const previewMode = useSelector(selectors.ui.previewMode)
@@ -79,6 +92,15 @@ const NocodeTopbar = ({
           </a>
         </div>
         <div className={ classes.options }>
+          <Button
+            variant="contained"
+            size="small"
+            className={classes.button}
+            startIcon={<RefreshIcon />}
+            onClick={ actions.onRebuild }
+          >
+            Reload
+          </Button>
           <FormGroup row>
             <FormControlLabel
               control={
