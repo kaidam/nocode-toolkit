@@ -120,7 +120,18 @@ const SettingsSnippets = ({
   const fields = [{
     title: 'Name',
     name: 'name',
+  }, {
+    title: 'Global',
+    name: 'global',
   }]
+
+  const data = snippets.map(snippet => {
+    return {
+      id: snippet.id,
+      name: snippet.name,
+      global: snippet.global ? 'global' : ''
+    }
+  })
 
   return (
     <div className={ classes.container }>
@@ -134,7 +145,7 @@ const SettingsSnippets = ({
           <Grid item xs={ 12 }>
             <SimpleTable
               hideHeader
-              data={ snippets }
+              data={ data }
               fields={ fields }
               getActions={ (item) => (
                 <span>

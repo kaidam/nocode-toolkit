@@ -3,6 +3,9 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
+import FormHelperText from '@material-ui/core/FormHelperText'
+import Checkbox from '@material-ui/core/Checkbox'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
@@ -29,6 +32,9 @@ const useStyles = makeStyles(theme => ({
   },
   info: {
     marginTop: theme.spacing(2),
+  },
+  margin: {
+    marginTop: theme.spacing(1),
   }
 }))
 
@@ -41,6 +47,7 @@ const SettingsSnippetEditDialog = ({
   const classes = useStyles()
 
   const [name, setName] = useState(snippet.name)
+  const [global, setGlobal] = useState(snippet.global)
   const [code, setCode] = useState(snippet.code)
   const [showErrors, setShowErrors] = useState(false)
 
@@ -54,10 +61,12 @@ const SettingsSnippetEditDialog = ({
     if(!isValid) return
     onSubmit({
       name,
+      global,
       code,
     })
   }, [
     name,
+    global,
     code,
     nameError,
     codeError,
@@ -95,6 +104,21 @@ const SettingsSnippetEditDialog = ({
           value={ code }
           onChange={(e) => setCode(e.target.value)}
         />
+        <div className={ classes.margin }></div>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={ global }
+              onChange={ (e) => setGlobal(e.target.value) }
+              value="yes"
+              color="secondary"
+            />
+          }
+          label="Global?"
+        />
+        <FormHelperText>
+          Global snippets appear on all pages
+        </FormHelperText>
       </DialogContent>
       <DialogActions>
         <div className={ classes.buttonsContainer }>
