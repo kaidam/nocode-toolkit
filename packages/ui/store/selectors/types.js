@@ -215,6 +215,7 @@ const form = createSelector(
             title: 'Template',
             helperText: 'Choose the template to render page content',
             component: 'templateSelect',
+            includeInherit: type != 'settings',
           }]
         })
       }

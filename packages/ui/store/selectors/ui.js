@@ -30,7 +30,7 @@ const templates = createSelector(
 
     const defaultTemplate = {
       id: 'default',
-      name: 'Default',
+      name: 'Standard',
       system: true,
       default: true,
       layout: DEFAULT_TEMPLATE_LAYOUT,

@@ -11,6 +11,8 @@ import contentActions from '../../../store/modules/content'
 const TemplateSelectField = (props) => {
   const values = props.values
 
+  const schemaItem = props.item
+
   const editItem = values._item
 
   const actions = Actions(useDispatch(), {
@@ -19,14 +21,24 @@ const TemplateSelectField = (props) => {
   
   const templates = useSelector(selectors.ui.templates)
 
-  const options = templates.map(template => {
+  let options = templates.map(template => {
     return {
       title: template.name,
       value: template.id,
     }
   })
 
-  const value = props.field.value || 'default'
+  let defaultValue = 'default'
+
+  if(schemaItem.includeInherit) {
+    options = [{
+      title: 'Inherit',
+      value: 'inherit',
+    }].concat(options)
+    defaultValue = 'inherit'
+  }
+
+  const value = props.field.value || defaultValue
   
   const item = Object.assign({}, props.item, {
     options,

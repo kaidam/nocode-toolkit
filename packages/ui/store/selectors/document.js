@@ -23,23 +23,23 @@ const layoutId = createSelector(
   core.router.route,
   contentSelectors.contentAll,
   contentSelectors.sectionAll,
-  (settings, route, content, sections) => {
+  contentSelectors.routeSection,
+  (settings, route, content, sections, sectionName) => {
     const page = content[route.item]
     if(!page || route.name == 'root') return {
       type: 'default',
       id: 'default',
     }
-
-    const section = page.location && page.location.type == 'section' ?
-      sections[page.location.id] :
+    const section = sectionName ?
+      sections[sectionName] :
       null
-    const settingsId = settings && settings.data && settings.data.template && settings.data.template != 'default' ?
+    const settingsId = settings && settings.data && settings.data.template ?
       settings.data.template :
-      null
-    const sectionId = section && section.annotation && section.annotation.template && section.annotation.template != 'default' ?
+      'default'
+    const sectionId = section && section.annotation && section.annotation.template && section.annotation.template != 'inherit' ?
       section.annotation.template :
       null
-    const pageId = page && page.annotation && page.annotation.template && page.annotation.template != 'default' ?
+    const pageId = page && page.annotation && page.annotation.template && page.annotation.template != 'inherit' ?
       page.annotation.template :
       null
 

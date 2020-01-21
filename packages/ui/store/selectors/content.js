@@ -130,6 +130,15 @@ const routeItems = createSelector(
   },
 )
 
+const routeSection = createSelector(
+  routeItems,
+  (routeItems) => {
+    const first = routeItems[0]
+    if(!first) return
+    return first.location.id
+  }
+)
+
 const sectionPageList = () => createSelector(
   sectionAll,
   contentAll,
@@ -178,6 +187,7 @@ const selectors = {
   ghostParent,
   routeItemPath,
   routeItems,
+  routeSection,
   sectionPageList,
 }
 
