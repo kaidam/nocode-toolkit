@@ -41,6 +41,10 @@ const DocumentHTML = ({
       })
     })
 
+    // loop over all links that are poitning to anchors on this page
+    // insert the full URL to the current page
+    // as we are using base href tag - these link to the homepage
+    // if we don't do this
     const hashLinks = Array.prototype.slice
       .call(
         contentRef.current.querySelectorAll('a')
@@ -52,6 +56,18 @@ const DocumentHTML = ({
         const newHref = `${document.location.href.replace(/#.*/, '')}${link.getAttribute('href')}`
         link.setAttribute('href', newHref)
       })
+
+    // if we arrived on this page using a hash - we need to manually jump down to the element
+    const hashAnchorSelector = (document.location.hash || '').replace(/\./g, '\\.')
+    const hashAnchor = document.querySelector(hashAnchorSelector)
+
+    if(hashAnchor) {
+      hashAnchor.scrollIntoView({
+        behavior: 'auto',
+        block: 'start',
+        inline: 'start',
+      })
+    }
   }, [
     content,
   ])
