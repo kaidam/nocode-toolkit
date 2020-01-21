@@ -1,5 +1,6 @@
 import React from 'react'
 import useSettings from '../hooks/useSettings'
+import UserHTML from '../system/UserHTML'
 
 const Snippet = ({
   content,
@@ -11,10 +12,9 @@ const Snippet = ({
   const snippet = settings.snippets.find(snippet => snippet.id == content.id)
   if(!snippet) return
   return (
-    <div 
-      dangerouslySetInnerHTML={{__html: snippet.code }}
-    >
-    </div>
+    <UserHTML
+      html={ snippet.code }
+    />
   )
 }
 
