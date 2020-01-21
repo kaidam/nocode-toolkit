@@ -77,6 +77,7 @@ import BackNextIcon from '@material-ui/icons/SyncAlt'
 
 import UnsplashLogo from './styles/UnsplashLogo'
 import GoogleDriveLogo from './styles/GoogleDriveLogo'
+import NocodeLogo from './styles/NocodeLogo'
 
 
 const icons = {
@@ -96,6 +97,7 @@ const icons = {
   item: DocumentIcon,
   drive: GoogleDriveLogo,
   unsplash: UnsplashLogo,
+  nocode: NocodeLogo,
   link: LinkIcon,
   video: VideoIcon,
   expandMore: ExpandMoreIcon,

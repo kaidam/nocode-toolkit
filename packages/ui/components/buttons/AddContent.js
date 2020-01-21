@@ -34,6 +34,7 @@ const AddContent = ({
     onOpenContentForm: actions.onOpenContentForm,
     onOpenFinder: actions.onOpenFinder,
   })
+  
   return (
     <MenuButton
       items={ menuItems }
