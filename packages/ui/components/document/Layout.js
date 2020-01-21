@@ -66,11 +66,6 @@ const DocumentRouteLayout = ({
         CellOptionsWrapper={ CellOptions }
       />
       <Suspense>
-        <PageSettingsButton
-          item={ data.item }
-        />
-      </Suspense>
-      <Suspense>
         <DocumentReloadTrigger />
       </Suspense>
     </React.Fragment>
