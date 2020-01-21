@@ -2,6 +2,7 @@ import React, { lazy, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import Suspense from '../system/Suspense'
 import Layout from '../layout/Layout'
+import FolderLayout from '../layout/FolderLayout'
 import selectors from '../../store/selectors'
 
 const RenderDefaultHomeUI = lazy(() => import(/* webpackChunkName: "ui" */ './RenderDefaultHomeUI'))
@@ -28,12 +29,10 @@ const defaultRenderers = {
   defaultHome: RenderDefaultHome,
 }
 
-const DocumentLayout = ({
+const DocumentRouteLayout = ({
+  data,
   renderers = {},
 }) => {
-
-  const data = useSelector(selectors.document.data)
-
   const renderCell = ({
     data,
     cell,
@@ -78,4 +77,45 @@ const DocumentLayout = ({
   )
 }
 
-export default DocumentLayout
+const FolderRouteLayout = ({
+  data,
+  renderers = {},
+}) => {
+  return (
+    <FolderLayout
+      data={ data }
+      renderers={ renderers }
+    />
+  )
+}
+
+const RouteLayout = ({
+  renderers = {},
+}) => {
+
+  const data = useSelector(selectors.document.data)
+
+  if(data.type == 'document') {
+    return (
+      <DocumentRouteLayout
+        renderers={ renderers }
+        data={ data }
+      />
+    )
+  }
+  else if(data.type == 'folder') {
+    return (
+      <FolderRouteLayout
+        renderers={ renderers }
+        data={ data }
+      />
+    )
+  }
+  else {
+    return (
+      <div>Unknown item found { data.type }</div>
+    )
+  }
+}
+
+export default RouteLayout

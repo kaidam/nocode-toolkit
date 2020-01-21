@@ -77,6 +77,15 @@ const sectionList = () => createSelector(
   }
 )
 
+const childrenList = () => createSelector(
+  contentAll,
+  (_, id) => id,
+  (content, id) => {
+    const parent = content[id]
+    return _createList(content, parent)
+  }
+)
+
 const ghostParent = () => createSelector(
   contentAll,
   (_, item) => item,
@@ -123,6 +132,7 @@ const selectors = {
   queryItem,
   sectionTree,
   sectionList,
+  childrenList,
   ghostParent,
   routeItemPath,
 }

@@ -73,7 +73,6 @@ const layout = createSelector(
   (selectedTemplate, templates) => {
     let template = templates.find(template => template.id == selectedTemplate.id)
     if(!template) {
-      console.error(`warning - no template found for ${selectedTemplate.type} -> ${selectedTemplate.id}`)
       template = templates.find(template => template.id == 'default')
     }
     return template.layout
@@ -86,40 +85,63 @@ const data = createSelector(
   contentSelectors.contentAll,
   layout,
   (externals, route, content, layout) => {
-    const item = content[route.item]
-    if(!item) {
+
+    if(route.isFolder) {
+      const item = content[route.item]
+      if(!item) {
+        return {
+          type: 'folder',
+          item: {
+            data: {
+              name: 'notfound',
+            }
+          },
+        }
+      }
       return {
-        item: {
-          data: {
-            name: 'notfound',
-          }
-        },
-        externals: [],
-        layout: [],
-        disableLayoutEditor: true,
+        type: 'folder',
+        item,
       }
     }
-
-    const data = item.type == 'defaultHome' ?
-      {
-        item: {
-          data: {
-            name: 'Home',
-          }
-        },
-        externals: [],
-        disableLayoutEditor: true,
-        defaultHome: true,
-      } : {
-        item,
-        externals: (route.externals || []).map(id => externals[id]),
+    else {
+      const item = content[route.item]
+      if(!item) {
+        return {
+          type: 'document',
+          item: {
+            data: {
+              name: 'notfound',
+            }
+          },
+          externals: [],
+          layout: [],
+          disableLayoutEditor: true,
+        }
       }
 
-    data.layout = data.item.annotation && data.item.annotation.layout ?
-      data.item.annotation.layout :
-      layout
+      const data = item.type == 'defaultHome' ?
+        {
+          item: {
+            data: {
+              name: 'Home',
+            }
+          },
+          externals: [],
+          disableLayoutEditor: true,
+          defaultHome: true,
+        } : {
+          item,
+          externals: (route.externals || []).map(id => externals[id]),
+        }
 
-    return data
+      data.layout = data.item.annotation && data.item.annotation.layout ?
+        data.item.annotation.layout :
+        layout
+
+      data.type = 'document'
+
+      return data
+    }
   },
 )
 
