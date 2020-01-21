@@ -118,6 +118,18 @@ const routeItemPath = createSelector(
   },
 )
 
+const routeItems = createSelector(
+  routeItemPath,
+  contentAll,
+  (routeItemPath, content) => {
+    return routeItemPath
+      .map(id => content[id])
+      .filter(item => {
+        return item.location.isGhost ? false : true
+      })
+  },
+)
+
 const selectors = {
   errors: props(networkErrors, NETWORK_NAMES),
   loading: props(networkLoading, NETWORK_NAMES),
@@ -135,6 +147,7 @@ const selectors = {
   childrenList,
   ghostParent,
   routeItemPath,
+  routeItems,
 }
 
 export default selectors
