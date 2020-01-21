@@ -129,6 +129,7 @@ const SettingsSnippets = ({
     return {
       id: snippet.id,
       name: snippet.name,
+      code: snippet.code,
       global: snippet.global ? 'global' : ''
     }
   })
