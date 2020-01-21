@@ -231,12 +231,15 @@ const CellOptions = ({
       }, {})
 
     groups.snippet = settings && settings.data && settings.data.snippets ?
-      settings.data.snippets.map(snippet => ({
-        title: snippet.name,
-        icon: icons.code,
-        type: 'snippet',
-        handler: () => snippetHandler(snippet.id),
-      })) : []
+      settings.data.snippets
+        .filter(snippet => snippet.global ? false : true)
+        .map(snippet => ({
+          title: snippet.name,
+          icon: icons.code,
+          type: 'snippet',
+          handler: () => snippetHandler(snippet.id),
+        })) : 
+        []
 
     return CellGroups
       .filter(group => {
