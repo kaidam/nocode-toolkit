@@ -148,35 +148,51 @@ const CellOptions = ({
       settings.data.activePlugins :
       {}
 
-    const baseHandler = (type, schema) => {
-      setAddingCell({
-        cell: {
-          component: type,
-          source: 'cell',
-          editor: 'local',
-        },
-        type,
-        method,
-        params,
-      })
-      onOpenEditor(true)
-    }
-
-    const snippetHandler = (id) => {
+    const insertHandler = (cell) => {
       onEditLayout({
         data,
         rowIndex,
         cellIndex,
         method,
         params,
-        cell: {
+        cell: Object.assign({}, cell, {
           id: uuid(),
-          component: 'snippet',
-          source: 'cell',
-          editor: 'local',
-          data: {
-            id,
+        })
+      })
+    }
+
+    const baseHandler = (type, schema) => {
+
+      const metadata = schema.metadata || {}
+
+      // if the schema definition gives us a cell
+      // it means to be inserted immediately
+      if(metadata.cell) {
+        insertHandler(metadata.cell)
+      }
+      // otherwise we open the editor for the cell
+      else {
+        setAddingCell({
+          cell: {
+            component: type,
+            source: 'cell',
+            editor: 'local',
           },
+          type,
+          method,
+          params,
+        })
+        onOpenEditor(true)
+      }      
+    }
+
+    const snippetHandler = (id) => {
+      insertHandler({
+        component: 'snippet',
+        source: 'cell',
+        editor: 'local',
+        data: {
+          id,
         },
       })
     }

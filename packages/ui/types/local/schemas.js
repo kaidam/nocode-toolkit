@@ -378,7 +378,11 @@ const documentTitle = {
   icon: 'title',
   metadata: {
     cellGroup: 'document',
-    auto: true,
+    cell: {
+      component: 'title',
+      source: 'title',
+      editor: 'external',
+    },
   },
   parentFilter: ['cell'],
   initialValues: {},
@@ -392,7 +396,11 @@ const documentInfo = {
   icon: 'info',
   metadata: {
     cellGroup: 'document',
-    auto: true,
+    cell: {
+      component: 'documentInfo',
+      source: 'info',
+      editor: 'external',
+    },
   },
   parentFilter: ['cell'],
   initialValues: {},
@@ -406,7 +414,13 @@ const documentContent = {
   icon: 'text',
   metadata: {
     cellGroup: 'document',
-    auto: true,
+    cell: {
+      component: 'html',
+      source: 'external',
+      editor: 'external',
+      index: 0,
+      mainDocumentContent: true,
+    },
   },
   parentFilter: ['cell'],
   initialValues: {},
@@ -420,7 +434,11 @@ const breadcrumbs = {
   icon: 'text',
   metadata: {
     cellGroup: 'navigation',
-    auto: true,
+    cell: {
+      component: 'breadcrumbs',
+      source: 'none',
+      editor: 'none',
+    },
   },
   parentFilter: ['cell'],
   initialValues: {},
@@ -434,7 +452,11 @@ const backnextButtons = {
   icon: 'backnext',
   metadata: {
     cellGroup: 'navigation',
-    auto: true,
+    cell: {
+      component: 'backnextButtons',
+      source: 'none',
+      editor: 'none',
+    },
   },
   parentFilter: ['cell'],
   initialValues: {},
