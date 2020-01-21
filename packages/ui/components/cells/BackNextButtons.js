@@ -33,8 +33,10 @@ const BackNextButtons = ({
   const contentAll = useSelector(selectors.content.contentAll)
   const sectionPageListSelector = useMemo(selectors.content.sectionPageList, [])
   const rootItem = pathToItem[0] || itemData.item
-  const sectionId = rootItem.location.id
+  const sectionId = rootItem && rootItem.location ? rootItem.location.id : 'sidebar'
   const sectionPageList = useSelector(state => sectionPageListSelector(state, sectionId))
+
+  if(!rootItem) return null
 
   const currentIndex = sectionPageList.indexOf(itemData.item.id)
 

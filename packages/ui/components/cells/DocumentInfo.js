@@ -22,6 +22,8 @@ const DocumentInfo = ({
     modifiedBy,
   } = content
 
+  if(!modified || !modifiedBy) return null
+
   return (
     <div style={ styles.root }>
       Updated <span style={ styles.bold }>{ new Date(modified).toLocaleString() }</span> by <span style={ styles.bold }>{ modifiedBy }</span>
