@@ -1,5 +1,6 @@
 import React, { useMemo, useCallback } from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import MenuButton from '../buttons/MenuButton'
 import SimpleTable from '../table/SimpleTable'
@@ -243,13 +244,20 @@ const FinderList = ({
     })
   }, [items])
 
-  return (
-    <SimpleTable
-      hideHeader
-      data={ data }
-      fields={ fields }
-    />
-  )
+  if(!items || items.length <= 0) {
+    return (
+      <Typography>No results found...</Typography>
+    )
+  }
+  else {
+    return (
+      <SimpleTable
+        hideHeader
+        data={ data }
+        fields={ fields }
+      />
+    )
+  }  
 }
 
 export default FinderList
