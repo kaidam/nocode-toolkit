@@ -58,15 +58,17 @@ const DocumentHTML = ({
       })
 
     // if we arrived on this page using a hash - we need to manually jump down to the element
-    const hashAnchorSelector = (document.location.hash || '').replace(/\./g, '\\.')
-    const hashAnchor = document.querySelector(hashAnchorSelector)
+    if(document.location.hash) {
+      const hashAnchorSelector = (document.location.hash || '').replace(/\./g, '\\.')
+      const hashAnchor = document.querySelector(hashAnchorSelector)
 
-    if(hashAnchor) {
-      hashAnchor.scrollIntoView({
-        behavior: 'auto',
-        block: 'start',
-        inline: 'start',
-      })
+      if(hashAnchor) {
+        hashAnchor.scrollIntoView({
+          behavior: 'auto',
+          block: 'start',
+          inline: 'start',
+        })
+      }
     }
   }, [
     content,
