@@ -215,12 +215,11 @@ const snippet = {
   type: 'snippet',
   title: 'Snippet',
   icon: 'code',
-  metadata: {
-    disableCellEdit: true,
-  },
+  metadata: {},
   parentFilter: [],
   initialValues: {},
   cellConfig: {
+    disableEdit: true,
     component: Snippet,
   },
 }
@@ -440,6 +439,7 @@ const breadcrumbs = {
   initialValues: {},
   schema: [],
   cellConfig: {
+    disableEdit: true,
     group: 'navigation',
     component: BreadCrumbs,
     cell: {
@@ -459,6 +459,7 @@ const backnextButtons = {
   initialValues: {},
   schema: [],
   cellConfig: {
+    disableEdit: true,
     group: 'navigation',
     component: BackNextButtons,
     cell: {

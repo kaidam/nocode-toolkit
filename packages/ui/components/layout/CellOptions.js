@@ -409,7 +409,7 @@ const CellOptions = ({
       handler: onOpenDeleteConfirm,
     }
 
-    const canEdit = cellSchemaDefinition && cellSchemaDefinition.metadata && cellSchemaDefinition.metadata.disableCellEdit ?
+    const canEdit = cellSchemaDefinition && cellSchemaDefinition.cellConfig && cellSchemaDefinition.cellConfig.disableEdit ?
       false :
       true
 

@@ -60,6 +60,8 @@ export const RenderCell = ({
         position: 'relative',
         minHeight: '45px',
         border: showUI ? '1px solid #f5f5f5' : '',
+        display: 'flex',
+        alignItems: 'center',
       }}
     >
       {

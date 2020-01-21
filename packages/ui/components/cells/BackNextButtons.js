@@ -4,7 +4,7 @@ const BackNextButtons = ({
   content,
 }) => {
   return (
-    <p>BackNextButtons</p>
+    <div>BackNextButtons</div>
   )
 }
 
