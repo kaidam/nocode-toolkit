@@ -163,12 +163,12 @@ const CellOptions = ({
 
     const baseHandler = (type, schema) => {
 
-      const metadata = schema.metadata || {}
+      const cellConfig = schema.cellConfig || {}
 
       // if the schema definition gives us a cell
       // it means to be inserted immediately
-      if(metadata.cell) {
-        insertHandler(metadata.cell)
+      if(cellConfig.cell) {
+        insertHandler(cellConfig.cell)
       }
       // otherwise we open the editor for the cell
       else {
@@ -213,10 +213,10 @@ const CellOptions = ({
           }
       })
       .reduce((all, schemaDefinition) => {
-        const metadata = schemaDefinition.metadata || {}
+        const cellConfig = schemaDefinition.cellConfig || {}
         const cellGroup = schemaDefinition.plugin ?
           'plugin' :
-          metadata.cellGroup
+          cellConfig.group
         if(!cellGroup) return all
         const group = all[cellGroup] || []
         group.push({

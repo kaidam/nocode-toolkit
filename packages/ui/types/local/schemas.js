@@ -6,6 +6,9 @@ import RawHTML from '../../components/cells/RawHTML'
 import Image from '../../components/cells/Image'
 import Video from '../../components/cells/Video'
 import Snippet from '../../components/cells/Snippet'
+import DocumentInfo from '../../components/cells/DocumentInfo'
+import BreadCrumbs from '../../components/cells/BreadCrumbs'
+import BackNextButtons from '../../components/cells/BackNextButtons'
 
 const folder = {
   driver: 'local',
@@ -79,7 +82,6 @@ const youtube = {
   metadata: {
     nodeType: 'externalLink',
     contentType: 'video',
-    cellGroup: 'media',
   },
   parentFilter: ['section', 'local.folder', 'cell'],
   initialValues: {
@@ -109,6 +111,7 @@ const youtube = {
     }
   }],
   cellConfig: {
+    group: 'media',
     component: Video,
   },
 }
@@ -118,9 +121,7 @@ const title = {
   type: 'title',
   title: 'Title',
   icon: 'title',
-  metadata: {
-    cellGroup: 'text',
-  },
+  metadata: {},
   parentFilter: ['cell'],
   initialValues: {
     title: '',
@@ -131,6 +132,7 @@ const title = {
     helperText: 'Enter the text for the title',
   }],
   cellConfig: {
+    group: 'text',
     component: Title,
   },
 }
@@ -140,9 +142,7 @@ const richtext = {
   type: 'richtext',
   title: 'Text',
   icon: 'text',
-  metadata: {
-    cellGroup: 'text',
-  },
+  metadata: {},
   parentFilter: ['cell'],
   initialValues: {
     data: [{
@@ -158,6 +158,7 @@ const richtext = {
     component: 'richtext',
   }],
   cellConfig:  {
+    group: 'text',
     component: RichText,
     compactEditor: true,
     noScrollEditor: true,
@@ -170,9 +171,7 @@ const rawhtml = {
   type: 'rawhtml',
   title: 'HTML',
   icon: 'code',
-  metadata: {
-    cellGroup: 'text',
-  },
+  metadata: {},
   parentFilter: ['cell'],
   initialValues: {
     html: '',
@@ -184,6 +183,7 @@ const rawhtml = {
     rows: 15,
   }],
   cellConfig:  {
+    group: 'text',
     component: RawHTML,
   },
 }
@@ -193,9 +193,7 @@ const image = {
   type: 'image',
   title: 'Image',
   icon: 'image',
-  metadata: {
-    cellGroup: 'media',
-  },
+  metadata: {},
   parentFilter: ['cell'],
   initialValues: {
     image: null,
@@ -207,6 +205,7 @@ const image = {
     component: 'image',
   }],
   cellConfig: {
+    group: 'media',
     component: Image,
   },
 }
@@ -376,17 +375,18 @@ const documentTitle = {
   type: 'documentTitle',
   title: 'Title',
   icon: 'title',
-  metadata: {
-    cellGroup: 'document',
+  metadata: {},
+  parentFilter: ['cell'],
+  initialValues: {},
+  schema: [],
+  cellConfig: {
+    group: 'document',
     cell: {
       component: 'title',
       source: 'title',
       editor: 'external',
     },
   },
-  parentFilter: ['cell'],
-  initialValues: {},
-  schema: [],
 }
 
 const documentInfo = {
@@ -394,17 +394,19 @@ const documentInfo = {
   type: 'documentInfo',
   title: 'Info',
   icon: 'info',
-  metadata: {
-    cellGroup: 'document',
+  metadata: {},
+  parentFilter: ['cell'],
+  initialValues: {},
+  schema: [],
+  cellConfig: {
+    group: 'document',
+    component: DocumentInfo,
     cell: {
       component: 'documentInfo',
       source: 'info',
       editor: 'external',
     },
   },
-  parentFilter: ['cell'],
-  initialValues: {},
-  schema: [],
 }
 
 const documentContent = {
@@ -412,8 +414,12 @@ const documentContent = {
   type: 'documentContent',
   title: 'Content',
   icon: 'text',
-  metadata: {
-    cellGroup: 'document',
+  metadata: {},
+  parentFilter: ['cell'],
+  initialValues: {},
+  schema: [],
+  cellConfig: {
+    group: 'document',
     cell: {
       component: 'html',
       source: 'external',
@@ -422,9 +428,6 @@ const documentContent = {
       mainDocumentContent: true,
     },
   },
-  parentFilter: ['cell'],
-  initialValues: {},
-  schema: [],
 }
 
 const breadcrumbs = {
@@ -432,17 +435,19 @@ const breadcrumbs = {
   type: 'breadcrumbs',
   title: 'Breadcrumbs',
   icon: 'text',
-  metadata: {
-    cellGroup: 'navigation',
+  metadata: {},
+  parentFilter: ['cell'],
+  initialValues: {},
+  schema: [],
+  cellConfig: {
+    group: 'navigation',
+    component: BreadCrumbs,
     cell: {
       component: 'breadcrumbs',
       source: 'none',
       editor: 'none',
     },
   },
-  parentFilter: ['cell'],
-  initialValues: {},
-  schema: [],
 }
 
 const backnextButtons = {
@@ -450,17 +455,18 @@ const backnextButtons = {
   type: 'backnextButtons',
   title: 'Back/Next buttons',
   icon: 'backnext',
-  metadata: {
-    cellGroup: 'navigation',
+  parentFilter: ['cell'],
+  initialValues: {},
+  schema: [],
+  cellConfig: {
+    group: 'navigation',
+    component: BackNextButtons,
     cell: {
       component: 'backnextButtons',
       source: 'none',
       editor: 'none',
     },
   },
-  parentFilter: ['cell'],
-  initialValues: {},
-  schema: [],
 }
 
 const schemas = {
