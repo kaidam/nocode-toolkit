@@ -117,7 +117,7 @@ const SettingsSnippetEditDialog = ({
           label="Global?"
         />
         <FormHelperText>
-          Global snippets appear on all pages
+          Global snippets appear on all pages and are useful for adding script tags or custom CSS
         </FormHelperText>
       </DialogContent>
       <DialogActions>
