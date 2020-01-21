@@ -25,7 +25,10 @@ const layoutId = createSelector(
   contentSelectors.sectionAll,
   (settings, route, content, sections) => {
     const page = content[route.item]
-    if(!page) return 'default'
+    if(!page || route.name == 'root') return {
+      type: 'default',
+      id: 'default',
+    }
 
     const section = page.location && page.location.type == 'section' ?
       sections[page.location.id] :
