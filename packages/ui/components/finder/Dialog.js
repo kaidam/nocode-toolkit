@@ -67,11 +67,8 @@ const FinderDialog = ({
   }, [page])
 
   useEffect(() => {
-    actions.onLoadList()
-  }, [parent])
-
-  useEffect(() => {
     actions.onUpdateSearch('')
+    actions.onLoadList()
   }, [parent])
 
   return (
