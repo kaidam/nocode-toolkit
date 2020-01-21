@@ -27,7 +27,7 @@ export const TreeItem = ({
   const itemType = itemTypes(item)
   const hasChildren = itemType.hasChildren(item)
   const hasRoute = itemType.hasRoute(item)
-  const isOpen = pathToItem.indexOf(item.id) >= 0
+  const isOpen = pathToItem.indexOf(item.id) >= 0 || currentItemId == item.id
   const isCurrentPage = currentItemId == item.id
   const itemRoute = routeMap[item.id]
 
@@ -113,25 +113,22 @@ export const TreeItem = ({
       </ItemOptionsRenderer>
     </Suspense>
   )
-
-  const renderedItem = (
-    <React.Fragment>
-      <ItemRenderer
-        item={ item }
-        itemOptions={ itemOptions }
-        isCurrentPage={ isCurrentPage }
-        isOpen={ isOpen }
-        hasChildren={ hasChildren }
-        onClick={ onClickHandler }
-        onRightClick={ onRightClickHandler }
-        {...props}
-      />
-      { children }
-    </React.Fragment>
+  
+  let renderedItem = (
+    <ItemRenderer
+      item={ item }
+      itemOptions={ itemOptions }
+      isCurrentPage={ isCurrentPage }
+      isOpen={ isOpen }
+      hasChildren={ hasChildren }
+      onClick={ onClickHandler }
+      onRightClick={ onRightClickHandler }
+      {...props}
+    />
   )
 
   if(itemType.isLink(item)) {
-    return (
+    renderedItem = (
       <a
         href={ item.data.url }
         onContextMenu={ onRightClickHandler }
@@ -141,8 +138,8 @@ export const TreeItem = ({
       </a>
     )
   }
-  else if(itemType.hasRoute(item) && itemRoute) {
-    return (
+  else if(itemRoute) {
+    renderedItem = (
       <Link
         path={ itemRoute.path }
         name={ itemRoute.name }
@@ -152,9 +149,13 @@ export const TreeItem = ({
       </Link>
     )
   }
-  else {
-    return renderedItem
-  }
+  
+  return (
+    <React.Fragment>
+      { renderedItem }
+      { children }
+    </React.Fragment>
+  )
 }
 
 export const TreeItems = ({
