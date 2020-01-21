@@ -57,6 +57,7 @@ export const RenderCell = ({
     <div
       style={{
         height: '100%',
+        width: '100%',
         position: 'relative',
         minHeight: '45px',
         border: showUI ? '1px solid #f5f5f5' : '',
@@ -80,6 +81,7 @@ export const RenderCell = ({
       }
       <div
         style={{
+          width: '100%',
           padding: `${padding}px`,
           textAlign: align,
           marginRight: showUI ? '40px' : '0px',

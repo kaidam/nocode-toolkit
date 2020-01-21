@@ -130,6 +130,36 @@ const routeItems = createSelector(
   },
 )
 
+const sectionPageList = () => createSelector(
+  sectionAll,
+  contentAll,
+  core.nocode.routeMap,
+  (_, name) => name,
+  (sections, content, routeMap, name) => {
+    const section = sections[name]
+    const tree = _createTree(content, section)
+    const list = []
+    const addChildrenToList = (children) => {
+      children
+        .filter(item => {
+          const route = routeMap[item.id]
+          return route ? true : false
+        })
+        .forEach(item => {
+          const route = routeMap[item.id]
+          if(route.isFolder) {
+            addChildrenToList(item.children)
+          }
+          else {
+            list.push(item.id)
+          }
+        })
+    }
+    addChildrenToList(tree.children)
+    return list
+  }
+)
+
 const selectors = {
   errors: props(networkErrors, NETWORK_NAMES),
   loading: props(networkLoading, NETWORK_NAMES),
@@ -148,6 +178,7 @@ const selectors = {
   ghostParent,
   routeItemPath,
   routeItems,
+  sectionPageList,
 }
 
 export default selectors
