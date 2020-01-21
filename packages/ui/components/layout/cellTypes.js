@@ -41,6 +41,17 @@ const getContent = ({
   }
   if(cell.source == 'external') return data.externals[cell.index]
   if(cell.source == 'cell') return cell.data
+  if(cell.source == 'info') {
+    if(data.item && data.item.data) {
+      return {
+        modified: data.item.data.modified,
+        modifiedBy: data.item.data.modifiedBy,
+      }
+    }
+    else {
+      return {}
+    }
+  }
   return ''
 }
 
