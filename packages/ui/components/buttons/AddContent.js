@@ -19,6 +19,7 @@ const AddContent = ({
   location,
   structure,
   stashQueryParams,
+  getButton,
 }) => {
 
   const actions = Actions(useDispatch(), {
@@ -38,15 +39,18 @@ const AddContent = ({
   return (
     <MenuButton
       items={ menuItems }
-      getButton={ onClick => (
-        <Fab
-          size="small"
-          color="secondary"
-          onClick={ onClick }
-        >
-          <AddIcon />
-        </Fab>
-      )}
+      getButton={ onClick => {
+        if(getButton) return getButton(onClick)
+        return (
+          <Fab
+            size="small"
+            color="secondary"
+            onClick={ onClick }
+          >
+            <AddIcon />
+          </Fab>
+        )
+      }}
     />
   )
 }

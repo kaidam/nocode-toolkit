@@ -55,17 +55,25 @@ const Window = ({
   fullHeight = true,
   onCancel,
   onSubmit,
+  classNames = {},
 }) => {
   const classes = useStyles()
+
+  const headerClassname = [
+    classNames.header,
+  ].filter(c => c).join(' ')
+
   const contentClassname = [
     compact ? classes.compactContent : null,
     noScroll ? classes.noWindowScroll : null,
+    classNames.content,
   ].filter(c => c).join(' ')
 
   const paperClassname = [
     classes.paper,
     fullHeight ? classes.fullHeightPaper : null,
     noScroll ? classes.noWindowScroll : null,
+    classNames.paper,
   ].filter(c => c).join(' ')
 
   return (
@@ -80,7 +88,9 @@ const Window = ({
     >
       {
         title && (
-          <DialogTitle>
+          <DialogTitle
+            className={ headerClassname }
+          >
             { title }
           </DialogTitle>
         )

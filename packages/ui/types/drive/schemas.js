@@ -20,7 +20,7 @@ const getContentFormParams = ({
 const folder = {
   driver: 'drive',
   type: 'folder',
-  title: 'Google Drive Folder',
+  title: 'Folder',
   icon: 'folder',
   metadata: {
     hasChildren: true,
@@ -45,7 +45,7 @@ const folder = {
 const document = {
   driver: 'drive',
   type: 'document',
-  title: 'Google Drive Document',
+  title: 'Google Docs',
   icon: 'item',
   metadata: {
     externalEditor: true,
