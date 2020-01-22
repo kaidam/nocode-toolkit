@@ -40,6 +40,11 @@ const FinderDialog = ({
     onResetSearch: finderActions.resetSearch,
   })
 
+  const onOpenTabHandler = useCallback((id) => {
+    actions.onUpdateSearch('')
+    actions.onOpenTab(id)
+  })
+
   const queryParams = useSelector(selectors.router.queryParams)
 
   const {
@@ -82,7 +87,7 @@ const FinderDialog = ({
       addFilter={ addFilter }
       withBack={ true }
       loading={ loading }
-      onOpenTab={ actions.onOpenTab }
+      onOpenTab={ onOpenTabHandler }
       onUpdateSearch={ actions.onUpdateSearch }
       onResetSearch={ actions.onResetSearch }
       onSearch={ actions.onLoadList }

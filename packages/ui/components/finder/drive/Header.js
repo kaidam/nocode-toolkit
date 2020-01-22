@@ -49,6 +49,10 @@ const DriveHeader = ({
     onUpdateSearch(ev.target.value)
   }, [onUpdateSearch])
 
+  const onKeyPressHandler = useCallback((ev) => {
+    if(ev.key == 'Enter') onSearch()
+  }, [onSearch])
+
   const titleComponent = useMemo(() => {
     return (
       <div className={ classes.titleContainer }>
@@ -69,6 +73,7 @@ const DriveHeader = ({
           helperText='Search for content'
           value={ search }
           onChange={ onUpdateSearchHandler }
+          onKeyPress={ onKeyPressHandler }
         />
         <Button
           className={ classes.searchButton }

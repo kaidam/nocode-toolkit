@@ -39,14 +39,11 @@ const useStyles = makeStyles(theme => createStyles({
   }
 }))
 
-const DEFAULT_ARRAY = []
-
 const DriveSidebar = ({
   driver,
   parent,
   search,
   finderConfig,
-  tab,
   onOpenTab,
 }) => {
 
@@ -77,25 +74,6 @@ const DriveSidebar = ({
             <ListItemText className={ classes.grey } primary="Shared with me" />
           </ListItem>
         </List>
-        
-        {/* <Tabs
-          value={ activeTabIndex }
-          indicatorColor="primary"
-          textColor="primary"
-          orientation="vertical"
-          onChange={ onOpenTabHandler }
-        >
-          {
-            tabs.map((tab, i) => {
-              return (
-                <Tab
-                  key={ i }
-                  label={ tab.title }
-                />
-              )
-            })
-          }
-        </Tabs> */}
       </div>
     )
   }, [
