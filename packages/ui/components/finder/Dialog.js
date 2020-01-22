@@ -56,6 +56,7 @@ const FinderDialog = ({
   } = queryParams
 
   const items = useSelector(selectors.finder.list)
+  const ancestors = useSelector(selectors.finder.ancestors)
   const search = useSelector(selectors.finder.search)
   const loading = useSelector(selectors.finder.loading.getList)
 
@@ -84,6 +85,7 @@ const FinderDialog = ({
       search={ search }
       tab={ tab }
       items={ items }
+      ancestors={ ancestors }
       addFilter={ addFilter }
       withBack={ true }
       loading={ loading }

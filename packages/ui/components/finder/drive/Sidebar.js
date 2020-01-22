@@ -9,6 +9,7 @@ import Divider from '@material-ui/core/Divider'
 
 import AddContentButton from '../../buttons/AddContent'
 
+import GoogleDriveLogo from '../../../styles/GoogleDriveLogo'
 import MyDriveLogo from '../../../styles/MyDriveLogo'
 import SharedWithMeLogo from '../../../styles/SharedWithMeLogo'
 import icons from '../../../icons'
@@ -19,6 +20,19 @@ const useStyles = makeStyles(theme => createStyles({
   root: {
     display: 'flex',
     flexDirection: 'column',
+  },
+  titleContainer: {
+    margin: '20px',
+    marginLeft: '30px',
+    display: 'flex',
+  },
+  driveTitle: {
+    color: '#999',
+    display: 'inline-block',
+    paddingLeft: '10px',
+    paddingTop: '5px',
+    fontSize: '1.3em',
+    fontWeight: 'bold',
   },
   tabsContainer: {
     
@@ -48,6 +62,14 @@ const DriveSidebar = ({
 }) => {
 
   const classes = useStyles()
+
+  const titleComponent = useMemo(() => {
+    return (
+      <div className={ classes.titleContainer }>
+        <GoogleDriveLogo /> <span className={ classes.driveTitle }>Drive</span>
+      </div>
+    )
+  }, [])
 
   const tabComponent = useMemo(() => {
     return (
@@ -108,6 +130,7 @@ const DriveSidebar = ({
 
   return (
     <div className={ classes.root }>
+      { titleComponent }
       { addButtonComponent }
       <Divider />
       { tabComponent }

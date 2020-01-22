@@ -2,17 +2,11 @@ import React, { useCallback, useMemo } from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
-import GoogleDriveLogo from '../../../styles/GoogleDriveLogo'
 
 const useStyles = makeStyles(theme => createStyles({
   root: {
     display: 'flex',
     flexDirection: 'row',
-  },
-  titleContainer: {
-    display: 'flex',
-    width: '256px',
-    paddingTop: '20px',
   },
   searchContainer: {
     flexGrow: 1,
@@ -27,11 +21,6 @@ const useStyles = makeStyles(theme => createStyles({
   searchButton: {
     marginLeft: theme.spacing(1),
   },
-  driveTitle: {
-    color: '#999',
-    display: 'inline-block',
-    paddingLeft: '10px',
-  }
 }))
 
 const DriveHeader = ({
@@ -52,14 +41,6 @@ const DriveHeader = ({
   const onKeyPressHandler = useCallback((ev) => {
     if(ev.key == 'Enter') onSearch()
   }, [onSearch])
-
-  const titleComponent = useMemo(() => {
-    return (
-      <div className={ classes.titleContainer }>
-        <GoogleDriveLogo /> <span className={ classes.driveTitle }>Drive</span>
-      </div>
-    )
-  }, [])
 
   const searchComponent = useMemo(() => {
     if(!finderConfig.canSearch()) return null
@@ -103,7 +84,6 @@ const DriveHeader = ({
 
   return (
     <div className={ classes.root }>
-      { titleComponent }
       { searchComponent }
     </div>
   )

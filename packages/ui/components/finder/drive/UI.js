@@ -7,35 +7,48 @@ import Loading from '../../system/Loading'
 import FinderHeader from './Header'
 import FinderSidebar from './Sidebar'
 import FinderList from '../List'
-import FinderGrid from '../Grid'
+import FinderBreadcrumbs from './Breadcrumbs'
 
 const useStyles = makeStyles(theme => createStyles({
-  buttonsContainer: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  button: {
-    marginLeft: theme.spacing(2),
-  },
   root: {
     display: 'flex',
     flexDirection: 'row',
     width: '100%',
+    height: '100%',
   },
   sidebar: {
-    position: 'fixed',
     width: '256px',
     minWidth: '256px',
+    height: '100%',
+    flexGrow: 0,
+  },
+  body: {
+    flexGrow: 1,
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  header: {
+    paddingTop: '10px',
+    flexGrow: 0,
+  },
+  toolbar: {
     flexGrow: 0,
   },
   content: {
-    paddingLeft: '266px',
     flexGrow: 1,
+    overflowY: 'auto',
   },
   windowContent: {
-    padding: '0px',
-  }
+    padding: ['0px', '!important'],
+    overflowY: 'hidden',
+  },
+  windowPaper: {
+    overflowY: 'hidden', 
+  },
+  button: {
+    marginLeft: theme.spacing(2),
+  },
 }))
 
 const DriveUI = ({
@@ -45,6 +58,7 @@ const DriveUI = ({
   search,
   tab,
   items,
+  ancestors,
   addFilter,
   withBack,
   loading,
@@ -98,6 +112,24 @@ const DriveUI = ({
     finderConfig,
     search,
     tab,
+    onOpenTab,
+  ])
+
+  const breadcrumbs = useMemo(() => {
+    return (
+      <FinderBreadcrumbs
+        ancestors={ ancestors }
+        parent={ parent }
+        search={ search }
+        onOpenFolder={ onOpenFolder }
+        onOpenTab={ onOpenTab }
+      />
+    )
+  }, [
+    ancestors,
+    parent,
+    search,
+    onOpenFolder,
     onOpenTab,
   ])
 
@@ -169,26 +201,34 @@ const DriveUI = ({
     <Window
       open
       size="lg"
-      title={ header }
       withCancel
       onCancel={ onCancel }
       leftButtons={ leftButtons }
       classNames={{
         content: classes.windowContent,
+        paper: classes.windowPaper,
       }}
     >
       <div className={ classes.root }>
         <div className={ classes.sidebar }>
           { sidebar }
         </div>
-        <div className={ classes.content }>
-          {
-            loading ? (
-              <Loading />
-            ) : (
-              content
-            )
-          }
+        <div className={ classes.body }>
+          <div className={ classes.header }>
+            { header }
+          </div>
+          <div className={ classes.toolbar }>
+            { breadcrumbs }
+          </div>
+          <div className={ classes.content }>
+            {
+              loading ? (
+                <Loading />
+              ) : (
+                content
+              )
+            }
+          </div>
         </div>
       </div>
     </Window>

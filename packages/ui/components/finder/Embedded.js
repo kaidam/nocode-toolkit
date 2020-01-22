@@ -26,6 +26,7 @@ const EmbeddedFinder = ({
   })
 
   const items = useSelector(selectors.finder.list)
+  const ancestors = useSelector(selectors.finder.ancestors)
   const loading = useSelector(selectors.finder.loading.getList)
 
   const schemaDefinition = library.get(`${driver}.finder`)
@@ -106,6 +107,7 @@ const EmbeddedFinder = ({
       search={ search }
       tab={ tab }
       items={ items }
+      ancestors={ ancestors }
       addFilter={ addFilter }
       withBack={ false }
       loading={ loading }

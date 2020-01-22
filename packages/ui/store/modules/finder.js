@@ -138,6 +138,7 @@ const sideEffects = {
       driver,
       items: [],
     }))
+    dispatch(actions.setAncestors([]))
     let items = []
     if(search) {
       items = await loaders.getSearch(getState, {
