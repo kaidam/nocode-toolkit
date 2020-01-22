@@ -73,20 +73,19 @@ const DriveHeader = ({
         <Button
           className={ classes.searchButton }
           variant="contained"
-          color="secondary"
           size="small"
           onClick={ onSearch }
         >
           Search
         </Button>
-        <Button
+        {/* <Button
           className={ classes.searchButton }
           variant="contained"
           size="small"
           onClick={ onResetSearch }
         >
           Clear
-        </Button>
+        </Button> */}
       </div>
     )
   }, [
