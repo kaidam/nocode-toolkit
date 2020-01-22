@@ -11,7 +11,10 @@ export const RenderRoot = ({
 }
 
 export const RenderRow = ({
+  showUI,
   cells,
+  rowIndex,
+  rowCount,
 }) => {
   return (
     <div
@@ -19,6 +22,10 @@ export const RenderRow = ({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'flex-start',
+        borderTop: showUI ? '1px dotted #e5e5e5' : '',
+        borderLeft: showUI ? '1px dotted #e5e5e5' : '',
+        borderRight: showUI ? '1px dotted #e5e5e5' : '',
+        borderBottom: showUI && rowIndex >= rowCount - 1 ? '1px dotted #e5e5e5' : '',
       }}
     >
       {
@@ -60,7 +67,6 @@ export const RenderCell = ({
         width: '100%',
         position: 'relative',
         minHeight: '45px',
-        border: showUI ? '1px solid #f5f5f5' : '',
         display: 'flex',
         alignItems: 'center',
       }}

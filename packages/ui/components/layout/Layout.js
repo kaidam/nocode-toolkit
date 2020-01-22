@@ -76,6 +76,9 @@ const Layout = ({
       <RowRenderer
         key={ i }
         cells={ cells }
+        rowIndex={ i }
+        rowCount={ data.layout.length }
+        showUI={ showUI }
       />
     )             
   })
