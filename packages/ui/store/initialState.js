@@ -25,6 +25,7 @@ export const content = {
 export const finder = {
   list: [],
   search: '',
+  ancestors: [],
 }
 
 export const document = {

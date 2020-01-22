@@ -85,10 +85,10 @@ const finder = {
   // this means if we add this content
   // we open the finder dialog not the content dialog
   openDialog: 'finder',
-  
   // put these params into the finder dialog
   // to control whether we can add folders or just documents
   finder: {
+    loadAncestors: (parent) => parent && parent != 'shared' && parent != 'root',
     // the search is active for google drive
     canSearch: () => true,
     hasPagination: () => false,

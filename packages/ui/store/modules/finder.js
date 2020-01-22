@@ -37,6 +37,9 @@ const reducers = {
     const nonFolders = items.filter(item => !driverSchema.finder.isFolder(item))
     state.list = folders.concat(nonFolders)
   },
+  setAncestors: (state, action) => {
+    state.ancestors = action.payload
+  },
   setSearchValue: (state, action) => {
     state.search = action.payload
   },
@@ -57,6 +60,12 @@ const loaders = {
       page,
     }
   })
+    .then(apiUtils.process),
+
+  getAncestors: (getState, {
+    driver,
+    parent,
+  } = {}) => axios.get(apiUtils.websiteUrl(getState, `/remote/${driver}/ancestors/${parent}`))
     .then(apiUtils.process),
 
   getSearch: (getState, {
@@ -123,6 +132,8 @@ const sideEffects = {
     page = page || queryParams.page
     search = search || selectors.finder.search(getState())
 
+    const driverSchema = library.get([driver, 'finder'].join('.'))
+
     dispatch(actions.setList({
       driver,
       items: [],
@@ -135,6 +146,7 @@ const sideEffects = {
         filter: listFilter,
         page,
       })
+      dispatch(actions.setAncestors([]))
     }
     else {
       items = await loaders.getList(getState, {
@@ -149,6 +161,15 @@ const sideEffects = {
       driver,
       items
     }))
+
+    if(driverSchema.finder && driverSchema.finder.loadAncestors && !search) {
+      if(!driverSchema.finder.loadAncestors(parent)) return
+      const ancestors = await loaders.getAncestors(getState, {
+        driver,
+        parent,
+      })
+      dispatch(actions.setAncestors(ancestors))
+    }
   }),
 
   /*
