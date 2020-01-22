@@ -10,6 +10,14 @@ import DocumentInfo from '../../components/cells/DocumentInfo'
 import BreadCrumbs from '../../components/cells/BreadCrumbs'
 import BackNextButtons from '../../components/cells/BackNextButtons'
 
+const nocodeGroup = {
+  driver: 'local',
+  type: 'nocodeGroup',
+  title: 'Nocode Content',
+  icon: 'nocode',
+  parentFilter: [],
+}
+
 const folder = {
   driver: 'local',
   type: 'folder',
@@ -18,6 +26,7 @@ const folder = {
   metadata: {
     nodeType: 'folder',
     hasChildren: true,
+    group: 'nocodeGroup',
   },
   parentFilter: ['section', 'local.folder'],
   initialValues: {
@@ -44,6 +53,7 @@ const externalLink = {
   metadata: {
     nodeType: 'externalLink',
     contentType: 'externalLink',
+    group: 'nocodeGroup',
   },
   parentFilter: ['section', 'local.folder'],
   initialValues: {
@@ -82,6 +92,7 @@ const youtube = {
   metadata: {
     nodeType: 'externalLink',
     contentType: 'video',
+    group: 'nocodeGroup',
   },
   parentFilter: ['section', 'local.folder', 'cell'],
   initialValues: {
@@ -471,6 +482,7 @@ const backnextButtons = {
 }
 
 const schemas = {
+  nocodeGroup,
   externalLink,
   title,
   richtext,
