@@ -115,6 +115,17 @@ const sideEffects = {
     }))
   },
 
+  loadAncestors: ({
+    driver,
+    parent,
+  } = {}) => wrapper('getList', async (dispatch, getState) => {
+    const ancestors = await loaders.getAncestors(getState, {
+      driver,
+      parent,
+    })
+    dispatch(actions.setAncestors(ancestors))
+  }),
+
   // get a list of content from a remote driver under parent
   // the listFilter controls what we want to see (e.g. folder,document)
   getList: ({
@@ -134,11 +145,19 @@ const sideEffects = {
 
     const driverSchema = library.get([driver, 'finder'].join('.'))
 
+    dispatch(actions.setAncestors([]))
+
+    if(driverSchema.finder && driverSchema.finder.loadAncestors && !search && driverSchema.finder.loadAncestors(parent)) {
+      dispatch(actions.loadAncestors({
+        driver,
+        parent,
+      }))
+    }
+
     dispatch(actions.setList({
       driver,
       items: [],
     }))
-    dispatch(actions.setAncestors([]))
     let items = []
     if(search) {
       items = await loaders.getSearch(getState, {
@@ -162,15 +181,6 @@ const sideEffects = {
       driver,
       items
     }))
-
-    if(driverSchema.finder && driverSchema.finder.loadAncestors && !search) {
-      if(!driverSchema.finder.loadAncestors(parent)) return
-      const ancestors = await loaders.getAncestors(getState, {
-        driver,
-        parent,
-      })
-      dispatch(actions.setAncestors(ancestors))
-    }
   }),
 
   /*
