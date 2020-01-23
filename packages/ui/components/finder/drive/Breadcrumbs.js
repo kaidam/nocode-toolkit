@@ -35,6 +35,14 @@ const DriveBreadcrumbs = ({
 
   const classes = useStyles()
 
+  const onClick = useCallback((breadcrumb) => {
+    if(breadcrumb.tab) onOpenTab(breadcrumb.tab)
+    else if(breadcrumb.folder) onOpenFolder(breadcrumb.folder)
+  }, [
+    onOpenFolder,
+    onOpenTab,
+  ])
+
   if(search) {
     return (
       <div className={ classes.root }>
@@ -95,7 +103,7 @@ const DriveBreadcrumbs = ({
 
           return (
             <React.Fragment key={ i }>
-              <span className={ className }>
+              <span className={ className } onClick={ () => onClick(breadcrumb) }>
                 { breadcrumb.title }
               </span>
               {

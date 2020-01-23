@@ -145,13 +145,14 @@ const sideEffects = {
 
     const driverSchema = library.get([driver, 'finder'].join('.'))
 
-    dispatch(actions.setAncestors([]))
-
     if(driverSchema.finder && driverSchema.finder.loadAncestors && !search && driverSchema.finder.loadAncestors(parent)) {
       dispatch(actions.loadAncestors({
         driver,
         parent,
       }))
+    }
+    else {
+      dispatch(actions.setAncestors([]))
     }
 
     dispatch(actions.setList({
