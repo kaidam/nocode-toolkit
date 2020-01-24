@@ -79,28 +79,17 @@ const ImageField = ({
 
   const onAddFinderContent = useCallback(({id, data}) => {
     onCloseFinder()
-    // some drivers (like unsplash) require us to use
-    // the URLs on their servers
-    if(data && data.url) {
-      const finalData = Object.assign({}, data, {
-        driver: finderDriver,
-      })
-      setFieldValue(name, finalData)
-    }
-    // if we don't have a URL from the driver - it means we need
-    // to sync the image to storage first
-    else {
-      actions.onSyncFiles({
-        driver: finderDriver,
-        fileid: id,
-        onComplete: (file) => {
-          const finalData = Object.assign({}, data, file, {
-            driver: finderDriver,
-          })
-          setFieldValue(name, finalData)
-        }
-      })
-    }
+    actions.onSyncFiles({
+      driver: finderDriver,
+      fileid: id,
+      onComplete: (file) => {
+        const finalData = Object.assign({}, data, file, {
+          driver: finderDriver,
+        })
+        setFieldValue(name, finalData)
+      }
+    })
+    // }
   }, [setFieldValue, finderDriver, name])
 
   const onAddUploaderContent = useCallback((files) => {
