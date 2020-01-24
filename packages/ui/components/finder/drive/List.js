@@ -325,7 +325,7 @@ const FinderList = ({
                               </div>
                               <div className={ classes.buttonRowText }>
                                 <Typography className={ classes.infoPanelText } variant="caption" display="block" gutterBottom>
-                                  Add everything <b>inside</b> this folder and keep it synchronized with Gogle Drive.
+                                  Add everything <b>inside</b> this folder and keep it synchronized with Google Drive.
                                 </Typography>
                               </div>
                             </div>
@@ -346,7 +346,7 @@ const FinderList = ({
                         </div>
                         <div className={ classes.buttonRowText }>
                           <Typography className={ classes.infoPanelText } variant="caption" display="block" gutterBottom>
-                            Click this to open this foder
+                            Click this to open this folder
                           </Typography>
                         </div>
                       </div>
