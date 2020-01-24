@@ -6,7 +6,7 @@ import Window from '../../system/Window'
 import Loading from '../../system/Loading'
 import FinderHeader from './Header'
 import FinderSidebar from './Sidebar'
-import FinderList from '../List'
+import FinderList from './List'
 import FinderBreadcrumbs from './Breadcrumbs'
 
 const useStyles = makeStyles(theme => createStyles({
@@ -21,6 +21,7 @@ const useStyles = makeStyles(theme => createStyles({
     minWidth: '256px',
     height: '100%',
     flexGrow: 0,
+    marginRight: '50px',
   },
   body: {
     flexGrow: 1,
@@ -34,8 +35,8 @@ const useStyles = makeStyles(theme => createStyles({
   },
   toolbar: {
     flexGrow: 0,
-    minHeight: '70px',
-    height: '70px',
+    minHeight: '50px',
+    height: '50px',
   },
   content: {
     flexGrow: 1,
@@ -205,6 +206,7 @@ const DriveUI = ({
       size="lg"
       withCancel
       onCancel={ onCancel }
+      cancelTitle="Close"
       leftButtons={ leftButtons }
       classNames={{
         content: classes.windowContent,

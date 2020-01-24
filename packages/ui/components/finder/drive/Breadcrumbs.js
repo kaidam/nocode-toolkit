@@ -5,8 +5,8 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexDirection: 'row',
-    paddingTop: '20px',
-    paddingBottom: '20px',
+    paddingTop: '10px',
+    paddingBottom: '10px',
     fontSize: '1.3em',
   },
   link: {

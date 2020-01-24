@@ -23,6 +23,7 @@ import ContentIcon from '@material-ui/icons/Inbox'
 import OpenIcon from '@material-ui/icons/OpenInBrowser'
 import LogoutIcon from '@material-ui/icons/PowerSettingsNew'
 import FolderIcon from '@material-ui/icons/Folder'
+import FolderOpenIcon from '@material-ui/icons/FolderOpen'
 import DocumentIcon from '@material-ui/icons/InsertDriveFile'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 import LinkIcon from '@material-ui/icons/Link'
@@ -93,6 +94,7 @@ const icons = {
   open: OpenIcon,
   logout: LogoutIcon,
   folder: FolderIcon,
+  folderopen: FolderOpenIcon,
   document: DocumentIcon,
   item: DocumentIcon,
   drive: GoogleDriveLogo,
