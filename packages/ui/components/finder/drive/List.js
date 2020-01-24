@@ -15,6 +15,7 @@ import library from '../../../types/library'
 
 const AddIcon = icons.add
 const FolderIcon = icons.folder
+const ImageIcon = icons.image
 const FolderOpenIcon = icons.folderopen
 const DocumentIcon = icons.document
 
@@ -149,6 +150,10 @@ const FinderList = ({
   const finderSchema = library.get([driver, 'finder'].join('.'))
 
   const handleRowClick = useCallback((row) => {
+    if(!row.canAdd) {
+      onOpenFolder(row.id)
+      return
+    }
     if(!row.isFolder || selectedItem) {
       setSelectedItem(row)
     }
@@ -166,6 +171,7 @@ const FinderList = ({
 
   const handleRowDoubleClick = useCallback((row) => {
     if(!row.isFolder) return
+    if(!row.canAdd) return
     onOpenFolder(row.id)
   }, [
     onOpenFolder,
@@ -174,6 +180,8 @@ const FinderList = ({
   const data = useMemo(() => {
     return items.map((item, index) => {
       const isFolder = finderSchema.finder.isFolder(item)
+      const isImage = finderSchema.finder.isImage(item)
+      const canAdd = finderSchema.finder.canAddFromFinder(addFilter, item)
       const addGhostMode = finderSchema.finder.canAddGhostFolder(item)
       const itemTitle = finderSchema.finder.getItemTitle(item)
       const itemSubtitle = finderSchema.finder.getItemSubtitle(item)
@@ -185,6 +193,8 @@ const FinderList = ({
         id: item.id,
         icon,
         isFolder,
+        isImage,
+        canAdd,
         addGhostMode,
         itemTitle,
         name: (
@@ -352,13 +362,17 @@ const FinderList = ({
                             className={ classes.infoPanelButton }
                             onClick={ () => onAddContent({id:selectedItem.id}) }
                           >
-                            <DocumentIcon />
-                            &nbsp;&nbsp;Add Document
+                            {
+                              selectedItem.isImage ?
+                                <ImageIcon /> :
+                                <DocumentIcon />
+                            }
+                            &nbsp;&nbsp;{ selectedItem.isImage ? 'Select Image' : 'Add Document' }
                           </Button>
                         </div>
                         <div className={ classes.buttonRowText }>
                           <Typography className={ classes.infoPanelText } variant="caption" display="block" gutterBottom>
-                            Add this document.
+                            { selectedItem.isImage ? 'Select this image' : 'Add this document' }
                           </Typography>
                         </div>
                       </div>

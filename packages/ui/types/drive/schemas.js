@@ -125,6 +125,7 @@ const finder = {
     getItemIcon: (item) => utils.getItemIcon(item),
     getItemThumbnail: (item) => utils.getItemThumbnail(item),
     isFolder: (item) => utils.isFolder(item),
+    isImage: (item) => utils.isImage(item),
     // extra params to add to the finder route
     getQueryParams: ({
       structure,
