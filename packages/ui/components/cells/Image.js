@@ -60,8 +60,8 @@ const DocumentImage = ({
     <div
       style={{
         position: 'relative',
-        width: showUI ? 'calc(100% - 42px)' : '100%',
-        maxWidth: showUI ? 'calc(100% - 42px)' : '100%',
+        // width: showUI ? 'calc(100% - 42px)' : '100%',
+        // maxWidth: showUI ? 'calc(100% - 42px)' : '100%',
       }}
     >
       <img
