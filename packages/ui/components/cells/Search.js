@@ -165,36 +165,44 @@ const Search = ({
                       )
                     }
                     {
-                      results.hits.map((result, i) => {
-                        const {
-                          _source: {
-                            title,
-                            pathname,
-                          },
-                          highlight: {
-                            content,
-                          }
-                        } = result                  
-                        return (
-                          <div
-                            key={ i }
-                            className={ classes.resultContainer }
-                            onClick={ () => openPage(pathname) }
-                          >
-                            <div className={ classes.resultTitle }>
-                              { title }
-                            </div>
-                            <div className={ classes.resultUrl }>
-                              { pathname }
-                            </div>
+                      results.hits
+                        .filter(result => {
+                          if(!result) return false
+                          if(!result._source) return false
+                          if(!result.highlight) return false
+                          if(!result.highlight.content) return false
+                          return true
+                        })
+                        .map((result, i) => {
+                          const {
+                            _source: {
+                              title,
+                              pathname,
+                            },
+                            highlight: {
+                              content,
+                            }
+                          } = result                  
+                          return (
                             <div
-                              className={ classes.resultSnippet }
-                              dangerouslySetInnerHTML={{__html: content.join(', ') }}
+                              key={ i }
+                              className={ classes.resultContainer }
+                              onClick={ () => openPage(pathname) }
                             >
+                              <div className={ classes.resultTitle }>
+                                { title }
+                              </div>
+                              <div className={ classes.resultUrl }>
+                                { pathname }
+                              </div>
+                              <div
+                                className={ classes.resultSnippet }
+                                dangerouslySetInnerHTML={{__html: content.join(', ') }}
+                              >
+                              </div>
                             </div>
-                          </div>
-                        )
-                      })
+                          )
+                        })
                     }
                   </div>
                 )
