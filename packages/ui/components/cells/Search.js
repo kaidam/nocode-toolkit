@@ -3,6 +3,9 @@ import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import Popper from '@material-ui/core/Popper'
+import utils from '@nocode-toolkit/website/store/utils'
+import routerActions from '@nocode-toolkit/website/store/moduleRouter'
+
 import selectors from '../../store/selectors'
 
 import searchActions from '../../store/modules/search'
@@ -38,7 +41,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   resultTitle: {
-    fontWeight: 'bold',
+    fontWeight: 'bold',    
   },
   resultUrl: {
     color: 'blue',
@@ -70,6 +73,13 @@ const Search = ({
     dispatch(searchActions.search({
       query,
     }))
+  }, [])
+
+  const openPage = useCallback(pathname => {
+    dispatch(searchActions.setResults([]))
+    setValue('')
+    const routeName = utils.routePathToName(pathname)
+    dispatch(routerActions.navigateTo(routeName))
   }, [])
 
   const clearSearch = useCallback(() => {
@@ -142,6 +152,7 @@ const Search = ({
                           <div
                             key={ i }
                             className={ classes.resultContainer }
+                            onClick={ () => openPage(pathname) }
                           >
                             <div className={ classes.resultTitle }>
                               { title }

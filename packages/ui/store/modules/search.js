@@ -18,7 +18,7 @@ const HIT = {
   _source: {
     title: 'Hello page',
     id: '123',
-    pathname: '/apples'
+    pathname: '/oranges'
   },
   highlight: {
     content: [
