@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
@@ -29,16 +29,21 @@ const SortingEditorList = ({
   allItems,
   onUpdate,
 }) => {
+
+  const filteredIds = useMemo(() => {
+    return ids.filter(id => allItems[id] ? true : false)
+  }, [ids, allItems])
+
   const classes = useStyles()
   const onDragEnd = useCallback(result => {
     if (!result.destination) return
     const startIndex = result.source.index
     const endIndex = result.destination.index
-    const newIds = Array.from(ids)
+    const newIds = Array.from(filteredIds)
     const [removed] = newIds.splice(startIndex, 1)
     newIds.splice(endIndex, 0, removed)
     onUpdate(newIds)
-  }, [ids, onUpdate])
+  }, [filteredIds, onUpdate])
 
   return (
     <DragDropContext onDragEnd={ onDragEnd }>
@@ -50,8 +55,7 @@ const SortingEditorList = ({
           >
             <List>
               {
-                ids
-                  .filter(id => allItems[id] ? true : false)
+                filteredIds
                   .map((id, index) => {
                     const item = allItems[id]
                     return (
