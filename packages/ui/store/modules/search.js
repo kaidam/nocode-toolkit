@@ -35,7 +35,7 @@ const sideEffects = {
   search: ({
     query,
   }) => async (dispatch, getState) => {
-    const showUI = selectors.ui.showUI(getState())
+    const showUI = selectors.ui.showCoreUI(getState())
     if(!query) {
       dispatch(actions.setLoading(false))
       dispatch(actions.setResults({hits:[]}))

@@ -71,7 +71,7 @@ const Search = ({
   const dispatch = useDispatch()
   const results = useSelector(selectors.search.results)
   const loading = useSelector(selectors.search.loading)
-  const showUI = useSelector(selectors.ui.showUI)
+  const showUI = useSelector(selectors.ui.showCoreUI)
   const [value, setValue] = useState('')
 
   const doSearch = useCallback(query => {

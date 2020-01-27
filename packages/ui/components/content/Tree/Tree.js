@@ -16,6 +16,7 @@ const Tree = ({
   section,
   onClick,
   classes,
+  contentTop,
   ...props
 }) => {
 
@@ -86,7 +87,7 @@ const Tree = ({
     </Suspense>
   ) : null
 
-  const panelTop = panelData.panelTop ? (
+  let panelTop = panelData.panelTop ? (
     <TreePanel
       layout={ panelData.panelTop }
       section={ section }
@@ -103,6 +104,18 @@ const Tree = ({
       {...props}
     />
   ) : null
+
+  if(panelTop && contentTop) {
+    panelTop = (
+      <React.Fragment>
+        { contentTop }
+        { panelTop }
+      </React.Fragment>
+    )
+  }
+  else if(!panelTop && contentTop) {
+    panelTop = contentTop
+  }
 
   const RootRenderer = renderers.root || defaultRenderers.root
 
