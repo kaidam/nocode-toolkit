@@ -14,36 +14,15 @@ const reducers = {
   },
 }
 
-const HIT = {
-  _source: {
-    title: 'Hello page',
-    id: '123',
-    pathname: '/oranges'
-  },
-  highlight: {
-    content: [
-      "<em>Here is</em> an example",
-      "Another example <em>Here is</em>",
-    ]
-  }
-}
-
 const loaders = {
   search: ({
     query,
-  }) => new Promise((resolve, reject) => {
-    resolve({
-      hits: [
-        HIT,
-        HIT,
-        HIT,
-        HIT,
-        HIT,
-        HIT,
-        HIT,
-      ]
-    })
-  }),
+  }) => axios.get(`/search`, {
+    params: {
+      query,
+    }
+  })
+  .then(apiUtils.process),
 
 }
 
@@ -52,8 +31,7 @@ const sideEffects = {
   search: ({
     query,
   }) => async (dispatch, getState) => {
-    //const showUI = selectors.ui.showUI(getState())
-    const showUI = false
+    const showUI = selectors.ui.showUI(getState())
     if(!query) {
       dispatch(actions.setResults([]))
       return

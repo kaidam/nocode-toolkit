@@ -54,6 +54,10 @@ const useStyles = makeStyles(theme => ({
       fontWeight: 'bold',
     }
   },
+  disabledMessage: {
+    padding: theme.spacing(1),
+    color: '#999',
+  }
 }))
 
 const Search = ({
@@ -65,8 +69,7 @@ const Search = ({
   const anchorEl = useRef(null)
   const dispatch = useDispatch()
   const results = useSelector(selectors.search.results)
-  //const showUI = useSelector(selectors.ui.showUI)
-  const showUI = false
+  const showUI = useSelector(selectors.ui.showUI)
   const [value, setValue] = useState('')
 
   const doSearch = useCallback(query => {
@@ -127,7 +130,17 @@ const Search = ({
               {
                 showUI ? (
                   <div>
-                    Search will activate once the website has been published.
+                    <div
+                      className={ classes.clearResults }
+                      onClick={ clearSearch }
+                    >
+                      Clear Results X
+                    </div>
+                    <div
+                      className={ classes.disabledMessage }
+                    >
+                      Search will activate once the website has been published.
+                    </div>
                   </div>
                 ) : (
                   <div>
