@@ -20,19 +20,24 @@ const FolderLayout = ({
   const titleConfig = cellTypes.getCellConfig('title')
   const TitleComponent = titleConfig.component 
   
-  const pageLinks = childrenList.map((child, i) => {
-    const route = routeMap[child.id]
-    return (
-      <div key={ i }>
-        <Link
-          path={ route.path }
-          name={ route.name }
-        >
-          { child.data.name }
-        </Link>
-      </div>
-    )
-  })
+  const pageLinks = childrenList
+    .filter(child => {
+      const route = routeMap[child.id]
+      return route ? true : false
+    })
+    .map((child, i) => {
+      const route = routeMap[child.id]
+      return (
+        <div key={ i }>
+          <Link
+            path={ route.path }
+            name={ route.name }
+          >
+            { child.data.name }
+          </Link>
+        </div>
+      )
+    })
 
   const content = [
     <TitleComponent
