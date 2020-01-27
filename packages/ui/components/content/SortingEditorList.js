@@ -50,41 +50,43 @@ const SortingEditorList = ({
           >
             <List>
               {
-                ids.map((id, index) => {
-                  const item = allItems[id]
-                  return (
-                    <Draggable key={ item.id } draggableId={ item.id } index={ index }>
-                      {(provided, snapshot) => (
-                        <div
-                          ref={ provided.innerRef }
-                          { ...provided.draggableProps }
-                          { ...provided.dragHandleProps }
-                          style={ provided.draggableProps.style }
-                        >
-                          <ListItem
-                            dense
-                            className={ classes.menuItem }
+                ids
+                  .filter(id => allItems[id] ? true : false)
+                  .map((id, index) => {
+                    const item = allItems[id]
+                    return (
+                      <Draggable key={ item.id } draggableId={ item.id } index={ index }>
+                        {(provided, snapshot) => (
+                          <div
+                            ref={ provided.innerRef }
+                            { ...provided.draggableProps }
+                            { ...provided.dragHandleProps }
+                            style={ provided.draggableProps.style }
                           >
-                            <ListItemIcon
-                              className={ classes.menuIcon }
+                            <ListItem
+                              dense
+                              className={ classes.menuItem }
                             >
-                              <ContentIcon
-                                item={ item }
-                                className={ classes.normalListItem }
+                              <ListItemIcon
+                                className={ classes.menuIcon }
+                              >
+                                <ContentIcon
+                                  item={ item }
+                                  className={ classes.normalListItem }
+                                />
+                              </ListItemIcon>
+                              <ListItemText
+                                classes={{
+                                  primary: classes.normalListItem
+                                }}
+                                primary={ item.data.name }
                               />
-                            </ListItemIcon>
-                            <ListItemText
-                              classes={{
-                                primary: classes.normalListItem
-                              }}
-                              primary={ item.data.name }
-                            />
-                          </ListItem>
-                        </div>
-                      )}
-                    </Draggable>
-                  )
-                })
+                            </ListItem>
+                          </div>
+                        )}
+                      </Draggable>
+                    )
+                  })
               }
               { provided.placeholder }
             </List>
