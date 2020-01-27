@@ -1,6 +1,7 @@
 import globals from '../globals'
 import loaders from './loaders'
 import initialState from './initialState'
+import { reducer as search } from './modules/search'
 
 const GetReducer = (name) => {
   let reducerFunction = (state) => {
@@ -31,6 +32,7 @@ const reducers = {
   network: GetReducer('network'),
   document: GetReducer('document'),
   section: GetReducer('section'),
+  search,
 }
 
 export const mergeReducers = (appReducers) => {

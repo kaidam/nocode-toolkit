@@ -8,6 +8,7 @@ import document from './document'
 import section from './section'
 import ui from './ui'
 import fileupload from './fileupload'
+import search from './search'
 
 import {
   DEFAULT_ARRAY,
@@ -26,6 +27,7 @@ const selectors = {
   section,
   ui,
   fileupload,
+  search,
   DEFAULT_ARRAY,
   DEFAULT_OBJECT,
 }

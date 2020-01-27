@@ -22,6 +22,10 @@ export const content = {
   itemOptions: {},
 }
 
+export const search = {
+  results: [],
+}
+
 export const finder = {
   list: [],
   search: '',
