@@ -9,6 +9,7 @@ import Snippet from '../../components/cells/Snippet'
 import DocumentInfo from '../../components/cells/DocumentInfo'
 import BreadCrumbs from '../../components/cells/BreadCrumbs'
 import BackNextButtons from '../../components/cells/BackNextButtons'
+import Search from '../../components/cells/Search'
 
 const nocodeGroup = {
   driver: 'local',
@@ -481,6 +482,26 @@ const backnextButtons = {
   },
 }
 
+const search = {
+  driver: 'local',
+  type: 'search',
+  title: 'Search',
+  icon: 'search',
+  parentFilter: ['cell'],
+  initialValues: {},
+  schema: [],
+  cellConfig: {
+    disableEdit: true,
+    group: 'navigation',
+    component: Search,
+    cell: {
+      component: 'search',
+      source: 'none',
+      editor: 'none',
+    },
+  },
+}
+
 const schemas = {
   nocodeGroup,
   externalLink,
@@ -501,6 +522,7 @@ const schemas = {
   documentContent,
   breadcrumbs,
   backnextButtons,
+  search,
 }
 
 export default schemas

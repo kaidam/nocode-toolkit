@@ -75,6 +75,7 @@ import SaveIcon from '@material-ui/icons/Save'
 import TemplateIcon from '@material-ui/icons/Dashboard'
 import InfoIcon from '@material-ui/icons/Info'
 import BackNextIcon from '@material-ui/icons/SyncAlt'
+import SearchIcon from '@material-ui/icons/Search'
 
 import UnsplashLogo from './styles/UnsplashLogo'
 import GoogleDriveLogo from './styles/GoogleDriveLogo'
@@ -148,6 +149,7 @@ const icons = {
   template: TemplateIcon,
   info: InfoIcon,
   backnext: BackNextIcon,
+  search: SearchIcon,
 }
 
 export default icons
