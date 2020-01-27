@@ -69,6 +69,7 @@ const Search = ({
   const anchorEl = useRef(null)
   const dispatch = useDispatch()
   const results = useSelector(selectors.search.results)
+  const loading = useSelector(selectors.search.loading)
   const showUI = useSelector(selectors.ui.showUI)
   const [value, setValue] = useState('')
 
@@ -148,14 +149,16 @@ const Search = ({
                       className={ classes.clearResults }
                       onClick={ clearSearch }
                     >
-                      Clear Results X
+                      Clear X
                     </div>
                     {
                       results.hits.length <= 0 && (
                         <div
                           className={ classes.disabledMessage }
                         >
-                          No results found
+                          {
+                            loading ? 'Loading...' : 'No results found...'
+                          }
                         </div>
                       )
                     }

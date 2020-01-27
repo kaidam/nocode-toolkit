@@ -12,6 +12,9 @@ const reducers = {
   setResults: (state, action) => {
     state.results = action.payload
   },
+  setLoading: (state, action) => {
+    state.loading = action.payload
+  }
 }
 
 const loaders = {
@@ -40,10 +43,12 @@ const sideEffects = {
       dispatch(actions.setResults({hits:[]}))
       return
     }
+    dispatch(actions.setLoading(true))
     const results = await loaders.search({
       query,
     })
     dispatch(actions.setResults(results))
+    dispatch(actions.setLoading(false))
   },
 }
 

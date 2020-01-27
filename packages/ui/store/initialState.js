@@ -23,6 +23,7 @@ export const content = {
 }
 
 export const search = {
+  loading: false,
   results: null,
 }
 
