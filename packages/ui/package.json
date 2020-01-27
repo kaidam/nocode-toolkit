@@ -1,6 +1,6 @@
 {
   "name": "@nocode-toolkit/ui",
-  "version": "1.0.74",
+  "version": "1.0.75",
   "description": "React/Redux library for nocode website editors",
   "scripts": {},
   "publishConfig": {
