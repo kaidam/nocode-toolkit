@@ -33,21 +33,11 @@ const sideEffects = {
   }) => async (dispatch, getState) => {
     const showUI = selectors.ui.showUI(getState())
     if(!query) {
-      dispatch(actions.setResults([]))
+      dispatch(actions.setResults({hits:[]}))
       return
     }
     if(showUI) {
-      dispatch(actions.setResults({
-        hits: [{
-          _source: {
-            title: 'Disabled',
-            pathname: '/disabled',
-          },
-          highlight: {
-            content: [],
-          },
-        }],
-      }))
+      dispatch(actions.setResults({hits:[]}))
       return
     }
     const results = await loaders.search({

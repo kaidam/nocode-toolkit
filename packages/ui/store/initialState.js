@@ -23,7 +23,7 @@ export const content = {
 }
 
 export const search = {
-  results: [],
+  results: null,
 }
 
 export const finder = {

@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2),
     backgroundColor: theme.palette.background.paper,
     maxHeight: '300px',
-    minWidth: '400px',
+    maxWidth: '400px',
     overflowY: 'auto',
   },
   clearResults: {
@@ -99,7 +99,7 @@ const Search = ({
     value,
   ])
 
-  const open = value && results && results.hits && results.hits.length > 0 ? true : false
+  const open = value && results && results.hits ? true : false
 
   return (
     <div className={ classes.root }>
@@ -134,7 +134,7 @@ const Search = ({
                       className={ classes.clearResults }
                       onClick={ clearSearch }
                     >
-                      Clear Results X
+                      Clear X
                     </div>
                     <div
                       className={ classes.disabledMessage }
@@ -150,6 +150,15 @@ const Search = ({
                     >
                       Clear Results X
                     </div>
+                    {
+                      results.hits.length <= 0 && (
+                        <div
+                          className={ classes.disabledMessage }
+                        >
+                          No results found
+                        </div>
+                      )
+                    }
                     {
                       results.hits.map((result, i) => {
                         const {
