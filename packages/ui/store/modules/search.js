@@ -1,3 +1,4 @@
+import Promise from 'bluebird'
 import axios from 'axios'
 import CreateReducer from '@nocode-toolkit/website/store/utils/createReducer'
 import CreateActions from '@nocode-toolkit/website/store/utils/createActions'
@@ -36,10 +37,12 @@ const sideEffects = {
   }) => async (dispatch, getState) => {
     const showUI = selectors.ui.showUI(getState())
     if(!query) {
+      dispatch(actions.setLoading(false))
       dispatch(actions.setResults({hits:[]}))
       return
     }
     if(showUI) {
+      dispatch(actions.setLoading(false))
       dispatch(actions.setResults({hits:[]}))
       return
     }

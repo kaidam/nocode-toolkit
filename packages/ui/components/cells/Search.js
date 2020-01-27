@@ -24,6 +24,7 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(2),
     backgroundColor: theme.palette.background.paper,
     maxHeight: '300px',
+    minWidth: '200px',
     maxWidth: '400px',
     overflowY: 'auto',
   },
@@ -96,6 +97,7 @@ const Search = ({
     delayTimeout.current = setTimeout(() => {
       doSearch(value)
     }, 500)
+    dispatch(searchActions.setLoading(true))
   }, [
     value,
   ])
