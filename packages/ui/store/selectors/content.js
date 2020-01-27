@@ -164,7 +164,7 @@ const sectionPageList = () => createSelector(
           }
         })
     }
-    addChildrenToList(tree.children)
+    if(tree) addChildrenToList(tree.children)
     return list
   }
 )
