@@ -76,6 +76,7 @@ const DocumentHTML = ({
 
   return (
     <div 
+      id="nocode-document-html"
       ref={ contentRef }
       dangerouslySetInnerHTML={{__html: content }}
     >
