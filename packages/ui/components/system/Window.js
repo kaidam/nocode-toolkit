@@ -9,7 +9,7 @@ import Button from '@material-ui/core/Button'
 
 const useStyles = makeStyles(theme => createStyles({
   paper: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: '#fff',
   },
   fullHeightPaper: {
     height: '100%',
