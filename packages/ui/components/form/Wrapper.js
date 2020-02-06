@@ -153,7 +153,7 @@ const FormWrapper = ({
             handleSubmit()
           }
 
-          const defaultSpacing = compact ? 0 : 1
+          const defaultSpacing = compact ? 0 : 4
 
           const formElem = (
             <form
