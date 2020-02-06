@@ -33,6 +33,7 @@ const reducers = {
       items,
     } = action.payload
     items.sort((a, b) => {
+      if(!a.name || !b.name) return 0
       const aName = a.name.toLowerCase()
       const bName = b.name.toLowerCase()
       return ((aName < bName) ? -1 : ((aName > bName) ? 1 : 0));
