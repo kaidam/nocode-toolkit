@@ -26,6 +26,11 @@ import SettingsDomains from './SettingsDomains'
 import SettingsSnippets from './SettingsSnippets'
 
 const useStyles = makeStyles(theme => ({
+  paper: {
+    height: '100%',
+    overflowX: ['hidden', '!important'],
+    overflowY: ['hidden', '!important']
+  },
   appBar: {
     
   },
@@ -114,9 +119,13 @@ const SettingsDialog = ({
 
   return (
     <Dialog
-      fullScreen
       open
+      fullWidth
+      maxWidth="xl"
       onClose={ actions.onClose }
+      classes={{
+        paper: classes.paper,
+      }}
     >
       <div className={ classes.container }>
         <div className={ classes.sidebar }>
