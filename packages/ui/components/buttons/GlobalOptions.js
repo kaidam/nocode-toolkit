@@ -34,13 +34,13 @@ const GlobalOptions = ({
         icon: icons.settings,
         handler: actions.onOpenSettings,
       }, {
+        title: 'Build',
+        icon: icons.build,
+        handler: actions.onPublish,
+      }, {
         title: 'Publish',
         icon: icons.publish,
         handler: actions.onViewHistory,
-      }, {
-        title: 'Help',
-        icon: icons.help,
-        handler: actions.onViewHelp,
       }, '-', {
         title: 'List Websites',
         icon: icons.content,
@@ -49,6 +49,10 @@ const GlobalOptions = ({
         title: 'Logout',
         icon: icons.logout,
         handler: actions.onLogout,
+      }, {
+        title: 'Help',
+        icon: icons.help,
+        handler: actions.onViewHelp,
       }]
     },
       [actions]
