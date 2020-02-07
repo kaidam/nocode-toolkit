@@ -34,12 +34,12 @@ const GlobalOptions = ({
         icon: icons.settings,
         handler: actions.onOpenSettings,
       }, {
-        title: 'Build',
+        title: 'Build Website',
         icon: icons.build,
         handler: actions.onPublish,
       }, {
-        title: 'Publish',
-        icon: icons.publish,
+        title: 'Build History',
+        icon: icons.history,
         handler: actions.onViewHistory,
       }, '-', {
         title: 'List Websites',
