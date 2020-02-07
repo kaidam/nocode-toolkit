@@ -260,22 +260,6 @@ const JobPublishedDialog = ({
       onCancel={ actions.onClose }
       rightButtons={(
         <React.Fragment>
-          <Button
-            type="button"
-            variant="contained"
-            onClick={ () => actions.onViewLogs({id: job.id, type: 'publish'}) }
-            className={ classes.rightButton }
-          >
-            <LogsIcon />&nbsp;&nbsp;Logs
-          </Button>
-          <Button
-            type="button"
-            variant="contained"
-            onClick={ actions.onOpenHistory }
-            className={ classes.rightButton }
-          >
-            <HistoryIcon />&nbsp;&nbsp;Build History
-          </Button>
           {
             type != 'live' && (
               <Button
@@ -300,3 +284,25 @@ const JobPublishedDialog = ({
 }
 
 export default JobPublishedDialog
+
+
+/*
+
+  <Button
+            type="button"
+            variant="contained"
+            onClick={ () => actions.onViewLogs({id: job.id, type: 'publish'}) }
+            className={ classes.rightButton }
+          >
+            <LogsIcon />&nbsp;&nbsp;Logs
+          </Button>
+          <Button
+            type="button"
+            variant="contained"
+            onClick={ actions.onOpenHistory }
+            className={ classes.rightButton }
+          >
+            <HistoryIcon />&nbsp;&nbsp;Build History
+          </Button>
+
+*/
