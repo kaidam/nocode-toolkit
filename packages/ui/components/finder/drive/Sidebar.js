@@ -57,6 +57,7 @@ const DriveSidebar = ({
   driver,
   parent,
   search,
+  addFilter,
   finderConfig,
   onOpenTab,
 }) => {
@@ -131,7 +132,7 @@ const DriveSidebar = ({
   return (
     <div className={ classes.root }>
       { titleComponent }
-      { addButtonComponent }
+      { addFilter != 'image' && addButtonComponent }
       <Divider />
       { tabComponent }
       <Divider />

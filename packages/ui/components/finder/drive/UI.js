@@ -105,6 +105,7 @@ const DriveUI = ({
       <FinderSidebar
         driver={ driver }
         parent={ parent }
+        addFilter={ addFilter }
         finderConfig={ finderConfig }
         search={ search }
         tab={ tab }
