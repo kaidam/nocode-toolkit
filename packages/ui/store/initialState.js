@@ -48,6 +48,7 @@ export const job = {
   publishStatus: {},
   id: null,
   data: null,
+  loading: false,
 }
 
 export const network = {

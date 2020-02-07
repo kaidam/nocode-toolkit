@@ -48,6 +48,9 @@ const reducers = {
   setList: (state, action) => {
     state.list = action.payload
   },
+  setLoading: (state, action) => {
+    state.loading = action.payload
+  },
 }
 
 const loaders = {
@@ -109,24 +112,22 @@ const sideEffects = {
     loader,
     throwError = false,
     showWindow = false,
+    showWindowImmediately = false,
     manualComplete = false,
     runBeforeComplete,
   }) => async (dispatch, getState) => {
+    dispatch(actions.setLoading(!showWindowImmediately))
+    let windowOpened = showWindowImmediately
 
-    console.log('--------------------------------------------')
-    console.log('--------------------------------------------')
-    console.dir({
-      showWindow,
-      throwError,
-      manualComplete,
-    })
-    if(showWindow) {
+    if(showWindowImmediately) {
       dispatch(actions.openWindow(id ? {id,type} : {type}))
     }
+
+    let secondsElapsed = 0
     if(loader) {
       const jobResult = await loader()
       id = jobResult.id
-      if(showWindow) {
+      if(showWindowImmediately) {
         dispatch(actions.openWindow({id,type}))
       }
     }
@@ -134,11 +135,18 @@ const sideEffects = {
     let job = await dispatch(actions.loadJob(id))
     while(job && (selectors.job.id(getState()) == id) && (job.status == 'created' || job.status == 'running')) {
       await Promise.delay(1000)
+      secondsElapsed++
+      if(showWindow && secondsElapsed >= 2 && !windowOpened) {
+        dispatch(actions.setLoading(false))
+        dispatch(actions.openWindow({id,type}))
+        windowOpened = true
+      }
       job = await dispatch(actions.loadJob(id)) 
     }
     if(!job) return
     if(selectors.job.id(getState()) != id) return
     dispatch(actions.setId(null))
+    dispatch(actions.setLoading(false))
     if(job.status == 'complete') {
       if(runBeforeComplete) {
         await runBeforeComplete()
@@ -252,6 +260,7 @@ const sideEffects = {
         loader: () => loaders.publish(getState),
         type: 'publish',
         showWindow: true,
+        showWindowImmediately: true,
       }))
     }    
   }),
