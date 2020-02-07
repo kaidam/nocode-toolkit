@@ -16,6 +16,7 @@ import Loading from '../system/Loading'
 import SimpleTable from '../table/SimpleTable'
 
 import icons from '../../icons'
+import jobUtils from '../../utils/job'
 
 const ErrorIcon = icons.error
 const SuccessIcon = icons.success
@@ -101,11 +102,6 @@ const JobHistoryDialog = ({
     actions.onLoadHistory()
   }, [])
 
-  const getJobUrl = (job) => {
-    const port = config.main_port == 80 || config.main_port == 443 ? '' : `:${config.main_port}`
-    return `${config.main_protocol}://job-${job.website}-${job.jobid}.${config.main_domain}${port}`
-  }
-
   const renderPublishUrl = (url, children) => {
     return (
       <a href={ url } target="_blank">
@@ -167,7 +163,7 @@ const JobHistoryDialog = ({
     let deployed = ''
     let screenshot = ''
     let publishAction = null
-    let urls = [getJobUrl(job)]
+    let urls = [jobUtils.getJobUrl(config, job)]
 
     if(publishStatus && publishStatus.production && publishStatus.production.job == job.jobid) {
       deployed = 'live'
@@ -243,28 +239,6 @@ const JobHistoryDialog = ({
       cancelTitle="Close"
       withCancel
       onCancel={ actions.onClose }
-      rightButtons={(
-        <React.Fragment>
-          <Button
-            type="button"
-            variant="contained"
-            onClick={ actions.onRebuild }
-            className={ classes.publishButton }
-          >
-            <RebuildIcon /> Rebuild Preview
-          </Button>
-          <Button
-            type="button"
-            variant="contained"
-            color="secondary"
-            onClick={ actions.onPublish }
-            className={ classes.publishButton }
-          >
-            <PublishIcon /> Publish Now
-          </Button>
-        </React.Fragment>
-        
-      )}
     >
       {
         loading ? (
@@ -292,3 +266,30 @@ export default JobHistoryDialog
 //     />
 //   )
 // }
+
+/*
+
+  rightButtons={(
+        <React.Fragment>
+          <Button
+            type="button"
+            variant="contained"
+            onClick={ actions.onRebuild }
+            className={ classes.publishButton }
+          >
+            <RebuildIcon /> Rebuild Preview
+          </Button>
+          <Button
+            type="button"
+            variant="contained"
+            color="secondary"
+            onClick={ actions.onPublish }
+            className={ classes.publishButton }
+          >
+            <PublishIcon /> Publish Now
+          </Button>
+        </React.Fragment>
+        
+      )}
+
+*/

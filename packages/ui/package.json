@@ -22,6 +22,7 @@
     "pretty-bytes": "^5.2.0",
     "react": "^16.8.6",
     "react-beautiful-dnd": "^12.0.0",
+    "react-copy-to-clipboard": "^5.0.2",
     "react-dom": "^16.8.6",
     "react-dropzone": "^10.1.4",
     "react-redux": "^7.0.1",

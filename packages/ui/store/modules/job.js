@@ -225,10 +225,10 @@ const sideEffects = {
         title: 'Local Development Mode',
         message: `
           <p>Because you are in local development mode - your local template will not be used.</p>
-          <p>Instead the most recently published template will be used instead.</p>
-          <p>Are you sure you want to publish?</p>
+          <p>Instead the most recently uploaded template will be used instead.</p>
+          <p>Are you sure you want to build?</p>
         `,
-        confirmTitle: "I'm sure - publish anyway",
+        confirmTitle: "I'm sure - build anyway",
       }))
 
       if(!result) return
@@ -289,8 +289,15 @@ const sideEffects = {
     ])
   }),
 
-  deployFromPublished: (id, type, viewid) => wrapper('deployFromPublished', async (dispatch, getState) => {
-    await dispatch(actions.deploy(id, type))
+  deployFromPublished: ({
+    viewid,
+    jobid,
+    type,
+  }) => wrapper('deployFromPublished', async (dispatch, getState) => {
+    await dispatch(actions.deploy({
+      job: jobid,
+      type,
+    }))
     dispatch(uiActions.openDialog('jobPublished', {id: viewid, type:'live'}))
   }),
   
