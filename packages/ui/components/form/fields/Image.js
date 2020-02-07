@@ -137,7 +137,12 @@ const ImageField = ({
 
   const buttons = useMemo(() => {
     const remoteImageTypes = typeUI.addContentOptionsWithCallback({
-      filter: (parentFilter) => parentFilter.indexOf('image') >= 0,
+      filter: (parentFilter, schema) => {
+        if(item.excludeDrivers && item.excludeDrivers.indexOf(schema.driver) >= 0) {
+          return false
+        }
+        return parentFilter.indexOf('image') >= 0
+      },
       handler: (type, schema) => onOpenFinder(schema.driver),
     })
     return [{
@@ -169,7 +174,12 @@ const ImageField = ({
           
         )
       })
-  }, [onOpenFinder, onOpenUploader, onResetValue])
+  }, [
+    onOpenFinder,
+    onOpenUploader,
+    onResetValue,
+    item,
+  ])
 
   const description = item.helperText
 

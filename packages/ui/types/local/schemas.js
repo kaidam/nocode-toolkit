@@ -325,6 +325,7 @@ const logo = {
     title: 'Image',
     helperText: 'Upload an image for your logo',
     component: 'image',
+    excludeDrivers: ['unsplash']
   }]
 }
 
