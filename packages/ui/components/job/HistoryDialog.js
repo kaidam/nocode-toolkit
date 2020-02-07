@@ -25,8 +25,9 @@ const OpenIcon = icons.open
 const LogsIcon = icons.logs
 const UndoIcon = icons.undo
 const PublishIcon = icons.publish
-const RebuildIcon = icons.refresh
+const BuildIcon = icons.build
 const LookIcon = icons.look
+const RebuildIcon = icons.refresh
 
 const useStyles = makeStyles(theme => createStyles({
   screenshot: {
@@ -48,14 +49,20 @@ const useStyles = makeStyles(theme => createStyles({
   error: {
     color: theme.palette.error.dark,
   },
-  success: {
+  built: {
+    color: blue[600],
+  },
+  published: {
     color: green[600],
   },
-  waiting: {
-    color: blue[600],
+  unknown: {
+    color: '#666',
   },
   publishButton: {
     marginLeft: theme.spacing(1),
+  },
+  rowButton: {
+    marginRight: theme.spacing(1),
   }
 }))
 
@@ -68,12 +75,6 @@ const fields =[{
 }, {
   title: 'Status',
   name: 'status',
-}, {
-  title: 'Deployed To',
-  name: 'deployed',
-}, {
-  title: 'Actions',
-  name: 'deployActions',
 }, {
   title: '',
   name: 'actions',
@@ -110,51 +111,37 @@ const JobHistoryDialog = ({
     )
   }
 
-  const getJobStatus = (job) => {
+  const getJobStatus = (job, deployed) => {
     let Icon = null
     let className = null
+    let statusText = ''
+
     if(job.status == "complete") {
-      Icon = SuccessIcon
-      className = classes.success
+      Icon = BuildIcon
+      className = classes.built
+      statusText = 'Built'
     }
     else if(job.status == "error") {
       Icon = ErrorIcon
       className = classes.error
+      statusText = 'Error'
     }
     else {
       Icon = WaitingIcon
-      className = classes.waiting
+      className = classes.unknown
+      statusText = 'Waiting'
     }
 
-    return (
-      <div className={ classes.statusContainer }>
-        <Icon className={ `${className} ${classes.icon}` } />
-        <span className={ className }>{ job.status }</span>
-      </div>
-    )
-  }
-
-
-  const getJobDeployed = (deployed) => {
-    if(!deployed) return null
-    let Icon = null
-    let className = null
     if(deployed == "live") {
       Icon = SuccessIcon
-      className = classes.success
-    }
-    else if(deployed == "preview") {
-      Icon = LookIcon
-      className = classes.waiting
-    }
-    else {
-      return null
+      className = classes.published
+      statusText = 'Published'
     }
 
     return (
       <div className={ classes.statusContainer }>
         <Icon className={ `${className} ${classes.icon}` } />
-        <span className={ className }>{ deployed }</span>
+        <span className={ className }>{ statusText }</span>
       </div>
     )
   }
@@ -169,29 +156,7 @@ const JobHistoryDialog = ({
       deployed = 'live'
       urls = publishStatus.production.urls
     }
-    else if(publishStatus && publishStatus.preview && publishStatus.preview.job == job.jobid) {
-      deployed = 'preview'
-      urls = publishStatus.preview.urls
-      publishAction = (
-        <Button 
-          size="small"
-          onClick={ () => actions.onDeploy({job: job.jobid, type: 'production'}) }
-        >
-          <PublishIcon /> Deploy live
-        </Button>
-      )
-    }
-    else {
-      publishAction = (
-        <Button 
-          size="small"
-          onClick={ () => actions.onDeploy({job:job.jobid, type: 'preview'}) }
-        >
-          <UndoIcon /> Rollback
-        </Button>
-      )
-    }
-
+  
     if(job.result && job.result.screenshotUrl) {
       screenshot = renderPublishUrl(urls[0], (
         <img 
@@ -208,23 +173,38 @@ const JobHistoryDialog = ({
           { new Date(job.created_at).toLocaleString() }
         </span>
       ),
-      status: getJobStatus(job),
-      deployed: getJobDeployed(deployed),
+      status: getJobStatus(job, deployed),
       screenshot,
-      deployActions: publishAction,
       actions: (
         <div>
+          {
+            deployed != 'live' && job.status == 'complete' && (
+              <Button 
+                size="small"
+                className={ classes.rowButton }
+                onClick={ () => actions.onDeploy({job: job.jobid, type: 'production'}) }
+              >
+                <PublishIcon />&nbsp;&nbsp;Publish
+              </Button>
+            )
+          }
+          {
+            job.status == 'complete' && (
+              <Button 
+                size="small"
+                className={ classes.rowButton }
+                onClick={ () => window.open(urls[0]) }
+              >
+                <LookIcon />&nbsp;&nbsp;View
+              </Button>
+            )
+          }
           <Button 
             size="small"
-            onClick={ () => window.open(urls[0]) }
-          >
-            <OpenIcon /> Visit
-          </Button>
-          <Button 
-            size="small"
+            className={ classes.rowButton }
             onClick={ () => actions.onViewLogs({id: job.id, type: 'publish'}) }
           >
-            <LogsIcon /> Logs
+            <LogsIcon />&nbsp;&nbsp;Logs
           </Button>
         </div>
       ),

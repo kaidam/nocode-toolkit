@@ -227,7 +227,7 @@ const JobPublishedDialog = ({
                   ) : (
                     <React.Fragment>
                       <Typography>
-                        When you are happy that everything is correct, click the "Publish" button below and
+                        When you are happy that everything is correct, click the <strong>"Publish"</strong> button below and
                         your website will be live.<br /><br />
                       </Typography>
                       <Typography>
