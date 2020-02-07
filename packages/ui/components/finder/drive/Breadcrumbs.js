@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import blue from '@material-ui/core/colors/blue'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -17,7 +18,8 @@ const useStyles = makeStyles(theme => ({
     }
   },
   nonSelectedLink: {
-    color: '#666666',
+    color: blue[600],
+    textDecoration: 'underline',
   },
   selectedLink: {
     color: '#444444',
