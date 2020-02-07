@@ -112,6 +112,14 @@ const sideEffects = {
     manualComplete = false,
     runBeforeComplete,
   }) => async (dispatch, getState) => {
+
+    console.log('--------------------------------------------')
+    console.log('--------------------------------------------')
+    console.dir({
+      showWindow,
+      throwError,
+      manualComplete,
+    })
     if(showWindow) {
       dispatch(actions.openWindow(id ? {id,type} : {type}))
     }
