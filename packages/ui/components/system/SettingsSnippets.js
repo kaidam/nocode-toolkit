@@ -52,6 +52,75 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+const SettingsSnippetGroup = ({
+  global = false,
+  snippets,
+  setDeleteSnippet,
+  setEditSnippet,
+  onOpenAddDialog,
+}) => {
+  const classes = useStyles()
+
+  const fields = [{
+    title: 'Name',
+    name: 'name',
+  }]
+
+  const data = snippets.map(snippet => {
+    return {
+      id: snippet.id,
+      name: snippet.name,
+      code: snippet.code,
+    }
+  })
+
+  return (
+    <div className={ classes.content }>
+      <Grid container className={ classes.titleContainer }>
+        <Grid item xs={ 12 }>
+          <Typography variant="h6">{ global ? 'Global ' : ''} Snippets</Typography>
+        </Grid>
+      </Grid>
+      <Grid container className={ classes.tableContainer }>
+        <Grid item xs={ 12 }>
+          <SimpleTable
+            hideHeader
+            data={ data }
+            fields={ fields }
+            getActions={ (item) => (
+              <span>
+                <IconButton
+                  onClick={ () => setDeleteSnippet(item, global) }
+                >
+                  <DeleteIcon />
+                </IconButton>
+                <IconButton
+                  onClick={ () => setEditSnippet(item, global) }
+                >
+                  <EditIcon />
+                </IconButton>
+              </span>
+            )}
+          />
+        </Grid>
+      </Grid>
+      <Grid container>
+        <Grid item xs={ 4 }>
+          <Button
+            className={ classes.addButton }
+            size="small"
+            color="secondary"
+            variant="contained"
+            onClick={ onOpenAddDialog }
+          >
+            Add { global ? 'global ' : ''} snippet
+          </Button>
+        </Grid>
+      </Grid>
+    </div>
+  )
+}
+
 const SettingsSnippets = ({
   onClose,
 }) => {
@@ -63,6 +132,7 @@ const SettingsSnippets = ({
   })
 
   const snippets = useSelector(selectors.ui.snippets)
+  const globalSnippets = useSelector(selectors.ui.globalSnippets)
 
   const [ editSnippet, setEditSnippet ] = useState(null)
   const [ deleteSnippet, setDeleteSnippet ] = useState(null)
@@ -117,68 +187,22 @@ const SettingsSnippets = ({
     snippets,
   ])
 
-  const fields = [{
-    title: 'Name',
-    name: 'name',
-  }, {
-    title: 'Global',
-    name: 'global',
-  }]
-
-  const data = snippets.map(snippet => {
-    return {
-      id: snippet.id,
-      name: snippet.name,
-      code: snippet.code,
-      global: snippet.global ? 'global' : ''
-    }
-  })
-
   return (
     <div className={ classes.container }>
-      <div className={ classes.content }>
-        <Grid container className={ classes.titleContainer }>
-          <Grid item xs={ 12 }>
-            <Typography variant="h6">Snippets</Typography>
-          </Grid>
-        </Grid>
-        <Grid container className={ classes.tableContainer }>
-          <Grid item xs={ 12 }>
-            <SimpleTable
-              hideHeader
-              data={ data }
-              fields={ fields }
-              getActions={ (item) => (
-                <span>
-                  <IconButton
-                    onClick={ () => setDeleteSnippet(item) }
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                  <IconButton
-                    onClick={ () => setEditSnippet(item) }
-                  >
-                    <EditIcon />
-                  </IconButton>
-                </span>
-              )}
-            />
-          </Grid>
-        </Grid>
-        <Grid container>
-          <Grid item xs={ 4 }>
-            <Button
-              className={ classes.addButton }
-              size="small"
-              color="secondary"
-              variant="contained"
-              onClick={ onOpenAddDialog }
-            >
-              Add snippet
-            </Button>
-          </Grid>
-        </Grid>
-      </div>
+      <SettingsSnippetGroup
+        global={ false }
+        snippets={ snippets }
+        setDeleteSnippet={ setDeleteSnippet }
+        setEditSnippet={ setEditSnippet }
+        onOpenAddDialog={ onOpenAddDialog }
+      />
+      <SettingsSnippetGroup
+        global={ true }
+        snippets={ globalSnippets }
+        setDeleteSnippet={ setDeleteSnippet }
+        setEditSnippet={ setEditSnippet }
+        onOpenAddDialog={ onOpenAddDialog }
+      />
       <div className={ classes.appbar }>
         <AppBar color="default" position="relative">
           <Toolbar>
