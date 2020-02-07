@@ -36,6 +36,7 @@ const EmbeddedFinder = ({
   const [ tab, setTab ] = useState('root')
   const [ page, setPage ] = useState(1)
   const [ search, setSearch ] = useState('')
+  const [ resultsSearch, setResultsSearch ] = useState('')
 
   const onLastPage = useCallback(() => {
     if(page <= 1) return
@@ -61,6 +62,7 @@ const EmbeddedFinder = ({
     const useSearch = typeof(params.search) !== 'undefined' ?
       params.search :
       search
+    setResultsSearch(useSearch)
     actions.onLoadList({
       parent,
       driver,
@@ -105,6 +107,7 @@ const EmbeddedFinder = ({
       parent={ parent }
       finderConfig={ finderConfig }
       search={ search }
+      resultsSearch={ resultsSearch }
       tab={ tab }
       items={ items }
       ancestors={ ancestors }

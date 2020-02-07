@@ -59,6 +59,7 @@ const DriveUI = ({
   parent,
   finderConfig,
   search,
+  resultsSearch,
   tab,
   items,
   ancestors,
@@ -85,6 +86,7 @@ const DriveUI = ({
         title={ title }
         finderConfig={ finderConfig }
         search={ search }
+        resultsSearch={ resultsSearch }
         onUpdateSearch={ onUpdateSearch }
         onSearch={ onSearch }
         onResetSearch={ onResetSearch }
@@ -124,6 +126,7 @@ const DriveUI = ({
         ancestors={ ancestors }
         parent={ parent }
         search={ search }
+        resultsSearch={ resultsSearch }
         onOpenFolder={ onOpenFolder }
         onOpenTab={ onOpenTab }
       />

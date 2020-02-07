@@ -29,6 +29,7 @@ const DriveBreadcrumbs = ({
   ancestors,
   parent,
   search,
+  resultsSearch,
   onOpenFolder,
   onOpenTab,
 }) => {
@@ -43,7 +44,7 @@ const DriveBreadcrumbs = ({
     onOpenTab,
   ])
 
-  if(search) {
+  if(resultsSearch) {
     return (
       <div className={ classes.root }>
         Search results...

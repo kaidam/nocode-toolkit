@@ -58,6 +58,7 @@ const FinderDialog = ({
   const items = useSelector(selectors.finder.list)
   const ancestors = useSelector(selectors.finder.ancestors)
   const search = useSelector(selectors.finder.search)
+  const resultsSearch = useSelector(selectors.finder.resultsSearch)
   const loading = useSelector(selectors.finder.loading.getList)
 
   const schemaDefinition = library.get(`${driver}.finder`)
@@ -83,6 +84,7 @@ const FinderDialog = ({
       parent={ parent }
       finderConfig={ finderConfig }
       search={ search }
+      resultsSearch={ resultsSearch }
       tab={ tab }
       items={ items }
       ancestors={ ancestors }

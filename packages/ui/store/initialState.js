@@ -31,6 +31,7 @@ export const finder = {
   list: [],
   search: '',
   ancestors: [],
+  resultsSearch: '',
 }
 
 export const document = {

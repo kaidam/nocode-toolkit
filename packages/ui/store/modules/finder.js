@@ -31,6 +31,7 @@ const reducers = {
     const {
       driver,
       items,
+      search,
     } = action.payload
     items.sort((a, b) => {
       if(!a.name || !b.name) return 0
@@ -42,6 +43,7 @@ const reducers = {
     const folders = items.filter(item => driverSchema.finder.isFolder(item))
     const nonFolders = items.filter(item => !driverSchema.finder.isFolder(item))
     state.list = folders.concat(nonFolders)
+    state.resultsSearch = search
   },
   setAncestors: (state, action) => {
     state.ancestors = action.payload
@@ -164,6 +166,7 @@ const sideEffects = {
     dispatch(actions.setList({
       driver,
       items: [],
+      search: '',
     }))
     let items = []
     if(search) {
@@ -186,7 +189,8 @@ const sideEffects = {
     
     dispatch(actions.setList({
       driver,
-      items
+      items,
+      search,
     }))
   }),
 
