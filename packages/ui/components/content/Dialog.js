@@ -84,6 +84,7 @@ const ContentFormDialog = ({
     typeTitle,
     initialValues,
     tabs,
+    schemaDefinition,
   } = useSelector(selectors.types.form)
 
   const params = {
@@ -146,6 +147,7 @@ const ContentFormDialog = ({
               open
               compact
               withCancel
+              fullHeight={ typeof(schemaDefinition.metadata.fullHeight) === 'boolean' ? schemaDefinition.metadata.fullHeight : true }
               loading={ loading }
               onSubmit={ () => {
                 handleSubmit()
@@ -159,15 +161,19 @@ const ContentFormDialog = ({
                   { typeTitle }
                 </Typography>
               </div>
-              <Tabs value={ activeTab } onChange={ (e, value) => actions.updateQueryParams({tab:value}) } aria-label="simple tabs example">
-                {
-                  tabs.map((tabConfig, i) => {
-                    return (
-                      <Tab key={ i } label={ tabConfig.title } value={ tabConfig.id } />
-                    )
-                  })
-                }
-              </Tabs>
+              {
+                tabs.length > 1 && (
+                  <Tabs value={ activeTab } onChange={ (e, value) => actions.updateQueryParams({tab:value}) } aria-label="simple tabs example">
+                    {
+                      tabs.map((tabConfig, i) => {
+                        return (
+                          <Tab key={ i } label={ tabConfig.title } value={ tabConfig.id } />
+                        )
+                      })
+                    }
+                  </Tabs>
+                )
+              }
               <div className={ classes.content }>
                 {
                   getTabContent(tabConfig, formElem)

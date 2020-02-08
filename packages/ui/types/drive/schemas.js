@@ -24,6 +24,7 @@ const folder = {
   icon: 'folder',
   metadata: {
     hasChildren: true,
+    fullHeight: false,
   },
   parentFilter: ['section', 'drive.finder', 'drive.folder'],
   schema: [{

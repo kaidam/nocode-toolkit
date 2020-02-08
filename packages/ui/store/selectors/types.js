@@ -225,6 +225,7 @@ const form = createSelector(
       typeTitle,
       initialValues,
       tabs,
+      schemaDefinition,
     }
   }
 )
