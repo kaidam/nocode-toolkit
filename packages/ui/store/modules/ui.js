@@ -56,7 +56,10 @@ const reducers = {
   },
   setPreviewMode: (state, action) => {
     state.previewMode = action.payload
-  }
+  },
+  setLoading: (state, action) => {
+    state.loading = action.payload
+  },
 }
 
 const loaders = {

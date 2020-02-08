@@ -16,6 +16,7 @@ const previewMode = state => state.ui.previewMode
 const config = state => state.ui.config
 const website = state => state.ui.website
 const dnsInfo = state => state.ui.dnsInfo
+const loading = state => state.ui.loading
 const snippets = createSelector(
   settings,
   (settings) => {
@@ -117,6 +118,7 @@ const showUI = createSelector(
 const selectors = {
   settings,
   logo,
+  loading,
   previewMode,
   showCoreUI,
   showUI,

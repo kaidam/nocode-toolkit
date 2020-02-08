@@ -10,6 +10,7 @@ export const ui = {
   confirmWindow: null,
   previewMode: false,
   dnsInfo: null,
+  loading: false,
 }
 
 export const content = {
@@ -48,7 +49,6 @@ export const job = {
   publishStatus: {},
   id: null,
   data: null,
-  loading: false,
 }
 
 export const network = {

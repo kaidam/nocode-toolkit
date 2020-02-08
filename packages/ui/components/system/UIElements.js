@@ -13,10 +13,10 @@ import FinderDialog from '../finder/Dialog'
 import JobDialog from '../job/Dialog'
 import JobHistoryDialog from '../job/HistoryDialog'
 import JobPublishedDialog from '../job/PublishedDialog'
-import JobLoading from '../job/Loading'
 import ConfirmDialog from './ConfirmDialog'
 import HelpDialog from './HelpDialog'
 import SnackBar from './Snackbar'
+import GlobalLoading from './GlobalLoading'
 
 const dialogs = {
   contentForm: ContentFormDialog,
@@ -45,7 +45,7 @@ const UIElements = ({
         DialogComponent && <DialogComponent />
       }
       <SnackBar />
-      <JobLoading />
+      <GlobalLoading />
     </div>
   )
 }

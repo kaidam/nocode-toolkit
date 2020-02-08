@@ -15,7 +15,6 @@ const data = state => state.job.data
 const list = state => state.job.list
 const publishStatus = state => state.job.publishStatus
 const id = state => state.job.id
-const loading = state => state.job.loading
 
 const status = createSelector(
   data,
@@ -56,7 +55,6 @@ const selectors = {
   publishStatus,
   id,
   status,
-  loading,
   error,
   logs,
   canCloseWindow,

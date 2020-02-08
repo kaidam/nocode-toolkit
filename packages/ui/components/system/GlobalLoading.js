@@ -23,14 +23,15 @@ const useStyles = makeStyles(theme => createStyles({
     backgroundColor: '#ffffff',
     border: '1px solid #e5e5e5',
     boxShadow: '10px 10px 5px 0px rgba(0,0,0,0.2)',
+    borderRadius: 5,
   }
 }))
 
-const JobLoading = ({
+const GlobalLoading = ({
   
 }) => {
   const classes = useStyles()
-  const loading = useSelector(selectors.job.loading)
+  const loading = useSelector(selectors.ui.loading)
   if(!loading) return null
   return (
     <div className={ classes.container }>
@@ -41,4 +42,4 @@ const JobLoading = ({
   )
 }
 
-export default JobLoading
+export default GlobalLoading

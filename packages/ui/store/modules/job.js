@@ -48,9 +48,6 @@ const reducers = {
   setList: (state, action) => {
     state.list = action.payload
   },
-  setLoading: (state, action) => {
-    state.loading = action.payload
-  },
 }
 
 const loaders = {
@@ -116,7 +113,7 @@ const sideEffects = {
     manualComplete = false,
     runBeforeComplete,
   }) => async (dispatch, getState) => {
-    dispatch(actions.setLoading(!showWindowImmediately))
+    dispatch(uiActions.setLoading(!showWindowImmediately))
     let windowOpened = showWindowImmediately
 
     if(showWindowImmediately) {
@@ -137,7 +134,7 @@ const sideEffects = {
       await Promise.delay(1000)
       secondsElapsed++
       if(showWindow && secondsElapsed >= 2 && !windowOpened) {
-        dispatch(actions.setLoading(false))
+        dispatch(uiActions.setLoading(false))
         dispatch(actions.openWindow({id,type}))
         windowOpened = true
       }
@@ -146,7 +143,7 @@ const sideEffects = {
     if(!job) return
     if(selectors.job.id(getState()) != id) return
     dispatch(actions.setId(null))
-    dispatch(actions.setLoading(false))
+    dispatch(uiActions.setLoading(false))
     if(job.status == 'complete') {
       if(runBeforeComplete) {
         await runBeforeComplete()
