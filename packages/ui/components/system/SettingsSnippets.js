@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
   },
   content: {
-    padding: theme.spacing(5),
+    padding: theme.spacing(2),
     flexGrow: 1,
     overflowY: 'auto',
   },
@@ -81,6 +81,17 @@ const SettingsSnippetGroup = ({
           <Typography variant="h6">{ global ? 'Global ' : ''} Snippets</Typography>
         </Grid>
       </Grid>
+      <Grid container className={ classes.titleContainer }>
+        <Grid item xs={ 12 }>
+          <Typography>
+            {
+              global ?
+                `Appear on all pages and are useful for adding script tags or custom CSS` :
+                `Chunks of HTML that you can add to pages`
+            }
+          </Typography>
+        </Grid>
+      </Grid>
       <Grid container className={ classes.tableContainer }>
         <Grid item xs={ 12 }>
           <SimpleTable
@@ -111,7 +122,7 @@ const SettingsSnippetGroup = ({
             size="small"
             color="secondary"
             variant="contained"
-            onClick={ onOpenAddDialog }
+            onClick={ () => onOpenAddDialog(global) }
           >
             Add { global ? 'global ' : ''} snippet
           </Button>
@@ -132,7 +143,18 @@ const SettingsSnippets = ({
   })
 
   const snippets = useSelector(selectors.ui.snippets)
-  const globalSnippets = useSelector(selectors.ui.globalSnippets)
+
+  const pageSnippets = useMemo(() => {
+    return snippets.filter(snippet => !snippet.global)
+  }, [
+    snippets,
+  ])
+
+  const globalSnippets = useMemo(() => {
+    return snippets.filter(snippet => snippet.global)
+  }, [
+    snippets,
+  ])
 
   const [ editSnippet, setEditSnippet ] = useState(null)
   const [ deleteSnippet, setDeleteSnippet ] = useState(null)
@@ -140,10 +162,11 @@ const SettingsSnippets = ({
   const onCloseEditDialog = useCallback(() => setEditSnippet(null))
   const onCloseDeleteDialog = useCallback(() => setDeleteSnippet(null))
 
-  const onOpenAddDialog = useCallback(() => {
+  const onOpenAddDialog = useCallback((global) => {
     setEditSnippet({
       name: '',
       code: '',
+      global,
     })
   })
 
@@ -191,7 +214,7 @@ const SettingsSnippets = ({
     <div className={ classes.container }>
       <SettingsSnippetGroup
         global={ false }
-        snippets={ snippets }
+        snippets={ pageSnippets }
         setDeleteSnippet={ setDeleteSnippet }
         setEditSnippet={ setEditSnippet }
         onOpenAddDialog={ onOpenAddDialog }

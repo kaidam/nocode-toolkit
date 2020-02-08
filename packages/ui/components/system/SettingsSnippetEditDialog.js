@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
+import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
@@ -14,6 +15,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 const useStyles = makeStyles(theme => ({
   paper: {
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    height: '100%',
   },
   buttonsContainer: {
     width: '100%',
@@ -46,13 +48,21 @@ const SettingsSnippetEditDialog = ({
 
   const classes = useStyles()
 
+  const global = snippet.global
+
   const [name, setName] = useState(snippet.name)
-  const [global, setGlobal] = useState(snippet.global)
   const [code, setCode] = useState(snippet.code)
+  const [headCode, setHeadCode] = useState(snippet.headCode)
+  const [beforeBodyCode, setBeforeBodyCode] = useState(snippet.beforeBodyCode)
+  const [afterBodyCode, setAfterBodyCode] = useState(snippet.afterBodyCode)
   const [showErrors, setShowErrors] = useState(false)
 
   const nameError = name ? null : `Please enter a name`
-  const codeError = code ? null : `Please enter some HTML`
+  let codeError = code ? null : `Please enter some HTML`
+
+  if(global) {
+    codeError = !headCode && !beforeBodyCode && !afterBodyCode ? `Please enter some HTML` : null
+  }
 
   const isValid = !nameError && !codeError
 
@@ -77,48 +87,94 @@ const SettingsSnippetEditDialog = ({
       open
       onClose={ onClose }
       fullWidth
-      maxWidth="md"
+      maxWidth="lg"
       classes={{
         paper: classes.paper,
       }}
     >
       <DialogTitle>
-        Snippet
+        { global ? 'Global ' : '' } Snippet
       </DialogTitle>
       <DialogContent>
-        <TextField
-          label="Name"
-          helperText={ showErrors && nameError ? nameError : "Enter the name of the snippet" }
-          fullWidth
-          error={ showErrors && nameError ? true : false }
-          value={ name }
-          onChange={(e) => setName(e.target.value)}
-        />
-        <TextField
-          label="HTML"
-          helperText={ showErrors && codeError ? codeError : "Enter some HTML code for this snippet" }
-          fullWidth
-          multiline
-          rows={ 5 }
-          error={ showErrors && codeError ? true : false }
-          value={ code }
-          onChange={(e) => setCode(e.target.value)}
-        />
-        <div className={ classes.margin }></div>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={ global }
-              onChange={ (e) => setGlobal(e.target.value) }
-              value="yes"
-              color="secondary"
+        <Grid container spacing={ 2 }>
+
+          <Grid item xs={ 12 }>
+            <FormHelperText>
+              {
+                global ?
+                  `Global snippets appear on all pages and are useful for adding script tags or custom CSS` :
+                  `Snippets are chunks of HTML that you can add to pages`
+              }
+              
+            </FormHelperText>
+          </Grid>
+
+          <Grid item xs={ 12 }>
+            <TextField
+              label="Name"
+              helperText={ showErrors && nameError ? nameError : "Enter the name of the snippet" }
+              fullWidth
+              error={ showErrors && nameError ? true : false }
+              value={ name }
+              onChange={(e) => setName(e.target.value)}
             />
+          </Grid>
+          {
+            global ? (
+              <React.Fragment>
+                <Grid item xs={ 4 }>
+                  <TextField
+                    label="Head HTML"
+                    helperText={ showErrors && codeError ? codeError : "Enter some HTML code for the HEAD tag" }
+                    fullWidth
+                    multiline
+                    rows={ 10 }
+                    error={ showErrors && codeError ? true : false }
+                    value={ headCode }
+                    onChange={(e) => setHeadCode(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={ 4 }>
+                  <TextField
+                    label="Before Body HTML"
+                    helperText={ showErrors && codeError ? codeError : "Enter some HTML code for before the BODY tag" }
+                    fullWidth
+                    multiline
+                    rows={ 10 }
+                    error={ showErrors && codeError ? true : false }
+                    value={ beforeBodyCode }
+                    onChange={(e) => setBeforeBodyCode(e.target.value)}
+                  />
+                </Grid>
+                <Grid item xs={ 4 }>
+                  <TextField
+                    label="After Body HTML"
+                    helperText={ showErrors && codeError ? codeError : "Enter some HTML code for after the BODY tag" }
+                    fullWidth
+                    multiline
+                    rows={ 10 }
+                    error={ showErrors && codeError ? true : false }
+                    value={ afterBodyCode }
+                    onChange={(e) => setAfterBodyCode(e.target.value)}
+                  />
+                </Grid>
+              </React.Fragment>
+            ) : (
+              <Grid item xs={ 12 }>
+                <TextField
+                  label="HTML"
+                  helperText={ showErrors && codeError ? codeError : "Enter some HTML code for this snippet" }
+                  fullWidth
+                  multiline
+                  rows={ 10 }
+                  error={ showErrors && codeError ? true : false }
+                  value={ code }
+                  onChange={(e) => setCode(e.target.value)}
+                />
+              </Grid>
+            )
           }
-          label="Global?"
-        />
-        <FormHelperText>
-          Global snippets appear on all pages and are useful for adding script tags or custom CSS
-        </FormHelperText>
+        </Grid>
       </DialogContent>
       <DialogActions>
         <div className={ classes.buttonsContainer }>

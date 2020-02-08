@@ -169,12 +169,11 @@ const sideEffects = {
   },
   setSnippets: ({
     data,
-    field = 'snippets',
     onComplete,
   }) => wrapper('setSnippets', async (dispatch, getState) => {
     const existingItem = selectors.ui.settings(getState())
     const newData = Object.assign({}, existingItem ? existingItem.data : {}, {
-      [field]: data,
+      snippets: data,
     })
     const newItem = Object.assign({}, existingItem, {
       data: newData,

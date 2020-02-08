@@ -23,13 +23,6 @@ const snippets = createSelector(
     return settings.data.snippets
   }
 )
-const globalSnippets = createSelector(
-  settings,
-  (settings) => {
-    if(!settings || !settings.data || !settings.data.globalSnippets) return []
-    return settings.data.globalSnippets
-  }
-)
 
 const templates = createSelector(
   settings,
@@ -96,7 +89,6 @@ const selectors = {
   website,
   dnsInfo,
   snippets,
-  globalSnippets,
   templates,
 }
 
