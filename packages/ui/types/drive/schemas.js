@@ -20,12 +20,12 @@ const getContentFormParams = ({
 const folder = {
   driver: 'drive',
   type: 'folder',
-  title: 'Folder',
+  title: 'Create New Drive Folder',
   icon: 'folder',
   metadata: {
     hasChildren: true,
   },
-  parentFilter: ['drive.finder', 'drive.folder'],
+  parentFilter: ['section', 'drive.finder', 'drive.folder'],
   schema: [{
     id: 'name',
     title: 'Name',
@@ -45,12 +45,12 @@ const folder = {
 const document = {
   driver: 'drive',
   type: 'document',
-  title: 'Google Docs',
-  icon: 'item',
+  title: 'Create New Google Docs',
+  icon: 'docs',
   metadata: {
     externalEditor: true,
   },
-  parentFilter: ['drive.finder', 'drive.folder'],
+  parentFilter: ['section', 'drive.finder', 'drive.folder'],
   schema: [{
     id: 'name',
     title: 'Name',
@@ -78,7 +78,7 @@ const image = {
 
 const finder = {
   driver: 'drive',
-  title: 'Google Drive Content',
+  title: 'Add Existing Drive Content',
   icon: 'drive',
   metadata: {},
   parentFilter: ['section', 'local.folder', 'home'],

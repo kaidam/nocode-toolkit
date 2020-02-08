@@ -81,6 +81,7 @@ import ClipboardIcon from '@material-ui/icons/FileCopy'
 
 import UnsplashLogo from './styles/UnsplashLogo'
 import GoogleDriveLogo from './styles/GoogleDriveLogo'
+import GoogleDocsLogo from './styles/GoogleDocsLogo'
 import NocodeLogo from './styles/NocodeLogo'
 
 
@@ -101,6 +102,7 @@ const icons = {
   document: DocumentIcon,
   item: DocumentIcon,
   drive: GoogleDriveLogo,
+  docs: GoogleDocsLogo,
   unsplash: UnsplashLogo,
   nocode: NocodeLogo,
   link: LinkIcon,
