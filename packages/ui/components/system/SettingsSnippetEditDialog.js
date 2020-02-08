@@ -73,11 +73,17 @@ const SettingsSnippetEditDialog = ({
       name,
       global,
       code,
+      headCode,
+      beforeBodyCode,
+      afterBodyCode,
     })
   }, [
     name,
     global,
     code,
+    headCode,
+    beforeBodyCode,
+    afterBodyCode,
     nameError,
     codeError,
   ])

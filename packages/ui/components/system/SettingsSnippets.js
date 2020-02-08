@@ -81,6 +81,10 @@ const SettingsSnippetGroup = ({
       id: snippet.id,
       name: snippet.name,
       code: snippet.code,
+      headCode: snippet.headCode,
+      beforeBodyCode: snippet.beforeBodyCode,
+      afterBodyCode: snippet.afterBodyCode,
+      global: snippet.global,
     }
   })
 
@@ -124,12 +128,12 @@ const SettingsSnippetGroup = ({
             getActions={ (item) => (
               <span>
                 <IconButton
-                  onClick={ () => setDeleteSnippet(item, global) }
+                  onClick={ () => setDeleteSnippet(item) }
                 >
                   <DeleteIcon />
                 </IconButton>
                 <IconButton
-                  onClick={ () => setEditSnippet(item, global) }
+                  onClick={ () => setEditSnippet(item) }
                 >
                   <EditIcon />
                 </IconButton>
@@ -176,6 +180,9 @@ const SettingsSnippets = ({
     setEditSnippet({
       name: '',
       code: '',
+      headCode: '',
+      beforeBodyCode: '',
+      afterBodyCode: '',
       global,
     })
   })
