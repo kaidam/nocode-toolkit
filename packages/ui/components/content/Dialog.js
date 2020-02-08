@@ -156,7 +156,7 @@ const ContentFormDialog = ({
             >
               <div className={ classes.title }>
                 <Typography variant="h6">
-                  {id == 'new' ? 'Add' : 'Edit'} {typeTitle}
+                  { typeTitle }
                 </Typography>
               </div>
               <Tabs value={ activeTab } onChange={ (e, value) => actions.updateQueryParams({tab:value}) } aria-label="simple tabs example">
