@@ -103,6 +103,12 @@ const loaders = {
     data,
   }) => axios.put(apiUtils.websiteUrl(getState, `/remote/${driver}/update/${id}`), data)
     .then(apiUtils.process),
+
+  ensureSectionFolder: (getState, {
+    driver,
+    parent,
+  }) => axios.post(apiUtils.websiteUrl(getState, `/remote/${driver}/ensureSection/${parent}`))
+    .then(apiUtils.process),
 }
 
 const sideEffects = {
@@ -296,45 +302,62 @@ const sideEffects = {
         type,
       }, getState)
 
-      const [ _, parent ] = location.split(':')
+      const [ parentType, parent ] = location.split(':')
 
-      // first - create the remote item via the driver
-      const newItem = await loaders.createRemoteItem(getState, {
-        driver,
-        parent,
-        data: {
-          mimeType: type,
-          ...saveData
-        },
-      })
+      if(parentType == 'section') {
 
-      // trigger a rebuild so the backend has the new item in the tree
-      await dispatch(jobActions.rebuild({
-        manualComplete: true,
-      }))
-
-      // get the annotation data from the options form
-      const {
-        annotation,
-      } = typeUtils.getSaveData({
-        driver,
-        type,
-        item: null,
-        data,
-      })
-
-      // if it exists - then update the annotation server side
-      if(annotation) {
-        await dispatch(contentActions.saveAnnotation({
-          id: newItem.id,
-          annotation,
-        }, data))
+        // first - ensure the nocode folder for the section
+        // this will also link the folder to the section (in ghost mode)
+        // so once this is done - all we need to do is add the
+        // content to the returned parent and rebuild
+        const parentFolder = await loaders.ensureSectionFolder(getState, {
+          driver,
+          parent,
+        })
+        
+        console.log('--------------------------------------------')
+        console.log('We have ensured the parent folder')
+        console.dir(parentFolder)
       }
+      else {
+        // first - create the remote item via the driver
+        const newItem = await loaders.createRemoteItem(getState, {
+          driver,
+          parent,
+          data: {
+            mimeType: type,
+            ...saveData
+          },
+        })
 
-      dispatch(snackbarActions.setSuccess(`${type} created`))
+        // trigger a rebuild so the backend has the new item in the tree
+        await dispatch(jobActions.rebuild({
+          manualComplete: true,
+        }))
 
-      await dispatch(uiActions.closeDialogs())
-      await dispatch(jobActions.reload())
+        // get the annotation data from the options form
+        const {
+          annotation,
+        } = typeUtils.getSaveData({
+          driver,
+          type,
+          item: null,
+          data,
+        })
+
+        // if it exists - then update the annotation server side
+        if(annotation) {
+          await dispatch(contentActions.saveAnnotation({
+            id: newItem.id,
+            annotation,
+          }, data))
+        }
+
+        dispatch(snackbarActions.setSuccess(`${type} created`))
+
+        await dispatch(uiActions.closeDialogs())
+        await dispatch(jobActions.reload())
+      } 
     }
     else {
 
