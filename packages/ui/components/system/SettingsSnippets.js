@@ -33,13 +33,23 @@ const useStyles = makeStyles(theme => ({
   content: {
     padding: theme.spacing(2),
     flexGrow: 1,
-    overflowY: 'auto',
   },
   appbar: {
     flexGrow: 0,
   },
   grow: {
     flexGrow: 1,
+  },
+  listContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    flexGrow: 1,
+    height: "100%",
+    overflowY: 'auto',
+  },
+  listCell: {
+    flexGrow: 1,
+    width: '50%',
   },
   titleContainer: {
     marginBottom: theme.spacing(2),
@@ -48,7 +58,7 @@ const useStyles = makeStyles(theme => ({
     borderTop: '1px solid #ccc'
   },
   addButton: {
-    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   }
 }))
 
@@ -92,6 +102,19 @@ const SettingsSnippetGroup = ({
           </Typography>
         </Grid>
       </Grid>
+      <Grid container>
+        <Grid item xs={ 4 }>
+          <Button
+            className={ classes.addButton }
+            size="small"
+            color="secondary"
+            variant="contained"
+            onClick={ () => onOpenAddDialog(global) }
+          >
+            Add { global ? 'global ' : ''} snippet
+          </Button>
+        </Grid>
+      </Grid>
       <Grid container className={ classes.tableContainer }>
         <Grid item xs={ 12 }>
           <SimpleTable
@@ -113,19 +136,6 @@ const SettingsSnippetGroup = ({
               </span>
             )}
           />
-        </Grid>
-      </Grid>
-      <Grid container>
-        <Grid item xs={ 4 }>
-          <Button
-            className={ classes.addButton }
-            size="small"
-            color="secondary"
-            variant="contained"
-            onClick={ () => onOpenAddDialog(global) }
-          >
-            Add { global ? 'global ' : ''} snippet
-          </Button>
         </Grid>
       </Grid>
     </div>
@@ -212,20 +222,26 @@ const SettingsSnippets = ({
 
   return (
     <div className={ classes.container }>
-      <SettingsSnippetGroup
-        global={ false }
-        snippets={ pageSnippets }
-        setDeleteSnippet={ setDeleteSnippet }
-        setEditSnippet={ setEditSnippet }
-        onOpenAddDialog={ onOpenAddDialog }
-      />
-      <SettingsSnippetGroup
-        global={ true }
-        snippets={ globalSnippets }
-        setDeleteSnippet={ setDeleteSnippet }
-        setEditSnippet={ setEditSnippet }
-        onOpenAddDialog={ onOpenAddDialog }
-      />
+      <div className={ classes.listContainer }>
+        <div className={ classes.listCell }>
+          <SettingsSnippetGroup
+            global={ false }
+            snippets={ pageSnippets }
+            setDeleteSnippet={ setDeleteSnippet }
+            setEditSnippet={ setEditSnippet }
+            onOpenAddDialog={ onOpenAddDialog }
+          />
+        </div>
+        <div className={ classes.listCell }>
+          <SettingsSnippetGroup
+            global={ true }
+            snippets={ globalSnippets }
+            setDeleteSnippet={ setDeleteSnippet }
+            setEditSnippet={ setEditSnippet }
+            onOpenAddDialog={ onOpenAddDialog }
+          />
+        </div>
+      </div>
       <div className={ classes.appbar }>
         <AppBar color="default" position="relative">
           <Toolbar>
