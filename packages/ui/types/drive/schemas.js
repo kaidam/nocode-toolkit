@@ -46,7 +46,7 @@ const folder = {
 const document = {
   driver: 'drive',
   type: 'document',
-  title: 'Create New Google Docs',
+  title: 'Create New Google Doc',
   icon: 'docs',
   metadata: {
     externalEditor: true,
@@ -80,7 +80,7 @@ const image = {
 
 const finder = {
   driver: 'drive',
-  title: 'Add Existing Drive Content',
+  title: 'Find Existing Drive Content',
   icon: 'drive',
   metadata: {},
   parentFilter: ['section', 'local.folder', 'home'],
