@@ -50,6 +50,7 @@ const document = {
   icon: 'docs',
   metadata: {
     externalEditor: true,
+    fullHeight: false,
   },
   parentFilter: ['section', 'drive.finder', 'drive.folder'],
   schema: [{

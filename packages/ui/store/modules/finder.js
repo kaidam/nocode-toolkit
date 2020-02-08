@@ -302,7 +302,7 @@ const sideEffects = {
         type,
       }, getState)
 
-      const [ parentType, parent ] = location.split(':')
+      let [ parentType, parent ] = location.split(':')
 
       if(parentType == 'section') {
 
@@ -314,50 +314,47 @@ const sideEffects = {
           driver,
           parent,
         })
-        
-        console.log('--------------------------------------------')
-        console.log('We have ensured the parent folder')
-        console.dir(parentFolder)
+
+        parent = parentFolder.id
       }
-      else {
-        // first - create the remote item via the driver
-        const newItem = await loaders.createRemoteItem(getState, {
-          driver,
-          parent,
-          data: {
-            mimeType: type,
-            ...saveData
-          },
-        })
+      
+      // first - create the remote item via the driver
+      const newItem = await loaders.createRemoteItem(getState, {
+        driver,
+        parent,
+        data: {
+          mimeType: type,
+          ...saveData
+        },
+      })
 
-        // trigger a rebuild so the backend has the new item in the tree
-        await dispatch(jobActions.rebuild({
-          manualComplete: true,
-        }))
+      // trigger a rebuild so the backend has the new item in the tree
+      await dispatch(jobActions.rebuild({
+        manualComplete: true,
+      }))
 
-        // get the annotation data from the options form
-        const {
+      // get the annotation data from the options form
+      const {
+        annotation,
+      } = typeUtils.getSaveData({
+        driver,
+        type,
+        item: null,
+        data,
+      })
+
+      // if it exists - then update the annotation server side
+      if(annotation) {
+        await dispatch(contentActions.saveAnnotation({
+          id: newItem.id,
           annotation,
-        } = typeUtils.getSaveData({
-          driver,
-          type,
-          item: null,
-          data,
-        })
+        }, data))
+      }
 
-        // if it exists - then update the annotation server side
-        if(annotation) {
-          await dispatch(contentActions.saveAnnotation({
-            id: newItem.id,
-            annotation,
-          }, data))
-        }
+      dispatch(snackbarActions.setSuccess(`${type} created`))
 
-        dispatch(snackbarActions.setSuccess(`${type} created`))
-
-        await dispatch(uiActions.closeDialogs())
-        await dispatch(jobActions.reload())
-      } 
+      await dispatch(uiActions.closeDialogs())
+      await dispatch(jobActions.reload())
     }
     else {
 
