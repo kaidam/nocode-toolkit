@@ -157,19 +157,9 @@ const SettingsSnippets = ({
   })
 
   const snippets = useSelector(selectors.ui.snippets)
-
-  const pageSnippets = useMemo(() => {
-    return snippets.filter(snippet => !snippet.global)
-  }, [
-    snippets,
-  ])
-
-  const globalSnippets = useMemo(() => {
-    return snippets.filter(snippet => snippet.global)
-  }, [
-    snippets,
-  ])
-
+  const pageSnippets = useSelector(selectors.ui.pageSnippets)
+  const globalSnippets = useSelector(selectors.ui.globalSnippets)
+  
   const [ editSnippet, setEditSnippet ] = useState(null)
   const [ deleteSnippet, setDeleteSnippet ] = useState(null)
   

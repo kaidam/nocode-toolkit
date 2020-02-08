@@ -24,6 +24,41 @@ const snippets = createSelector(
   }
 )
 
+const pageSnippets = createSelector(
+  snippets,
+  (snippets) => snippets.filter(snippet => !snippet.global)
+)
+
+const globalSnippets = createSelector(
+  snippets,
+  (snippets) => snippets.filter(snippet => snippet.global)
+)
+
+const headSnippetCode = createSelector(
+  globalSnippets,
+  (snippets) => snippets
+    .filter(snippet => snippet.headCode)
+    .map(snippet => snippet.headCode)
+    .join("\n")
+)
+
+const beforeBodySnippetCode = createSelector(
+  globalSnippets,
+  (snippets) => snippets
+    .filter(snippet => snippet.beforeBodyCode)
+    .map(snippet => snippet.beforeBodyCode)
+    .join("\n")
+)
+
+const afterBodySnippetCode = createSelector(
+  globalSnippets,
+  (snippets) => snippets
+    .filter(snippet => snippet.afterBodyCode)
+    .map(snippet => snippet.afterBodyCode)
+    .join("\n")
+)
+
+
 const templates = createSelector(
   settings,
   (settings) => {
@@ -89,6 +124,11 @@ const selectors = {
   website,
   dnsInfo,
   snippets,
+  pageSnippets,
+  globalSnippets,
+  headSnippetCode,
+  beforeBodySnippetCode,
+  afterBodySnippetCode,
   templates,
 }
 

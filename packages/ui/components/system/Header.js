@@ -8,15 +8,7 @@ const SiteHeader = ({
   children,
 }) => {
   const settings = useSelector(selectors.ui.settings)
-
-  const snippets = settings && settings.data && settings.data.snippets ?
-    settings.data.snippets.filter(snippet => snippet.global ? true : false) :
-    []
-
-  const globalSnippetHTML = snippets
-    .map(snippet => snippet.code)
-    .join("\n")
-
+  const headSnippetHTML = useSelector(selectors.ui.headSnippetCode)
   return (
     <React.Fragment>
       <Header
@@ -32,7 +24,8 @@ const SiteHeader = ({
         { children }
       </Header>
       <UserHTML
-        html={ globalSnippetHTML }
+        head
+        html={ headSnippetHTML }
       />
     </React.Fragment>
     
