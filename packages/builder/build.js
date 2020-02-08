@@ -18,7 +18,9 @@ const runBuild = ({
   logger(`building ${name}`)
   const compiler = webpack(config)
   let compileErrors = []
-  compiler.hooks.afterCompile.tap('compileMessage', (data) => compileErrors = data.errors)
+  compiler.hooks.afterCompile.tap('compileMessage', (data) => {
+    compileErrors = data.errors
+  })
   compiler.run((err, stats) => {
     if(err) return done(err)
     logger(`done - ${name} build stats:`)

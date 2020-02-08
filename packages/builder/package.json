@@ -4,7 +4,8 @@
   "description": "Build static websites using React and dynamic data sources.",
   "main": "index.js",
   "scripts": {
-    "test": "tape **/*.test.js | tap-spec"
+    "test": "tape **/*.test.js | tap-spec",
+    "lint": "eslint build.js"
   },
   "bin": {
     "nocode": "./cli.js"
@@ -46,6 +47,9 @@
     "yargs": "^15.0.1"
   },
   "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.20.1",
     "tap-spec": "^5.0.0",
     "tape": "^4.10.1"
   },
