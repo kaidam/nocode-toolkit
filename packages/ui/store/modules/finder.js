@@ -106,8 +106,15 @@ const loaders = {
 
   ensureSectionFolder: (getState, {
     driver,
-    parent,
-  }) => axios.post(apiUtils.websiteUrl(getState, `/remote/${driver}/ensureSection/${parent}`))
+    section,
+  }) => axios.post(apiUtils.websiteUrl(getState, `/remote/${driver}/section/${section}/folder`))
+    .then(apiUtils.process),
+
+  linkContentToSection: (getState, {
+    driver,
+    section,
+    content_id,
+  }) => axios.post(apiUtils.websiteUrl(getState, `/remote/${driver}/section/${section}/content/${content_id}`))
     .then(apiUtils.process),
 }
 
@@ -303,30 +310,40 @@ const sideEffects = {
       }, getState)
 
       let [ parentType, parent ] = location.split(':')
+      let parentId = parent
 
-      if(parentType == 'section') {
-
-        // first - ensure the nocode folder for the section
-        // this will also link the folder to the section (in ghost mode)
-        // so once this is done - all we need to do is add the
-        // content to the returned parent and rebuild
+      // we are adding a remote item to a section
+      // so we need a folder to create it in
+      // first - ensure the nocode folder for the section
+      // this will also link the folder to the section (in ghost mode)
+      // so once this is done - all we need to do is add the
+      // content to the returned parent and rebuild
+      if(parentType == 'section') {        
         const parentFolder = await loaders.ensureSectionFolder(getState, {
           driver,
-          parent,
+          section: parent,
         })
-
-        parent = parentFolder.id
+        parentId = parentFolder.id
       }
       
-      // first - create the remote item via the driver
+      // create the remote item via the driver
       const newItem = await loaders.createRemoteItem(getState, {
         driver,
-        parent,
+        parent: parentId,
         data: {
           mimeType: type,
           ...saveData
         },
       })
+
+      // now we need to link the new item to the section
+      if(parentType == 'section') {
+        await loaders.linkContentToSection(getState, {
+          driver,
+          section: parent,
+          content_id: newItem.id,
+        })
+      }
 
       // trigger a rebuild so the backend has the new item in the tree
       await dispatch(jobActions.rebuild({
