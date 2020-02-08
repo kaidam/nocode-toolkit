@@ -1,6 +1,7 @@
 import React from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import SectionAdd from './SectionAdd'
+import SectionSettings from './SectionSettings'
 
 const useStyles = makeStyles(theme => createStyles({
   root: {
@@ -12,6 +13,10 @@ const useStyles = makeStyles(theme => createStyles({
   },
   children: {
     flexGrow: 0,
+  },
+  settings: {
+    flexGrow: 0,
+    marginRight: theme.spacing(1),
   },
   add: {
     flexGrow: 0,
@@ -32,6 +37,12 @@ const SectionEditor = ({
   
   return (
     <div className={ classes.root }>
+      <div className={ classes.settings }>
+        <SectionSettings
+          id={ id }
+          tiny={ tiny }
+        />
+      </div>
       <div className={ classes.filler }>
       </div>
       {

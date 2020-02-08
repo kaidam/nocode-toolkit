@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react'
+import React, { useCallback } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch } from 'react-redux'
 
@@ -8,15 +8,14 @@ import Tooltip from '@material-ui/core/Tooltip'
 import Actions from '../../utils/actions'
 
 import contentActions from '../../store/modules/content'
-import finderActions from '../../store/modules/finder'
 
 import typeUI from '../../types/ui'
 import icons from '../../icons'
 
 import MenuButton from './MenuButton'
 
-const AddIcon = icons.add
 const SettingsIcon = icons.settings
+const MoreVertIcon = icons.moreVert
 
 const useStyles = makeStyles({
   tinyRoot: {
@@ -29,56 +28,46 @@ const useStyles = makeStyles({
   }
 })
 
-const SectionAdd = ({
+const SectionSettings = ({
   id,
-  filter,
-  location,
-  structure,
   tiny,
-  stashQueryParams,
-  extraItems = [],
 }) => {
   const actions = Actions(useDispatch(), {
     onOpenContentForm: contentActions.openDialogContentForm,
-    onOpenFinder: finderActions.openDialogFinder,
   })
   const classes = useStyles()
-  const menuItems = useMemo(
-    () => {
-      return typeUI.addContentOptions({
-        filter,
-        location,
-        structure,
-        stashQueryParams,
-        onOpenContentForm: actions.onOpenContentForm,
-        onOpenFinder: actions.onOpenFinder,
-      })
+
+  const settingsHandler = useCallback(typeUI.editContentHandler({
+    item: {
+      id,
+      driver: 'local',
+      type: 'section',
     },
-    [
-      filter,
-      location,
-      structure,
-      stashQueryParams,
-      window._nocodeRebuildCount,
-    ]
-  )
+    location: 'root',
+    structure: 'tree',
+    onOpenContentForm: actions.onOpenContentForm,
+  }), [id, actions])
 
-  const useItems = menuItems
-    .concat(extraItems)
+  const settingsItem = {
+    title: 'Settings',
+    icon: SettingsIcon,
+    handler: settingsHandler,
+  }
 
+  const useItems = [settingsItem]
+    
   return (
     <MenuButton
       items={ useItems }
       tiny
       getButton={ onClick => (
-        <Tooltip title="Add Content">
+        <Tooltip title="Edit Settings">
           <Fab
             size="small"
-            color="secondary"
             className={ tiny ? classes.tinyRoot : null }
             onClick={ onClick }
           >
-            <AddIcon />
+            <MoreVertIcon />
           </Fab>
         </Tooltip>
       )}
@@ -86,4 +75,4 @@ const SectionAdd = ({
   )
 }
 
-export default SectionAdd
+export default SectionSettings
