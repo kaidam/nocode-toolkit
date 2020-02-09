@@ -116,6 +116,13 @@ const loaders = {
     content_id,
   }) => axios.post(apiUtils.websiteUrl(getState, `/remote/${driver}/section/${section}/content/${content_id}`))
     .then(apiUtils.process),
+
+  linkContentToSingleton: (getState, {
+    driver,
+    singleton,
+    content_id,
+  }) => axios.post(apiUtils.websiteUrl(getState, `/remote/${driver}/singleton/${singleton}/content/${content_id}`))
+    .then(apiUtils.process),
 }
 
 const sideEffects = {
@@ -335,7 +342,7 @@ const sideEffects = {
       // this will also link the folder to the section (in ghost mode)
       // so once this is done - all we need to do is add the
       // content to the returned parent and rebuild
-      if(parentType == 'section') {        
+      if(parentType == 'section' || parentType == 'singleton') {
         const parentFolder = await loaders.ensureSectionFolder(getState, {
           driver,
           section: parent,
@@ -358,6 +365,13 @@ const sideEffects = {
         await loaders.linkContentToSection(getState, {
           driver,
           section: parent,
+          content_id: newItem.id,
+        })
+      }
+      else if(parentType == 'singleton') {
+        await loaders.linkContentToSingleton(getState, {
+          driver,
+          singleton: parent,
           content_id: newItem.id,
         })
       }
