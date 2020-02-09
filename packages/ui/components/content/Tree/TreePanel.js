@@ -32,6 +32,7 @@ const TreePanel = ({
   return (
     <Layout
       data={ data }
+      location="section"
       CellOptionsWrapper={ CellOptionsWrapper }
     />
   )

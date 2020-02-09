@@ -13,6 +13,7 @@ const Layout = ({
   renderers = {},
   renderCell,
   CellOptionsWrapper = CellOptions,
+  location,
 }) => {
   const showUI = useSelector(selectors.ui.showUI)
 
@@ -33,6 +34,7 @@ const Layout = ({
       const editor = data.disableLayoutEditor ? null : (
         <Suspense>
           <CellOptionsWrapper
+            location={ location }
             data={ data }
             cell={ cell }
             rowIndex={ i }
