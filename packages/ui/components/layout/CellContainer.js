@@ -23,6 +23,14 @@ const useStyles = makeStyles(theme => createStyles({
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
+  nonSelectableRoot: {
+    position: 'relative',
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
   editor: {
     padding: '8px',
     flexGrow: 0,
@@ -34,51 +42,30 @@ const useStyles = makeStyles(theme => createStyles({
     border: ['2px dotted #66a', '!important'],
     backgroundColor: ['#f5f5ff', '!important'],
   },
-  smallOptionButton: {
-    width: '24px',
-    height: '24px',
-    minHeight: '24px',
-    '& svg': {
-      fontSize: '1rem',
-    }
-  },
-  topButtons: {
-    position: 'absolute',
-    width: '100%',
-    top: '0px',
-    left: '0px',
-    textAlign: 'center',
-  },
-  bottomButtons: {
-    position: 'absolute',
-    width: '100%',
-    bottom: '0px',
-    left: '0px',
-    textAlign: 'center',
-  },
 }))
 
 
 const CellContainer = ({
+  CellOptionsWrapper = CellOptions,
   isActive,
   location,
   data,
   cell,
   rowIndex,
   cellIndex,
-  onSelect,
   children,
-  CellOptionsWrapper = CellOptions,
+  selectable,
+  onSelect,
+  onResetSelect
 }) => {
   const classes = useStyles()
   const className = [
-    classes.root,
+    selectable ? classes.root : classes.nonSelectableRoot,
     isActive ? classes.activeRoot : null
   ].filter(c => c).join(' ')
   return (
     <div
       className={ className }
-      onClick={ onSelect }
     >
       <div className={ classes.editor }>
         {
@@ -90,11 +77,19 @@ const CellContainer = ({
               cell={ cell }
               rowIndex={ rowIndex }
               cellIndex={ cellIndex }
+              onChange={ onResetSelect }
             />
           )
         }
       </div>
-      <div className={ classes.content }>
+      <div
+        className={ classes.content }
+        onClick={ (e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          onSelect()
+        }}
+      >
         { children }
       </div>
     </div>

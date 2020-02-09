@@ -14,6 +14,7 @@ const Layout = ({
   renderCell,
   CellOptionsWrapper,
   location,
+  selectable = true,
 }) => {
   const showUI = useSelector(selectors.ui.showUI)
 
@@ -27,7 +28,7 @@ const Layout = ({
 
     const cells = row.map((cell, j) => {
 
-      const isActive = activeCell && activeCell.row == i && activeCell.cell == j
+      const isActive = selectable && activeCell && activeCell.row == i && activeCell.cell == j
 
       const cellConfig = cellTypes.getCellConfig(cell.component)
       const cellContent = cellTypes.getContent({
@@ -74,7 +75,11 @@ const Layout = ({
               cell={ cell }
               rowIndex={ i }
               cellIndex={ j }
+              selectable={ selectable }
               onSelect={ () => setActiveCell(isActive ? null : {row:i, cell:j})}
+              onResetSelect={ () => {
+                setActiveCell(null) 
+              }}
             >
               { renderedCell }
             </CellContainer>

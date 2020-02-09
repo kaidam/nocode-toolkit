@@ -3,6 +3,7 @@ import uuid from 'uuid/v4'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { useSelector, useDispatch } from 'react-redux'
 import Fab from '@material-ui/core/Fab'
+import Tooltip from '@material-ui/core/Tooltip'
 
 import Actions from '../../utils/actions'
 
@@ -38,6 +39,60 @@ const useStyles = makeStyles(theme => createStyles({
     minHeight: '24px',
     '& svg': {
       fontSize: '1rem',
+    }
+  },
+  buttonContainer: {
+    transition: 'opacity 200ms linear',
+  },
+  buttonContainerHidden: {
+    opacity: 0,
+  },
+  buttonContainerVisible: {
+    opacity: 1,
+  },
+  toolbarButtons: {
+    position: 'absolute',
+    left: '0px',
+    width: '100%',
+    zIndex: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  sidebarButtons: {
+    position: 'absolute',
+    top: '-12px',
+    right: '0px',
+    height: '100%',
+    zIndex: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  toolbarButtonsTop: {
+    top: '-12px',
+  },
+  toolbarButtonsBottom: {
+    bottom: '-12px',
+  },
+  toolbarButton: {
+    marginLeft: '4px',
+    marginRight: '4px',
+    width: '20px',
+    height: '20px',
+    minHeight: '20px',
+    '& svg': {
+      fontSize: '0.8rem',
+    }
+  },
+  sidebarButton: {
+    marginLeft: '4px',
+    marginRight: '4px',
+    width: '20px',
+    height: '20px',
+    minHeight: '20px',
+    '& svg': {
+      fontSize: '0.8rem',
     }
   },
 }))
@@ -78,6 +133,7 @@ const CellOptions = ({
   location = 'document',
   onEditLayout,
   onSaveContent,
+  onChange,
 }) => {
 
   const actions = Actions(useDispatch(), {
@@ -115,12 +171,17 @@ const CellOptions = ({
 
   const cellSchemaDefinition = library.get(`local.${cell.component}`)
 
+  const canEdit = cellSchemaDefinition && cellSchemaDefinition.cellConfig && cellSchemaDefinition.cellConfig.disableEdit ?
+    false :
+    true
+
   const getContentTypeOptions = useCallback(({
     method,
     params,
   }) => {
 
     const insertHandler = (cell) => {
+      onChange && onChange()
       onEditLayout({
         data,
         rowIndex,
@@ -173,6 +234,7 @@ const CellOptions = ({
     method,
     params,
   }) => () => {
+    onChange && onChange()
     onEditLayout({
       data,
       rowIndex,
@@ -203,6 +265,86 @@ const CellOptions = ({
   }, [
     getEditLayoutHandler,
     getContentTypeOptions,
+  ])
+
+  const moveItems = useMemo(() => {
+    return [{
+      title: 'Up',
+      help: 'Move this cell up a row',
+      icon: IconCombo(UpIcon, RowIcon),
+      items: [{
+        title: 'Up: New Row',
+        help: 'New row above',
+        icon: IconCombo(UpIcon, RowIcon),
+        handler: getEditLayoutHandler({
+          method: 'moveCell',
+          params: {
+            location: 'up',
+            merge: false,
+          },
+        })
+      }, {
+        title: 'Up: Merge',
+        help: 'Merge into row above',
+        icon: IconCombo(UpIcon, RowIcon),
+        handler: getEditLayoutHandler({
+          method: 'moveCell',
+          params: {
+            location: 'up',
+            merge: true,
+          },
+        })
+      }]
+    }, {
+      title: 'Down',
+      help: 'Move this cell down a row',
+      icon: IconCombo(DownIcon, RowIcon),
+      items: [{
+        title: 'Down: New Row',
+        help: 'New row below',
+        icon: IconCombo(DownIcon, RowIcon),
+        handler: getEditLayoutHandler({
+          method: 'moveCell',
+          params: {
+            location: 'down',
+            merge: false,
+          },
+        })
+      }, {
+        title: 'Down: Merge',
+        help: 'Merge into row below',
+        icon: IconCombo(DownIcon, RowIcon),
+        handler: getEditLayoutHandler({
+          method: 'moveCell',
+          params: {
+            location: 'down',
+            merge: true,
+          },
+        })
+      }]
+    }, {
+      title: 'Left',
+      help: 'Move this cell left',
+      icon: IconCombo(LeftIcon, CellIcon),
+      handler: getEditLayoutHandler({
+        method: 'moveCell',
+        params: {
+          location: 'left',
+        },
+      })
+    }, {
+      title: 'Right',
+      help: 'Move this cell right',
+      icon: IconCombo(RightIcon, CellIcon),
+      handler: getEditLayoutHandler({
+        method: 'moveCell',
+        params: {
+          location: 'right',
+        },
+      })
+    }]
+  }, [
+    getEditLayoutHandler,
   ])
 
   const fullMenuItems = useMemo(() => {
@@ -236,81 +378,7 @@ const CellOptions = ({
       title: 'Move',
       help: 'Move this cell',
       icon: MoveIcon,
-      items: [{
-        title: 'Up',
-        help: 'Move this cell up a row',
-        icon: IconCombo(UpIcon, RowIcon),
-        items: [{
-          title: 'Up: New Row',
-          help: 'New row above',
-          icon: IconCombo(UpIcon, RowIcon),
-          handler: getEditLayoutHandler({
-            method: 'moveCell',
-            params: {
-              location: 'up',
-              merge: false,
-            },
-          })
-        }, {
-          title: 'Up: Merge',
-          help: 'Merge into row above',
-          icon: IconCombo(UpIcon, RowIcon),
-          handler: getEditLayoutHandler({
-            method: 'moveCell',
-            params: {
-              location: 'up',
-              merge: true,
-            },
-          })
-        }]
-      }, {
-        title: 'Down',
-        help: 'Move this cell down a row',
-        icon: IconCombo(DownIcon, RowIcon),
-        items: [{
-          title: 'Down: New Row',
-          help: 'New row below',
-          icon: IconCombo(DownIcon, RowIcon),
-          handler: getEditLayoutHandler({
-            method: 'moveCell',
-            params: {
-              location: 'down',
-              merge: false,
-            },
-          })
-        }, {
-          title: 'Down: Merge',
-          help: 'Merge into row below',
-          icon: IconCombo(DownIcon, RowIcon),
-          handler: getEditLayoutHandler({
-            method: 'moveCell',
-            params: {
-              location: 'down',
-              merge: true,
-            },
-          })
-        }]
-      }, {
-        title: 'Left',
-        help: 'Move this cell left',
-        icon: IconCombo(LeftIcon, CellIcon),
-        handler: getEditLayoutHandler({
-          method: 'moveCell',
-          params: {
-            location: 'left',
-          },
-        })
-      }, {
-        title: 'Right',
-        help: 'Move this cell right',
-        icon: IconCombo(RightIcon, CellIcon),
-        handler: getEditLayoutHandler({
-          method: 'moveCell',
-          params: {
-            location: 'right',
-          },
-        })
-      }]
+      items: moveItems,
     }
 
     const deleteOption = {
@@ -320,9 +388,7 @@ const CellOptions = ({
       handler: onOpenDeleteConfirm,
     }
 
-    const canEdit = cellSchemaDefinition && cellSchemaDefinition.cellConfig && cellSchemaDefinition.cellConfig.disableEdit ?
-      false :
-      true
+    
 
     let menuItems = []
 
@@ -341,19 +407,22 @@ const CellOptions = ({
   }, [
     getEditLayoutHandler,
     getContentTypeOptions,
-    cellSchemaDefinition,
+    canEdit,
+    moveItems,
   ])
 
-  const getButton = useCallback((onClick) => {
+  const getButton = useCallback((Icon = OptionsIcon, tooltip = "Options", className = classes.smallOptionButton) => (onClick) => {
     return (
-      <Fab
-        size="small"
-        color={ isActive ? "secondary" : "default" }
-        className={ classes.smallOptionButton }
-        onClick={ onClick }
-      >
-        <OptionsIcon />
-      </Fab>
+      <Tooltip title={ tooltip }>
+        <Fab
+          size="small"
+          color={ isActive ? "secondary" : "default" }
+          className={ className }
+          onClick={ onClick }
+        >
+          <Icon />
+        </Fab>
+      </Tooltip>
     )
   }, [
     classes,
@@ -362,6 +431,7 @@ const CellOptions = ({
 
   const onDeleteSubmit = useCallback(() => {
     onCloseDeleteConfirm()
+    onChange && onChange()
     onEditLayout({
       data,
       rowIndex,
@@ -379,6 +449,7 @@ const CellOptions = ({
         type,
       } = addingCell
 
+      onChange && onChange()
       // this updates the cell layout in the store
       onEditLayout({
         data,
@@ -398,6 +469,7 @@ const CellOptions = ({
     }
     // this is the callback from the form when we are saving an existing cell
     else {
+      onChange && onChange()
       onSaveContent({
         item: data.item,
         cell,
@@ -419,6 +491,7 @@ const CellOptions = ({
   ])
 
   const onSettingsEditorSubmit = useCallback((payload) => {
+    onChange && onChange()
     onSaveContent({
       item: data.item,
       cell,
@@ -439,11 +512,16 @@ const CellOptions = ({
     placeholderMenuItems :
     fullMenuItems
 
+  const buttonContainerClassname = [
+    classes.buttonContainer,
+    isActive ? classes.buttonContainerVisible : classes.buttonContainerHidden,
+  ].join(' ')
+
   return (
     <React.Fragment>
       <MenuButton
         items={ menuItems }
-        getButton={ getButton }
+        getButton={ getButton() }
       />
       {
         deleteConfirmOpen && (
@@ -471,6 +549,52 @@ const CellOptions = ({
           />
         )
       }
+      <div className={ buttonContainerClassname }>
+        {
+          isActive && (
+            <React.Fragment>
+              <div className={ [classes.toolbarButtons, classes.toolbarButtonsTop].join(' ') }>
+                <MenuButton
+                  items={ 
+                    getContentTypeOptions({
+                      method: 'insertRow',
+                      params: {
+                        location: 'before',
+                      },
+                    })
+                  }
+                  getButton={ getButton(AddIcon, "Add Content Above", classes.toolbarButton) }
+                />
+              </div>
+              <div className={ classes.sidebarButtons }>
+                {
+                  canEdit && getButton(EditIcon, "Edit", classes.sidebarButton)(() => onOpenEditor())
+                }
+                <MenuButton
+                  items={ moveItems }
+                  getButton={ getButton(MoveIcon, "Move this cell", classes.sidebarButton) }
+                />
+                {
+                  getButton(DeleteIcon, "Delete", classes.sidebarButton)(() => onOpenDeleteConfirm())
+                }
+              </div>
+              <div className={ [classes.toolbarButtons, classes.toolbarButtonsBottom].join(' ') }>
+                <MenuButton
+                  items={ 
+                    getContentTypeOptions({
+                      method: 'insertRow',
+                      params: {
+                        location: 'after',
+                      },
+                    })
+                  }
+                  getButton={ getButton(AddIcon, "Add Content After", classes.toolbarButton) }
+                />
+              </div>
+            </React.Fragment>
+          )
+        }
+      </div>
     </React.Fragment>
   )
 }
