@@ -74,6 +74,7 @@ const CellOptions = ({
   cell,
   rowIndex,
   cellIndex,
+  isActive,
   location = 'document',
   onEditLayout,
   onSaveContent,
@@ -347,13 +348,17 @@ const CellOptions = ({
     return (
       <Fab
         size="small"
+        color={ isActive ? "secondary" : "" }
         className={ classes.smallOptionButton }
         onClick={ onClick }
       >
         <OptionsIcon />
       </Fab>
     )
-  }, [classes])
+  }, [
+    classes,
+    isActive,
+  ])
 
   const onDeleteSubmit = useCallback(() => {
     onCloseDeleteConfirm()

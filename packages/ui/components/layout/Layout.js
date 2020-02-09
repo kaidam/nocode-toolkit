@@ -1,4 +1,4 @@
-import React, { lazy } from 'react'
+import React, { lazy, useState } from 'react'
 import { useSelector } from 'react-redux'
 import selectors from '../../store/selectors'
 import Suspense from '../system/Suspense'
@@ -18,6 +18,8 @@ const Layout = ({
 }) => {
   const showUI = useSelector(selectors.ui.showUI)
 
+  const [activeCell, setActiveCell] = useState(null)
+
   const RootRenderer = renderers.root || defaultRenderers.root
   const RowRenderer = renderers.row || defaultRenderers.row
   const CellRenderer = renderers.cell || defaultRenderers.cell
@@ -25,6 +27,8 @@ const Layout = ({
   const rows = data.layout.map((row, i) => {
 
     const cells = row.map((cell, j) => {
+
+      const isActive = activeCell && activeCell.row == i && activeCell.cell == j
 
       const cellConfig = cellTypes.getCellConfig(cell.component)
       const cellContent = cellTypes.getContent({
@@ -35,6 +39,7 @@ const Layout = ({
       const editor = data.disableLayoutEditor ? null : (
         <Suspense>
           <CellOptionsWrapper
+            isActive={ isActive }
             location={ location }
             data={ data }
             cell={ cell }
@@ -76,7 +81,10 @@ const Layout = ({
       if(showUI) {
         return (
           <Suspense>
-            <CellContainer>
+            <CellContainer
+              isActive={ isActive }
+              onSelect={ () => setActiveCell(isActive ? null : {row:i, cell:j})}
+            >
               { renderedCell }
             </CellContainer>
           </Suspense>
