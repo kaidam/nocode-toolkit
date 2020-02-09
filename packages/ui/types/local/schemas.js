@@ -391,6 +391,7 @@ const documentTitle = {
   parentFilter: ['cell'],
   initialValues: {},
   schema: [],
+  addCellFilter: (settings, { location }) => location == 'document',
   cellConfig: {
     group: 'document',
     cell: {
@@ -410,6 +411,7 @@ const documentInfo = {
   parentFilter: ['cell'],
   initialValues: {},
   schema: [],
+  addCellFilter: (settings, { location }) => location == 'document',
   cellConfig: {
     group: 'document',
     component: DocumentInfo,
@@ -430,6 +432,7 @@ const documentContent = {
   parentFilter: ['cell'],
   initialValues: {},
   schema: [],
+  addCellFilter: (settings, { location }) => location == 'document',
   cellConfig: {
     group: 'document',
     cell: {
@@ -451,6 +454,7 @@ const breadcrumbs = {
   parentFilter: ['cell'],
   initialValues: {},
   schema: [],
+  addCellFilter: (settings, { location }) => location == 'document',
   cellConfig: {
     disableEdit: true,
     group: 'navigation',
@@ -471,6 +475,7 @@ const backnextButtons = {
   parentFilter: ['cell'],
   initialValues: {},
   schema: [],
+  addCellFilter: (settings, { location }) => location == 'document',
   cellConfig: {
     disableEdit: true,
     group: 'navigation',
