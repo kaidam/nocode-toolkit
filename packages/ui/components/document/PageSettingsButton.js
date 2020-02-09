@@ -14,7 +14,7 @@ import uiActions from '../../store/modules/ui'
 import MenuButton from '../buttons/MenuButton'
 import PageSettingsSaveTemplateDialog from './PageSettingsSaveTemplateDialog'
 
-const SettingsIcon = icons.moreVert
+const SettingsIcon = icons.settings
 const SaveIcon = icons.save
 
 const useStyles = makeStyles({
@@ -23,7 +23,7 @@ const useStyles = makeStyles({
     backgroundColor: '#f5f5f5',
     textAlign: 'left',
     minHeight: '45px',
-    padding: '10px',
+    padding: '12px',
   },
   button: {
     width: '24px',

@@ -7,6 +7,7 @@ import cellTypes from './cellTypes'
 import defaultRenderers from './renderers'
 
 const CellOptions = lazy(() => import(/* webpackChunkName: "ui" */ './CellOptions'))
+const CellContainer = lazy(() => import(/* webpackChunkName: "ui" */ './CellContainer'))
 
 const Layout = ({
   data,
@@ -61,7 +62,7 @@ const Layout = ({
         )
       }
 
-      return (
+      const renderedCell = (
         <CellRenderer
           key={ j }
           showUI={ showUI }
@@ -71,6 +72,19 @@ const Layout = ({
           content={ content }
         />
       )
+
+      if(showUI) {
+        return (
+          <Suspense>
+            <CellContainer>
+              { renderedCell }
+            </CellContainer>
+          </Suspense>
+        )
+      }
+      else {
+        return renderedCell
+      }
 
     })
 

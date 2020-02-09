@@ -66,7 +66,7 @@ export const RenderCell = ({
         height: '100%',
         width: '100%',
         position: 'relative',
-        minHeight: '45px',
+        //minHeight: '45px',
         display: 'flex',
         alignItems: 'center',
       }}
