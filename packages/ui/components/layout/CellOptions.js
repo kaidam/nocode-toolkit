@@ -18,6 +18,7 @@ import icons from '../../icons'
 import selectors from '../../store/selectors'
 import contentActions from '../../store/modules/content'
 
+const OptionsIcon = icons.moreVert
 const EditIcon = icons.edit
 const AddIcon = icons.add
 const MoveIcon = icons.move
@@ -443,7 +444,7 @@ const CellOptions = ({
         className={ classes.smallOptionButton }
         onClick={ onClick }
       >
-        <EditIcon />
+        <OptionsIcon />
       </Fab>
     )
   }, [classes])

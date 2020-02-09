@@ -14,14 +14,14 @@ import uiActions from '../../store/modules/ui'
 import MenuButton from '../buttons/MenuButton'
 import PageSettingsSaveTemplateDialog from './PageSettingsSaveTemplateDialog'
 
-const SettingsIcon = icons.settings
+const SettingsIcon = icons.moreVert
 const SaveIcon = icons.save
 
 const useStyles = makeStyles({
   root: {
     //border: '1px solid #f5f5f5',
     backgroundColor: '#f5f5f5',
-    textAlign: 'right',
+    textAlign: 'left',
     minHeight: '45px',
     padding: '10px',
   },
@@ -92,7 +92,6 @@ const PageSettingsButton = ({
           <Tooltip title="Edit Settings">
             <Fab
               size="small"
-              color="secondary"
               className={ classes.button }
               onClick={ onClick }
             >

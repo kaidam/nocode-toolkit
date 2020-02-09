@@ -77,7 +77,7 @@ export const RenderCell = ({
             style={{
               position: 'absolute',
               top: '0px',
-              right: '0px',
+              left: '0px',
               padding: '8px',
             }}
           >
@@ -90,7 +90,7 @@ export const RenderCell = ({
           width: '100%',
           padding: `${padding}px`,
           textAlign: align,
-          marginRight: showUI ? '40px' : '0px',
+          marginLeft: showUI ? '40px' : '0px',
         }}
       >
         { content }
