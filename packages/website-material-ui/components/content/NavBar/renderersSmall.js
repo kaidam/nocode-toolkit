@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import IconButton from '@material-ui/core/IconButton'
-import MoreVert from '@material-ui/icons/MoreVert'
+import MenuIcon from '@material-ui/icons/Menu'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 
@@ -89,7 +89,7 @@ const RenderRoot = ({
             aria-haspopup="true"
             onClick={ handleMenu }
           >
-            <MoreVert className={ classes.navButton } />
+            <MenuIcon className={ classes.navButton } />
           </IconButton>
           <Menu
             id="menu-appbar"

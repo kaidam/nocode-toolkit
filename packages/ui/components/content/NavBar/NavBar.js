@@ -16,10 +16,11 @@ const NavBar = ({
   const showUI = useSelector(selectors.ui.showUI)
   const sectionListSelector = useMemo(selectors.content.sectionList, [])
   const sectionList = useSelector(state => sectionListSelector(state, section))
+  const allContent = useSelector(selectors.content.contentAll)
+  const routeMap = useSelector(selectors.nocode.routeMap)
 
   const sectionFilter = useCallback((parentFilter, schemaDefinition) => {
     if(parentFilter.indexOf('section') < 0) return false
-    if(schemaDefinition.metadata.hasChildren) return false
     return true
   }, [])
 
@@ -47,11 +48,18 @@ const NavBar = ({
           key={ i }
           item={ item }
           renderers={ renderers }
+          allContent={ allContent }
+          routeMap={ routeMap }
           {...props}
         />
       )
     })
-  }, [withHome, sectionList, props])
+  }, [
+    withHome,
+    sectionList,
+    props,
+    allContent,
+  ])
 
   const editor = showUI && (
     <Suspense>
@@ -59,7 +67,7 @@ const NavBar = ({
         id={ section }
         filter={ sectionFilter }
         location={ `section:${section}` }
-        structure="list"
+        structure="tree"
         tiny
       />
     </Suspense>

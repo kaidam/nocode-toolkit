@@ -1,11 +1,14 @@
 import React, { lazy, useMemo, useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import Link from '@nocode-toolkit/website/Link'
+import routerActions from '@nocode-toolkit/website/store/moduleRouter'
 
 import Suspense from '../../system/Suspense'
 
 import itemTypes from '../../../types/item'
+
+import Actions from '../../../utils/actions'
 import selectors from '../../../store/selectors'
 
 import defaultRenderers from './renderers'
@@ -30,8 +33,15 @@ const NativeLinkComponent = ({
 const NavBarItem = ({
   item,
   renderers,
+  allContent,
+  routeMap,
   ...props
 }) => {
+
+  const actions = Actions(useDispatch(), {
+    navigateTo: routerActions.navigateTo,
+  })
+
   const route = useSelector(selectors.router.route)
 
   let isCurrent = route.item == item.id
@@ -71,10 +81,13 @@ const NavBarItem = ({
   return (
     <ItemRenderer
       item={ item }
+      allContent={ allContent }
+      routeMap={ routeMap }
       editor={ editor }
       isCurrent={ isCurrent }
       linkProps={ linkProps }
       LinkComponent={ LinkComponent }
+      onNavigateTo={ actions.navigateTo }
       {...props}
     />
   )

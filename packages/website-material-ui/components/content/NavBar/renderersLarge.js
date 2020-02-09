@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import classNames from 'classnames'
 import { makeStyles } from '@material-ui/core/styles'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
+import MenuButton from './MenuButton'
 
 import {
   getMergedClasses,
@@ -131,10 +132,13 @@ const RenderRoot = ({
 
 const RenderItem = ({
   item,
+  allContent,
+  routeMap,
   editor,
   isCurrent,
   linkProps,
   LinkComponent,
+  onNavigateTo,
   ...props
 }) => {
   const classes = getMergedClasses(useStyles({
@@ -146,22 +150,66 @@ const RenderItem = ({
     [classes.item]: true,
     [classes.itemActive]: isCurrent,
   })
+  if(item.type == 'folder') {
 
-  return (
-    <li
-      className={ classes.itemContainer }
-    >
-      <LinkComponent
-        className={ itemClass }
-        {...linkProps}
+    const getItemOptions = (item) => {
+      return item.children.map(id => {
+        const child = allContent[id]
+        const base = {
+          title: child.data.name,
+        }
+        if(child.type == 'folder') {
+          base.items = getItemOptions(child)
+        }
+        else {
+          base.handler = () => {
+            const route = routeMap[child.id]
+            onNavigateTo(route.name)
+          }
+        }
+        return base
+      })
+    }
+
+    return (
+      <MenuButton
+        getButton={ (onClick) => {
+          return (
+            <div
+              className={ classes.itemContainer }
+              onClick={ onClick }
+            >
+              <div className={ itemClass }>
+                <span>
+                  { editor }
+                </span>
+                { item.data.name }
+              </div>
+            </div>
+          )
+        }}
+        items={ getItemOptions(item) }
+        className={ classes.itemContainer }
+      />
+    )
+  }
+  else {
+    return (
+      <li
+        className={ classes.itemContainer }
       >
-        <span>
-          { editor }
-        </span>
-        { item.data.name }
-      </LinkComponent>
-    </li>
-  )
+        <LinkComponent
+          className={ itemClass }
+          {...linkProps}
+        >
+          <span>
+            { editor }
+          </span>
+          { item.data.name }
+        </LinkComponent>
+      </li>
+    )
+  }
 }
 
 const RendererItemOptions = ({
