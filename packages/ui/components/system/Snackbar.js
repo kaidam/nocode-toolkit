@@ -77,8 +77,8 @@ const SnackbarWrapper = ({
     <div>
       <Snackbar
         anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'left',
+          vertical: 'top',
+          horizontal: 'center',
         }}
         open={ open }
         autoHideDuration={ 5000 }
