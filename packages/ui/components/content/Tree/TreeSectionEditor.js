@@ -1,8 +1,8 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback, useState, useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import uuid from 'uuid/v4'
 
 import selectors from '../../../store/selectors'
-import SmallIconButton from '../../buttons/SmallIconButton'
 import icons from '../../../icons'
 
 import Actions from '../../../utils/actions'
@@ -10,70 +10,100 @@ import sectionActions from '../../../store/modules/section'
 
 import SectionEditor from '../../buttons/SectionEditor'
 
-const AddPanelTopIcon = icons.addPanelTop
-const AddPanelBottomIcon = icons.addPanelBottom
+import typeUI from '../../../types/ui'
+
+import CellEditor from '../../layout/CellEditor'
 
 const TreeSectionEditor = ({
   section,
 }) => {
 
   const actions = Actions(useDispatch(), {
-    onAddPanel: sectionActions.addPanel,
+    onEditLayout: sectionActions.editLayout,
   })
 
-  const sectionPanelSelector = useMemo(selectors.section.panels, [])
-  const panelData = useSelector(state => sectionPanelSelector(state, section))
-
+  const settings = useSelector(selectors.ui.settings)
   const parentFilter = useCallback((parentFilter) => parentFilter.indexOf('section') >= 0)
-  const hasPanelTop = panelData.panelTop ? true : false
-  const hasPanelBottom = panelData.panelBottom ? true : false
+
+  const [ addingCell, setAddingCell ] = useState(null)
 
   const extraAddItems = useMemo(() => {
-    const panels = []
-
-    if(!hasPanelTop) {
-      panels.push({
-        title: 'Add panel above',
-        icon: AddPanelTopIcon,
-        handler: () => actions.onAddPanel({
-          section,
-          panelName: 'panelTop',
-        })
-      })
-    }
-    if(!hasPanelBottom) {
-      panels.push({
-        title: 'Add panel below',
-        icon: AddPanelBottomIcon,
-        handler: () => actions.onAddPanel({
-          section,
-          panelName: 'panelBottom',
-        })
+    const insertHandler = (cell) => {
+      actions.onEditLayout({
+        section,
+        cell: Object.assign({}, cell, {
+          id: uuid(),
+        }),
+        method: 'appendRow',
       })
     }
 
-    if(panels.length > 0) {
-      return [{
-        title: 'Panel',
-        icon: AddPanelTopIcon,
-        items: panels,
-      }]
+    const addHandler = ({
+      type,
+    }) => {
+      setAddingCell({
+        component: type,
+        source: 'cell',
+        editor: 'local',
+      })
     }
+
+    const groups = typeUI.addCellWidgetOptions({
+      method: 'appendRow',
+      params: {},
+      location: 'section',
+      settings,
+      insertHandler,
+      addHandler,
+    })
+
+    return [{
+      title: 'Nocode Widgets',
+      icon: icons.nocode,
+      items: groups,
+    }]
   }, [
-    hasPanelTop,
-    hasPanelBottom,
+    settings,
+  ])
+
+  const onSubmitCellForm = useCallback((data) => {
+    const cell = Object.assign({}, addingCell, {
+      data,
+      id: uuid(),
+    })
+    actions.onEditLayout({
+      section,
+      cell,
+      method: 'appendRow',
+      onComplete: () => {
+        setAddingCell(null)
+      }
+    })
+  }, [
     section,
+    addingCell,
   ])
 
   return (
-    <SectionEditor
-      id={ section }
-      tiny
-      filter={ parentFilter }
-      location={ `section:${section}` }
-      structure="tree"
-      extraAddItems={ extraAddItems }
-    />
+    <React.Fragment>
+      <SectionEditor
+        id={ section }
+        tiny
+        filter={ parentFilter }
+        location={ `section:${section}` }
+        structure="tree"
+        extraAddItems={ extraAddItems }
+      />
+      {
+        addingCell && (
+          <CellEditor
+            cell={ addingCell }
+            onSubmit={ onSubmitCellForm }
+            onCancel={ () => setAddingCell(null) }
+          />
+        )
+      }
+    </React.Fragment> 
   )
 }
 

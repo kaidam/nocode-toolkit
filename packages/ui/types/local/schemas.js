@@ -29,7 +29,7 @@ const folder = {
     hasChildren: true,
     group: 'nocodeGroup',
   },
-  parentFilter: ['section', 'local.folder'],
+  parentFilter: ['local.folder'],
   initialValues: {
     name: '',
   },
@@ -54,7 +54,7 @@ const externalLink = {
   metadata: {
     nodeType: 'externalLink',
     contentType: 'externalLink',
-    group: 'nocodeGroup',
+    //group: 'nocodeGroup',
   },
   parentFilter: ['section', 'local.folder'],
   initialValues: {
@@ -95,7 +95,7 @@ const youtube = {
     contentType: 'video',
     group: 'nocodeGroup',
   },
-  parentFilter: ['section', 'local.folder', 'cell'],
+  parentFilter: ['cell'],
   initialValues: {
     name: '',
     url: '',
@@ -488,6 +488,7 @@ const search = {
   type: 'search',
   title: 'Search',
   icon: 'search',
+  metadata: {},
   parentFilter: ['cell'],
   initialValues: {},
   schema: [],

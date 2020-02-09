@@ -16,6 +16,17 @@ const insertRow = ({
   return layout
 }
 
+const appendRow = ({
+  layout,
+  cell,
+}) => {
+  const insertCell = cell || {
+    component: 'blank',
+  }
+  layout.push([insertCell])
+  return layout
+}
+
 const insertCell = ({
   layout,
   rowIndex,
@@ -108,6 +119,7 @@ const deleteCell = ({
 
 const EDIT_ACTION_HANDLERS = {
   insertRow,
+  appendRow,
   insertCell,
   moveCell,
   deleteCell,

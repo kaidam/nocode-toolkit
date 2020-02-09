@@ -3,6 +3,7 @@ import CreateReducer from '@nocode-toolkit/website/store/utils/createReducer'
 import CreateActions from '@nocode-toolkit/website/store/utils/createActions'
 
 import nocodeActions from '@nocode-toolkit/website/store/moduleNocode'
+import uuid from 'uuid/v4'
 
 import { section as initialState } from '../initialState'
 import apiUtils from '../../utils/api'
@@ -36,54 +37,11 @@ const loaders = {
 
 const sideEffects = {
 
-  addPanel: ({
-    section,
-    panelName,
-    onComplete,
-  }) => wrapper('addPanel', async (dispatch, getState) => {
-    const cell = {
-      component: 'blank',
-      placeholder: true,
-    }
-
-    const newLayout = layoutUtils.editLayout({
-      layout: [],
-      method: 'insertRow',
-      rowIndex: 0,
-      cellIndex: 0,
-      cell,
-    })
-
-    const sectionData = selectors.content.sectionItem()(getState(), section)
-    const annotation = Object.assign({}, sectionData.annotation, {
-      [panelName]: newLayout,
-    })
-    const newSection = Object.assign({}, sectionData, {
-      annotation,
-    })
-
-    dispatch(nocodeActions.setItem({
-      type: 'sections',
-      id: section,
-      data: newSection,
-    }))
-
-    await loaders.update(getState, {
-      section,
-      payload: {
-        annotation,
-      }
-    })
-
-    dispatch(snackbarActions.setSuccess(`panel inserted`))
-    if(onComplete) onComplete()
-  }),
-
   editLayout: ({
     section,
-    panelName,
-    rowIndex,
-    cellIndex,
+    panelName = 'panelTop',
+    rowIndex = 0,
+    cellIndex = 0,
     method,
     params = {},
     cell,
