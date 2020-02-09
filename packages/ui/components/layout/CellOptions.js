@@ -348,7 +348,7 @@ const CellOptions = ({
     return (
       <Fab
         size="small"
-        color={ isActive ? "secondary" : "" }
+        color={ isActive ? "secondary" : "default" }
         className={ classes.smallOptionButton }
         onClick={ onClick }
       >

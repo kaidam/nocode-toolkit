@@ -6,14 +6,13 @@ import Suspense from '../system/Suspense'
 import cellTypes from './cellTypes'
 import defaultRenderers from './renderers'
 
-const CellOptions = lazy(() => import(/* webpackChunkName: "ui" */ './CellOptions'))
 const CellContainer = lazy(() => import(/* webpackChunkName: "ui" */ './CellContainer'))
 
 const Layout = ({
   data,
   renderers = {},
   renderCell,
-  CellOptionsWrapper = CellOptions,
+  CellOptionsWrapper,
   location,
 }) => {
   const showUI = useSelector(selectors.ui.showUI)
@@ -35,19 +34,6 @@ const Layout = ({
         cell,
         data,
       })
-
-      const editor = data.disableLayoutEditor ? null : (
-        <Suspense>
-          <CellOptionsWrapper
-            isActive={ isActive }
-            location={ location }
-            data={ data }
-            cell={ cell }
-            rowIndex={ i }
-            cellIndex={ j }
-          />
-        </Suspense>
-      )
 
       let content = renderCell && renderCell({
         data,
@@ -73,7 +59,6 @@ const Layout = ({
           showUI={ showUI }
           cell={ cell }
           cellConfig={ cellConfig }
-          editor={ editor }
           content={ content }
         />
       )
@@ -82,7 +67,13 @@ const Layout = ({
         return (
           <Suspense>
             <CellContainer
+              CellOptionsWrapper={ CellOptionsWrapper }
               isActive={ isActive }
+              location={ location }
+              data={ data }
+              cell={ cell }
+              rowIndex={ i }
+              cellIndex={ j }
               onSelect={ () => setActiveCell(isActive ? null : {row:i, cell:j})}
             >
               { renderedCell }
