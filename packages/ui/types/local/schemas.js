@@ -209,8 +209,27 @@ const image = {
   parentFilter: ['cell'],
   initialValues: {
     image: null,
+    size: 'default',
   },
   schema: [{
+    id: 'size',
+    title: 'Size',
+    helperText: 'How large should the image be displayed',
+    component: 'select',
+    options: [{
+      title: 'Fit',
+      value: 'default',
+    },{
+      title: 'Large',
+      value: 'large',
+    },{
+      title: 'Medium',
+      value: 'medium',
+    },{
+      title: 'Small',
+      value: 'small',
+    }]
+  }, {
     id: 'image',
     title: 'Image',
     helperText: 'Upload an image',

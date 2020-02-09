@@ -1,17 +1,26 @@
 import React from 'react'
 
+const SIZES = {
+  small: '50%',
+  medium: '65%',
+  large: '80%',
+  default: '100%',
+}
+
 const DocumentImage = ({
   content,
   showUI,
 }) => {
   if(!content) return null
-  
+
   const {
     url,
     driver,
     unsplash = {},
   } = content.image
 
+  const size = SIZES[content.size] || SIZES.default
+  
   let copyrightContent = null
 
   if(driver == 'unsplash') {
@@ -59,16 +68,22 @@ const DocumentImage = ({
   return (
     <div
       style={{
-        position: 'relative',
+        display: 'inline-block',
+        width: size,
       }}
     >
-      <img
-        width="100%"
-        src={ url }
-      />
-      { copyright }
+      <div
+        style={{
+          position: 'relative',
+        }}
+      >
+        <img
+          width="100%"
+          src={ url }
+        />
+        { copyright }
+      </div>
     </div>
-    
   )
 }
 
