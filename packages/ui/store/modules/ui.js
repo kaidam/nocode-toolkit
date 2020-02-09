@@ -60,10 +60,16 @@ const reducers = {
   setLoading: (state, action) => {
     state.loading = action.payload
   },
+  setUser: (state, action) => {
+    state.user = action.payload
+  },
 }
 
 const loaders = {
   config: (getState) => axios.get(apiUtils.websiteUrl(getState, `/config`))
+    .then(apiUtils.process),
+
+  user: () => axios.get(apiUtils.apiUrl(`/auth/status`))
     .then(apiUtils.process),
 
   website: (id) => axios.get(apiUtils.apiUrl(`/websites/${id}`))
@@ -95,6 +101,8 @@ const sideEffects = {
       dispatch(actions.setInitialiseCalled())
       const data = await loaders.config(getState)
       dispatch(actions.setConfig(data))
+      const user = await loaders.user(getState)
+      dispatch(actions.setUser(user))
       dispatch(jobActions.waitForPreviewJob())
       globals.setWindowInitialised()
       globals.identifyUser(data.user)

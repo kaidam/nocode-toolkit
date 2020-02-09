@@ -13,6 +13,7 @@ const settings = content.contentItem('settings')
 const logo = content.contentItem('logo')
 
 const previewMode = state => state.ui.previewMode
+const user = state => state.ui.user
 const config = state => state.ui.config
 const website = state => state.ui.website
 const dnsInfo = state => state.ui.dnsInfo

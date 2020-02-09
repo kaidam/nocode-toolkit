@@ -3,6 +3,7 @@ import utils from '@nocode-toolkit/website/store/utils'
 export const ui = {
   initialiseCalled: false,
   initialised: false,
+  user: null,
   config: utils.isNode ? {} : window._uiConfigData || {},
   website: {
     meta: {},
