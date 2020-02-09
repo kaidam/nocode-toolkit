@@ -145,7 +145,7 @@ const ItemMenuButtonContent = ({
       else if(isGhostDescendant && ghostParent) {
         menuItems.push({
           title: `Remove Parent`,
-          help: `Remove the ${ghostParent.data.name} folder and all children`,
+          help: `Remove the ${ghostParent.data.name} folder and all contents`,
           icon: DeleteIcon,
           handler: () => actions.onRemoveItem({item}),
         })

@@ -3,8 +3,8 @@ import itemTypes from './item'
 const SORT_OPTIONS_SCHEMA = [[
   {
     id: 'annotation.sortType',
-    title: 'Sort Children By',
-    helperText: 'Choose the method by which the children will be sorted',
+    title: 'Sort Contents By',
+    helperText: 'Choose the method by which the contents will be sorted',
     component: 'select',
     options: [{
       title: 'Manually (drag and drop)',
@@ -19,8 +19,8 @@ const SORT_OPTIONS_SCHEMA = [[
   },
   {
     id: 'annotation.sortOrder',
-    title: 'Sort Children Direction',
-    helperText: 'Choose the direction the children will be sorted in',
+    title: 'Sort Contents Direction',
+    helperText: 'Choose the direction the contents will be sorted in',
     component: 'select',
     options: [{
       title: 'Ascending',

@@ -337,8 +337,8 @@ const sideEffects = {
       const content = selectors.content.contentAll(getState())
       const ghostParentItem = content[ghostParent]
       if(ghostParentItem) {
-        title = `Remove ${ghostParentItem.data.name} and all children?`
-        message = `This item is included as part of it's parent (${ghostParentItem.data.name}) - are you sure you want to remove ${ghostParentItem.data.name} and all it's children from the website?`
+        title = `Remove ${ghostParentItem.data.name} and all contents?`
+        message = `This item is included as part of it's parent (${ghostParentItem.data.name}) - are you sure you want to remove ${ghostParentItem.data.name} and all it's content from the website?`
       }
     }
     const confirmed = await dispatch(uiActions.waitForConfirmation({

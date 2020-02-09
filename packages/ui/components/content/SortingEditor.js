@@ -25,8 +25,8 @@ const SortingEditorTypeEditor = ({
 
   const item = useMemo(() => {
     return {
-      title: 'Sort Children By',
-      helperText: 'Choose the method by which the children will be sorted',
+      title: 'Sort Contents By',
+      helperText: 'Choose the method by which the contents will be sorted',
       options: [{
         title: 'Manually (drag and drop)',
         value: 'manual',
@@ -68,8 +68,8 @@ const SortingEditorDirectionEditor = ({
 
   const item = useMemo(() => {
     return {
-      title: 'Sort Children Direction',
-      helperText: 'Choose the direction the children will be sorted in',
+      title: 'Sort Contents Direction',
+      helperText: 'Choose the direction the contents will be sorted in',
       options: [{
         title: 'Ascending',
         value: 'asc',
