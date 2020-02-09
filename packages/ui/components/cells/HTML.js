@@ -1,21 +1,52 @@
-import React, { useEffect, useRef } from 'react'
+import React, { lazy, useEffect, useRef, useMemo, useCallback, } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import routerActions from '@nocode-toolkit/website/store/moduleRouter'
+import contentActions from '../../store/modules/content'
 import selectors from '../../store/selectors'
 import Actions from '../../utils/actions'
 
+import Suspense from '../system/Suspense'
+const RenderDefaultDocumentUI = lazy(() => import(/* webpackChunkName: "ui" */ '../document/RenderDefaultDocumentUI'))
+
 const DocumentHTML = ({
+  showUI,
   content,
+  data,
 }) => {
 
+  const item = data.item
   const actions = Actions(useDispatch(), {
     navigateTo: routerActions.navigateTo,
+    onOpenExternalEditor: contentActions.onOpenExternalEditor,
   })
 
   const routePathMap = useSelector(selectors.nocode.routePathMap)
   const config = useSelector(selectors.nocode.config)
 
   const contentRef = useRef(null)
+
+  const editDocument = useCallback(() => {
+    actions.onOpenExternalEditor({
+      driver: item.driver,
+      id: item.id,
+    })
+  }, [
+    item,
+  ])
+
+  const hasContent = useMemo(() => {
+    if(!content) return true
+
+    const checkDiv = document.createElement('div')
+    checkDiv.innerHTML = content
+
+    const hasText = checkDiv.innerText.match(/\w/) ? true : false
+    const hasImage = checkDiv.querySelector('img') ? true : false
+
+    return hasText || hasImage
+  }, [
+    content,
+  ])
 
   // handle internal links by canceling the click event and triggering an internal
   // route refresh (don't do this is ctrl is held down)
@@ -45,7 +76,7 @@ const DocumentHTML = ({
     // insert the full URL to the current page
     // as we are using base href tag - these link to the homepage
     // if we don't do this
-    const hashLinks = Array.prototype.slice
+    Array.prototype.slice
       .call(
         contentRef.current.querySelectorAll('a')
       )
@@ -73,6 +104,21 @@ const DocumentHTML = ({
   }, [
     content,
   ])
+
+  if(showUI && !hasContent) {
+    return (
+      <div
+        id="nocode-document-html"
+        ref={ contentRef }
+      >
+        <Suspense>
+          <RenderDefaultDocumentUI
+            onClick={ editDocument }
+          />
+        </Suspense>
+      </div>
+    )
+  }
 
   return (
     <div 

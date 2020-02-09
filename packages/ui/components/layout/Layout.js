@@ -50,6 +50,7 @@ const Layout = ({
             content={ cellContent }
             rowIndex={ i }
             cellIndex={ j }
+            data={ data }
           />
         )
       }

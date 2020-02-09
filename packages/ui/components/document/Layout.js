@@ -54,16 +54,21 @@ const DocumentRouteLayout = ({
 
   return (
     <React.Fragment>
-      <Suspense>
-        <PageSettingsButton
-          item={ data.item }
-        />
-      </Suspense>
+      {
+        !data.defaultHome && (
+          <Suspense>
+            <PageSettingsButton
+              item={ data.item }
+            />
+          </Suspense>
+        )
+      }
       <Layout
         renderers={ renderers }
         data={ data }
         renderCell={ renderCell }
         CellOptionsWrapper={ CellOptions }
+        selectable={ data.defaultHome ? false : true }
       />
       <Suspense>
         <DocumentReloadTrigger />

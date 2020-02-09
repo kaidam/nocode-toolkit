@@ -52,7 +52,7 @@ const document = {
     externalEditor: true,
     fullHeight: false,
   },
-  parentFilter: ['section', 'drive.finder', 'drive.folder'],
+  parentFilter: ['section', 'drive.finder', 'drive.folder', 'home'],
   schema: [{
     id: 'name',
     title: 'Name',
