@@ -9,7 +9,7 @@ import contentActions from '../../store/modules/content'
 import typeUI from '../../types/ui'
 import icons from '../../icons'
 
-const EditIcon = icons.edit
+const EditIcon = icons.moreVert
 
 const useStyles = makeStyles({
   tinyRoot: {
@@ -47,7 +47,6 @@ const EditButton = ({
   return (
     <Fab
       size="small"
-      color="secondary"
       className={ tiny ? classes.tinyRoot : null }
       onClick={ (e) => {
         e.preventDefault()

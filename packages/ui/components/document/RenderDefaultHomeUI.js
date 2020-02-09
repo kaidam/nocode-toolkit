@@ -8,7 +8,7 @@ import icons from '../../icons'
 import ItemOptions from '../buttons/ItemOptions'
 
 const AddIcon = icons.add
-const EditIcon = icons.edit
+const EditIcon = icons.moreVert
 const SettingsIcon = icons.settings
 
 const useStyles = makeStyles(theme => createStyles({
@@ -20,9 +20,6 @@ const useStyles = makeStyles(theme => createStyles({
       fontSize: '1rem',
     }
   },
-  buttonEdit: {
-    marginLeft: theme.spacing(1),
-  }
 }))
 
 const RenderDefaultHomeUI = ({
@@ -32,30 +29,29 @@ const RenderDefaultHomeUI = ({
 
   return (
     <div>
-      <p>You can add content by clicking the <b>add</b> (<Fab
+      <p>You can add content by clicking the <b>add</b> (&nbsp;<Fab
           size="small"
           color="secondary"
           className={ classes.tinyRoot }
           onClick={ () => {} }
         >
           <AddIcon />
-        </Fab>) button on any section.</p>
-      <p>You can edit content by clicking the <b>edit</b> (<Fab
+        </Fab>&nbsp;) button on any section.</p>
+      <p>You can edit content by clicking the <b>edit</b> (&nbsp;<Fab
           size="small"
-          color="secondary"
           className={ classes.tinyRoot }
           onClick={ () => {} }
         >
           <EditIcon />
-        </Fab>) button next to items.</p>
-      <p>You can publish your website by clicking the <b>settings</b> (<Fab
+        </Fab>&nbsp;) button next to items.</p>
+      <p>You can publish your website by clicking the <b>settings</b> (&nbsp;<Fab
           size="small"
           color="secondary"
           className={ classes.tinyRoot }
           onClick={ () => {} }
         >
           <SettingsIcon />
-        </Fab>) button top right.</p>
+        </Fab>&nbsp;) button top right.</p>
       <div>
         <ItemOptions
           item={{
@@ -68,7 +64,7 @@ const RenderDefaultHomeUI = ({
               variant="contained"
               onClick={ onClick }
             >
-              Update Homepage <EditIcon className={ classes.buttonEdit }/> 
+              <EditIcon />&nbsp;&nbsp;Update Homepage
             </Button>
           )}
         />
