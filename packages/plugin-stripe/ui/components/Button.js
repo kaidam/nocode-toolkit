@@ -5,11 +5,24 @@ const PaymentButton = ({
   onClick,
 }) => {
   return (
-    <button
-      onClick={ onClick }
-    >
-      { content.buttonTitle } ({content.currencySymbol}{content.price})
-    </button>
+    <div>
+      <div>
+        <button
+          onClick={ onClick }
+        >
+          { content.buttonTitle } ({content.currencySymbol}{content.price})
+        </button>
+      </div>
+      {
+        content.description && (
+          <div style={{marginTop: '10px'}}>
+            <p>
+              { content.description }
+            </p>
+          </div>
+        )
+      }
+    </div>
   )
 }
 
