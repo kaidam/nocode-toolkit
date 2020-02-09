@@ -8,6 +8,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 import Actions from '../../utils/actions'
 
 import contentActions from '../../store/modules/content'
+import finderActions from '../../store/modules/finder'
 
 import typeUI from '../../types/ui'
 import icons from '../../icons'
@@ -16,6 +17,7 @@ import MenuButton from './MenuButton'
 
 const SettingsIcon = icons.settings
 const MoreVertIcon = icons.moreVert
+const OpenIcon = icons.open
 
 const useStyles = makeStyles({
   tinyRoot: {
@@ -34,7 +36,9 @@ const SectionSettings = ({
 }) => {
   const actions = Actions(useDispatch(), {
     onOpenContentForm: contentActions.openDialogContentForm,
+    onOpenFolder: finderActions.openSectionFolder,
   })
+
   const classes = useStyles()
 
   const settingsHandler = useCallback(typeUI.editContentHandler({
@@ -54,7 +58,18 @@ const SectionSettings = ({
     handler: settingsHandler,
   }
 
-  const useItems = [settingsItem]
+  const openItem = {
+    title: 'Open in Google Drive',
+    icon: OpenIcon,
+    handler: () => actions.onOpenFolder({
+      section: id,
+    })
+  }
+
+  const useItems = [
+    settingsItem,
+    openItem,
+  ]
     
   return (
     <MenuButton

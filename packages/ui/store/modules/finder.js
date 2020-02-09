@@ -12,7 +12,7 @@ import jobActions from './job'
 import contentActions from './content'
 import uiActions from './ui'
 import snackbarActions from './snackbar'
-
+import driveUtils from '../../types/drive/utils'
 import library from '../../types/library'
 import typeUtils from '../../types/utils'
 import globals from '../../globals'
@@ -279,6 +279,23 @@ const sideEffects = {
 
     // navigate back to the finder now the remote item has been created
     window.history.back()
+  }),
+
+  openSectionFolder: ({
+    section,
+  }) => wrapper('saveRemoteContent', async (dispatch, getState) => {
+    dispatch(uiActions.setLoading(true))
+    try {
+      const sectionFolder = await loaders.ensureSectionFolder(getState, {
+        driver: 'drive',
+        section,
+      })
+      window.open(driveUtils.getGoogleLink(driveUtils.getFolderLink(sectionFolder.id)))
+    } catch(e) {
+      dispatch(uiActions.setLoading(false))
+      throw e
+    }
+    dispatch(uiActions.setLoading(false))
   }),
 
   /*
