@@ -46,7 +46,7 @@ const BuildPreviewServer = ({
     const filename = req.params[0]
     const websiteId = getWebsiteId(req)    
     getBuildFolder(websiteId, (err, buildFolder) => {
-      if(err) return next(err)
+      if(err) return next(new Error(err))
       const filePath = path.join(buildFolder, filename)
       fs.stat(filePath, (err, stat) => {
         if(err || !stat) return next()
@@ -65,7 +65,7 @@ const BuildPreviewServer = ({
     res.header('Pragma', 'no-cache')
 
     getBuildInfo(websiteId, async (err, buildInfo) => {
-      if(err) return next(err)
+      if(err) return next(new Error(err))
       let html = HTML({
         buildInfo,
         hash: buildInfo.hash,
@@ -158,7 +158,7 @@ const PreviewServer = ({
       id,
       req,
     }, (err, data) => {
-      if(err) return next(err)
+      if(err) return next(new Error(err))
       res.end(Data.script(Data.factory({
         extraConfig: {
           externalsUrl: externalsPath,
@@ -177,7 +177,7 @@ const PreviewServer = ({
       filename,
       req,
     }, (err, data) => {
-      if(err) return next(err)
+      if(err) return next(new Error(err))
       res.end(data)
     })
   }
