@@ -8,9 +8,15 @@ const useStyles = makeStyles(theme => createStyles({
     height: '100%',
     backgroundColor: '#000',
     fontSize: '0.8em',
+    display: 'flex',
+    flexDirection: 'column',
     //boxShadow: '10px 10px 20px 0px rgba(0,0,0,0.4)',
   },
+  errorContainer: {
+    flexGrow: 0,
+  },
   scrollerContainer: {
+    flexGrow: 1,
     height: '100%',
     overflow: 'auto',
     padding: theme.spacing(1),
@@ -59,30 +65,25 @@ const JobLogs = ({
         className={ classes.scrollerContainer }
         ref={ scrollerContainerRef }
       >
-        {
-          status == 'error' && (
-            <DialogContentText className={ classes.errorText }>
-              { error }
-            </DialogContentText>
-          )
-        }
         <div className={ classes.logContainer }>
           <pre>
             <code>{ logText }</code>                 
           </pre>
         </div>
-        {
-          status == 'error' && (
-            <DialogContentText className={ classes.errorText }>
-              { error }
-            </DialogContentText>
-          )
-        }
         <div
           ref={ scrollerBottomRef }
         >
         </div>
       </div>
+      {
+        status == 'error' && (
+          <div className={ classes.errorContainer }>
+            <DialogContentText className={ classes.errorText }>
+              { error }
+            </DialogContentText>
+          </div>
+        )
+      }
     </Paper>
   )
 }
