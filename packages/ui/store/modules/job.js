@@ -108,6 +108,7 @@ const sideEffects = {
     type,
     loader,
     throwError = false,
+    snackbarError = false,
     showWindow = false,
     showWindowImmediately = false,
     manualComplete = false,
@@ -152,8 +153,9 @@ const sideEffects = {
         await dispatch(actions.jobComplete(job))
       } 
     }
-    else if(job.status == 'error' && throwError) {
-      throw new Error(job.result.error)
+    else if(job.status == 'error') {
+      if(throwError) throw new Error(job.result.error)
+      if(snackbarError) dispatch(snackbarActions.setError(job.result.error)) 
     }
   },
 
@@ -258,6 +260,7 @@ const sideEffects = {
         type: 'publish',
         showWindow: true,
         showWindowImmediately: true,
+        snackbarError: true,
       }))
     }    
   }),

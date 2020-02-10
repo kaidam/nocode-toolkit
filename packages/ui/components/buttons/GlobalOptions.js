@@ -51,7 +51,7 @@ const GlobalOptions = ({
         icon: icons.build,
         handler: actions.onPublish,
       }, {
-        title: 'Build History',
+        title: 'History',
         icon: icons.history,
         handler: actions.onViewHistory,
       }, 
