@@ -80,7 +80,7 @@ const image = {
 
 const finder = {
   driver: 'drive',
-  title: 'Find Existing Drive Content',
+  title: 'Add Existing Drive Content',
   icon: 'drive',
   metadata: {},
   parentFilter: ['section', 'local.folder', 'home'],
