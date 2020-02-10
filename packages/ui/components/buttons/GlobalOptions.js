@@ -1,7 +1,9 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import Hidden from '@material-ui/core/Hidden'
 import Actions from '../../utils/actions'
+import selectors from '../../store/selectors'
 import uiActions from '../../store/modules/ui'
 import jobActions from '../../store/modules/job'
 import icons from '../../icons'
@@ -28,6 +30,7 @@ const GlobalOptions = ({
 
   const actions = Actions(useDispatch(), {
     onOpenSettings: uiActions.openSettings,
+    onSetPreviewMode: uiActions.setPreviewMode,
     onLogout: uiActions.logout,
     onRebuild: jobActions.rebuild,
     onPublish: jobActions.publish,
@@ -35,8 +38,10 @@ const GlobalOptions = ({
     onViewHelp: uiActions.openHelp,
   })
 
-  const menuItems = useMemo(
-    () => {
+  const previewMode = useSelector(selectors.ui.previewMode)
+
+  const getMenuItems = useCallback(
+    (includeExtra) => {
       return [{
         title: 'Settings',
         icon: icons.settings,
@@ -49,37 +54,70 @@ const GlobalOptions = ({
         title: 'Build History',
         icon: icons.history,
         handler: actions.onViewHistory,
-      }, '-', {
+      }, 
+      includeExtra ? {
+        title: 'Reload',
+        icon: icons.refresh,
+        handler: actions.onRebuild,
+      } : null,
+      includeExtra && !previewMode ? {
+        title: 'Enable Preview',
+        icon: icons.look,
+        handler: () => actions.onSetPreviewMode(true),
+      } : null,
+      includeExtra && previewMode ? {
+        title: 'Disable Preview',
+        icon: icons.look,
+        handler: () => actions.onSetPreviewMode(false),
+      } : null,
+      '-', {
         title: 'List Websites',
         icon: icons.content,
         handler: onListWebsites,
       }, {
-        title: 'Logout',
-        icon: icons.logout,
-        handler: actions.onLogout,
-      }, {
         title: 'Help',
         icon: icons.help,
         handler: actions.onViewHelp,
-      }]
+      }, '-', {
+        title: 'Logout',
+        icon: icons.logout,
+        handler: actions.onLogout,
+      }].filter(i => i)
     },
-      [actions]
+      [
+        actions,
+        previewMode,
+      ]
     )
 
+  const getButton = onClick => (
+    <div
+      className={ classes.logoLink }
+      onClick={ onClick }
+    >
+      <img src="images/favicon.png" className={ classes.logo } />
+    </div>
+  )
+
   return (
-    <MenuButton
-      items={ menuItems }
-      icon={ icons.settings }
-      getButton={ onClick => (
-        <div
-          className={ classes.logoLink }
-          onClick={ onClick }
-        >
-          <img src="images/favicon.png" className={ classes.logo } />
-        </div>
-        
-      )}
-    />
+    <React.Fragment>
+      <Hidden smDown>
+        <MenuButton
+          items={ getMenuItems(false) }
+          icon={ icons.settings }
+          getButton={ getButton }
+        />
+      </Hidden>
+      <Hidden mdUp>
+        <MenuButton
+          items={ getMenuItems(true) }
+          icon={ icons.settings }
+          getButton={ getButton }
+        />
+      </Hidden>
+    </React.Fragment>
+    
+    
   )
 }
 
