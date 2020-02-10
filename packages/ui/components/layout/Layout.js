@@ -1,4 +1,4 @@
-import React, { lazy, useState } from 'react'
+import React, { lazy, useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import selectors from '../../store/selectors'
 import Suspense from '../system/Suspense'
@@ -23,6 +23,12 @@ const Layout = ({
   const RootRenderer = renderers.root || defaultRenderers.root
   const RowRenderer = renderers.row || defaultRenderers.row
   const CellRenderer = renderers.cell || defaultRenderers.cell
+
+  useEffect(() => {
+    setActiveCell(null)
+  }, [
+    data,
+  ])
 
   const rows = data.layout.map((row, i) => {
 
