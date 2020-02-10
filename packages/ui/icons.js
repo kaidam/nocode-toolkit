@@ -78,6 +78,7 @@ import BackNextIcon from '@material-ui/icons/SyncAlt'
 import SearchIcon from '@material-ui/icons/Search'
 import BuildIcon from '@material-ui/icons/Build'
 import ClipboardIcon from '@material-ui/icons/FileCopy'
+import AccountCircle from '@material-ui/icons/AccountCircle'
 
 import UnsplashLogo from './styles/UnsplashLogo'
 import GoogleDriveLogo from './styles/GoogleDriveLogo'
@@ -156,6 +157,7 @@ const icons = {
   search: SearchIcon,
   build: BuildIcon,
   clipboard: ClipboardIcon,
+  account: AccountCircle,
 }
 
 export default icons

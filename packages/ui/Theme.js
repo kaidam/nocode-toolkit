@@ -29,7 +29,7 @@ const themeProcessor = ({
     layout: {
       showUI: config.showUI,
       uiTopbarHeight: config.showUI ? 60 : 0,
-      uiLogoHeight: 30,
+      uiLogoHeight: 40,
     }
   }
   return processor ?

@@ -20,6 +20,10 @@ const useStyles = makeStyles(theme => createStyles({
       fontSize: '1rem',
     }
   },
+  tinyLogo: {
+    height: '24px',
+    verticalAlign: 'middle',
+  },
 }))
 
 const RenderDefaultHomeUI = ({
@@ -44,14 +48,7 @@ const RenderDefaultHomeUI = ({
         >
           <EditIcon />
         </Fab>&nbsp;) button next to items.</p>
-      <p>You can publish your website by clicking the <b>settings</b> (&nbsp;<Fab
-          size="small"
-          color="secondary"
-          className={ classes.tinyRoot }
-          onClick={ () => {} }
-        >
-          <SettingsIcon />
-        </Fab>&nbsp;) button top right.</p>
+      <p>You can publish your website by clicking the <b>nocode settings</b> (&nbsp;<img src="images/favicon.png" className={ classes.tinyLogo } />&nbsp;) button top right.</p>
       <div>
         <ItemOptions
           item={{

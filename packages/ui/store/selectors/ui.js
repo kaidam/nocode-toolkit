@@ -121,6 +121,7 @@ const selectors = {
   logo,
   loading,
   previewMode,
+  user,
   showCoreUI,
   showUI,
   config,

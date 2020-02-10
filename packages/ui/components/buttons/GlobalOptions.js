@@ -1,23 +1,31 @@
 import React, { useMemo } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { makeStyles } from '@material-ui/core/styles'
+import { useDispatch } from 'react-redux'
 import Actions from '../../utils/actions'
-
-import Fab from '@material-ui/core/Fab'
-
 import uiActions from '../../store/modules/ui'
 import jobActions from '../../store/modules/job'
 import icons from '../../icons'
 
 import MenuButton from './MenuButton'
-import selectors from '../../store/selectors'
-
-const SettingsIcon = icons.settings
 
 const onListWebsites = () => document.location = '/'
+
+const useStyles = makeStyles(theme => ({
+  logoLink: {
+    cursor: 'pointer',
+  },
+  logo: {
+    height: `${theme.layout.uiLogoHeight}px`,
+    padding: '3px',
+  },
+}))
 
 const GlobalOptions = ({
 
 }) => {
+
+  const classes = useStyles()
+
   const actions = Actions(useDispatch(), {
     onOpenSettings: uiActions.openSettings,
     onLogout: uiActions.logout,
@@ -63,16 +71,28 @@ const GlobalOptions = ({
       items={ menuItems }
       icon={ icons.settings }
       getButton={ onClick => (
-        <Fab
-          size="small"
-          color="secondary"
+        <div
+          className={ classes.logoLink }
           onClick={ onClick }
         >
-          <SettingsIcon />
-        </Fab>
+          <img src="images/favicon.png" className={ classes.logo } />
+        </div>
+        
       )}
     />
   )
 }
 
 export default GlobalOptions
+
+/*
+
+  <Fab
+          size="small"
+          color="secondary"
+          onClick={ onClick }
+        >
+          <SettingsIcon />
+        </Fab>
+
+*/

@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import { useSelector, useDispatch } from 'react-redux'
 
 import FormGroup from '@material-ui/core/FormGroup'
@@ -17,10 +17,11 @@ import jobActions from '../../store/modules/job'
 import icons from '../../icons'
 
 import GlobalOptions from '../buttons/GlobalOptions'
+import UserAvatar from './UserAvatar'
 
 const RefreshIcon = icons.refresh
 
-const useStyles = makeStyles(theme => createStyles({
+const useStyles = makeStyles(theme => ({
   appBar: {
     position: 'relative',
     zIndex: theme.zIndex.drawer + 1,
@@ -36,6 +37,8 @@ const useStyles = makeStyles(theme => createStyles({
   },
   appBarTitle: {
     flexGrow: 1,
+    display: 'flex',
+    flexDirection: 'row',
   },
   logo: {
     height: `${theme.layout.uiLogoHeight}px`,
@@ -70,6 +73,7 @@ const NocodeTopbar = ({
     onRebuild: jobActions.rebuild,
   })
 
+  const user = useSelector(selectors.ui.user)
   const previewMode = useSelector(selectors.ui.previewMode)
 
   const handleChange = useCallback(event => {
@@ -85,11 +89,13 @@ const NocodeTopbar = ({
         className={ classes.toolbar }
       >
         <div className={ classes.appBarTitle }>
-          <a
-            href="/"
-          >
-            <img src="images/favicon.png" className={ classes.logo } />
-          </a>
+          {
+            user && (
+              <UserAvatar
+                user={ user }
+              />
+            )
+          }
         </div>
         <div className={ classes.options }>
           <Button
