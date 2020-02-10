@@ -27,9 +27,9 @@ const useStyles = makeStyles(theme => ({
     position: 'relative',
     zIndex: theme.zIndex.drawer + 1,
     height: [`${theme.layout.uiTopbarHeight}px`, '!important'],
-    backgroundColor: '#fff',
+    backgroundColor: '#f5f5f5',
     boxShadow: 'none',
-    borderBottom: 'solid 3px rgba(0, 0, 0, 1)',
+    borderBottom: 'solid 2px rgba(0, 0, 0, 1)',
   },
   toolbar: {
     height: [`${theme.layout.uiTopbarHeight}px`, '!important'],
