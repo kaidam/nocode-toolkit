@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button'
 import Switch from '@material-ui/core/Switch'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
+import Hidden from '@material-ui/core/Hidden'
 
 import Actions from '../../utils/actions'
 import selectors from '../../store/selectors'
@@ -88,41 +89,46 @@ const NocodeTopbar = ({
       <Toolbar
         className={ classes.toolbar }
       >
-        <div className={ classes.appBarTitle }>
-          {
-            user && (
-              <UserAvatar
-                user={ user }
-              />
-            )
-          }
-        </div>
-        <div className={ classes.options }>
-          <Button
-            variant="contained"
-            size="small"
-            className={classes.button}
-            startIcon={<RefreshIcon />}
-            onClick={ actions.onRebuild }
-          >
-            Reload
-          </Button>
-          <FormGroup row>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={ previewMode }
-                  onChange={ handleChange }
-                  color="secondary"
+        <Hidden mdUp>
+          <div className={ classes.appBarTitle }></div>
+        </Hidden>
+        <Hidden smDown>
+          <div className={ classes.appBarTitle }>
+            {
+              user && (
+                <UserAvatar
+                  user={ user }
                 />
-              }
-              label="preview"
-              classes={{
-                label: classes.previewModeLabel,
-              }}
-            />
-          </FormGroup>
-        </div>
+              )
+            }
+          </div>
+          <div className={ classes.options }>
+            <Button
+              variant="contained"
+              size="small"
+              className={classes.button}
+              startIcon={<RefreshIcon />}
+              onClick={ actions.onRebuild }
+            >
+              Reload
+            </Button>
+            <FormGroup row>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={ previewMode }
+                    onChange={ handleChange }
+                    color="secondary"
+                  />
+                }
+                label="preview"
+                classes={{
+                  label: classes.previewModeLabel,
+                }}
+              />
+            </FormGroup>
+          </div>
+        </Hidden>
         <div className={ classes.options }>
           <GlobalOptions />
         </div>
