@@ -1,4 +1,5 @@
 import utils from '@nocode-toolkit/website/store/utils'
+import userUtils from './utils/user'
 
 const hasNocodeData = () => {
   if(utils.isNode) return true
@@ -49,7 +50,15 @@ const trackEvent = (name, params, getState) => {
   if(utils.isNode) return
   if(!window.__nocodeTrackingEvent) return
   const website = getState().nocode.config.websiteId
-  window.__nocodeTrackingEvent(`builder.${name}`, Object.assign({}, params, {website}))
+  const user = getState().ui.user
+  if(user) {
+    window.__nocodeTrackingEvent(`builder.${name}`, Object.assign({}, params, {
+      website,
+      user_id: user.username,
+      user_name: userUtils.displayName(user),
+      user_email: userUtils.email(user),
+    }))
+  }
 }
 
 const getTracker = (name) => {

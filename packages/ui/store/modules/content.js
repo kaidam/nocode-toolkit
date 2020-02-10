@@ -175,6 +175,9 @@ const sideEffects = {
     })
     dispatch(snackbarActions.setSuccess(`page settings updated`))
     dispatch(uiActions.resetQueryParams())
+    globals.trackEvent('update_website_settings', {
+      
+    }, getState)
   },
 
   resetPageLayout: ({
