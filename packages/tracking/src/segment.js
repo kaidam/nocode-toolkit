@@ -1,17 +1,17 @@
 const Segment = require('analytics-node')
 const tools = require('./tools')
 
-const SEGMENT_KEY = process.env.SEGMENT_KEY
+const SEGMENT_SERVER_KEY = process.env.SEGMENT_SERVER_KEY
 const SEGMENT_ENABLE = process.env.SEGMENT_ENABLE
 
 let analytics = null
 let initParams = {}
 
-const isActive = () => SEGMENT_KEY && SEGMENT_ENABLE ? true : false
+const isActive = () => SEGMENT_SERVER_KEY && SEGMENT_ENABLE ? true : false
 
 const initialise = (params) => {
   initParams = params
-  analytics = new Segment(SEGMENT_KEY)
+  analytics = new Segment(SEGMENT_SERVER_KEY)
 }
 
 const identifyUser = (user) => {
