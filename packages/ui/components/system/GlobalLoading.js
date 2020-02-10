@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => createStyles({
     height: '200px',
     backgroundColor: '#ffffff',
     border: '1px solid #e5e5e5',
-    boxShadow: '10px 10px 5px 0px rgba(0,0,0,0.2)',
+    boxShadow: 'none',
     borderRadius: 5,
   }
 }))
