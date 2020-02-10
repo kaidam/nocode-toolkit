@@ -28,6 +28,7 @@ const SectionEditor = ({
   filter,
   location,
   structure,
+  sectionType,
   tiny,
   stashQueryParams,
   children,
@@ -58,6 +59,7 @@ const SectionEditor = ({
           filter={ filter }
           location={ location }
           structure={ structure }
+          sectionType={ sectionType }
           tiny={ tiny }
           stashQueryParams={ stashQueryParams }
           extraItems={ extraAddItems }

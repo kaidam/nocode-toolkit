@@ -33,6 +33,7 @@ const editContentHandler = ({
   onOpenExternalEditor,
   location,
   structure = 'tree',
+  sectionType = 'sidebar',
 }) => {
   const schemaDefinition = library.getItemSchema(item)
   return schemaDefinition.metadata.externalEditor ?
@@ -48,6 +49,7 @@ const editContentHandler = ({
       params: schemaDefinition.content && schemaDefinition.content.getQueryParams ?
         schemaDefinition.content.getQueryParams({
           structure,
+          sectionType,
           location,
         }) : {}
     })
@@ -56,6 +58,7 @@ const editContentHandler = ({
 const addContentItem = ({
   location,
   structure,
+  sectionType,
   schemaDefinition,
   stashQueryParams,
   onOpenFinder,
@@ -69,6 +72,7 @@ const addContentItem = ({
         params: schemaDefinition.finder && schemaDefinition.finder.getQueryParams ?
           schemaDefinition.finder.getQueryParams({
             structure,
+            sectionType,
             location,
           }) : {}
       }) :
@@ -80,6 +84,7 @@ const addContentItem = ({
         params: schemaDefinition.content && schemaDefinition.content.getQueryParams ?
           schemaDefinition.content.getQueryParams({
             structure,
+            sectionType,
             location,
           }) : {}
       })
@@ -88,6 +93,7 @@ const addContentItem = ({
   return {
     title: schemaDefinition.title,
     icon: icons[schemaDefinition.icon],
+    secondaryIcon: icons[schemaDefinition.secondaryIcon],
     type: schemaDefinition.type,
     handler,
   }
@@ -157,6 +163,7 @@ const addCellWidgetOptions = ({
       group.push({
         title: schemaDefinition.title,
         icon: icons[schemaDefinition.icon],
+        secondaryIcon: icons[schemaDefinition.secondaryIcon],
         type: schemaDefinition.type,
         help: schemaDefinition.help,
         handler: () => baseHandler(schemaDefinition.type, schemaDefinition),
@@ -193,12 +200,14 @@ const addContentOptions = ({
   filter,
   location,
   structure = 'tree',
+  sectionType = 'sidebar',
   stashQueryParams = false,
   onOpenFinder,
   onOpenContentForm,
 }) => {
 
   const groups = {}
+  const groupItems = []
   const items = []
 
   library.list()
@@ -211,6 +220,7 @@ const addContentOptions = ({
       const item = {
         title: schemaDefinition.title,
         icon: icons[schemaDefinition.icon],
+        secondaryIcon: icons[schemaDefinition.secondaryIcon],
         type: schemaDefinition.type,
         handler: () => {
           schemaDefinition.openDialog == 'finder' ?
@@ -220,6 +230,7 @@ const addContentOptions = ({
               params: schemaDefinition.finder && schemaDefinition.finder.getQueryParams ?
                 schemaDefinition.finder.getQueryParams({
                   structure,
+                  sectionType,
                   location,
                 }) : {}
             }) :
@@ -231,6 +242,7 @@ const addContentOptions = ({
               params: schemaDefinition.content && schemaDefinition.content.getQueryParams ?
                 schemaDefinition.content.getQueryParams({
                   structure,
+                  sectionType,
                   location,
                 }) : {}
             })
@@ -247,9 +259,10 @@ const addContentOptions = ({
             icon: icons[groupSchema.icon],
             type: groupSchema.type,
             items: [],
+            isGroup: true,
           }
           groups[groupName] = group
-          items.push(group)
+          groupItems.push(group)
         }
         groups[groupName].items.push(item)
       }
@@ -258,7 +271,7 @@ const addContentOptions = ({
       }
     })
 
-  return items
+  return groupItems.concat(items)
 }
 
 const addContentOptionsWithCallback = ({
@@ -276,6 +289,7 @@ const addContentOptionsWithCallback = ({
       return {
         title: schemaDefinition.title,
         icon: icons[schemaDefinition.icon],
+        secondaryIcon: icons[schemaDefinition.secondaryIcon],
         type: schemaDefinition.type,
         help: schemaDefinition.help,
         handler: () => handler(schemaDefinition.type, schemaDefinition),
@@ -300,6 +314,7 @@ const addCellOptionsWithCallback = ({
       return {
         title: schemaDefinition.title,
         icon: icons[schemaDefinition.icon],
+        secondaryIcon: icons[schemaDefinition.secondaryIcon],
         type: schemaDefinition.type,
         help: schemaDefinition.help,
         handler: () => handler(schemaDefinition.type, schemaDefinition),

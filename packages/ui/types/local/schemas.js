@@ -530,7 +530,6 @@ const search = {
 
 const schemas = {
   nocodeGroup,
-  externalLink,
   title,
   richtext,
   rawhtml,
@@ -549,6 +548,7 @@ const schemas = {
   breadcrumbs,
   backnextButtons,
   search,
+  externalLink,
 }
 
 export default schemas

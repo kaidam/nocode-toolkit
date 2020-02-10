@@ -34,6 +34,7 @@ const SectionAdd = ({
   filter,
   location,
   structure,
+  sectionType,
   tiny,
   stashQueryParams,
   extraItems = [],
@@ -45,30 +46,35 @@ const SectionAdd = ({
   const classes = useStyles()
   const menuItems = useMemo(
     () => {
-      return typeUI.addContentOptions({
+      const baseItems = typeUI.addContentOptions({
         filter,
         location,
         structure,
+        sectionType,
         stashQueryParams,
         onOpenContentForm: actions.onOpenContentForm,
         onOpenFinder: actions.onOpenFinder,
       })
+
+      const allItems = baseItems.concat(extraItems || [])
+      const groups = allItems.filter(item => item.isGroup)
+      const nonGroups = allItems.filter(item => !item.isGroup)
+      return groups.concat(nonGroups)
     },
     [
       filter,
       location,
       structure,
+      sectionType,
       stashQueryParams,
       window._nocodeRebuildCount,
+      extraItems,
     ]
   )
 
-  const useItems = menuItems
-    .concat(extraItems)
-
   return (
     <MenuButton
-      items={ useItems }
+      items={ menuItems }
       tiny
       getButton={ onClick => (
         <Tooltip title="Add Content">

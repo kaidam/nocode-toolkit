@@ -21,6 +21,7 @@ const NavBar = ({
 
   const sectionFilter = useCallback((parentFilter, schemaDefinition) => {
     if(parentFilter.indexOf('section') < 0) return false
+    if(schemaDefinition.metadata.allowedSectionTypes && schemaDefinition.metadata.allowedSectionTypes.indexOf('navbar') < 0) return false
     return true
   }, [])
 
@@ -68,6 +69,7 @@ const NavBar = ({
         filter={ sectionFilter }
         location={ `section:${section}` }
         structure="tree"
+        sectionType="navbar"
         tiny
       />
     </Suspense>

@@ -1,10 +1,18 @@
 import React, { useState, useCallback, useMemo } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Divider from '@material-ui/core/Divider'
+
+const useStyles = makeStyles(theme => ({
+  menuText: {
+    paddingRight: '50px',
+  },
+}))
 
 const ItemMenu = ({
   anchorEl,
@@ -14,6 +22,7 @@ const ItemMenu = ({
   onClose,
   onItemClick,
 }) => {
+  const classes = useStyles()
   return (
     <Menu
       anchorEl={ anchorEl }
@@ -55,7 +64,17 @@ const ItemMenu = ({
               <ListItemText 
                 primary={ item.title }
                 secondary={ item.help }
+                classes={{
+                  primary: classes.menuText,
+                }}
               />
+              {
+                item.secondaryIcon && (
+                  <ListItemSecondaryAction>
+                    <item.secondaryIcon />
+                  </ListItemSecondaryAction>
+                )
+              }
             </MenuItem>
           )
         })

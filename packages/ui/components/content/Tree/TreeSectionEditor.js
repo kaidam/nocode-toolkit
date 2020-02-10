@@ -61,6 +61,7 @@ const TreeSectionEditor = ({
       title: 'Nocode Widgets',
       icon: icons.nocode,
       items: groups,
+      isGroup: true,
     }]
   }, [
     settings,
@@ -92,6 +93,7 @@ const TreeSectionEditor = ({
         filter={ parentFilter }
         location={ `section:${section}` }
         structure="tree"
+        sectionType="sidebar"
         extraAddItems={ extraAddItems }
       />
       {
