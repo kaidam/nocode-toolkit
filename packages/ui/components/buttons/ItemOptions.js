@@ -24,6 +24,7 @@ const ItemMenuButtonHome = ({
   iconClassName,
   actions,
   getButton,
+  groupFilter,
   onOpen,
   onClose,
 }) => {
@@ -45,12 +46,14 @@ const ItemMenuButtonHome = ({
         filter: parentFilter => parentFilter.indexOf('home') >= 0,
         location: `singleton:home`,
         structure: 'list',
+        groupFilter,
         onOpenContentForm: actions.onOpenContentForm,
         onOpenFinder: actions.onOpenFinder,
       })
     },
     [
       actions,
+      groupFilter,
     ]
   )
 
@@ -68,6 +71,7 @@ const ItemMenuButtonHome = ({
 
 const ItemMenuButtonContent = ({
   item,
+  groupFilter,
   iconClassName,
   parentAnchorEl,
   actions,
@@ -96,6 +100,7 @@ const ItemMenuButtonContent = ({
           filter: parentFilter => parentFilter.indexOf(parentType) >= 0,
           location: `item:${item.id}`,
           structure: 'tree',
+          groupFilter,
           onOpenContentForm: actions.onOpenContentForm,
           onOpenFinder: actions.onOpenFinder,
         })
@@ -167,6 +172,7 @@ const ItemMenuButtonContent = ({
     [
       actions,
       item,
+      groupFilter,
       ghostParent,
     ]
   )
@@ -200,6 +206,7 @@ const ItemMenuButtonContent = ({
 
 const ItemMenuButton = ({
   item,
+  groupFilter,
   parentAnchorEl,
   iconClassName,
   getButton,
@@ -218,6 +225,7 @@ const ItemMenuButton = ({
   if(item.id == 'home') {
     return (
       <ItemMenuButtonHome
+        groupFilter={ groupFilter }
         iconClassName={ iconClassName }
         actions={ actions }
         getButton={ getButton }
@@ -230,6 +238,7 @@ const ItemMenuButton = ({
     return (
       <ItemMenuButtonContent
         item={ item }
+        groupFilter={ groupFilter }
         iconClassName={ iconClassName }
         parentAnchorEl={ parentAnchorEl }
         getButton={ getButton }

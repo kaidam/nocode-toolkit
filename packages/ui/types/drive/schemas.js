@@ -28,7 +28,7 @@ const driveGroup = {
 const folder = {
   driver: 'drive',
   type: 'folder',
-  title: 'Create New Google Drive Folder',
+  title: 'New Google Drive Folder',
   icon: 'folder',
   secondaryIcon: 'drive',
   metadata: {
@@ -56,7 +56,7 @@ const folder = {
 const document = {
   driver: 'drive',
   type: 'document',
-  title: 'Create New Google Doc',
+  title: 'New Google Doc',
   icon: 'docs',
   secondaryIcon: 'drive',
   metadata: {
@@ -165,7 +165,7 @@ const finderConfig = {
 
 const finder = {
   driver: 'drive',
-  title: 'Add Existing Google Drive Content',
+  title: 'Find Existing Google Drive Content',
   icon: 'search',
   secondaryIcon: 'drive',
   metadata: {
@@ -183,7 +183,7 @@ const finder = {
 const syncFolder = {
   driver: 'drive',
   type: 'syncFolder',
-  title: 'Sync Existing Google Drive Folder',
+  title: 'Sync Google Drive Folder',
   icon: 'sync',
   secondaryIcon: 'drive',
   metadata: {

@@ -204,6 +204,7 @@ const addContentOptions = ({
   stashQueryParams = false,
   onOpenFinder,
   onOpenContentForm,
+  groupFilter,
 }) => {
 
   const groups = {}
@@ -271,7 +272,14 @@ const addContentOptions = ({
       }
     })
 
-  return groupItems.concat(items)
+  if(groupFilter) {
+    const group = groups[groupFilter]
+    if(!group) return []
+    return group.items
+  }
+  else {
+    return groupItems.concat(items)
+  }
 }
 
 const addContentOptionsWithCallback = ({

@@ -54,6 +54,7 @@ const RenderDefaultHomeUI = ({
           item={{
             id: 'home'
           }}
+          groupFilter="driveGroup"
           iconClassName="navbar-ui-icon"
           getButton={onClick => (
             <Button
