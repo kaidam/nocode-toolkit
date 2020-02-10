@@ -1,6 +1,7 @@
 import React, { lazy, useEffect, useRef, useMemo, useCallback, } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import routerActions from '@nocode-toolkit/website/store/moduleRouter'
+import utils from '@nocode-toolkit/website/store/utils'
 import contentActions from '../../store/modules/content'
 import selectors from '../../store/selectors'
 import Actions from '../../utils/actions'
@@ -36,6 +37,7 @@ const DocumentHTML = ({
 
   const hasContent = useMemo(() => {
     if(!content) return true
+    if(utils.isNode) return true
 
     const checkDiv = document.createElement('div')
     checkDiv.innerHTML = content
@@ -55,6 +57,8 @@ const DocumentHTML = ({
   // but prepending the full browser URL before the hash
   // this will not trigger a router reload
   useEffect(() => {
+    if(utils.isNode) return
+    
     const internalLinks = Array.prototype.slice.call(
       contentRef.current.querySelectorAll('a[data-nocode-internal-route]')
     )
