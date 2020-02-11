@@ -198,7 +198,7 @@ const form = createSelector(
       }
 
       // we inject the sorting tab here
-      if(controller != 'finder' && schemaDefinition.metadata.hasChildren) {
+      if(id != 'new' && controller != 'finder' && schemaDefinition.metadata.hasChildren) {
         tabs.push({
           id: 'sorting',
           title: 'Sorting',
