@@ -202,7 +202,7 @@ const JobPublishedDialog = ({
                   type == 'live' ? (
                     <React.Fragment>
                       <Typography>
-                        Your website is now live at the following address.  You can give this address
+                        Your website is now live at the address shown above.  You can give this address
                         to your users so they can see your wonderful creation!
                       </Typography>
                     </React.Fragment>
@@ -224,7 +224,7 @@ const JobPublishedDialog = ({
                   type == 'live' ? (
                     <React.Fragment>
                       <Typography>
-                        If you have made a mistake - you can publish a previous build by clicking the "Build History"
+                        If you have made a mistake - you can publish a previous build by clicking the <strong>"Build History"</strong>
                         button below.
                       </Typography>
                     </React.Fragment>
