@@ -199,6 +199,8 @@ const addCellWidgetOptions = ({
 const addContentOptions = ({
   filter,
   location,
+  driver,
+  type,
   structure = 'tree',
   sectionType = 'sidebar',
   stashQueryParams = false,
@@ -272,8 +274,13 @@ const addContentOptions = ({
       }
     })
 
-  if(groupFilter) {
-    const group = groups[groupFilter]
+  let useGroupFilter = groupFilter
+
+  // for drive items - filter down to only drive things we can add
+  if(driver == 'drive') useGroupFilter = 'driveGroup'
+
+  if(useGroupFilter) {
+    const group = groups[useGroupFilter]
     if(!group) return []
     return group.items
   }

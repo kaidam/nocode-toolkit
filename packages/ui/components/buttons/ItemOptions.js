@@ -97,6 +97,8 @@ const ItemMenuButtonContent = ({
       if(hasChildren) {
         const parentType = [item.driver, item.type].join('.')
         const addChildMenuItems = typeUI.addContentOptions({
+          driver: item.driver,
+          type: item.type,
           filter: parentFilter => parentFilter.indexOf(parentType) >= 0,
           location: `item:${item.id}`,
           structure: 'tree',
