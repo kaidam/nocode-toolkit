@@ -21,6 +21,7 @@ import GlobalOptions from '../buttons/GlobalOptions'
 import UserAvatar from './UserAvatar'
 
 const RefreshIcon = icons.refresh
+const BuildIcon = icons.build
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -78,6 +79,7 @@ const NocodeTopbar = ({
   const actions = Actions(useDispatch(), {
     onSetPreviewMode: uiActions.setPreviewMode,
     onRebuild: jobActions.rebuild,
+    onPublish: jobActions.publish,
   })
 
   const user = useSelector(selectors.ui.user)
@@ -109,6 +111,15 @@ const NocodeTopbar = ({
             }
           </div>
           <div className={ classes.options }>
+            <Button
+              variant="contained"
+              size="small"
+              className={classes.button}
+              startIcon={<BuildIcon />}
+              onClick={ actions.onPublish }
+            >
+              Build Website
+            </Button>
             <Button
               variant="contained"
               size="small"
