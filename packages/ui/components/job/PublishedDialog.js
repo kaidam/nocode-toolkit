@@ -71,6 +71,11 @@ const useStyles = makeStyles(theme => createStyles({
     marginBottom: theme.spacing(2),
     color: '#666',
   },
+  urlBlock: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    color: '#666',
+  },
   link: {
     fontSize: '0.9em'
   }
@@ -158,6 +163,19 @@ const JobPublishedDialog = ({
               >
                 <LookIcon />&nbsp;&nbsp;View Website
               </Button>
+              <CopyToClipboard
+                text={ url }
+                onCopy={ () => actions.onSetSuccess(`url copied to clipboard`) }
+              >
+                <Button
+                  type="button"
+                  size="small"
+                  variant="contained"
+                  className={ classes.rightButton }
+                >
+                  <ClipboardIcon />&nbsp;&nbsp;Copy URL to clipboard
+                </Button>
+              </CopyToClipboard>    
             </div>
             
           </Grid>
@@ -173,6 +191,10 @@ const JobPublishedDialog = ({
                 >
                   { type == 'live' ? 'Website' : 'Preview' } URL
                 </Typography>
+              </div>
+
+              <div className={ classes.urlBlock }>
+                <Typography className={ classes.link }><a target="_blank" href={ url }>{ url }</a></Typography>
               </div>
 
               <div className={ classes.textBlock }>
@@ -195,25 +217,7 @@ const JobPublishedDialog = ({
                 }
               </div>
 
-              <div className={ classes.textBlock }>
-                <Typography className={ classes.link }><a target="_blank" href={ url }>{ url }</a></Typography>
-              </div>
-
-              <div className={ classes.buttons }>
-                <CopyToClipboard
-                  text={ url }
-                  onCopy={ () => actions.onSetSuccess(`url copied to clipboard`) }
-                >
-                  <Button
-                    type="button"
-                    size="small"
-                    variant="contained"
-                    className={ classes.rightButton }
-                  >
-                    <ClipboardIcon />&nbsp;&nbsp;Copy to clipboard
-                  </Button>
-                </CopyToClipboard>    
-              </div>
+              
 
               <div className={ classes.textBlock }>
                 {
@@ -231,7 +235,7 @@ const JobPublishedDialog = ({
                         your website will be live.<br /><br />
                       </Typography>
                       <Typography>
-                        If you want to publish this build later, you can use the "Build History" button to publish any of your builds.
+                        If you want to publish this build later, you can use the <strong>"Build History"</strong> button to publish any of your builds.
                       </Typography>
                     </React.Fragment>
                   )
@@ -260,6 +264,14 @@ const JobPublishedDialog = ({
       onCancel={ actions.onClose }
       rightButtons={(
         <React.Fragment>
+          <Button
+            type="button"
+            variant="contained"
+            onClick={ actions.onOpenHistory }
+            className={ classes.rightButton }
+          >
+            <HistoryIcon />&nbsp;&nbsp;Build History
+          </Button>
           {
             type != 'live' && (
               <Button

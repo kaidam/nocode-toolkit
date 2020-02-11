@@ -34,6 +34,7 @@ const useStyles = makeStyles(theme => ({
   toolbar: {
     paddingLeft: '8px',
     paddingRight: '8px',
+    paddingBottom: '6px',
     height: [`${theme.layout.uiTopbarHeight}px`, '!important'],
     minHeight: [`${theme.layout.uiTopbarHeight}px`, '!important'],
     maxHeight: [`${theme.layout.uiTopbarHeight}px`, '!important'],
