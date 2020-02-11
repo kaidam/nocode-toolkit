@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'left',
-    paddingLeft: '10px',
+    paddingLeft: '12px',
     cursor: 'pointer',
   },
 }))

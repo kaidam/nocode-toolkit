@@ -394,6 +394,7 @@ const sideEffects = {
 
       let [ parentType, parent ] = location.split(':')
       let parentId = parent
+      let syncMode = false
 
       // we are adding a remote item to a section
       // so we need a folder to create it in
@@ -402,10 +403,26 @@ const sideEffects = {
       // so once this is done - all we need to do is add the
       // content to the returned parent and rebuild
       if(parentType == 'section' || parentType == 'singleton') {
-        const parentFolder = await loaders.ensureSectionFolder(getState, {
-          driver,
-          section: parent,
-        })
+
+        let parentFolder = null
+
+        if(parentType == 'section') {
+          const sectionSyncFolder = selectors.content.sectionSyncFolder()(getState(), parent)
+          if(sectionSyncFolder) {
+            parentFolder = sectionSyncFolder
+            syncMode = true
+          }
+        }
+
+        if(!parentFolder) {
+          parentFolder = await loaders.ensureSectionFolder(getState, {
+            driver,
+            section: parent,
+          })
+        }
+
+        if(!parentFolder) throw new Error(`unable to get parent folder`)
+        
         parentId = parentFolder.id
       }
       
@@ -420,21 +437,23 @@ const sideEffects = {
       })
 
       // now we need to link the new item to the section
-      if(parentType == 'section') {
-        await loaders.linkContentToSection(getState, {
-          driver,
-          section: parent,
-          content_id: newItem.id,
-        })
+      if(!syncMode) {
+        if(parentType == 'section') {
+          await loaders.linkContentToSection(getState, {
+            driver,
+            section: parent,
+            content_id: newItem.id,
+          })
+        }
+        else if(parentType == 'singleton') {
+          await loaders.linkContentToSingleton(getState, {
+            driver,
+            singleton: parent,
+            content_id: newItem.id,
+          })
+        }
       }
-      else if(parentType == 'singleton') {
-        await loaders.linkContentToSingleton(getState, {
-          driver,
-          singleton: parent,
-          content_id: newItem.id,
-        })
-      }
-
+      
       // trigger a rebuild so the backend has the new item in the tree
       await dispatch(jobActions.rebuild({
         manualComplete: true,

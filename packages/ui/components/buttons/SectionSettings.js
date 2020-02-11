@@ -1,11 +1,12 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import Fab from '@material-ui/core/Fab'
 import Tooltip from '@material-ui/core/Tooltip'
 
 import Actions from '../../utils/actions'
+import selectors from '../../store/selectors'
 
 import contentActions from '../../store/modules/content'
 import finderActions from '../../store/modules/finder'
@@ -18,6 +19,7 @@ import MenuButton from './MenuButton'
 const SettingsIcon = icons.settings
 const MoreVertIcon = icons.moreVert
 const OpenIcon = icons.open
+const SyncIcon = icons.sync
 
 const useStyles = makeStyles({
   tinyRoot: {
@@ -37,7 +39,11 @@ const SectionSettings = ({
   const actions = Actions(useDispatch(), {
     onOpenContentForm: contentActions.openDialogContentForm,
     onOpenFolder: finderActions.openSectionFolder,
+    onRemoveContent: contentActions.removeContent,
   })
+
+  const sectionSyncFolderSelector = useMemo(selectors.content.sectionSyncFolder, [])
+  const sectionSyncFolder = useSelector(state => sectionSyncFolderSelector(state, id))
 
   const classes = useStyles()
 
@@ -66,10 +72,19 @@ const SectionSettings = ({
     })
   }
 
+  const unSyncItem = sectionSyncFolder ? {
+    title: `Un-sync the ${sectionSyncFolder.data.name} folder`,
+    icon: SyncIcon,
+    handler: () => {
+      actions.onRemoveContent({item: sectionSyncFolder})
+    }
+  } : null
+
   const useItems = [
     settingsItem,
     openItem,
-  ]
+    unSyncItem,
+  ].filter(i => i)
     
   return (
     <MenuButton

@@ -148,7 +148,7 @@ const finderConfig = {
 
 const finder = {
   driver: 'drive',
-  title: 'Find Existing Google Drive Content',
+  title: 'Find Google Drive Content',
   icon: 'search',
   secondaryIcon: 'drive',
   metadata: {

@@ -148,15 +148,15 @@ const ItemMenuButtonContent = ({
           handler: () => actions.onRemoveItem({item}),
         })
       }
-      // this item is a descendent of a ghost item in the content table
-      else if(isGhostDescendant && ghostParent) {
-        menuItems.push({
-          title: `Remove Parent`,
-          help: `Remove the ${ghostParent.data.name} folder and all contents`,
-          icon: DeleteIcon,
-          handler: () => actions.onRemoveItem({item}),
-        })
-      }
+      // // this item is a descendent of a ghost item in the content table
+      // else if(isGhostDescendant && ghostParent) {
+      //   menuItems.push({
+      //     title: `Remove Parent`,
+      //     help: `Remove the ${ghostParent.data.name} folder and all contents`,
+      //     icon: DeleteIcon,
+      //     handler: () => actions.onRemoveItem({item}),
+      //   })
+      // }
 
       // this item is a descendant of an item in the content table
       // we can't remove it - just "hide" it

@@ -29,7 +29,7 @@ const itemType = {
   iconName,
   isGhostDescendant,
   isRootContent,
-  isEditable: item => true,
+  isEditable: item => false,
   isOpenable: item => true,
   driverName: item => 'Google Drive',
   handleOpen,
