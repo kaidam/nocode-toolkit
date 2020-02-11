@@ -103,6 +103,7 @@ const sideEffects = {
       dispatch(actions.setConfig(data))
       const user = await loaders.user(getState)
       dispatch(actions.setUser(user))
+      dispatch(jobActions.getPublishStatus())
       dispatch(jobActions.waitForPreviewJob())
       globals.setWindowInitialised()
       globals.identifyUser(data.user)

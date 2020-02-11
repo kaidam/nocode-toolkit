@@ -63,6 +63,9 @@ const useStyles = makeStyles(theme => createStyles({
   },
   rowButton: {
     marginRight: theme.spacing(1),
+  },
+  link: {
+    fontSize: '0.8em',
   }
 }))
 
@@ -75,6 +78,9 @@ const fields =[{
 }, {
   title: 'Status',
   name: 'status',
+}, {
+  title: 'URL',
+  name: 'link',
 }, {
   title: '',
   name: 'actions',
@@ -158,7 +164,7 @@ const JobHistoryDialog = ({
     }
   
     if(job.result && job.result.screenshotUrl) {
-      screenshot = renderPublishUrl(urls[0], (
+      screenshot = renderPublishUrl(urls[urls.length-1], (
         <img 
           className={ classes.screenshot }
           src={ job.result.screenshotUrl } 
@@ -175,6 +181,17 @@ const JobHistoryDialog = ({
       ),
       status: getJobStatus(job, deployed),
       screenshot,
+      link: (
+        <div className={ classes.link }>
+          {
+            deployed == 'live' && (
+              <a href={ urls[urls.length-1] } target="_blank">
+                { urls[urls.length-1] }
+              </a>
+            )
+          }
+        </div>
+      ),
       actions: (
         <div>
           {
@@ -193,7 +210,7 @@ const JobHistoryDialog = ({
               <Button 
                 size="small"
                 className={ classes.rowButton }
-                onClick={ () => window.open(urls[0]) }
+                onClick={ () => window.open(urls[urls.length-1]) }
               >
                 <LookIcon />&nbsp;&nbsp;View
               </Button>

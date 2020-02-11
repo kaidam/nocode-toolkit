@@ -15,6 +15,9 @@ const onListWebsites = () => document.location = '/'
 const useStyles = makeStyles(theme => ({
   logoLink: {
     cursor: 'pointer',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   logo: {
     height: `${theme.layout.uiLogoHeight}px`,
@@ -23,7 +26,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const GlobalOptions = ({
-
+  children,
 }) => {
 
   const classes = useStyles()
@@ -96,6 +99,7 @@ const GlobalOptions = ({
       onClick={ onClick }
     >
       <img src="images/favicon.png" className={ classes.logo } />
+      { children }
     </div>
   )
 

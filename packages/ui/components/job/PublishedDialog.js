@@ -117,7 +117,7 @@ const JobPublishedDialog = ({
 
     if(publishStatus) {
       const publishData = type == 'live' ? publishStatus.production : null
-      if(publishData && publishData.urls) url = publishData.urls[0]
+      if(publishData && publishData.urls) url = publishData.urls[publishData.urls.length-1]
     }
 
     if(!url) {
@@ -224,7 +224,7 @@ const JobPublishedDialog = ({
                   type == 'live' ? (
                     <React.Fragment>
                       <Typography>
-                        If you have made a mistake - you can publish a previous build by clicking the <strong>"Build History"</strong>
+                        If you have made a mistake - you can publish a previous build by clicking the <strong>"History"</strong>
                         button below.
                       </Typography>
                     </React.Fragment>
@@ -235,7 +235,7 @@ const JobPublishedDialog = ({
                         your website will be live.<br /><br />
                       </Typography>
                       <Typography>
-                        If you want to publish this build later, you can use the <strong>"Build History"</strong> button to publish any of your builds.
+                        If you want to publish this build later, you can use the <strong>"History"</strong> button to publish any of your builds.
                       </Typography>
                     </React.Fragment>
                   )
@@ -270,7 +270,7 @@ const JobPublishedDialog = ({
             onClick={ actions.onOpenHistory }
             className={ classes.rightButton }
           >
-            <HistoryIcon />&nbsp;&nbsp;Build History
+            <HistoryIcon />&nbsp;&nbsp;History
           </Button>
           {
             type != 'live' && (

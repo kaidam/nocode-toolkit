@@ -40,34 +40,43 @@ const useStyles = makeStyles(theme => ({
     minHeight: [`${theme.layout.uiTopbarHeight}px`, '!important'],
     maxHeight: [`${theme.layout.uiTopbarHeight}px`, '!important'],
   },
-  appBarTitle: {
-    flexGrow: 1,
-    display: 'flex',
-    flexDirection: 'row',
-  },
-  logo: {
-    height: `${theme.layout.uiLogoHeight}px`,
-    // paddingTop: '3px',
-    // paddingLeft: '3px',
-    // paddingBottom: '3px',
-    // paddingRight: '0px',
-  },
-  menuButton: {
-    marginLeft: -12,
-    marginRight: 20,
-    color: '#000',
-  },
-  options: {
-    paddingLeft: theme.spacing(1.5),
+  container: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    width: '100%',
+  },
+  optionsContainer: {
+    paddingTop: '5px',
+    flexGrow: 0,
+  },
+  filler: {
+    flexGrow: 1,
+  },
+  urlContainer: {
+    paddingTop: '2px',
+    paddingLeft: '20px',
+    paddingRight: theme.spacing(3),
+    color: '#000',
+    flexGrow: 0,
+    fontSize: '0.8em',
+  },
+  buttonContainer: {
+    flexGrow: 0,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+  },
+  userContainer: {
+    flexGrow: 0,
+    paddingLeft: theme.spacing(1),
   },
   previewModeLabel: {
     color: theme.palette.text.primary,
   },
   button: {
-    marginRight: theme.spacing(3),
+    marginLeft: theme.spacing(3),
   },
 }))
 
@@ -84,10 +93,17 @@ const NocodeTopbar = ({
 
   const user = useSelector(selectors.ui.user)
   const previewMode = useSelector(selectors.ui.previewMode)
+  const publishStatus = useSelector(selectors.job.publishStatus)
 
   const handleChange = useCallback(event => {
     actions.onSetPreviewMode(event.target.checked)
   }, [actions.onSetPreviewMode])
+
+  let siteUrl = null
+  
+  if(publishStatus && publishStatus.production) {
+    siteUrl = publishStatus.production.urls[publishStatus.production.urls.length-1]
+  }
 
   return (
     <AppBar 
@@ -97,57 +113,70 @@ const NocodeTopbar = ({
       <Toolbar
         className={ classes.toolbar }
       >
-        <Hidden mdUp>
-          <div className={ classes.appBarTitle }></div>
-        </Hidden>
-        <Hidden smDown>
-          <div className={ classes.appBarTitle }>
+        <div className={ classes.container }>
+          <div className={ classes.optionsContainer }>
+            <GlobalOptions>
+              {
+                user && (
+                  <Hidden smDown>
+                    <div className={ classes.userContainer }>
+                      <UserAvatar
+                        user={ user }
+                      />
+                    </div>
+                  </Hidden>
+                )
+              }
+            </GlobalOptions>
+          </div>
+          <div className={ classes.filler }>
+          
+          </div>
+          <Hidden smDown>
             {
-              user && (
-                <UserAvatar
-                  user={ user }
-                />
+              siteUrl && (
+                <div className={ classes.urlContainer }>
+                  <a href={ siteUrl } target="_blank">
+                    { siteUrl }
+                  </a>
+                </div>
               )
             }
-          </div>
-          <div className={ classes.options }>
-            <Button
-              variant="contained"
-              size="small"
-              className={classes.button}
-              startIcon={<BuildIcon />}
-              onClick={ actions.onPublish }
-            >
-              Build Website
-            </Button>
-            <Button
-              variant="contained"
-              size="small"
-              className={classes.button}
-              startIcon={<RefreshIcon />}
-              onClick={ actions.onRebuild }
-            >
-              Reload
-            </Button>
-            <FormGroup row>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={ previewMode }
-                    onChange={ handleChange }
-                    color="secondary"
-                  />
-                }
-                label="preview"
-                classes={{
-                  label: classes.previewModeLabel,
-                }}
-              />
-            </FormGroup>
-          </div>
-        </Hidden>
-        <div className={ classes.options }>
-          <GlobalOptions />
+            <div className={ classes.buttonContainer }>
+              <FormGroup row>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={ previewMode }
+                      onChange={ handleChange }
+                      color="secondary"
+                    />
+                  }
+                  label="preview"
+                  classes={{
+                    label: classes.previewModeLabel,
+                  }}
+                />
+              </FormGroup>
+              <Button
+                variant="contained"
+                size="small"
+                startIcon={<RefreshIcon />}
+                onClick={ actions.onRebuild }
+              >
+                Reload
+              </Button>
+              <Button
+                variant="contained"
+                size="small"
+                className={classes.button}
+                startIcon={<BuildIcon />}
+                onClick={ actions.onPublish }
+              >
+                Build Website
+              </Button>
+            </div>
+          </Hidden>
         </div>
       </Toolbar>
     </AppBar>
