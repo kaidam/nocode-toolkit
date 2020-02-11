@@ -132,6 +132,7 @@ const useStyles = makeStyles(theme => createStyles({
 
 const FinderList = ({
   driver,
+  mode,
   items,
   addFilter,
   onOpenFolder,
@@ -294,45 +295,32 @@ const FinderList = ({
                             color="secondary"
                             variant="contained"
                             className={ classes.infoPanelButton }
-                            onClick={ () => onAddContent({id:selectedItem.id}) }
+                            onClick={ () => {
+                              const payload = mode == 'sync' ?
+                                {id:selectedItem.id, data:{ghost:true}} :
+                                {id:selectedItem.id}
+                              onAddContent(payload) 
+                            }}
                           >
                             <FolderIcon />
-                            &nbsp;&nbsp;Add Folder
+                            &nbsp;&nbsp;{ mode == 'sync' ? 'Sync' : 'Add' } Folder
                           </Button>
                         </div>
                         <div className={ classes.buttonRowText }>
-                          <Typography className={ classes.infoPanelText } variant="caption" display="block" gutterBottom>
-                            Add this folder and keep it synchronized with Google Drive.
-                          </Typography>
+                          {
+                            mode == 'sync' ? (
+                              <Typography className={ classes.infoPanelText } variant="caption" display="block" gutterBottom>
+                                Sync the contents of this folder to the section.
+                              </Typography>
+                            ) : (
+                              <Typography className={ classes.infoPanelText } variant="caption" display="block" gutterBottom>
+                                Add this folder to the section.
+                              </Typography>
+                            )
+                          }
                         </div>
                       </div>
                       <Divider className={ classes.divider } />
-                      {
-                        selectedItem.addGhostMode && (
-                          <React.Fragment>
-                            <div className={ classes.buttonRow }>
-                              <div className={ classes.buttonRowButton }>
-                                <Button
-                                  size="small"
-                                  color="secondary"
-                                  variant="outlined"
-                                  className={ classes.infoPanelButton }
-                                  onClick={ () => onAddContent({id:selectedItem.id, data:{ghost:true}}) }
-                                >
-                                  <FolderOpenIcon />
-                                  &nbsp;&nbsp;Add Contents
-                                </Button>
-                              </div>
-                              <div className={ classes.buttonRowText }>
-                                <Typography className={ classes.infoPanelText } variant="caption" display="block" gutterBottom>
-                                  Add everything <b>inside</b> this folder and keep it synchronized with Google Drive.
-                                </Typography>
-                              </div>
-                            </div>
-                            <Divider className={ classes.divider } />
-                          </React.Fragment>
-                        )
-                      }
                       <div className={ classes.buttonRow }>
                         <div className={ classes.buttonRowButton }>
                           <Button
@@ -341,7 +329,7 @@ const FinderList = ({
                             className={ classes.infoPanelButton }
                             onClick={ () => onOpenFolder(selectedItem.id) }
                           >
-                            &nbsp;&nbsp;Open
+                            <FolderOpenIcon />&nbsp;&nbsp;View Folder
                           </Button>
                         </div>
                         <div className={ classes.buttonRowText }>
@@ -389,7 +377,7 @@ const FinderList = ({
                       className={ classes.infoPanelButton }
                       onClick={ () => setSelectedItem(null) }
                     >
-                      Cancel
+                      Choose again
                     </Button>
                   </div>
                   <div className={ classes.buttonRowText }>

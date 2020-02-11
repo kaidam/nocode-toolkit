@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   },
   logo: {
     height: `${theme.layout.uiLogoHeight}px`,
-    padding: '3px',
+    //padding: '3px',
   },
 }))
 

@@ -57,6 +57,7 @@ const useStyles = makeStyles(theme => createStyles({
 const DriveUI = ({
   driver,
   parent,
+  mode,
   finderConfig,
   search,
   resultsSearch,
@@ -190,6 +191,7 @@ const DriveUI = ({
     return (
       <FinderList
         driver={ driver }
+        mode={ mode }
         addFilter={ addFilter }
         items={ items }
         onOpenFolder={ onOpenFolder }

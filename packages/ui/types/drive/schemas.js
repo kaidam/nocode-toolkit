@@ -28,7 +28,7 @@ const driveGroup = {
 const folder = {
   driver: 'drive',
   type: 'folder',
-  title: 'New Google Drive Folder',
+  title: 'Create Google Drive Folder',
   icon: 'folder',
   secondaryIcon: 'drive',
   metadata: {
@@ -56,7 +56,7 @@ const folder = {
 const document = {
   driver: 'drive',
   type: 'document',
-  title: 'New Google Doc',
+  title: 'Create Google Doc',
   icon: 'docs',
   secondaryIcon: 'drive',
   metadata: {
@@ -130,23 +130,6 @@ const finderConfig = {
   getItemThumbnail: (item) => utils.getItemThumbnail(item),
   isFolder: (item) => utils.isFolder(item),
   isImage: (item) => utils.isImage(item),
-  // extra params to add to the finder route
-  getQueryParams: ({
-    structure,
-    location,
-  }) => {
-    return structure == 'tree' ?
-      // in tree mode we can both see and add folders & documents
-      {
-        listFilter: 'folder,document',
-        addFilter: 'folder,document',
-      } :
-      // in list mode we can see both but only add documents
-      {
-        listFilter: 'folder,document',
-        addFilter: 'document',
-      }
-  },
   // the root sources shown as tabs at the top
   tabs: [{
     title: 'My Drive',
@@ -177,7 +160,25 @@ const finder = {
   openDialog: 'finder',
   // put these params into the finder dialog
   // to control whether we can add folders or just documents
-  finder: finderConfig,
+  finder: Object.assign({}, finderConfig, {
+    // extra params to add to the finder route
+    getQueryParams: ({
+      structure,
+      location,
+    }) => {
+      return structure == 'tree' ?
+        // in tree mode we can both see and add folders & documents
+        {
+          listFilter: 'folder,document',
+          addFilter: 'folder,document',
+        } :
+        // in list mode we can see both but only add documents
+        {
+          listFilter: 'folder,document',
+          addFilter: 'document',
+        }
+    },
+  }),
 }
 
 const syncFolder = {
@@ -192,16 +193,30 @@ const syncFolder = {
   },
   parentFilter: ['section'],
   openDialog: 'finder',
-  finder: finderConfig,
+  // put these params into the finder dialog
+  // to control whether we can add folders or just documents
+  finder: Object.assign({}, finderConfig, {
+    // extra params to add to the finder route
+    getQueryParams: ({
+      structure,
+      location,
+    }) => {
+      return {
+        listFilter: 'folder',
+        addFilter: 'folder',
+        mode: 'sync',
+      }
+    },
+  }),
 }
 
 const schemas = {
   driveGroup,
-  folder,
-  document,
   image,
   finder,
   syncFolder,
+  folder,
+  document,
 }
 
 export default schemas

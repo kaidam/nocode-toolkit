@@ -13,10 +13,10 @@ const useStyles = makeStyles(theme => createStyles({
     width: '100%',
     height: '100%',
     cursor: 'pointer',
-    border: '2px dotted rgba(255,255,255,0)',
+    border: '1px solid rgba(255,255,255,0)',
     transition: 'background-color 200ms linear, border 200ms linear',
     '&:hover': {
-      border: '2px dotted #999',
+      border: '1px solid #999',
       backgroundColor: '#f5f5f5',
     },
     display: 'flex',
@@ -39,7 +39,7 @@ const useStyles = makeStyles(theme => createStyles({
     flexGrow: 1,
   },
   activeRoot: {
-    border: ['2px dotted #66a', '!important'],
+    border: ['1px solid #66a', '!important'],
     backgroundColor: ['#f5f5ff', '!important'],
   },
 }))

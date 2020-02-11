@@ -18,7 +18,9 @@ import {
 const useStyles = makeStyles(theme => {
   return {
     root: {
-      padding: theme.spacing(1.5),
+      paddingLeft: theme.spacing(1.5),
+      paddingTop: theme.spacing(1.5),
+      paddingBottom: theme.spacing(1.5),
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',

@@ -12,7 +12,7 @@ import {
 const useStyles = makeStyles(theme => {
   return {
     root: {
-      padding: theme.spacing(1.5),
+      //padding: theme.spacing(1.5),
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
@@ -153,22 +153,24 @@ const RenderItem = ({
   if(item.type == 'folder') {
 
     const getItemOptions = (item) => {
-      return item.children.map(id => {
-        const child = allContent[id]
-        const base = {
-          title: child.data.name,
-        }
-        if(child.type == 'folder') {
-          base.items = getItemOptions(child)
-        }
-        else {
-          base.handler = () => {
-            const route = routeMap[child.id]
-            onNavigateTo(route.name)
+      return item.children
+        .filter(id => allContent[id])
+        .map(id => {
+          const child = allContent[id]
+          const base = {
+            title: child.data.name,
           }
-        }
-        return base
-      })
+          if(child.type == 'folder') {
+            base.items = getItemOptions(child)
+          }
+          else {
+            base.handler = () => {
+              const route = routeMap[child.id]
+              onNavigateTo(route.name)
+            }
+          }
+          return base
+        })
     }
 
     return (

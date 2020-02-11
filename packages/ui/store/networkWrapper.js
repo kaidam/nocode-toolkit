@@ -39,6 +39,7 @@ const networkWrapper = ({
     result = await handler(dispatch, getState)
   } catch(error) {
     const errorMessage = apiUtils.getErrorMessage(error)
+    console.error(`Network request failure`)
     console.error(error)
     console.error(errorMessage)
     dispatch(networkActions.setError({

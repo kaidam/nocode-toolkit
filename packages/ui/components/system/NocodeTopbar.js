@@ -32,6 +32,8 @@ const useStyles = makeStyles(theme => ({
     borderBottom: 'solid 2px rgba(0, 0, 0, 1)',
   },
   toolbar: {
+    paddingLeft: '8px',
+    paddingRight: '8px',
     height: [`${theme.layout.uiTopbarHeight}px`, '!important'],
     minHeight: [`${theme.layout.uiTopbarHeight}px`, '!important'],
     maxHeight: [`${theme.layout.uiTopbarHeight}px`, '!important'],
@@ -43,7 +45,10 @@ const useStyles = makeStyles(theme => ({
   },
   logo: {
     height: `${theme.layout.uiLogoHeight}px`,
-    padding: '3px',
+    // paddingTop: '3px',
+    // paddingLeft: '3px',
+    // paddingBottom: '3px',
+    // paddingRight: '0px',
   },
   menuButton: {
     marginLeft: -12,
@@ -51,7 +56,7 @@ const useStyles = makeStyles(theme => ({
     color: '#000',
   },
   options: {
-    paddingRight: theme.spacing(1.5),
+    paddingLeft: theme.spacing(1.5),
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',

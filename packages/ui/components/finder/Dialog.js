@@ -53,6 +53,7 @@ const FinderDialog = ({
     tab,
     addFilter,
     page = 1,
+    mode,
   } = queryParams
 
   const items = useSelector(selectors.finder.list)
@@ -82,6 +83,7 @@ const FinderDialog = ({
     <FinderUI
       driver={ driver }
       parent={ parent }
+      mode={ mode }
       finderConfig={ finderConfig }
       search={ search }
       resultsSearch={ resultsSearch }

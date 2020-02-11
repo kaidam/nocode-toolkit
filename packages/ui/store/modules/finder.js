@@ -239,6 +239,14 @@ const sideEffects = {
     id,
     data = {}
   } = {}) => wrapper('addContent', async (dispatch, getState) => {
+
+    // console.log('--------------------------------------------')
+    // console.log('--------------------------------------------')
+    // console.dir({
+    //   id,
+    //   data,
+    // })
+    // return
     const {
       driver,
       location,
