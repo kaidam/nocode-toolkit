@@ -211,12 +211,12 @@ const syncFolder = {
 }
 
 const schemas = {
+  document,
+  folder,
   driveGroup,
   image,
   finder,
   syncFolder,
-  folder,
-  document,
 }
 
 export default schemas
