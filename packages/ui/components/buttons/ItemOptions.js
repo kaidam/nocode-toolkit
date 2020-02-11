@@ -108,7 +108,7 @@ const ItemMenuButtonContent = ({
         })
         menuItems.push({
           title: 'Add',
-          help: `Add content inside this item`,
+          //help: `Add content inside this item`,
           icon: AddIcon,
           items: addChildMenuItems,
         })
@@ -117,7 +117,7 @@ const ItemMenuButtonContent = ({
       if(isEditable) {
         menuItems.push({
           title: 'Edit',
-          help: `Edit this item`,
+          //help: `Edit this item`,
           icon: EditIcon,
           handler: typeUI.editContentHandler({
             item,
@@ -133,7 +133,7 @@ const ItemMenuButtonContent = ({
         const driverName = itemType.driverName(item)
         menuItems.push({
           title: 'Open',
-          help: `Open this item with ${driverName}`,
+          //help: `Open this item with ${driverName}`,
           icon: OpenIcon,
           handler: () => itemType.handleOpen(item),
         })
@@ -143,7 +143,7 @@ const ItemMenuButtonContent = ({
       if(isRootContent) {
         menuItems.push({
           title: 'Remove',
-          help: `Remove this item from the website`,
+          //help: `Remove this item from the website`,
           icon: DeleteIcon,
           handler: () => actions.onRemoveItem({item}),
         })
@@ -153,13 +153,13 @@ const ItemMenuButtonContent = ({
       else {
         menuItems.push({
           title: 'Delete',
-          help: `Delete this item permenantly`,
+          //help: `Delete this item permenantly`,
           icon: DeleteIcon,
           handler: () => actions.onDeleteItem({item}),
         })
         menuItems.push({
           title: 'Hide',
-          help: `Don't show this item when the website is published`,
+          //help: `Don't show this item when the website is published`,
           icon: HideIcon,
           handler: () => actions.onHideItem({item}),
         })

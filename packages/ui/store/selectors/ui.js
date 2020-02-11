@@ -5,7 +5,7 @@ import content from './content'
 import library from '../../types/library'
 
 import {
-  DEFAULT_TEMPLATE_LAYOUT,
+  BASIC_TEMPLATE_LAYOUT,
   DOCUMENTATION_TEMPLATE_LAYOUT,
 } from '../../config'
 
@@ -64,21 +64,19 @@ const afterBodySnippetCode = createSelector(
 const templates = createSelector(
   settings,
   (settings) => {
-
-    const defaultTemplate = {
+    const docsTemplate = {
       id: 'default',
-      name: 'Standard',
-      system: true,
-      default: true,
-      layout: DEFAULT_TEMPLATE_LAYOUT,
-    }
-
-    const documentationTemplate = {
-      id: 'documentation',
       name: 'Documentation',
       system: true,
       default: true,
       layout: DOCUMENTATION_TEMPLATE_LAYOUT,
+    }
+
+    const basicTemplate = {
+      id: 'basic',
+      name: 'Basic',
+      system: true,
+      layout: BASIC_TEMPLATE_LAYOUT,
     }
 
     const libraryTemplates = library.templates
@@ -89,7 +87,7 @@ const templates = createSelector(
       settingsTemplates = settings.data.templates
     }
 
-    return [defaultTemplate,documentationTemplate]
+    return [docsTemplate,basicTemplate]
       .concat(libraryTemplates)
       .concat(settingsTemplates)
   }
