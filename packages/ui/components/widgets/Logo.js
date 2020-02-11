@@ -2,6 +2,7 @@ import React from 'react'
 import Link from '@nocode-toolkit/website/Link'
 import ContentEditor from './ContentEditor'
 import useSingleton from '../hooks/useSingleton'
+import useShowUI from '../hooks/useShowUI'
 
 const getValue = (logo) => {
   let title = logo.title
@@ -64,6 +65,7 @@ const Logo = ({
   ...props
 }) => {
   const singleton = useSingleton('logo')
+  const showUI = useShowUI()
   const Renderer = renderers.content || DefaultRenderer
   return (
     <ContentEditor
@@ -74,6 +76,7 @@ const Logo = ({
     >
       <Renderer
         value={ getValue(singleton) }
+        showUI={ showUI }
         {...props}
       />
     </ContentEditor>

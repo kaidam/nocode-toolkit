@@ -2,6 +2,7 @@ import Promise from 'bluebird'
 import axios from 'axios'
 import CreateReducer from '@nocode-toolkit/website/store/utils/createReducer'
 import CreateActions from '@nocode-toolkit/website/store/utils/createActions'
+import routerActions from '@nocode-toolkit/website/store/moduleRouter'
 
 import selectors from '../selectors'
 import apiUtils from '../../utils/api'
@@ -123,6 +124,11 @@ const loaders = {
     content_id,
   }) => axios.post(apiUtils.websiteUrl(getState, `/remote/${driver}/singleton/${singleton}/content/${content_id}`))
     .then(apiUtils.process),
+
+  remove: (getState, {
+    id,
+  }) => axios.delete(apiUtils.websiteUrl(getState, `/content/${id}`))
+    .then(apiUtils.process),
 }
 
 const sideEffects = {
@@ -239,18 +245,55 @@ const sideEffects = {
     id,
     data = {}
   } = {}) => wrapper('addContent', async (dispatch, getState) => {
-
-    // console.log('--------------------------------------------')
-    // console.log('--------------------------------------------')
-    // console.dir({
-    //   id,
-    //   data,
-    // })
-    // return
     const {
       driver,
       location,
+      mode,
     } = selectors.router.queryParams(getState())
+
+    const [ locationType, locationId ] = location.split(':')
+
+    // check to see if we already have a synced folder for this section
+    if(mode == 'sync' && locationType == 'section') {
+
+      // const sectionTreeSelector = useMemo(selectors.content.sectionTree, [])
+      // const sectionTree = useSelector(state => sectionTreeSelector(state, section))
+      const sectionSyncFolder = selectors.content.sectionSyncFolder()(getState(), locationId)
+
+      // we already have a synched folder for this section
+      // warn that this will be removed for us to sync the new folder
+      if(sectionSyncFolder) {
+        if(sectionSyncFolder.id == id) {
+          dispatch(snackbarActions.setError(`The ${sectionSyncFolder.data.name} folder is already synced to this section`)) 
+          return
+        }
+        else {
+          const confirmed = await dispatch(uiActions.waitForConfirmation({
+            title: `Replace the ${sectionSyncFolder.data.name} folder sync?`,
+            message: `
+              <p>The <b>${sectionSyncFolder.data.name}</b> folder is currently synced to this section.</p>
+              <p>If you proceed - all content from the <b>${sectionSyncFolder.data.name}</b> folder will first be removed.</p>
+              <p>Do you want to proceed?</p>
+            `
+          }))
+
+          if(!confirmed) return
+
+          await dispatch(jobActions.waitForJob({
+            throwError: true,
+            loader: () => loaders.remove(getState, {
+              id: sectionSyncFolder.id,
+            }),
+            runBeforeComplete: async () => {
+              dispatch(snackbarActions.setSuccess(`un-sync of ${sectionSyncFolder.data.name} in progress...`))
+              await Promise.delay(1000)
+              dispatch(routerActions.navigateTo('root'))
+            }
+          }))
+        }
+      }
+    }
+
     await dispatch(jobActions.waitForJob({
       throwError: true,
       showWindow: true,
@@ -260,6 +303,9 @@ const sideEffects = {
         location,
         data,
       }),
+      runBeforeComplete: async () => {
+        dispatch(snackbarActions.setSuccess(`folder is now synced`))
+      }
     }))
   }),
 

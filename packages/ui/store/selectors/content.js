@@ -61,6 +61,20 @@ const sectionTree = () => createSelector(
   }
 )
 
+const sectionSyncFolder = () => createSelector(
+  sectionAll,
+  contentAll,
+  (_, name) => name,
+  (sections, content, name) => {
+    const section = sections[name]
+    const syncedChild = section.children
+      .map(id => content[id])
+      .find(item => item.location.ghostParent)
+    if(!syncedChild) return null
+    return content[syncedChild.location.ghostParent]
+  }
+)
+
 const sectionItem = () => createSelector(
   sectionAll,
   (_, name) => name,
@@ -183,6 +197,7 @@ const selectors = {
   queryItem,
   sectionTree,
   sectionList,
+  sectionSyncFolder,
   childrenList,
   ghostParent,
   routeItemPath,

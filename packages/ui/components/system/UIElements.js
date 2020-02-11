@@ -35,14 +35,17 @@ const UIElements = ({
   const confirmWindow = useSelector(state => state.ui.confirmWindow)
   let { dialog } = useSelector(selectors.router.queryParams)
 
-  if(confirmWindow) dialog = 'confirm'
-
   const DialogComponent = dialog ? dialogs[dialog] : null
 
   return (
     <div>
       {
         DialogComponent && <DialogComponent />
+      }
+      {
+        confirmWindow && dialog != 'confirm' && (
+          <ConfirmDialog />
+        )
       }
       <SnackBar />
       <GlobalLoading />

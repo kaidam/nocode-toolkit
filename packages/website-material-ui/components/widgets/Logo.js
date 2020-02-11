@@ -16,7 +16,8 @@ const useStyles = makeStyles(theme => {
       flexDirection: 'row',
       alignItems: 'center',
     },
-    logoText: ({contrast}) => ({
+    logoText: ({contrast,showUI}) => ({
+      paddingLeft: showUI ? '0px' : '4px',
       color: contrast ? 
         theme.palette.primary.contrastText :
         theme.palette.primary.main,
@@ -36,6 +37,7 @@ const useStyles = makeStyles(theme => {
 })
 
 const Renderer = ({
+  showUI,
   value: {
     title,
     imageUrl,
@@ -43,7 +45,7 @@ const Renderer = ({
   contrast,
   ...props
 }) => {
-  const classes = useStyles({contrast})
+  const classes = useStyles({contrast,showUI})
   const classOverrides = props.classes || {}
   const titleClassname = classOverrides.title || ''
   return (

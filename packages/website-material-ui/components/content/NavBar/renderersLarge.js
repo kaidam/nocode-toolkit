@@ -23,6 +23,7 @@ const useStyles = makeStyles(theme => {
       flexGrow: 0,
     },
     editor: {
+      marginLeft: '8px',
       flexGrow: 0,
     },
     navbar: {
@@ -55,7 +56,7 @@ const useStyles = makeStyles(theme => {
       padding: theme.spacing(1),
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
-      marginRight: theme.spacing(1),
+      marginLeft: theme.spacing(1),
       borderRadius: theme.spacing(1),
       textDecoration: 'none',
       cursor: 'pointer',
