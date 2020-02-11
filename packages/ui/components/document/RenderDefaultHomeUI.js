@@ -60,9 +60,10 @@ const RenderDefaultHomeUI = ({
             <Button
               color="secondary"
               variant="contained"
+              size="small"
               onClick={ onClick }
             >
-              <EditIcon />&nbsp;&nbsp;Update Homepage
+              <AddIcon />&nbsp;&nbsp;Add Homepage
             </Button>
           )}
         />

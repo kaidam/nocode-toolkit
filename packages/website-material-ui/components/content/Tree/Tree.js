@@ -95,6 +95,7 @@ const RenderRoot = ({
   panelTop,
   editor,
   content,
+  children,
   panelBottom,
   ...props
 }) => {
@@ -120,6 +121,7 @@ const RenderRoot = ({
         )
       }
       <div className={ classes.content }>
+        { children }
         { content }
       </div>
       {

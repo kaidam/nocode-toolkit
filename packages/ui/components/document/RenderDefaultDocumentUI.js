@@ -41,6 +41,7 @@ const RenderDefaultDocumentUI = ({
         <Button
           color="secondary"
           variant="contained"
+          size="small"
           onClick={ (e) => {
             e.preventDefault()
             e.stopPropagation()

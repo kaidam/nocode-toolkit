@@ -38,6 +38,7 @@ const SectionAdd = ({
   tiny,
   stashQueryParams,
   extraItems = [],
+  getButton,
 }) => {
   const actions = Actions(useDispatch(), {
     onOpenContentForm: contentActions.openDialogContentForm,
@@ -76,18 +77,21 @@ const SectionAdd = ({
     <MenuButton
       items={ menuItems }
       tiny
-      getButton={ onClick => (
-        <Tooltip title="Add Content">
-          <Fab
-            size="small"
-            color="secondary"
-            className={ tiny ? classes.tinyRoot : null }
-            onClick={ onClick }
-          >
-            <AddIcon />
-          </Fab>
-        </Tooltip>
-      )}
+      getButton={ onClick => {
+        if(getButton) return getButton(onClick)
+        return (
+          <Tooltip title="Add Content">
+            <Fab
+              size="small"
+              color="secondary"
+              className={ tiny ? classes.tinyRoot : null }
+              onClick={ onClick }
+            >
+              <AddIcon />
+            </Fab>
+          </Tooltip>
+        )
+      }}
     />
   )
 }

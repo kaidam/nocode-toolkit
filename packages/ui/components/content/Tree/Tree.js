@@ -8,6 +8,7 @@ import TreePanel from './TreePanel'
 import TreeItems from  './TreeItems'
 
 const SectionEditor = lazy(() => import(/* webpackChunkName: "ui" */ './TreeSectionEditor'))
+const DefaultContent = lazy(() => import(/* webpackChunkName: "ui" */ './DefaultContent'))
 
 const DEFAULT_ARRAY = []
 
@@ -114,7 +115,18 @@ const Tree = ({
       panelBottom={ panelBottom }
       classes={ classes }
       {...props}
-    />
+    >
+      {
+        items.length <= 0 && (
+          <Suspense>
+            <DefaultContent
+              section={ section }
+            />
+          </Suspense>
+        )
+      }
+    </RootRenderer>
+    
   )
 }
 

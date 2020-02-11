@@ -5,6 +5,7 @@ const RenderRoot = ({
   editor,
   content,
   panelBottom,
+  children,
 }) => {
   return (
     <div
@@ -46,6 +47,7 @@ const RenderRoot = ({
           paddingBottom: '10px',
         }}
       >
+        { children }
         { content }
       </div>
       {
