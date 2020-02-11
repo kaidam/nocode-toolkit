@@ -114,6 +114,9 @@ const DocumentHTML = ({
       <div
         id="nocode-document-html"
         ref={ contentRef }
+        style={{
+          marginTop: showUI ? '0px' : '12px',
+        }}
       >
         <Suspense>
           <RenderDefaultDocumentUI
@@ -129,6 +132,9 @@ const DocumentHTML = ({
       id="nocode-document-html"
       ref={ contentRef }
       dangerouslySetInnerHTML={{__html: content }}
+      style={{
+        marginTop: showUI ? '0px' : '12px',
+      }}
     >
     </div>
   )
