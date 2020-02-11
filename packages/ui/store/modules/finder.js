@@ -342,18 +342,26 @@ const sideEffects = {
   openSectionFolder: ({
     section,
   }) => wrapper('saveRemoteContent', async (dispatch, getState) => {
-    dispatch(uiActions.setLoading(true))
-    try {
-      const sectionFolder = await loaders.ensureSectionFolder(getState, {
-        driver: 'drive',
-        section,
-      })
-      window.open(driveUtils.getGoogleLink(driveUtils.getFolderLink(sectionFolder.id)))
-    } catch(e) {
-      dispatch(uiActions.setLoading(false))
-      throw e
+
+    const sectionSyncFolder = selectors.content.sectionSyncFolder()(getState(), section)
+
+    if(sectionSyncFolder) {
+      window.open(driveUtils.getGoogleLink(driveUtils.getFolderLink(sectionSyncFolder.id)))
     }
-    dispatch(uiActions.setLoading(false))
+    else {
+      dispatch(uiActions.setLoading(true))
+      try {
+        const sectionFolder = await loaders.ensureSectionFolder(getState, {
+          driver: 'drive',
+          section,
+        })
+        window.open(driveUtils.getGoogleLink(driveUtils.getFolderLink(sectionFolder.id)))
+      } catch(e) {
+        dispatch(uiActions.setLoading(false))
+        throw e
+      }
+      dispatch(uiActions.setLoading(false))
+    }
   }),
 
   /*
