@@ -129,6 +129,12 @@ const loaders = {
     id,
   }) => axios.delete(apiUtils.websiteUrl(getState, `/content/${id}`))
     .then(apiUtils.process),
+
+  delete: (getState, {
+    driver,
+    id,
+  }) => axios.delete(apiUtils.websiteUrl(getState, `/remote/${driver}/${id}`))
+    .then(apiUtils.process),
 }
 
 const sideEffects = {
@@ -234,6 +240,39 @@ const sideEffects = {
     dispatch(actions.setSearchValue(''))
     dispatch(actions.getList())
   },
+
+  deleteItem: ({
+    item,
+  }) => wrapper('deleteItem', async (dispatch, getState) => {
+
+    const confirmed = await dispatch(uiActions.waitForConfirmation({
+      title: `Permenantly delete ${item.data.name}?`,
+      message: `
+        <p>Are you <b>absolutely sure</b> you want to delete <b>${item.data.name}</b>?</p>
+        <p>This cannot be undone and will remove the content from your Google drive</p>
+        <p>Do you want to proceed?</p>
+      `
+    }))
+
+    if(!confirmed) return
+
+    dispatch(uiActions.setLoading(true))
+
+    await loaders.delete(getState, {
+      driver: item.driver,
+      id: item.id,
+    })
+
+    await dispatch(jobActions.rebuild({
+      runBeforeComplete: async () => {
+        dispatch(snackbarActions.setSuccess(`${item.data.name} deleted`))
+        await Promise.delay(1000)
+        dispatch(routerActions.navigateTo('root'))
+      }
+    }))
+
+    dispatch(uiActions.setLoading(false))
+  }),
 
   /*
   

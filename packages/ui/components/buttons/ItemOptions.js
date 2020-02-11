@@ -148,19 +148,15 @@ const ItemMenuButtonContent = ({
           handler: () => actions.onRemoveItem({item}),
         })
       }
-      // // this item is a descendent of a ghost item in the content table
-      // else if(isGhostDescendant && ghostParent) {
-      //   menuItems.push({
-      //     title: `Remove Parent`,
-      //     help: `Remove the ${ghostParent.data.name} folder and all contents`,
-      //     icon: DeleteIcon,
-      //     handler: () => actions.onRemoveItem({item}),
-      //   })
-      // }
-
       // this item is a descendant of an item in the content table
       // we can't remove it - just "hide" it
-      if(!isRootContent) {
+      else {
+        menuItems.push({
+          title: 'Delete',
+          help: `Delete this item permenantly`,
+          icon: DeleteIcon,
+          handler: () => actions.onDeleteItem({item}),
+        })
         menuItems.push({
           title: 'Hide',
           help: `Don't show this item when the website is published`,
@@ -221,6 +217,7 @@ const ItemMenuButton = ({
     onOpenExternalEditor: contentActions.onOpenExternalEditor,
     onOpenFinder: finderActions.openDialogFinder,
     onRemoveItem: contentActions.removeContent,
+    onDeleteItem: finderActions.deleteItem,
     onHideItem: contentActions.hideContent,
   })
 
