@@ -255,9 +255,6 @@ const sideEffects = {
 
     // check to see if we already have a synced folder for this section
     if(mode == 'sync' && locationType == 'section') {
-
-      // const sectionTreeSelector = useMemo(selectors.content.sectionTree, [])
-      // const sectionTree = useSelector(state => sectionTreeSelector(state, section))
       const sectionSyncFolder = selectors.content.sectionSyncFolder()(getState(), locationId)
 
       // we already have a synched folder for this section
