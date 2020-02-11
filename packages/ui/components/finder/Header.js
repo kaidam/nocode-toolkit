@@ -69,6 +69,10 @@ const FinderHeader = ({
     onUpdateSearch(ev.target.value)
   }, [onUpdateSearch])
 
+  const onKeyPressHandler = useCallback((ev) => {
+    if(ev.key == 'Enter') onSearch()
+  }, [onSearch])
+
   const titleComponent = useMemo(() => {
     if(!title) return null
     return (
@@ -125,6 +129,7 @@ const FinderHeader = ({
           helperText='Search for content'
           value={ search }
           onChange={ onUpdateSearchHandler }
+          onKeyPress={ onKeyPressHandler }
         />
         <Button
           className={ classes.searchButton }
