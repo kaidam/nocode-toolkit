@@ -1,6 +1,6 @@
 {
   "name": "example-site-material-ui",
-  "version": "1.0.58",
+  "version": "1.0.59",
   "private": true,
   "description": "",
   "dependencies": {
@@ -9,7 +9,7 @@
     "@material-ui/styles": "^4.4.1",
     "@nocode-toolkit/builder": "^1.0.48",
     "@nocode-toolkit/website": "^1.0.51",
-    "@nocode-toolkit/website-material-ui": "^1.0.57",
+    "@nocode-toolkit/website-material-ui": "^1.0.58",
     "react": "^16.8.6",
     "react-dom": "^16.8.6"
   },
