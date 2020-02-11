@@ -26,7 +26,7 @@ const DefaultContent = ({
 
   return (
     <div className={ classes.root }>
-      <p>Get started by adding conent to this section:</p>
+      <p>Get started by adding content to this section:</p>
       <div className={ classes.button }>
         <SectionAdd
           id={ section }
