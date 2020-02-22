@@ -9,6 +9,7 @@ const defaultMethods = {
   isLink: item => false,
   isEditable: item => false,
   isOpenable: item => false,
+  editMode: item => '',
   // is this content included by a content entry that is not
   // itself visible?
   isGhostDescendant: item => false,
@@ -16,8 +17,9 @@ const defaultMethods = {
   // of another content entry?
   isRootContent: item => true,
   handleOpen: item => {
-    alert('not supported')
-  }
+    console.error('no supported')
+  },
+  getItemUrl: item => '',
 }
 
 const drivers = {

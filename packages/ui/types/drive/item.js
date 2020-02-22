@@ -30,9 +30,11 @@ const itemType = {
   isGhostDescendant,
   isRootContent,
   isEditable: item => true,
-  isOpenable: item => true,
+  isOpenable: item => item.type == 'folder',
+  editMode: item => item.type == 'folder' ? 'local' : 'external',
   driverName: item => 'Google Drive',
   handleOpen,
+  getItemUrl,
 }
 
 export default itemType

@@ -12,6 +12,13 @@ const useStyles = makeStyles(theme => ({
   menuText: {
     paddingRight: '50px',
   },
+  menuLink: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    textDecoration: 'none',
+    color: '#000',
+  },
 }))
 
 const ItemMenu = ({
@@ -49,11 +56,9 @@ const ItemMenu = ({
               <Divider key={ i } />
             )
           }
-          return (
-            <MenuItem
-              key={ i }
-              onClick={ (event) => onItemClick(event, item) }
-            >
+
+          let contents = (
+            <React.Fragment>
               {
                 item.icon && (
                   <ListItemIcon>
@@ -75,7 +80,37 @@ const ItemMenu = ({
                   </ListItemSecondaryAction>
                 )
               }
+            </React.Fragment>
+          )
+
+          if(item.url) {
+            contents = (
+              <a
+                className={ classes.menuLink }
+                href={ item.url }
+                target="_blank"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onClose()
+                  return false
+                }}
+              >
+                { contents }
+              </a>
+            )
+          }
+
+          return (
+            <MenuItem
+              key={ i }
+              onClick={ (event) => {
+                if(item.url) return
+                onItemClick(event, item)
+              }}
+            >
+              { contents }
             </MenuItem>
+            
           )
         })
       }
