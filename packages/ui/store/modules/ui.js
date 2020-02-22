@@ -29,7 +29,6 @@ const wrapper = (name, handler) => networkWrapper({
 
 const reducers = {
   setConfig: (state, action) => {
-    state.initialised = true
     state.config = action.payload
   },
   setWebsite: (state, action) => {
@@ -40,6 +39,7 @@ const reducers = {
   },
   setInitialiseCalled: (state, action) => {
     state.initialiseCalled = true
+    state.initialised = true
   },
   setConfirmWindow: (state, action) => {
     state.confirmWindow = action.payload
@@ -75,6 +75,15 @@ const loaders = {
   website: (id) => axios.get(apiUtils.apiUrl(`/websites/${id}`))
     .then(apiUtils.process),
 
+  updateWebsiteMeta: (id, data) => axios.put(apiUtils.apiUrl(`/websites/${id}/meta`, data))
+    .then(apiUtils.process),
+
+  ensureSectionFolders: (getState, {
+    driver,
+    sections,
+  }) => axios.post(apiUtils.websiteUrl(getState, `/remote/${driver}/sections`), {sections})
+    .then(apiUtils.process),
+    
   setSubdomain: (id, subdomain) => axios.put(apiUtils.apiUrl(`/websites/${id}/subdomain`), {subdomain})
     .then(apiUtils.process),
 
@@ -98,11 +107,12 @@ const sideEffects = {
     snackbarError: false,
     handler: async (dispatch, getState) => {
       if(getState().ui.initialiseCalled) return
-      dispatch(actions.setInitialiseCalled())
       const data = await loaders.config(getState)
       dispatch(actions.setConfig(data))
       const user = await loaders.user(getState)
       dispatch(actions.setUser(user))
+      await dispatch(actions.initialiseWebsite())
+      dispatch(actions.setInitialiseCalled())
       dispatch(jobActions.getPublishStatus())
       dispatch(jobActions.waitForPreviewJob())
       globals.setWindowInitialised()
@@ -113,7 +123,37 @@ const sideEffects = {
           dispatch(plugin.actions.initialize())
         }
       })
-      dispatch(actions.loadWebsite())
+    }
+  }),
+  initialiseWebsite: () => networkWrapper({
+    prefix,
+    name: 'initialiseWebsite',
+    snackbarError: false,
+    handler: async (dispatch, getState) => {
+      const website = await dispatch(actions.loadWebsite())
+
+      // this must be the first time we've used this website
+      // let's auto-create the folders we need
+      // as dictated by the template and the library
+      if(!website.meta.autoFoldersCreated) {
+        await loaders.ensureSectionFolders(getState, {
+          driver: 'drive',
+          sections: library.sections,
+        })
+        await dispatch(actions.updateWebsiteMeta({
+          autoFoldersCreated: true,
+        }))
+      }
+    }
+  }),
+  updateWebsiteMeta: (data) => networkWrapper({
+    prefix,
+    name: 'updateWebsiteMeta',
+    snackbarError: false,
+    handler: async (dispatch, getState) => {
+      const website = selectors.ui.website(getState())
+      await loaders.updateWebsiteMeta(website.id, data)
+      await dispatch(actions.loadWebsite())
     }
   }),
   loadWebsite: () => networkWrapper({
@@ -125,6 +165,7 @@ const sideEffects = {
       const data = await loaders.website(config.websiteId)
       data.meta = data.meta || {}
       dispatch(actions.setWebsite(data))
+      return data
     }
   }),
   setSubdomain: (subdomain) => wrapper('setSubdomain', async (dispatch, getState) => {

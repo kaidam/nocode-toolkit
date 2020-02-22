@@ -2,6 +2,7 @@ const library = {}
 const names = []
 const plugins = []
 const templates = []
+const sections = []
 
 const add = (type, schema) => {
   if(typeof(type) === 'string' && typeof(schema) === 'object') {
@@ -64,6 +65,10 @@ const addTemplate = (id, props = {}) => {
   })
 }
 
+const addSection = (section) => {
+  sections.push(section)
+}
+
 const types = {
   add,
   set,
@@ -75,6 +80,8 @@ const types = {
   addTab,
   templates,
   addTemplate,
+  addSection,
+  sections,
 }
 
 export default types
