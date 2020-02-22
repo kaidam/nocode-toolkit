@@ -75,7 +75,7 @@ const loaders = {
   website: (id) => axios.get(apiUtils.apiUrl(`/websites/${id}`))
     .then(apiUtils.process),
 
-  updateWebsiteMeta: (id, data) => axios.put(apiUtils.apiUrl(`/websites/${id}/meta`, data))
+  updateWebsiteMeta: (id, data) => axios.put(apiUtils.apiUrl(`/websites/${id}/meta`), data)
     .then(apiUtils.process),
 
   ensureSectionFolders: (getState, {
@@ -132,6 +132,9 @@ const sideEffects = {
     handler: async (dispatch, getState) => {
       const website = await dispatch(actions.loadWebsite())
 
+      console.log('--------------------------------------------')
+      console.log('--------------------------------------------')
+      console.dir(website.meta)
       // this must be the first time we've used this website
       // let's auto-create the folders we need
       // as dictated by the template and the library
