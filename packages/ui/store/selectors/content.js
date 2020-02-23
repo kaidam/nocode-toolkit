@@ -66,13 +66,11 @@ const sectionSyncFolder = () => createSelector(
   contentAll,
   (_, name) => name,
   (sections, content, name) => {
-    const section = sections[name]
-    if(!section) return null
-    const syncedChild = section.children
-      .map(id => content[id])
-      .find(item => item.location.ghostParent)
-    if(!syncedChild) return null
-    return content[syncedChild.location.ghostParent]
+    const id = Object.keys(content).find(id => {
+      const item = content[id]
+      return item.location.ghostSection && item.location.ghostSection == name
+    })
+    return content[id]
   }
 )
 

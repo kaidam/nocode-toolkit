@@ -40,6 +40,7 @@ const reducers = {
   setInitialiseCalled: (state, action) => {
     state.initialiseCalled = true
     state.initialised = true
+    globals.setWindowInitialised()
   },
   setConfirmWindow: (state, action) => {
     state.confirmWindow = action.payload
@@ -111,11 +112,8 @@ const sideEffects = {
       dispatch(actions.setConfig(data))
       const user = await loaders.user(getState)
       dispatch(actions.setUser(user))
-      await dispatch(actions.initialiseWebsite())
-      dispatch(actions.setInitialiseCalled())
+      const rebuildRequired = await dispatch(actions.initialiseWebsite())
       dispatch(jobActions.getPublishStatus())
-      dispatch(jobActions.waitForPreviewJob())
-      globals.setWindowInitialised()
       globals.identifyUser(data.user)
       const plugins = library.plugins
       plugins.forEach(plugin => {
@@ -123,6 +121,13 @@ const sideEffects = {
           dispatch(plugin.actions.initialize())
         }
       })
+      dispatch(actions.setInitialiseCalled())
+      if(rebuildRequired) {
+        dispatch(jobActions.rebuild())
+      }
+      else {
+        dispatch(jobActions.waitForPreviewJob())
+      }
     }
   }),
   initialiseWebsite: () => networkWrapper({
@@ -131,14 +136,10 @@ const sideEffects = {
     snackbarError: false,
     handler: async (dispatch, getState) => {
       const website = await dispatch(actions.loadWebsite())
-
-      console.log('--------------------------------------------')
-      console.log('--------------------------------------------')
-      console.dir(website.meta)
       // this must be the first time we've used this website
       // let's auto-create the folders we need
       // as dictated by the template and the library
-      if(!website.meta.autoFoldersCreated) {
+      if(!website.meta.autoFoldersCreated && website.meta.autoFoldersEnsure) {
         await loaders.ensureSectionFolders(getState, {
           driver: 'drive',
           sections: library.sections,
@@ -146,6 +147,10 @@ const sideEffects = {
         await dispatch(actions.updateWebsiteMeta({
           autoFoldersCreated: true,
         }))
+        return true
+      }
+      {
+        return false
       }
     }
   }),
