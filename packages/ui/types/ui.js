@@ -207,6 +207,7 @@ const addContentOptions = ({
   onOpenFinder,
   onOpenContentForm,
   groupFilter,
+  withGroups = true,
 }) => {
 
   const groups = {}
@@ -254,7 +255,7 @@ const addContentOptions = ({
 
       const groupName = (schemaDefinition.metadata || {}).group
 
-      if(groupName) {
+      if(groupName && withGroups) {
         if(!groups[groupName]) {
           const groupSchema = library.get([schemaDefinition.driver, groupName].join('.'))
           const group = {

@@ -20,7 +20,9 @@ import MenuButton from './MenuButton'
 const SettingsIcon = icons.settings
 const MoreVertIcon = icons.moreVert
 const OpenIcon = icons.open
-const SyncIcon = icons.sync
+const SearchIcon = icons.search
+const DriveIcon = icons.drive
+const UndoIcon = icons.undo
 
 const useStyles = makeStyles({
   tinyRoot: {
@@ -40,11 +42,20 @@ const SectionSettings = ({
   const actions = Actions(useDispatch(), {
     onOpenContentForm: contentActions.openDialogContentForm,
     onOpenFolder: finderActions.openSectionFolder,
+    onAddContent: finderActions.addContent,
+    onOpenFinder: finderActions.openDialogFinder,
     onRemoveContent: contentActions.removeContent,
   })
 
   const sectionSyncFolderSelector = useMemo(selectors.content.sectionSyncFolder, [])
   const sectionSyncFolder = useSelector(state => sectionSyncFolderSelector(state, id))
+  const website = useSelector(selectors.ui.website)
+
+  const autoFolderProp = `nocodeFolderId_${id}`
+  const autoFolderId = website && website.meta ? website.meta[autoFolderProp] : null
+  const sectionSyncFolderId = sectionSyncFolder && sectionSyncFolder.id
+
+  const hasCustomSyncFolder = autoFolderId && sectionSyncFolderId && autoFolderId != sectionSyncFolderId
 
   const itemType = itemTypes(sectionSyncFolder)
 
@@ -70,21 +81,51 @@ const SectionSettings = ({
   const openItem = {
     title: 'Open in Google Drive',
     icon: OpenIcon,
+    secondaryIcon: DriveIcon,
     url: itemType.getItemUrl(sectionSyncFolder),
   }
 
-  const unSyncItem = sectionSyncFolder ? {
-    title: `Un-sync the ${sectionSyncFolder.data.name} folder`,
-    icon: SyncIcon,
+  const changeSyncFolder = sectionSyncFolder ? {
+    title: `Change folder`,
+    icon: SearchIcon,
+    secondaryIcon: DriveIcon,
     handler: () => {
-      actions.onRemoveContent({item: sectionSyncFolder})
+      actions.onOpenFinder({
+        driver: 'drive',
+        location: `section:${id}`,
+        params: {
+          listFilter: 'folder',
+          addFilter: 'folder',
+          mode: 'sync',
+        }
+      })
+    }
+  } : null
+
+  const revertSyncFolder = sectionSyncFolder ? {
+    title: `Reset folder`,
+    icon: UndoIcon,
+    secondaryIcon: DriveIcon,
+    handler: () => {
+      actions.onAddContent({
+        id: autoFolderId,
+        data: {
+          ghost: true,
+        },
+        overrides: {
+          driver: 'drive',
+          location: `section:${id}`,
+          mode: 'sync',
+        }
+      })
     }
   } : null
 
   const useItems = [
     settingsItem,
     openItem,
-    unSyncItem,
+    changeSyncFolder,
+    hasCustomSyncFolder ? revertSyncFolder : null,
   ].filter(i => i)
     
   return (

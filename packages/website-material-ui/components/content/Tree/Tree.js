@@ -35,7 +35,6 @@ const useStyles = makeStyles(theme => createStyles({
   editor: {
     flexGrow: 0,
     borderBottom: '1px solid #ccc',
-    padding: theme.spacing(1),
   },
   panelTop: {
     flexGrow: 0,

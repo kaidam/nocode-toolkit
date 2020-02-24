@@ -28,7 +28,7 @@ const driveGroup = {
 const folder = {
   driver: 'drive',
   type: 'folder',
-  title: 'Create Google Drive Folder',
+  title: 'New Drive Folder',
   icon: 'folder',
   secondaryIcon: 'drive',
   metadata: {
@@ -56,7 +56,7 @@ const folder = {
 const document = {
   driver: 'drive',
   type: 'document',
-  title: 'Create Google Doc',
+  title: 'New Google Doc',
   icon: 'docs',
   secondaryIcon: 'drive',
   metadata: {
@@ -154,7 +154,7 @@ const finder = {
   metadata: {
     group: 'driveGroup',
   },
-  parentFilter: ['section', 'local.folder', 'home'],
+  parentFilter: ['local.folder', 'home'],
   // this means if we add this content
   // we open the finder dialog not the content dialog
   openDialog: 'finder',
@@ -191,7 +191,7 @@ const syncFolder = {
     allowedSectionTypes: ['sidebar'],
     group: 'driveGroup',
   },
-  parentFilter: ['section'],
+  parentFilter: [],
   openDialog: 'finder',
   // put these params into the finder dialog
   // to control whether we can add folders or just documents

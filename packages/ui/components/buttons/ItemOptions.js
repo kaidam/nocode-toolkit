@@ -18,6 +18,7 @@ const AddIcon = icons.add
 const EditIcon = icons.edit
 const OpenIcon = icons.open
 const DeleteIcon = icons.delete
+const SettingsIcon = icons.settings
 const HideIcon = icons.hide
 
 const ItemMenuButtonHome = ({
@@ -114,28 +115,12 @@ const ItemMenuButtonContent = ({
         })
       }
 
-      if(isEditable) {
-        if(editMode == 'external') {
-          menuItems.push({
-            title: 'Edit',
-            icon: EditIcon,
-            url: itemType.getItemUrl(item),
-          })
-        }
-        else {
-          menuItems.push({
-            title: 'Edit',
-            icon: EditIcon,
-            handler: typeUI.editContentHandler({
-              item,
-              location: `item:${item.id}`,
-              structure: 'tree',
-              onOpenContentForm: actions.onOpenContentForm,
-              onOpenExternalEditor: actions.onOpenExternalEditor,
-            }),
-          })
-        }
-        
+      if(isEditable && editMode == 'external') {
+        menuItems.push({
+          title: 'Edit',
+          icon: EditIcon,
+          url: itemType.getItemUrl(item),
+        })
       }
 
       if(isOpenable) {
@@ -167,6 +152,20 @@ const ItemMenuButtonContent = ({
         //   icon: HideIcon,
         //   handler: () => actions.onHideItem({item}),
         // })
+      }
+
+      if(isEditable && editMode != 'external') {
+        menuItems.push({
+          title: 'Settings',
+          icon: SettingsIcon,
+          handler: typeUI.editContentHandler({
+            item,
+            location: `item:${item.id}`,
+            structure: 'tree',
+            onOpenContentForm: actions.onOpenContentForm,
+            onOpenExternalEditor: actions.onOpenExternalEditor,
+          }),
+        })
       }
 
       return menuItems

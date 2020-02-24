@@ -282,13 +282,18 @@ const sideEffects = {
   */
   addContent: ({
     id,
-    data = {}
+    data = {},
+    overrides = {},
   } = {}) => wrapper('addContent', async (dispatch, getState) => {
-    const {
+    let {
       driver,
       location,
       mode,
     } = selectors.router.queryParams(getState())
+
+    if(overrides.driver) driver = overrides.driver
+    if(overrides.location) location = overrides.location
+    if(overrides.mode) mode = overrides.mode
 
     const [ locationType, locationId ] = location.split(':')
 

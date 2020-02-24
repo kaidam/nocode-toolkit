@@ -67,7 +67,7 @@ const sectionSyncFolder = () => createSelector(
   (content, name) => {
     const id = Object.keys(content).find(id => {
       const item = content[id]
-      return item.location.ghostSection && item.location.ghostSection == name
+      return item && item.location && item.location.ghostSection && item.location.ghostSection == name
     })
     return content[id]
   }

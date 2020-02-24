@@ -47,7 +47,7 @@ const SectionAdd = ({
   const classes = useStyles()
   const menuItems = useMemo(
     () => {
-      const baseItems = typeUI.addContentOptions({
+      const items = typeUI.addContentOptions({
         filter,
         location,
         structure,
@@ -55,12 +55,15 @@ const SectionAdd = ({
         stashQueryParams,
         onOpenContentForm: actions.onOpenContentForm,
         onOpenFinder: actions.onOpenFinder,
+        withGroups: false,
       })
 
-      const allItems = baseItems.concat(extraItems || [])
-      const groups = allItems.filter(item => item.isGroup)
-      const nonGroups = allItems.filter(item => !item.isGroup)
-      return groups.concat(nonGroups)
+      return items
+
+      // const allItems = baseItems.concat(extraItems || [])
+      // const groups = allItems.filter(item => item.isGroup)
+      // const nonGroups = allItems.filter(item => !item.isGroup)
+      // return groups.concat(nonGroups)
     },
     [
       filter,
