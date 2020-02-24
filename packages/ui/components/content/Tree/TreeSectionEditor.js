@@ -16,12 +16,15 @@ import typeUI from '../../../types/ui'
 import itemTypes from '../../../types/item'
 import CellEditor from '../../layout/CellEditor'
 
+const FolderIcon = icons.folder
+
 const useStyles = makeStyles(theme => ({
   syncFolderTitle: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'left',
     paddingLeft: '12px',
+    paddingTop: '2px',
     cursor: 'pointer',
   },
 }))
@@ -125,7 +128,7 @@ const TreeSectionEditor = ({
                 itemType.handleOpen(sectionSyncFolder)
               }}
             >
-              { sectionSyncFolder.data.name }
+              <FolderIcon />&nbsp;&nbsp;{ sectionSyncFolder.data.name }
             </Typography>
           )
         }
