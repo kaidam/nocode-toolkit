@@ -162,11 +162,11 @@ const ItemMenuButtonContent = ({
           icon: DeleteIcon,
           handler: () => actions.onDeleteItem({item}),
         })
-        menuItems.push({
-          title: 'Hide',
-          icon: HideIcon,
-          handler: () => actions.onHideItem({item}),
-        })
+        // menuItems.push({
+        //   title: 'Hide',
+        //   icon: HideIcon,
+        //   handler: () => actions.onHideItem({item}),
+        // })
       }
 
       return menuItems

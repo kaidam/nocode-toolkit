@@ -23,9 +23,10 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'left',
-    paddingLeft: '12px',
+    paddingLeft: '10px',
     paddingTop: '2px',
     cursor: 'pointer',
+    color: '#999'
   },
 }))
 
@@ -121,14 +122,14 @@ const TreeSectionEditor = ({
       >
         {
           sectionSyncFolder && (
-            <Typography
-              className={ classes.syncFolderTitle }
-              color="primary"
-              onClick={() => {
-                itemType.handleOpen(sectionSyncFolder)
-              }}
-            >
-              <FolderIcon />&nbsp;&nbsp;{ sectionSyncFolder.data.name }
+            <Typography>
+              <a
+                href={ itemType.getItemUrl(sectionSyncFolder) }
+                target="_blank"
+                className={ classes.syncFolderTitle }
+              >
+                <FolderIcon />&nbsp;&nbsp;{ sectionSyncFolder.data.name }
+              </a>
             </Typography>
           )
         }

@@ -62,10 +62,9 @@ const sectionTree = () => createSelector(
 )
 
 const sectionSyncFolder = () => createSelector(
-  sectionAll,
   contentAll,
   (_, name) => name,
-  (sections, content, name) => {
+  (content, name) => {
     const id = Object.keys(content).find(id => {
       const item = content[id]
       return item.location.ghostSection && item.location.ghostSection == name

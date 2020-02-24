@@ -11,6 +11,7 @@ import selectors from '../../store/selectors'
 import contentActions from '../../store/modules/content'
 import finderActions from '../../store/modules/finder'
 
+import itemTypes from '../../types/item'
 import typeUI from '../../types/ui'
 import icons from '../../icons'
 
@@ -45,6 +46,8 @@ const SectionSettings = ({
   const sectionSyncFolderSelector = useMemo(selectors.content.sectionSyncFolder, [])
   const sectionSyncFolder = useSelector(state => sectionSyncFolderSelector(state, id))
 
+  const itemType = itemTypes(sectionSyncFolder)
+
   const classes = useStyles()
 
   const settingsHandler = useCallback(typeUI.editContentHandler({
@@ -67,9 +70,7 @@ const SectionSettings = ({
   const openItem = {
     title: 'Open in Google Drive',
     icon: OpenIcon,
-    handler: () => actions.onOpenFolder({
-      section: id,
-    })
+    url: itemType.getItemUrl(sectionSyncFolder),
   }
 
   const unSyncItem = sectionSyncFolder ? {
