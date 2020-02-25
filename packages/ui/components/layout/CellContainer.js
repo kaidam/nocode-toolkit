@@ -78,6 +78,7 @@ const CellContainer = ({
               rowIndex={ rowIndex }
               cellIndex={ cellIndex }
               onChange={ onResetSelect }
+              onOpen={ onSelect }
             />
           )
         }

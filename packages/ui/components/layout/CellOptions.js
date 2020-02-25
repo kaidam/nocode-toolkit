@@ -134,6 +134,7 @@ const CellOptions = ({
   onEditLayout,
   onSaveContent,
   onChange,
+  onOpen,
 }) => {
 
   const actions = Actions(useDispatch(), {
@@ -388,20 +389,13 @@ const CellOptions = ({
       handler: onOpenDeleteConfirm,
     }
 
-    
-
-    let menuItems = []
-
-    if(canEdit) {
-      menuItems = menuItems.concat([editOptions])
-    }
-
-    menuItems = menuItems.concat([
+    let menuItems = [
+      canEdit ? editOptions : null,
       insertOptions,
       moveOptions,
-      deleteOption,
+      cell.mainDocumentContent ? null : deleteOption,
       settingsOptions,
-    ])
+    ].filter(i => i)
 
     return menuItems
   }, [
@@ -418,7 +412,10 @@ const CellOptions = ({
           size="small"
           color={ isActive ? "secondary" : "default" }
           className={ className }
-          onClick={ onClick }
+          onClick={ (e) => {
+            onOpen && onOpen(e)
+            onClick(e)
+          }}
         >
           <Icon />
         </Fab>

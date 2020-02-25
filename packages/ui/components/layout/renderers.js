@@ -12,6 +12,7 @@ export const RenderRoot = ({
 
 export const RenderRow = ({
   showUI,
+  showBorder,
   cells,
   rowIndex,
   rowCount,
@@ -22,10 +23,10 @@ export const RenderRow = ({
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'stretch',
-        borderTop: showUI ? '1px dotted #e5e5e5' : '',
-        borderLeft: showUI ? '1px dotted #e5e5e5' : '',
-        borderRight: showUI ? '1px dotted #e5e5e5' : '',
-        borderBottom: showUI && rowIndex >= rowCount - 1 ? '1px dotted #e5e5e5' : '',
+        borderTop: showBorder ? '1px dotted #e5e5e5' : '',
+        borderLeft: showBorder ? '1px dotted #e5e5e5' : '',
+        borderRight: showBorder ? '1px dotted #e5e5e5' : '',
+        borderBottom: showBorder && rowIndex >= rowCount - 1 ? '1px dotted #e5e5e5' : '',
       }}
     >
       {

@@ -32,8 +32,9 @@ const Layout = ({
 
   const renderLayoutData = data.displayLayout || data.layout || []
 
-  const rows = renderLayoutData.map((row, i) => {
+  let fixedCount = 0
 
+  const rows = renderLayoutData.map((row, i) => {
     const cells = row.map((cell, j) => {
 
       const isActive = selectable && activeCell && activeCell.row == i && activeCell.cell == j
@@ -73,7 +74,7 @@ const Layout = ({
         />
       )
 
-      if(showUI) {
+      if(showUI && !cell.fixed) {
         return (
           <Suspense>
             <CellContainer
@@ -82,7 +83,7 @@ const Layout = ({
               location={ location }
               data={ data }
               cell={ cell }
-              rowIndex={ i }
+              rowIndex={ i - fixedCount }
               cellIndex={ j }
               selectable={ selectable }
               onSelect={ () => setActiveCell(isActive ? null : {row:i, cell:j})}
@@ -101,6 +102,12 @@ const Layout = ({
 
     })
 
+    let showBorder = showUI
+    if(row[0].fixed) {
+      fixedCount = fixedCount + 1
+      showBorder = false
+    }
+
     return (
       <RowRenderer
         key={ i }
@@ -108,6 +115,7 @@ const Layout = ({
         rowIndex={ i }
         rowCount={ data.layout.length }
         showUI={ showUI }
+        showBorder={ showBorder }
       />
     )             
   })

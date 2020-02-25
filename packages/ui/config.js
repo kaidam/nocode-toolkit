@@ -12,16 +12,19 @@ export const LAYOUT_CELLS = {
     component: 'breadcrumbs',
     source: 'none',
     editor: 'none',
+    fixed: true,
   },
   documentTitle: {
     component: 'title',
     source: 'title',
     editor: 'external',
+    fixed: true,
   },
   documentInfo: {
     component: 'documentInfo',
     source: 'info',
     editor: 'external',
+    fixed: true,
   },
   documentHTML: {
     component: 'html',
@@ -34,6 +37,7 @@ export const LAYOUT_CELLS = {
     component: 'backnextButtons',
     source: 'none',
     editor: 'none',
+    fixed: true,
   }
 }
 
