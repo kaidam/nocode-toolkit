@@ -3,6 +3,7 @@ const names = []
 const plugins = []
 const templates = []
 const sections = []
+const handlers = {}
 
 const add = (type, schema) => {
   if(typeof(type) === 'string' && typeof(schema) === 'object') {
@@ -69,6 +70,8 @@ const addSection = (section) => {
   sections.push(section)
 }
 
+const addHandler = (name, fn) => handlers[name] = fn
+
 const types = {
   add,
   set,
@@ -81,6 +84,8 @@ const types = {
   templates,
   addTemplate,
   addSection,
+  addHandler,
+  handlers,
   sections,
 }
 

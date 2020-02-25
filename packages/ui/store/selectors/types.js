@@ -206,19 +206,19 @@ const form = createSelector(
         })
       }
       
-      if(type == 'settings' || type == 'section' || type == 'pageSettings') {
-        tabs.push({
-          id: 'template',
-          title: 'Template',
-          schema: [{
-            id: 'template',
-            title: 'Template',
-            helperText: 'Choose the template to render page content',
-            component: 'templateSelect',
-            includeInherit: type != 'settings',
-          }]
-        })
-      }
+      // if(type == 'settings' || type == 'section' || type == 'pageSettings') {
+      //   tabs.push({
+      //     id: 'template',
+      //     title: 'Template',
+      //     schema: [{
+      //       id: 'template',
+      //       title: 'Template',
+      //       helperText: 'Choose the template to render page content',
+      //       component: 'templateSelect',
+      //       includeInherit: type != 'settings',
+      //     }]
+      //   })
+      // }
     }
 
     return {

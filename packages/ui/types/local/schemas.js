@@ -273,6 +273,10 @@ const settings = {
     description: '',
     keywords: '',
     color: {color: "#3f51b5"},
+    breadcrumbs: 'yes',
+    documentTitle: 'yes',
+    documentInfo: 'yes',
+    backNextButtons: 'yes',
   },
   tabs: [{
     id: 'main',

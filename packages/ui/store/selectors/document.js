@@ -8,8 +8,13 @@ import {
   networkLoading,
 } from './utils'
 
+import {
+  SINGLE_LAYOUT,
+} from '../../config'
+
 import contentSelectors from './content'
 import uiSelectors from './ui'
+import library from '../../types/library'
 
 const settings = contentSelectors.contentItem('settings')
 
@@ -82,12 +87,19 @@ const layout = createSelector(
   }
 )
 
+/*
+
+  the selector we use for full page editing
+
+*/
 const data = createSelector(
   core.nocode.externals,
   core.router.route,
   contentSelectors.contentAll,
-  layout,
-  (externals, route, content, layout) => {
+  settings,
+  // if we are supporting full layouts we want this
+  //layout,
+  (externals, route, content, settings/*, layout*/) => {
 
     if(route.isFolder) {
       const item = content[route.item]
@@ -124,6 +136,7 @@ const data = createSelector(
 
       const data = item.type == 'defaultHome' ?
         {
+          type: 'document',
           item: {
             data: {
               name: 'Home',
@@ -133,15 +146,24 @@ const data = createSelector(
           disableLayoutEditor: true,
           defaultHome: true,
         } : {
+          type: 'document',
           item,
           externals: (route.externals || []).map(id => externals[id]),
         }
 
+      // does the item have an existing layout?
       data.layout = data.item.annotation && data.item.annotation.layout ?
         data.item.annotation.layout :
-        layout
+        SINGLE_LAYOUT
 
-      data.type = 'document'
+      data.displayLayout = data.layout
+
+      if(library.handlers.documentLayout) {
+        data.displayLayout = library.handlers.documentLayout({
+          layout: data.layout,
+          settings: settings && settings.data ? settings.data : {}
+        })
+      }
 
       return data
     }

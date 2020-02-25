@@ -30,7 +30,9 @@ const Layout = ({
     data,
   ])
 
-  const rows = data.layout.map((row, i) => {
+  const renderLayoutData = data.displayLayout || data.layout || []
+
+  const rows = renderLayoutData.map((row, i) => {
 
     const cells = row.map((cell, j) => {
 
