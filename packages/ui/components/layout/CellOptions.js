@@ -405,7 +405,7 @@ const CellOptions = ({
     moveItems,
   ])
 
-  const getButton = useCallback((Icon = OptionsIcon, tooltip = "Options", className = classes.smallOptionButton) => (onClick) => {
+  const getButton = useCallback((Icon = OptionsIcon, tooltip = "Options", className = classes.smallOptionButton, triggerOnOpen = true) => (onClick) => {
     return (
       <Tooltip title={ tooltip }>
         <Fab
@@ -413,7 +413,7 @@ const CellOptions = ({
           color={ isActive ? "secondary" : "default" }
           className={ className }
           onClick={ (e) => {
-            onOpen && onOpen(e)
+            onOpen && triggerOnOpen && onOpen(e)
             onClick(e)
           }}
         >
@@ -560,19 +560,19 @@ const CellOptions = ({
                       },
                     })
                   }
-                  getButton={ getButton(AddIcon, "Add Content Above", classes.toolbarButton) }
+                  getButton={ getButton(AddIcon, "Add Content Above", classes.toolbarButton, false) }
                 />
               </div>
               <div className={ classes.sidebarButtons }>
                 {
-                  canEdit && getButton(EditIcon, "Edit", classes.sidebarButton)(() => onOpenEditor())
+                  canEdit && getButton(EditIcon, "Edit", classes.sidebarButton, false)(() => onOpenEditor())
                 }
                 <MenuButton
                   items={ moveItems }
-                  getButton={ getButton(MoveIcon, "Move this cell", classes.sidebarButton) }
+                  getButton={ getButton(MoveIcon, "Move this cell", classes.sidebarButton, false) }
                 />
                 {
-                  getButton(DeleteIcon, "Delete", classes.sidebarButton)(() => onOpenDeleteConfirm())
+                  cell.mainDocumentContent ? null : getButton(DeleteIcon, "Delete", classes.sidebarButton)(() => onOpenDeleteConfirm())
                 }
               </div>
               <div className={ [classes.toolbarButtons, classes.toolbarButtonsBottom].join(' ') }>
@@ -585,7 +585,7 @@ const CellOptions = ({
                       },
                     })
                   }
-                  getButton={ getButton(AddIcon, "Add Content After", classes.toolbarButton) }
+                  getButton={ getButton(AddIcon, "Add Content After", classes.toolbarButton, false) }
                 />
               </div>
             </React.Fragment>
