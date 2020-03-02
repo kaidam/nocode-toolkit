@@ -7,6 +7,8 @@ import {
   networkLoading,
 } from './utils'
 
+const website = state => state.ui.website
+
 const _createTree = (content, item) => {
   if(!item) return null
   const returnItem = Object.assign({}, item)
@@ -61,15 +63,46 @@ const sectionTree = () => createSelector(
   }
 )
 
+// const sectionSyncFolder = () => createSelector(
+//   sectionAll,
+//   contentAll,
+//   (_, name) => name,
+//   (sections, content, name) => {
+//     const section = sections[name]
+//     if(!section) return null
+//     const syncedChild = section.children
+//       .map(id => content[id])
+//       .find(item => item.location.ghostParent)
+//     if(!syncedChild) return null
+//     return content[syncedChild.location.ghostParent]
+//   }
+// )
+
 const sectionSyncFolder = () => createSelector(
+  website,
+  sectionAll,
   contentAll,
   (_, name) => name,
-  (content, name) => {
-    const id = Object.keys(content).find(id => {
-      const item = content[id]
-      return item && item.location && item.location.ghostSection && item.location.ghostSection == name
-    })
-    return content[id]
+  (website, sections, content, name) => {
+    // this means we have had folders provisioned for us automatically
+    if(website && website.meta && website.meta.autoFoldersEnsure) {
+      const id = Object.keys(content).find(id => {
+        const item = content[id]
+        return item && item.location && item.location.ghostSection && item.location.ghostSection == name
+      })
+      return content[id]
+    }
+    // this means it's the old mode where any ghost parent is the linked folder
+    else {
+      const section = sections[name]
+      if(!section) return null
+      const syncedChild = section.children
+        .map(id => content[id])
+        .find(item => item.location.ghostParent)
+      if(!syncedChild) return null
+      return content[syncedChild.location.ghostParent]
+    }
+    
   }
 )
 

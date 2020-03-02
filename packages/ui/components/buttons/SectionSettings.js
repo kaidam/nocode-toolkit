@@ -57,7 +57,7 @@ const SectionSettings = ({
 
   const hasCustomSyncFolder = autoFolderId && sectionSyncFolderId && autoFolderId != sectionSyncFolderId
 
-  const itemType = itemTypes(sectionSyncFolder)
+  const itemType = sectionSyncFolder ? itemTypes(sectionSyncFolder) : null
 
   const classes = useStyles()
 
@@ -82,7 +82,7 @@ const SectionSettings = ({
     title: 'Open in Google Drive',
     icon: OpenIcon,
     secondaryIcon: DriveIcon,
-    url: itemType.getItemUrl(sectionSyncFolder),
+    url: itemType ? itemType.getItemUrl(sectionSyncFolder) : null,
   }
 
   const changeSyncFolder = sectionSyncFolder ? {
