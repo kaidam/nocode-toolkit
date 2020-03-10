@@ -63,6 +63,13 @@ const sectionTree = () => createSelector(
   }
 )
 
+const websiteSyncFolderId = () => () => createSelector(
+  website,
+  (website) => {
+    return website && website.meta ? website.meta.nocodeFolderId : null
+  }
+)
+
 // const sectionSyncFolder = () => createSelector(
 //   sectionAll,
 //   contentAll,
@@ -230,6 +237,7 @@ const selectors = {
   queryItem,
   sectionTree,
   sectionList,
+  websiteSyncFolderId,
   sectionSyncFolder,
   childrenList,
   ghostParent,

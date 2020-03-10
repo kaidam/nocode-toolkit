@@ -125,6 +125,9 @@ const loaders = {
   }) => axios.post(apiUtils.websiteUrl(getState, `/remote/${driver}/singleton/${singleton}/content/${content_id}`))
     .then(apiUtils.process),
 
+  injectNewContent: (getState, payload) => axios.post(apiUtils.websiteUrl(getState, `/content/inject`), payload)
+    .then(apiUtils.process),
+
   remove: (getState, {
     id,
   }) => axios.delete(apiUtils.websiteUrl(getState, `/content/${id}`))
@@ -385,7 +388,7 @@ const sideEffects = {
 
   openSectionFolder: ({
     section,
-  }) => wrapper('saveRemoteContent', async (dispatch, getState) => {
+  }) => wrapper('openSectionFolder', async (dispatch, getState) => {
 
     const sectionSyncFolder = selectors.content.sectionSyncFolder()(getState(), section)
 
@@ -438,70 +441,6 @@ const sideEffects = {
 
       let [ parentType, parent ] = location.split(':')
       let parentId = parent
-      let syncMode = false
-
-      // we are adding a remote item to a section
-      // so we need a folder to create it in
-      // first - ensure the nocode folder for the section
-      // this will also link the folder to the section (in ghost mode)
-      // so once this is done - all we need to do is add the
-      // content to the returned parent and rebuild
-      if(parentType == 'section' || parentType == 'singleton') {
-
-        let parentFolder = null
-
-        if(parentType == 'section') {
-          const sectionSyncFolder = selectors.content.sectionSyncFolder()(getState(), parent)
-          if(sectionSyncFolder) {
-            parentFolder = sectionSyncFolder
-            syncMode = true
-          }
-        }
-
-        if(!parentFolder) {
-          parentFolder = await loaders.ensureSectionFolder(getState, {
-            driver,
-            section: parent,
-          })
-        }
-
-        if(!parentFolder) throw new Error(`unable to get parent folder`)
-        
-        parentId = parentFolder.id
-      }
-      
-      // create the remote item via the driver
-      const newItem = await loaders.createRemoteItem(getState, {
-        driver,
-        parent: parentId,
-        data: {
-          mimeType: type,
-          ...saveData
-        },
-      })
-
-      // now we need to link the new item to the section
-      if(!syncMode) {
-        if(parentType == 'section') {
-          await loaders.linkContentToSection(getState, {
-            driver,
-            section: parent,
-            content_id: newItem.id,
-          })
-        }
-        else if(parentType == 'singleton') {
-          await loaders.linkContentToSingleton(getState, {
-            driver,
-            singleton: parent,
-            content_id: newItem.id,
-          })
-        }
-      }
-      
-      // trigger a rebuild so the backend has the new item in the tree
-      await dispatch(jobActions.rebuild({
-        manualComplete: true,
-      }))
 
       // get the annotation data from the options form
       const {
@@ -513,18 +452,95 @@ const sideEffects = {
         data,
       })
 
-      // if it exists - then update the annotation server side
-      if(annotation) {
-        await dispatch(contentActions.saveAnnotation({
-          id: newItem.id,
-          annotation,
-        }, data))
+      let syncMode = false
+
+      // we are adding a remote item to a section
+      // so we need a folder to create it in
+      // first - ensure the nocode folder for the section
+      // this will also link the folder to the section (in ghost mode)
+      // so once this is done - all we need to do is add the
+      // content to the returned parent and rebuild
+      if(parentType == 'section') {
+        let parentFolder = selectors.content.sectionSyncFolder()(getState(), parent)
+        if(!parentFolder) throw new Error(`no folder found for section: ${parent}`)
+        parentId = parentFolder.id
+      }
+      else if(parentType == 'singleton') {
+        const singletonFolderId = selectors.content.websiteSyncFolderId(getState())
+        if(!singletonFolderId) throw new Error(`no folder found for singleton: ${parentId}`)
+        parentId = singletonFolderId
       }
 
-      dispatch(snackbarActions.setSuccess(`${type} created`))
+      const newItem = await loaders.injectNewContent(getState, {
+        driver,
+        location,
+        parent: parentId,
+        data: {
+          mimeType: type,
+          ...saveData
+        },
+      })
 
-      await dispatch(uiActions.closeDialogs())
-      await dispatch(jobActions.reload())
+      console.log('--------------------------------------------')
+      console.log('--------------------------------------------')
+      console.dir(newItem)
+
+      // // create the remote item via the driver
+      // const newItem = await loaders.createRemoteItem(getState, {
+      //   driver,
+      //   parent: parentId,
+      //   data: {
+      //     mimeType: type,
+      //     ...saveData
+      //   },
+      // })
+
+      // // now we need to link the new item to the section
+      // // this means we are not adding to an already synced folder
+      // if(!syncMode) {
+      //   if(parentType == 'section') {
+      //     await loaders.linkContentToSection(getState, {
+      //       driver,
+      //       section: parent,
+      //       content_id: newItem.id,
+      //     })
+      //   }
+      //   else if(parentType == 'singleton') {
+      //     await loaders.linkContentToSingleton(getState, {
+      //       driver,
+      //       singleton: parent,
+      //       content_id: newItem.id,
+      //     })
+      //   }
+      // }
+      
+      // // trigger a rebuild so the backend has the new item in the tree
+      // await dispatch(jobActions.rebuild({
+      //   manualComplete: true,
+      // }))
+
+      // // get the annotation data from the options form
+      // const {
+      //   annotation,
+      // } = typeUtils.getSaveData({
+      //   driver,
+      //   type,
+      //   item: null,
+      //   data,
+      // })
+
+      // // if it exists - then update the annotation server side
+      // if(annotation) {
+      //   await dispatch(contentActions.saveAnnotation({
+      //     id: newItem.id,
+      //     annotation,
+      //   }, data))
+      // }
+
+      // dispatch(snackbarActions.setSuccess(`${type} created`))
+
+      // await dispatch(uiActions.closeDialogs())
+      // await dispatch(jobActions.reload())
     }
     else {
 
