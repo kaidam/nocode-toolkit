@@ -98,8 +98,10 @@ const sectionSyncFolder = () => createSelector(
       if(!section) return null
       const syncedChild = section.children
         .map(id => content[id])
+        .filter(item => item)
         .find(item => item.location.ghostParent)
       if(!syncedChild) return null
+      if(!syncedChild.location) return null
       return content[syncedChild.location.ghostParent]
     }
     
