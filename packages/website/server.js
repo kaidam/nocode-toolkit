@@ -8,7 +8,7 @@ import Store from './store'
 const Server = ({
   reducers,
   App,
-}) => ({
+}) => async ({
   route,
   globals,
   errorLog,
@@ -18,7 +18,7 @@ const Server = ({
   // a custom render function that handles things like server side style sheets
   // this will return bodyHTML and injectedHTML (optionally)
   render,
-}, done) => {
+}) => {
 
   let routeResult = null
 
@@ -31,57 +31,62 @@ const Server = ({
     reducers,
     globals,
     errorLog,
+    // allow the router to override the type of result we get back from the server
     setRouteResult: result => routeResult = result,
   })
 
   const router = createRouter()
 
-  router.start(route, (err) => {
-    if(err) return done(err)
-
-    // we got a route result from the router - return that
-    if(routeResult) return done(null, routeResult)
-
-    const appElem = (
-      <Provider store={ store }>
-        <HelmetProvider context={helmetContext}>
-          <App {...appProps} />
-        </HelmetProvider>
-      </Provider>
-    )
-
-    const results = {
-      type: 'render',
-      store,
-    }
-
-    // if we have a custom render function - use it
-    // this is used in cases like the material-ui server side rendering
-    // where we need to collect the style sheets
-    // for example - website-material-ui/src/server.js
-    // passes a custom render function that collects stylesheets
-    // and renders them to injectedHTML
-    if(render) {
-      const {
-        bodyHtml,
-        injectedHTML,
-      } = render({
-        appElem,
-      })
-      results.bodyHtml = bodyHtml
-      results.injectedHTML = injectedHTML
-    }
-    else {
-      results.bodyHtml = renderToString(
-        appElem,
-      )
-      results.injectedHTML = getInjectedHTML ? getInjectedHTML() : ''
-    }
-
-    results.helmet = helmetContext.helmet
-    
-    done(null, results)
+  await new Promise((resolve, reject) => {
+    router.start(route, (err) => {
+      if(err) return reject(err)
+      resolve()
+    })
   })
+
+  // we got a route result from the router - return that
+  // this is used to handle redirect results which result in different HTML output
+  if(routeResult) return routeResult
+
+  const appElem = (
+    <Provider store={ store }>
+      <HelmetProvider context={ helmetContext }>
+        <App { ...appProps } />
+      </HelmetProvider>
+    </Provider>
+  )
+
+  const results = {
+    type: 'render',
+    store,
+  }
+
+  // if we have a custom render function - use it
+  // this is used in cases like the material-ui server side rendering
+  // where we need to collect the style sheets
+  // for example - website-material-ui/src/server.js
+  // passes a custom render function that collects stylesheets
+  // and renders them to injectedHTML
+  if(render) {
+    const {
+      bodyHtml,
+      injectedHTML,
+    } = render({
+      appElem,
+    })
+    results.bodyHtml = bodyHtml
+    results.injectedHTML = injectedHTML
+  }
+  else {
+    results.bodyHtml = renderToString(
+      appElem,
+    )
+    results.injectedHTML = getInjectedHTML ? getInjectedHTML() : ''
+  }
+
+  results.helmet = helmetContext.helmet
+
+  return results
 }
 Server.renderToString = renderToString
 export default Server

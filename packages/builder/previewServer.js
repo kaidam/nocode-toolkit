@@ -1,6 +1,8 @@
 const path = require('path')
 const fs = require('fs')
 const express = require('express')
+const { promisify } = require('util')
+const statAsync = promisify(fs.stat)
 
 const Data = require('./data')
 const HTML = require('./html')
@@ -42,21 +44,22 @@ const BuildPreviewServer = ({
   // check to see if the filename is the data filename
   // if yes - pass off to the data server
   // otherwise - serve the file from the build folder
-  const serveBuildFile = (req, res, next) => {
+  const serveBuildFile = async (req, res, next) => {
     const filename = req.params[0]
-    const websiteId = getWebsiteId(req)    
-    getBuildFolder(websiteId, (err, buildFolder) => {
-      if(err) return next(new Error(err))
+    const websiteId = getWebsiteId(req)
+    try {
+      const buildFolder = await getBuildFolder(websiteId)
       const filePath = path.join(buildFolder, filename)
-      fs.stat(filePath, (err, stat) => {
-        if(err || !stat) return next()
-        res.sendFile(filePath)
-      })
-    })
+      const stat = await statAsync(filePath)
+      if(!stat) return next()
+      res.sendFile(filePath)
+    } catch(e) {
+      return next()
+    }
   }
 
   // build and send the HTML based on the buildinfo
-  const serveHTML = (req, res, next) => {
+  const serveHTML = async (req, res, next) => {
     const websiteId = getWebsiteId(req)
 
     // don't cache the HTML response in dev mode
@@ -64,8 +67,8 @@ const BuildPreviewServer = ({
     res.header('Expires', '-1')
     res.header('Pragma', 'no-cache')
 
-    getBuildInfo(websiteId, async (err, buildInfo) => {
-      if(err) return next(new Error(err))
+    try {
+      const buildInfo = await getBuildInfo(websiteId)
       let html = HTML({
         buildInfo,
         hash: buildInfo.hash,
@@ -75,7 +78,9 @@ const BuildPreviewServer = ({
         html = await processHTML(html)
       }
       res.end(html)
-    }) 
+    } catch(e) {
+      return next(e)
+    }
   }
 
   app.get(`${mountPath}*`, serveBuildFile)
@@ -152,13 +157,13 @@ const PreviewServer = ({
 
   app = app || express()
 
-  const serveNocodeData = (req, res, next) => {
+  const serveNocodeData = async (req, res, next) => {
     const id = getWebsiteId(req)
-    getData({
-      id,
-      req,
-    }, (err, data) => {
-      if(err) return next(new Error(err))
+    try {
+      const data = await getData({
+        id,
+        req,
+      })
       res.end(Data.script(Data.factory({
         extraConfig: {
           externalsUrl: externalsPath,
@@ -166,22 +171,25 @@ const PreviewServer = ({
         },
         ...data
       })))
-    })
+    } catch(e) {
+      return next(e)
+    }
   }
 
-  const serveExternal = (req, res, next) => {
+  const serveExternal = async (req, res, next) => {
     const id = getWebsiteId(req)
     const filename = req.params[0]
-    getExternal({
-      id,
-      filename,
-      req,
-    }, (err, data) => {
-      if(err) return next(new Error(err))
+    try {
+      const data = await getExternal({
+        id,
+        filename,
+        req,
+      })
       res.end(data)
-    })
+    } catch(e) {
+      return next(e)
+    }
   }
-
 
   app.get(`${mountPath}${externalsPath}/*`, serveExternal)
   app.get(`${mountPath}${nocodeDataPath}`, serveNocodeData)

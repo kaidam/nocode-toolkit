@@ -1,5 +1,4 @@
-const async = require('async')
-const utils = require('./utils')
+const Promise = require('bluebird')
 
 /*
 
@@ -7,6 +6,10 @@ const utils = require('./utils')
   in a nocode site
 
 */
-const RunPlugins = (context, plugins, done) => async.eachSeries(plugins || [], (plugin, nextPlugin) => plugin(context, nextPlugin), done)
+const RunPlugins = async (context, plugins) => {
+  await Promise.mapSeries(plugins, async plugin => {
+    await plugin(context)
+  })
+}
 
 module.exports = RunPlugins

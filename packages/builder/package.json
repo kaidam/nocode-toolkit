@@ -31,6 +31,7 @@
     "@babel/preset-react": "^7.0.0",
     "async": "^3.1.0",
     "babel-loader": "^8.0.5",
+    "bluebird": "^3.7.2",
     "copy-webpack-plugin": "^5.0.2",
     "detect-node": "^2.0.4",
     "express": "^4.16.4",

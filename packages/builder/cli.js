@@ -24,16 +24,16 @@ const cli = require('yargs')
   .command({
     command: 'build',
     desc: 'Build a nocode template',
-    handler: (argv) => {
-      Build({
-        options: Options.process(argv),
-        logger: console.log,
-      }, (err) => {
-        if(err) {
-          console.error(err)
-          process.exit(1)
-        }
-      })
+    handler: async (argv) => {
+      try {
+        await Build({
+          options: Options.process(argv),
+          logger: console.log,
+        })
+      } catch (e) {
+        console.error(err)
+        process.exit(1)
+      }
     },
   })
   .command({

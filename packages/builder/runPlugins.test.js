@@ -2,52 +2,54 @@ const tape = require('tape')
 const Context = require('./context')
 const RunPlugins = require('./runPlugins')
 
-tape('run the plugins and test the context output', (t) => {
+tape('run the plugins and test the context output', async (t) => {
   const context = new Context()
   const plugins = [
-    (context, next) => {
+    (context) => {
       context.item('fruit', 'apples', 10)
       context.route('/apples', 10)
-      next()
     },
-    (context, next) => {
+    (context) => {
       context.external('hello', 10)
-      next()
     },
   ]
 
-  RunPlugins(context, plugins, (err) => {
-    t.notok(err, `there was no error`)
-    t.deepEqual(context.state, {
-      config: {},
-      items: {
-        fruit: {
-          apples: 10,
-        }
-      },
-      routes: {
-        '/apples': 10,
-      },
-      externals: {
-        hello: 10,
+  await RunPlugins(context, plugins)
+  
+  t.deepEqual(context.state, {
+    config: {},
+    items: {
+      fruit: {
+        apples: 10,
       }
-    })
-  }, 'the state is correct')
+    },
+    routes: {
+      '/apples': 10,
+    },
+    externals: {
+      hello: 10,
+    }
+  })
   t.end()
 })
 
-tape('run the plugins and catch an error', (t) => {
+tape('run the plugins and catch an error', async (t) => {
   const context = new Context()
 
   let seenSecondPlugin = false
   const plugins = [
-    (context, next) => next('this is an error'),
-    (context, next) => seenSecondPlugin = true,
+    (context) => {
+      throw new Error('this is an error')
+    },
+    (context) => seenSecondPlugin = true,
   ]
 
-  RunPlugins(context, plugins, (err) => {
-    t.equal(err, 'this is an error')
+  try {
+    await RunPlugins(context, plugins)
+  } catch(err) {
+    t.equal(err.toString(), 'Error: this is an error')
     t.notok(seenSecondPlugin, `the second plugin was not seen`)
-  })
+  }
+
   t.end()
 })

@@ -109,31 +109,25 @@ const publishWebsite = async ({
   logger,
 }) => {
   logger(loggers.info(`building website HTML`))
-  await new Promise((resolve, reject) => {
-    Publish({
-      options: Options.get({}),
-      plugins: () => [
-        (context, next) => {
-          context.data = {
-            items: {
-              content: items,
-              sections,
-              singletons,
-            },
-            config,
-            routes,
-            externals,
-          }
-          next()
+  await Publish({
+    options: Options.get({}),
+    plugins: () => [
+      (context) => {
+        context.data = {
+          items: {
+            content: items,
+            sections,
+            singletons,
+          },
+          config,
+          routes,
+          externals,
         }
-      ],
-      onProgress: (data) => {},
-      logger,
-      concurrency: 5,
-    }, (err) => {
-      if(err) return reject(err)
-      resolve()
-    })
+      }
+    ],
+    onProgress: (data) => {},
+    logger,
+    concurrency: 5,
   })
   logger(loggers.success(`your website has been built in the ${options.publishPath} folder`))
 }

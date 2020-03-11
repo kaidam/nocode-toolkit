@@ -51,7 +51,7 @@ ${html}
 const Develop = ({
   options,
   logger,
-}, callback) => {
+}) => {
   const api = Api({
     options,
   })
@@ -94,7 +94,6 @@ const Develop = ({
     }
     catch(err) {
       next(err)
-      done(err)
     }
   })
 
@@ -113,34 +112,23 @@ const Develop = ({
     getData: async ({
       id,
       req,
-    }, done) => {
-      try {
-        const nocodeData = await getPreviewData(req.query.rebuild)
-        done(null, nocodeData)
-      }
-      catch(err) {
-        done(err)
-      }
+    }) => {
+      const nocodeData = await getPreviewData(req.query.rebuild)
+      return nocodeData
     },
     getExternal: async ({
       id,
       filename,
       req,
-    }, done) => {
-
-      try {
-        const res = await axios({
-          method: 'get',
-          url: api.getUrl(`/remote/external/${filename}`),
-          headers: api.getAuthHeaders(),
-        })
-        done(null, res.data)
-      }
-      catch(err) {
-        done(err)
-      }
+    }) => {
+      const res = await axios({
+        method: 'get',
+        url: api.getUrl(`/remote/external/${filename}`),
+        headers: api.getAuthHeaders(),
+      })
+      return res.data
     },
-    getBuildInfo: (id, done) => done(null, {}),
+    getBuildInfo: (id) => ({}),
     webpackProcessors: [
       (webpackConfig, options, env) => {
         if(options.aliasLinks) {
@@ -209,8 +197,6 @@ webserver will listen to port ${options.devserverPort}
 your preview is now building...
     `))
   })
-
-  callback()
 }
 
 module.exports = Develop

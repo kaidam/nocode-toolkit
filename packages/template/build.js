@@ -1,4 +1,3 @@
-const Promise = require('bluebird')
 const NocodeBuild = require('@nocode-toolkit/builder/build')
 const loggers = require('./loggers')
 
@@ -12,16 +11,11 @@ const Build = async ({
     // being viewed
     baseUrl: '/builder/website/loadable/'
   })
-  await new Promise((resolve, reject) => {
-    NocodeBuild({
-      options: useOptions,
-      logger,
-    }, (err) => {
-      if(err) return reject(err)
-      logger(loggers.success(`your code has compiled succesfully`))
-      resolve()
-    })
+  await NocodeBuild({
+    options: useOptions,
+    logger,
   })
+  logger(loggers.success(`your code has compiled succesfully`))
 }
 
 module.exports = Build

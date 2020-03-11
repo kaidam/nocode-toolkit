@@ -9,7 +9,7 @@ const Develop = ({
   logger,
   plugins,
   pluginConfig,
-}, done) => {
+}) => {
   
   const context = new Context()
   utils.contextLogger(context, logger)
@@ -19,22 +19,11 @@ const Develop = ({
     mode: 'development',
   })
 
-  async.series([
+  await RunPlugins(context, usePlugins(usePluginConfig))
 
-    next => RunPlugins(context, usePlugins(usePluginConfig), next),
-
-    next => {
-      try {
-        DevServer({
-          options,
-          context,          
-        }, next)
-      } catch(e) {
-        return next(e)
-      }
-    },
-  ], (err) => {
-    if(err) return done(err)
+  DevServer({
+    options,
+    context,          
   })
 }
 

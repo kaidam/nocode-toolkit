@@ -10,6 +10,7 @@ const errorLogger = (err) => {
   if(!err) return
   const errorMessage = process.env.NODE_ENV == 'development' ? err : err.toString()
   console.error(loggers.error(errorMessage))
+  console.error(err.stack)
   process.exit(1)
 }
 
