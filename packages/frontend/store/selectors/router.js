@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect'
 
+import nocodeSelectors from './nocode'
 const DEFAULT_OBJECT = {}
-const DEFAULT_ARRAY = []
 
 const routerStoreRoute = (state) => state.router.route || DEFAULT_OBJECT
 const routerPreviousRoute = (state) => state.router.previousRoute
@@ -9,13 +9,13 @@ const routerName = (state) => routerStoreRoute(state).name
 const routerPath = (state) => routerStoreRoute(state).path
 const routerParams = (state) => routerStoreRoute(state).params || DEFAULT_OBJECT
 const routerRoute = createSelector(
-  nocodeRoutes,
+  nocodeSelectors.routes,
   routerName,
   (routes, name) => routes.find(r => r.name == name)
 )
 const routerFullRoute = createSelector(
   routerRoute,
-  nocodeExternals,
+  nocodeSelectors.externals,
   (route, externals) => {
     const externalIds = route.externals || []
     const externalContent = externalIds.map(id => externals[id] || '')

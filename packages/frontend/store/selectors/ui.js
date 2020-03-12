@@ -4,9 +4,15 @@ import globals from '../../utils/globals'
 import systemUtils from '../../utils/system'
 import nocodeSelectors from './nocode'
 import networkSelectors from './network'
+import contentSelectors from './content'
 
-const DEFAULT_OBJECT = {}
-const DEFAULT_ARRAY = []
+const previewMode = state => state.ui.previewMode
+const user = state => state.ui.user
+const config = state => state.ui.config
+const website = state => state.ui.website
+const loading = state => state.ui.loading
+
+const settings = contentSelectors.contentItem('settings')
 
 // are we in core UI mode
 // this ignores previewMode so we can still
@@ -43,17 +49,17 @@ const initialiseError = createSelector(
     `we have had trouble loading the nocode data source`
 )
 
-const settings = createSelector(
-  state => state.nocode.items.settings,
-  value => value || DEFAULT_OBJECT,
-)
-
 const selectors = {
+  previewMode,
+  user,
+  config,
+  website,
+  settings,
+  loading,
   showCoreUI,
   showUI,
   initialised,
   initialiseError,
-  settings,
 }
 
 export default selectors

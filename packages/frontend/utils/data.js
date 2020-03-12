@@ -41,10 +41,10 @@ const Data = (globals) => {
 
     const routes = getInjectedRoutes()
     return Object.keys(routes).map(path => {
-      const name = utils.routePathToName(path)
+      const name = routeUtils.routePathToName(path)
       return Object.assign({}, routes[path], {
         name,
-        path: utils.sanitizeRoute(config.baseUrl + path),
+        path: routeUtils.sanitizeRoute(config.baseUrl + path),
       })
     })
   }
