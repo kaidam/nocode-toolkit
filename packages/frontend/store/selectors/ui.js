@@ -11,6 +11,7 @@ const user = state => state.ui.user
 const config = state => state.ui.config
 const website = state => state.ui.website
 const loading = state => state.ui.loading
+const initialiseCalled = state => state.ui.initialiseCalled
 
 const settings = contentSelectors.contentItem('settings')
 
@@ -59,6 +60,7 @@ const selectors = {
   showCoreUI,
   showUI,
   initialised,
+  initialiseCalled,
   initialiseError,
 }
 

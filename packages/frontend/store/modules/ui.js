@@ -12,6 +12,8 @@ import globals from '../../utils/globals'
 import networkWrapper from '../utils/networkWrapper'
 import apiUtils from '../utils/api'
 
+import uiSelectors from '../selectors/ui'
+
 import { ui as initialState } from '../initialState'
 
 const prefix = 'ui'
@@ -103,13 +105,13 @@ const sideEffects = {
     name: 'initialise',
     snackbarError: false,
     handler: async (dispatch, getState) => {
-      console.log('--------------------------------------------')
-      console.log('doinng initialise')
-      // if(getState().ui.initialiseCalled) return
-      // const data = await loaders.config(getState)
-      // dispatch(actions.setConfig(data))
-      // const user = await loaders.user(getState)
-      // dispatch(actions.setUser(user))
+      if(uiSelectors.initialiseCalled(getState())) return
+      const data = await loaders.config(getState)
+      dispatch(actions.setConfig(data))
+      const user = await loaders.user(getState)
+      dispatch(actions.setUser(user))
+      dispatch(actions.setInitialiseCalled())
+      //dispatch(jobActions.waitForPreviewJob())
       // const rebuildRequired = await dispatch(actions.initialiseWebsite())
       // dispatch(jobActions.getPublishStatus())
       // globals.identifyUser(data.user)
