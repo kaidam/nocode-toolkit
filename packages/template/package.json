@@ -19,7 +19,6 @@
     "express": "^4.16.4",
     "express-static-gzip": "^2.0.5",
     "pino": "^5.14.0",
-    "request": "^2.88.0",
     "yargs": "^15.0.2"
   },
   "license": "MIT",

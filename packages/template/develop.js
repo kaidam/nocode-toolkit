@@ -1,7 +1,6 @@
 const path = require('path')
 const express = require('express')
 const axios = require('axios')
-const request = require('request')
 const PreviewServer = require('@nocode-toolkit/builder/previewServer')
 
 const Api = require('./api')
@@ -61,10 +60,12 @@ const Develop = ({
   const requestProxy = async (req, res, next) => {
     const targetUrl = api.getUrl(req.originalUrl, 'raw')
     req
-      .pipe(request({
+      .pipe(axios({
         method: req.method,
         url: targetUrl,
         headers: api.getAuthHeaders(),
+        responseType: 'stream',
+        data: req,
       }))
       .pipe(res)
   }
