@@ -1,0 +1,13 @@
+{
+  "name": "@nocode-toolkit/frontend",
+  "version": "1.0.0",
+  "description": "Frontend library for nocode templates",
+  "scripts": {},
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    
+  },
+  "license": "MIT"
+}
