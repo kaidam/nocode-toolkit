@@ -3,12 +3,9 @@ import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 import useGlobalOptions from '../../hooks/globalOptions'
-
-import NocodeLogo from '../widgets/NocodeLogo'
 import MenuButton from '../widgets/MenuButton'
 
 const GlobalOptions = ({
-  children,
   getButton,
 }) => {
 
@@ -18,14 +15,6 @@ const GlobalOptions = ({
   const menuItems = useGlobalOptions({
     includeExtra: matches ? false : true,
   })
-
-  const defaultGetButton = onClick => (
-    <NocodeLogo
-      onClick={ onClick }
-    >
-      { children }
-    </NocodeLogo>
-  )
 
   return (
     <MenuButton

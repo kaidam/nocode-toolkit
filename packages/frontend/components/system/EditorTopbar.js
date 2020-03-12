@@ -19,6 +19,7 @@ import uiSelectors from '../../store/selectors/ui'
 
 import icons from '../../icons'
 
+import NocodeLogo from '../widgets/NocodeLogo'
 import GlobalOptions from './GlobalOptions'
 import UserAvatar from './UserAvatar'
 
@@ -107,6 +108,29 @@ const NocodeTopbar = ({
   //   siteUrl = publishStatus.production.urls[publishStatus.production.urls.length-1]
   // }
 
+  const getGlobalOptionsButton = useCallback((onClick) => {
+    return (
+      <NocodeLogo
+        onClick={ onClick }
+      >
+        {
+          user && (
+            <Hidden smDown>
+              <div className={ classes.userContainer }>
+                <UserAvatar
+                  user={ user }
+                />
+              </div>
+            </Hidden>
+          )
+        }
+      </NocodeLogo>
+    )
+  }, [
+    user,
+    classes.userContainer,
+  ])
+
   return (
     <AppBar 
       position="static" 
@@ -117,19 +141,9 @@ const NocodeTopbar = ({
       >
         <div className={ classes.container }>
           <div className={ classes.optionsContainer }>
-            <GlobalOptions>
-              {
-                user && (
-                  <Hidden smDown>
-                    <div className={ classes.userContainer }>
-                      <UserAvatar
-                        user={ user }
-                      />
-                    </div>
-                  </Hidden>
-                )
-              }
-            </GlobalOptions>
+            <GlobalOptions
+              getButton={ getGlobalOptionsButton }
+            />
           </div>
           <div className={ classes.filler }>
           
