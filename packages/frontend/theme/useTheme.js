@@ -16,6 +16,8 @@ const getThemeSettings = ({
   const baseUpdates = {
     layout: {
       showUI: config.showUI,
+      uiTopbarHeight: config.showUI ? 60 : 0,
+      uiLogoHeight: 40,
     }
   }
   const processorValues = processor ?

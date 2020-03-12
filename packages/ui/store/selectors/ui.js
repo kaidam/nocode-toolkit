@@ -2,12 +2,6 @@ import { createSelector } from 'reselect'
 import core from '@nocode-toolkit/website/selectors'
 import utils from '@nocode-toolkit/website/store/utils'
 import content from './content'
-import library from '../../types/library'
-
-import {
-  BASIC_TEMPLATE_LAYOUT,
-  DOCUMENTATION_TEMPLATE_LAYOUT,
-} from '../../config'
 
 const settings = content.contentItem('settings')
 const logo = content.contentItem('logo')
@@ -60,39 +54,6 @@ const afterBodySnippetCode = createSelector(
     .join("\n")
 )
 
-
-const templates = createSelector(
-  settings,
-  (settings) => {
-    const docsTemplate = {
-      id: 'default',
-      name: 'Documentation',
-      system: true,
-      default: true,
-      layout: DOCUMENTATION_TEMPLATE_LAYOUT,
-    }
-
-    const basicTemplate = {
-      id: 'basic',
-      name: 'Basic',
-      system: true,
-      layout: BASIC_TEMPLATE_LAYOUT,
-    }
-
-    const libraryTemplates = library.templates
-
-    let settingsTemplates = []
-
-    if(settings && settings.data && settings.data.templates) {
-      settingsTemplates = settings.data.templates
-    }
-
-    return [docsTemplate,basicTemplate]
-      .concat(libraryTemplates)
-      .concat(settingsTemplates)
-  }
-)
-
 // are we in core UI mode
 // this ignores previewMode so we can still
 // render the nocode topbar and theme
@@ -131,7 +92,6 @@ const selectors = {
   headSnippetCode,
   beforeBodySnippetCode,
   afterBodySnippetCode,
-  templates,
 }
 
 export default selectors

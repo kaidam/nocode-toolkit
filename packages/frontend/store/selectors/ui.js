@@ -12,6 +12,7 @@ const config = state => state.ui.config
 const website = state => state.ui.website
 const loading = state => state.ui.loading
 const initialiseCalled = state => state.ui.initialiseCalled
+const confirmWindow = state => state.ui.confirmWindow
 
 const settings = contentSelectors.contentItem('settings')
 
@@ -59,6 +60,7 @@ const selectors = {
   loading,
   showCoreUI,
   showUI,
+  confirmWindow,
   initialised,
   initialiseCalled,
   initialiseError,
