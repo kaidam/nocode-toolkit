@@ -1,9 +1,5 @@
-import React, { lazy, useCallback } from 'react'
-import { useSelector } from 'react-redux'
-import deepmerge from 'deepmerge'
-
+import React, { lazy } from 'react'
 import Suspense from '../components/system/Suspense'
-import uiSelectors from '../store/selectors/ui'
 
 const MaterialTheme = lazy(() => import(/* webpackChunkName: "ui" */ './material'))
 
@@ -18,27 +14,6 @@ const ThemeUIRender = (props) => {
   )
 }
 
-const themeProcessor = ({
-  processor,
-  settings,
-}) => (args) => {
-  const useArgs = Object.assign({}, args, {
-    settings,
-  })
-  const {
-    config,
-  } = args
-  const updates = {
-    layout: {
-      showUI: config.showUI,
-      uiTopbarHeight: config.showUI ? 60 : 0,
-      uiLogoHeight: 40,
-    }
-  }
-  return processor ?
-    deepmerge(processor(useArgs), updates) :
-    updates
-}
 /*
 
   only include the material UI theme if we are in showUI mode
@@ -48,17 +23,14 @@ const themeProcessor = ({
 
 */
 const Theme = ({
-
   // if we are using material in our template - this wil be the material module
   ThemeModule = ThemeUIRender,
   processor,
   children,
 }) => {
-  const settings = useSelector(uiSelectors.settings) 
-  const useThemeProcessor = useCallback(themeProcessor({processor,settings}), [processor,settings])
   return (
     <ThemeModule
-      processor={ useThemeProcessor }
+      processor={ processor }
     >
       { children }
     </ThemeModule>
