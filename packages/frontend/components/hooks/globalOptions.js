@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import Actions from '../utils/actions'
+import Actions from '../../utils/actions'
 
-import uiSelectors from '../store/selectors/ui'
-import icons from '../icons'
+import uiSelectors from '../../store/selectors/ui'
+import icons from '../../icons'
 
 const globalOptions = ({
   includeExtra = false,
@@ -26,18 +26,18 @@ const globalOptions = ({
 
   const menuItems = useMemo(() => {
     return [{
-      title: 'Settings',
-      icon: icons.settings,
-      handler: actions.onOpenSettings,
-    }, {
       title: 'Build Website',
-      icon: icons.build,
+      icon: icons.send,
       handler: actions.onPublish,
     }, {
       title: 'History',
       icon: icons.history,
       handler: actions.onViewHistory,
-    }, 
+    }, {
+      title: 'Settings',
+      icon: icons.settings,
+      handler: actions.onOpenSettings,
+    },
     includeExtra ? {
       title: 'Reload',
       icon: icons.refresh,

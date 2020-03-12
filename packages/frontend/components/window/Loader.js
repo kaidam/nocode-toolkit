@@ -11,6 +11,8 @@ import { useSelector } from 'react-redux'
 // import HelpDialog from './HelpDialog'
 
 import ConfirmWindow from './Confirm'
+import SettingsWindow from './Settings'
+
 import SnackBar from '../system/Snackbar'
 import GlobalLoading from '../system/GlobalLoading'
 
@@ -19,6 +21,7 @@ import routerSelectors from '../../store/selectors/router'
 
 const windows = {
   confirm: ConfirmWindow,
+  settings: SettingsWindow,
   // contentForm: ContentFormDialog,
   // settings: SettingsDialog,
   // finder: FinderDialog,
@@ -43,8 +46,8 @@ const Windows = ({
         WindowComponent && <WindowComponent />
       }
       {
-        confirmWindow && dialog != 'confirm' && (
-          <ConfirmDialog />
+        confirmWindow && window != 'confirm' && (
+          <ConfirmWindow />
         )
       }
       <SnackBar />

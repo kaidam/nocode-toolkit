@@ -24,7 +24,7 @@ import GlobalOptions from './GlobalOptions'
 import UserAvatar from './UserAvatar'
 
 const RefreshIcon = icons.refresh
-const BuildIcon = icons.build
+const BuildIcon = icons.send
 
 const useStyles = makeStyles(theme => ({
   appBar: {

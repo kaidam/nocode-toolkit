@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import Promise from 'bluebird'
+import Promise from 'bluebird'
 // import { v4 as uuidv4 } from 'uuid'
 
 import CreateReducer from '../utils/createReducer'
@@ -111,6 +111,14 @@ const sideEffects = {
       const user = await loaders.user(getState)
       dispatch(actions.setUser(user))
       dispatch(actions.setInitialiseCalled())
+
+      const result = await dispatch(actions.waitForConfirmation({
+        title: 'This test',
+        message: 'hello world'
+      }))
+
+      console.log('--------------------------------------------')
+      console.dir(result)
       //dispatch(jobActions.waitForPreviewJob())
       // const rebuildRequired = await dispatch(actions.initialiseWebsite())
       // dispatch(jobActions.getPublishStatus())
@@ -130,6 +138,24 @@ const sideEffects = {
       // }
     }
   }),
+  // open the confirm dialog with a message
+  // poll over the closing status of the confirm state
+  // return the resulting value (true or false)
+  waitForConfirmation: (confirmOptions) => async (dispatch, getState) => {
+    dispatch(actions.setConfirmWindow(confirmOptions))
+    let open = true
+    let confirmed = false
+    while(open) {
+      await Promise.delay(100)
+      const currentSettings = uiSelectors.confirmWindow(getState())
+      if(typeof(currentSettings.accepted) == 'boolean') {
+        confirmed = currentSettings.accepted
+        open = false
+        dispatch(actions.setConfirmWindow(null))
+      }
+    }
+    return confirmed
+  },
   // initialiseWebsite: () => networkWrapper({
   //   prefix,
   //   name: 'initialiseWebsite',
