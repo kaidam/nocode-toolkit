@@ -4,7 +4,7 @@ class Context extends EventEmitter {
 
   constructor({
     config,
-    data,
+    items,
     routes,
     externals,
   } = {}) {
