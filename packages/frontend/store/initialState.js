@@ -5,17 +5,23 @@ export const system = {
   initialised: false,
   user: null,
   config: systemUtils.isNode ? {} : window._uiConfigData || {},
+}
+
+export const ui = {
+  loading: false,
+  confirmWindow: null,
+  previewMode: false,
+}
+
+export const settings = {
   website: {
     meta: {},
   },
   dnsInfo: null,
 }
 
-
-export const ui = {
-  loading: false,
-  confirmWindow: null,
-  previewMode: false,
+export const dialog = {
+  
 }
 
 export const content = {
@@ -86,6 +92,8 @@ export const fileupload = {
 
 const initialState = {
   ui,
+  settings,
+  dialog,
   system,
   content,
   finder,

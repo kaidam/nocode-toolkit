@@ -20,7 +20,9 @@ import { system as initialState } from '../initialState'
 
 const prefix = 'system'
 
-const wrapper = networkWrapper.factory(prefix)
+const wrapper = networkWrapper.factory(prefix, {
+  snackbarError: false,
+})
 
 const reducers = {
   setInitialiseCalled: (state, action) => {
@@ -31,12 +33,7 @@ const reducers = {
   setConfig: (state, action) => {
     state.config = action.payload
   },
-  setWebsite: (state, action) => {
-    state.website = action.payload
-  },
-  setDnsInfo: (state, action) => {
-    state.dnsInfo = action.payload
-  },
+  
   setUser: (state, action) => {
     state.user = action.payload
   },
@@ -49,87 +46,48 @@ const loaders = {
   user: () => axios.get(apiUtils.apiUrl(`/auth/status`))
     .then(apiUtils.process),
 
-  website: (id) => axios.get(apiUtils.apiUrl(`/websites/${id}`))
-    .then(apiUtils.process),
-
-  updateWebsiteMeta: (id, data) => axios.put(apiUtils.apiUrl(`/websites/${id}/meta`), data)
-    .then(apiUtils.process),
-
   ensureSectionFolders: (getState, {
     driver,
     sections,
   }) => axios.post(apiUtils.websiteUrl(getState, `/remote/${driver}/sections`), {sections})
     .then(apiUtils.process),
     
-  setSubdomain: (id, subdomain) => axios.put(apiUtils.apiUrl(`/websites/${id}/subdomain`), {subdomain})
-    .then(apiUtils.process),
-
-  dnsInfo: () => axios.get(apiUtils.apiUrl(`/websites/dnsInfo`))
-    .then(apiUtils.process),
-
-  addUrl: (id, url) => axios.post(apiUtils.apiUrl(`/websites/${id}/urls`), {url})
-    .then(apiUtils.process),
-
-  removeUrl: (id, url) => axios.delete(apiUtils.apiUrl(`/websites/${id}/urls/${encodeURIComponent(url)}`))
-    .then(apiUtils.process),
-
   logout: () => axios.post(apiUtils.apiUrl('/auth/logout'))
     .then(apiUtils.process),
 }
 
 const sideEffects = {
-  initialise: () => networkWrapper({
-    prefix,
-    name: 'initialise',
-    snackbarError: false,
-    handler: async (dispatch, getState) => {
-      if(systemSelectors.initialiseCalled(getState())) return
-      const data = await loaders.config(getState)
-      dispatch(actions.setConfig(data))
-      const user = await loaders.user(getState)
-      dispatch(actions.setUser(user))
-      // await dispatch(jobActions.waitForPreviewJob())
-      
-      dispatch(actions.setInitialiseCalled())
-      
+  initialise: () => wrapper('initialise', async (dispatch, getState) => {
 
-      //dispatch(jobActions.waitForPreviewJob())
-      // const rebuildRequired = await dispatch(actions.initialiseWebsite())
-      // dispatch(jobActions.getPublishStatus())
-      // globals.identifyUser(data.user)
-      // // const plugins = library.plugins
-      // // plugins.forEach(plugin => {
-      // //   if(plugin.actions && plugin.actions.initialize) {
-      // //     dispatch(plugin.actions.initialize())
-      // //   }
-      // // })
-      // dispatch(actions.setInitialiseCalled())
-      // if(rebuildRequired) {
-      //   dispatch(jobActions.rebuild())
-      // }
-      // else {
-      //   dispatch(jobActions.waitForPreviewJob())
-      // }
-    }
+    if(systemSelectors.initialiseCalled(getState())) return
+    const data = await loaders.config(getState)
+    dispatch(actions.setConfig(data))
+    const user = await loaders.user(getState)
+    dispatch(actions.setUser(user))
+    // await dispatch(jobActions.waitForPreviewJob())
+    
+    dispatch(actions.setInitialiseCalled())
+    
+
+    //dispatch(jobActions.waitForPreviewJob())
+    // const rebuildRequired = await dispatch(actions.initialiseWebsite())
+    // dispatch(jobActions.getPublishStatus())
+    // globals.identifyUser(data.user)
+    // // const plugins = library.plugins
+    // // plugins.forEach(plugin => {
+    // //   if(plugin.actions && plugin.actions.initialize) {
+    // //     dispatch(plugin.actions.initialize())
+    // //   }
+    // // })
+    // dispatch(actions.setInitialiseCalled())
+    // if(rebuildRequired) {
+    //   dispatch(jobActions.rebuild())
+    // }
+    // else {
+    //   dispatch(jobActions.waitForPreviewJob())
+    // }
   }),
-  // open the confirm dialog with a message
-  // poll over the closing status of the confirm state
-  // return the resulting value (true or false)
-  waitForConfirmation: (confirmOptions) => async (dispatch, getState) => {
-    dispatch(actions.setConfirmWindow(confirmOptions))
-    let open = true
-    let confirmed = false
-    while(open) {
-      await Promise.delay(100)
-      const currentSettings = uiSelectors.confirmWindow(getState())
-      if(typeof(currentSettings.accepted) == 'boolean') {
-        confirmed = currentSettings.accepted
-        open = false
-        dispatch(actions.setConfirmWindow(null))
-      }
-    }
-    return confirmed
-  },
+  
   // initialiseWebsite: () => networkWrapper({
   //   prefix,
   //   name: 'initialiseWebsite',

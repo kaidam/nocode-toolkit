@@ -67,11 +67,12 @@ const networkWrapper = ({
   return result
 }
 
-networkWrapper.factory = (prefix) => (name, handler, props = {}) => {
-  networkWrapper({
+networkWrapper.factory = (prefix, baseProps = {}) => (name, handler, props = {}) => {
+  return networkWrapper({
     prefix,
     name,
     handler,
+    ...baseProps,
     ...props
   })
 }

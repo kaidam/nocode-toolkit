@@ -35,6 +35,8 @@ const reducers = {
   search,
   network: GetReducer('network'),
   system: GetReducer('system'),
+  settings: GetReducer('settings'),
+  dialog: GetReducer('dialog'),
   ui: GetReducer('ui'),
   job: GetReducer('job'),
   
