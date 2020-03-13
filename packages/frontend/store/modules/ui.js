@@ -12,7 +12,9 @@ import globals from '../../utils/globals'
 import networkWrapper from '../utils/networkWrapper'
 import apiUtils from '../utils/api'
 
+import jobActions from './job'
 import uiSelectors from '../selectors/ui'
+import nocodeSelectors from '../selectors/nocode'
 
 import { ui as initialState } from '../initialState'
 
@@ -112,13 +114,19 @@ const sideEffects = {
       dispatch(actions.setUser(user))
       dispatch(actions.setInitialiseCalled())
 
-      const result = await dispatch(actions.waitForConfirmation({
-        title: 'This test',
-        message: 'hello world'
-      }))
+      const { previewJobId } = nocodeSelectors.config(getState())
 
-      console.log('--------------------------------------------')
-      console.dir(result)
+      if(previewJobId) {
+        const previewJob = await dispatch(jobActions.waitForJob({
+          id: previewJobId,
+        }))
+
+        console.log('--------------------------------------------')
+        console.log('--------------------------------------------')
+        console.log('previewJob')
+        console.dir(previewJob)
+      }
+
       //dispatch(jobActions.waitForPreviewJob())
       // const rebuildRequired = await dispatch(actions.initialiseWebsite())
       // dispatch(jobActions.getPublishStatus())
