@@ -12,21 +12,19 @@ import FormHelperText from '@material-ui/core/FormHelperText'
 
 import Actions from '../../../utils/actions'
 
-import MenuButton from '../../buttons/MenuButton'
-import EmbeddedFinder from '../../finder/Embedded'
+//import EmbeddedFinder from '../../finder/Embedded'
 import Loading from '../../system/Loading'
 
 import UploadStatus from '../../uploader/UploadStatus'
 
 import fileuploadActions from '../../../store/modules/fileupload'
-import selectors from '../../../store/selectors'
+import fileuploadSelectors from '../../../store/selectors/fileupload'
 
 import icons from '../../../icons'
-import typeUI from '../../../types/ui'
 
-const EditIcon = icons.edit
+import useImageUploaders from '../../hooks/imageUploaders'
+
 const UploadIcon = icons.upload
-const DriveIcon = icons.drive
 const DeleteIcon = icons.delete
 
 const useStyles = makeStyles(theme => createStyles({
@@ -64,10 +62,10 @@ const ImageField = ({
   item,
 }) => {
   const classes = useStyles()
-  const syncLoading = useSelector(selectors.fileupload.loading.syncFiles)
-  const uploadInProgress = useSelector(selectors.fileupload.inProgress)
-  const uploadStatus = useSelector(selectors.fileupload.status)
-  const uploadError = useSelector(selectors.fileupload.errors.uploadFiles)
+  const syncLoading = useSelector(fileuploadSelectors.loading.syncFiles)
+  const uploadInProgress = useSelector(fileuploadSelectors.inProgress)
+  const uploadStatus = useSelector(fileuploadSelectors.status)
+  const uploadError = useSelector(fileuploadSelectors.errors.uploadFiles)
 
   const actions = Actions(useDispatch(), {
     onSyncFiles: fileuploadActions.syncFiles,
@@ -119,39 +117,27 @@ const ImageField = ({
 
   const onResetValue = useCallback(() => {
     setFieldValue(name, null)
-  }, [setFieldValue, name])
+  }, [name])
 
   const finderDialog = useMemo(() => {
     if(!finderDriver) return null
-    return (
-      <EmbeddedFinder
-        open
-        driver={ finderDriver }
-        addFilter="image"
-        listFilter="folder,image"
-        onAddContent={ onAddFinderContent }
-        onCancel={ onCloseFinder }
-      />
-    )
+    // return (
+    //   <EmbeddedFinder
+    //     open
+    //     driver={ finderDriver }
+    //     addFilter="image"
+    //     listFilter="folder,image"
+    //     onAddContent={ onAddFinderContent }
+    //     onCancel={ onCloseFinder }
+    //   />
+    // )
+    return null
   }, [finderDriver])
 
+  const imageUploaders = useImageUploaders()
+
   const buttons = useMemo(() => {
-    const remoteImageTypes = typeUI.addContentOptionsWithCallback({
-      filter: (parentFilter, schema) => {
-        if(item.excludeDrivers && item.excludeDrivers.indexOf(schema.driver) >= 0) {
-          return false
-        }
-        return parentFilter.indexOf('image') >= 0
-      },
-      handler: (type, schema) => onOpenFinder(schema.driver),
-    })
-    return [{
-      title: 'Upload',
-      help: 'Upload an image from your computer',
-      icon: UploadIcon,
-      handler: onOpenUploader,
-    }]
-      .concat(remoteImageTypes)
+    return imageUploaders
       .concat({
         title: 'Reset',
         help: 'Clear this image',
@@ -175,10 +161,8 @@ const ImageField = ({
         )
       })
   }, [
-    onOpenFinder,
-    onOpenUploader,
+    imageUploaders,
     onResetValue,
-    item,
   ])
 
   const description = item.helperText

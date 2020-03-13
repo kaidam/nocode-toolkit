@@ -24,7 +24,8 @@
     "reselect": "^4.0.0",
     "router5": "^7.0.0",
     "router5-plugin-browser": "^8.0.0",
-    "router5-transition-path": "^8.0.0"
+    "router5-transition-path": "^8.0.0",
+    "yup": "^0.28.3"
   },
   "license": "MIT"
 }

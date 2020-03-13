@@ -53,8 +53,18 @@ const loaders = {
 }
 
 const sideEffects = {
-  openDialog: () => wrapper('openDialog', async (dispatch, getState) => {
-    await dispatch(dialogActions.open('settings'))
+  openDialog: () => (dispatch, getState) => {
+    dispatch(dialogActions.open('settings'))
+  },
+
+  closeDialog: () => (dispatch, getState) => {
+    dispatch(dialogActions.close('settings'))
+  },
+
+  saveSettings: (data) => wrapper('saveSettings', async (dispatch, getState) => {
+    console.log('--------------------------------------------')
+    console.log('save settings')
+    console.dir(data)
   }),
   
   // loadWebsite: () => networkWrapper({

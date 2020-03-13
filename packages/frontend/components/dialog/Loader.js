@@ -10,8 +10,7 @@ import { useSelector } from 'react-redux'
 // import ConfirmDialog from './ConfirmDialog'
 // import HelpDialog from './HelpDialog'
 
-import ConfirmWindow from './Confirm'
-import SettingsWindow from './Settings'
+
 
 import SnackBar from '../system/Snackbar'
 import GlobalLoading from '../system/GlobalLoading'
@@ -20,8 +19,11 @@ import uiSelectors from '../../store/selectors/ui'
 import routerSelectors from '../../store/selectors/router'
 import dialogSelectors from '../../store/selectors/dialog'
 
+import ConfirmDialog from './Confirm'
+import SettingsDialog from '../settings/Dialog'
+
 const dialogs = {
-  settings: SettingsWindow,
+  settings: SettingsDialog,
   // contentForm: ContentFormDialog,
   // settings: SettingsDialog,
   // finder: FinderDialog,
@@ -59,7 +61,7 @@ const DialogLoader = ({
       }
       {
         confirmWindow && (
-          <ConfirmWindow />
+          <ConfirmDialog />
         )
       }
       <SnackBar />

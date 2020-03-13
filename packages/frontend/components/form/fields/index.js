@@ -7,7 +7,6 @@ import SelectField from './Select'
 import ColorPickerField from './ColorPickerField'
 import Image from './Image'
 import RichText from './RichText/Field'
-import TemplateSelect from './TemplateSelect'
 
 const fields = {
   text: TextField,
@@ -19,7 +18,6 @@ const fields = {
   color: ColorPickerField,
   image: Image,
   richtext: RichText,
-  templateSelect: TemplateSelect,
 }
 
 export const defaultValues = {
@@ -34,7 +32,6 @@ export const defaultValues = {
   },
   image: null,
   richtext: '',
-  templateSelect: '',
 }
 
 export default fields
