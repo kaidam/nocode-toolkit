@@ -7,6 +7,7 @@ import CreateActions from '../utils/createActions'
 
 // import nocodeActions from './nocode'
 // import routerActions from './router'
+import dialogActions from './dialog'
 
 import globals from '../../utils/globals'
 import networkWrapper from '../utils/networkWrapper'
@@ -53,7 +54,7 @@ const loaders = {
 
 const sideEffects = {
   openDialog: () => wrapper('openDialog', async (dispatch, getState) => {
-      
+    await dispatch(dialogActions.open('settings'))
   }),
   
   // loadWebsite: () => networkWrapper({

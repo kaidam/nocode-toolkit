@@ -33,8 +33,8 @@ const loaders = {
 }
 
 const sideEffects = {
-  open: (name, params) => (dispatch, getState) => {
-    const newParams = Object.assign({}, params, {name})
+  open: (name, params = {}) => (dispatch, getState) => {
+    const newParams = Object.assign({}, params, {open:'yes'})
     const mappedParams = Object.keys(newParams).reduce((all, id) => {
       all[`dialog_${name}_${id}`] = newParams[id]
       return all

@@ -18,9 +18,9 @@ import GlobalLoading from '../system/GlobalLoading'
 
 import uiSelectors from '../../store/selectors/ui'
 import routerSelectors from '../../store/selectors/router'
+import dialogSelectors from '../../store/selectors/dialog'
 
-const windows = {
-  confirm: ConfirmWindow,
+const dialogs = {
   settings: SettingsWindow,
   // contentForm: ContentFormDialog,
   // settings: SettingsDialog,
@@ -32,21 +32,33 @@ const windows = {
   // help: HelpDialog,
 }
 
-const Windows = ({
+const DEFAULT_PARAMS = {}
+
+const DialogLoader = ({
   
 }) => {
   const confirmWindow = useSelector(uiSelectors.confirmWindow)
-  let { window } = useSelector(routerSelectors.queryParams)
-
-  const WindowComponent = windows ? windows[window] : null
+  const dialogParams = useSelector(dialogSelectors.dialogParams)
 
   return (
     <div>
       {
-        WindowComponent && <WindowComponent />
+        Object
+          .keys(dialogs)
+          .filter(name => dialogParams[name] && dialogParams[name].open ? true : false)
+          .map((name, i) => {
+            const DialogComponent = dialogs[name]
+            const params = dialogParams[name] || DEFAULT_PARAMS
+            return (
+              <DialogComponent
+                key={ i }
+                {...params}
+              />
+            )
+          })
       }
       {
-        confirmWindow && window != 'confirm' && (
+        confirmWindow && (
           <ConfirmWindow />
         )
       }
@@ -56,4 +68,4 @@ const Windows = ({
   )
 }
 
-export default Windows
+export default DialogLoader

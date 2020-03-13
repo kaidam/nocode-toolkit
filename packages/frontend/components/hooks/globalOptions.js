@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Actions from '../../utils/actions'
 
+import settingsActions from '../../store/modules/settings'
 import uiSelectors from '../../store/selectors/ui'
 import icons from '../../icons'
 
@@ -9,7 +10,7 @@ const globalOptions = ({
   includeExtra = false,
 }) => {
   const actions = Actions(useDispatch(), {
-    onOpenSettings: () => {},/*uiActions.openSettings,*/
+    onOpenSettings: settingsActions.openDialog,
     onSetPreviewMode: () => {},/*uiActions.setPreviewMode,*/
     onLogout: () => {},/*uiActions.logout,*/
     onRebuild: () => {},/*jobActions.rebuild,*/

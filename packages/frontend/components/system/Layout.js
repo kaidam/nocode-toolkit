@@ -9,7 +9,7 @@ import Snippet from './Snippet'
 import Suspense from './Suspense'
 
 const EditorTopbar = lazy(() => import(/* webpackChunkName: "ui" */ './EditorTopbar'))
-const Windows = lazy(() => import(/* webpackChunkName: "ui" */ '../window/Loader'))
+const DialogLoader = lazy(() => import(/* webpackChunkName: "ui" */ '../dialog/Loader'))
 
 const Layout = ({
   children,
@@ -57,7 +57,7 @@ const Layout = ({
         html={ snippets.after }
       />
       <Suspense
-        Component={ Windows }
+        Component={ DialogLoader }
       />
     </React.Fragment>
   )
