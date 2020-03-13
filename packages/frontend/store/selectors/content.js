@@ -35,7 +35,7 @@ const NETWORK_NAMES = networkProps('content', [
 const previousQueryParams = state => state.content.previousQueryParams
 const itemOptions = state => state.content.itemOptions
 
-const contentAll = nocodeSelectors.itemGroup('content')
+const contentAll = nocodeSelectors.itemGroup('node')
 const sectionAll = nocodeSelectors.itemGroup('sections')
 const singletonAll = nocodeSelectors.itemGroup('singletons')
 
