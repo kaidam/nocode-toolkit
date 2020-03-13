@@ -16,7 +16,14 @@ const sideEffects = {
   addQueryParams: (params = {}) => (dispatch, getState) => {
     const route = routerSelectors.route(getState())
     const queryParams = routerSelectors.queryParams(getState())
-    const newParams = Object.assign({}, queryParams, params)
+    const newParams = Object.assign({}, queryParams)
+    Object
+      .keys(params)
+      .forEach(id => {
+        const newValue = params[id]
+        if(!newValue) delete(newParams[id])
+        else newParams[id] = newValue
+      })
     dispatch(coreActions.navigateTo(route.name, newParams))
   },
   // remove the given params

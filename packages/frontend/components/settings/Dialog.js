@@ -23,6 +23,11 @@ import Panels from '../widgets/Panels'
 
 import icons from '../../icons'
 
+const QUERY_NAMES = {
+  tab: `dialog_settings_tab`,
+  panel: `dialog_settings_panel`,
+}
+
 const useStyles = makeStyles(theme => ({
   formContainer: {
     padding: theme.spacing(2),
@@ -84,14 +89,19 @@ const SettingsContent = ({
 }) => {
 
   const classes = useStyles()
-  const {
-    tab,
-    panel,
-  } = useSelector(routerSelectors.queryParams)
+  const queryParams = useSelector(routerSelectors.queryParams)
 
+  const tab = queryParams[QUERY_NAMES.tab]
+  const panel = queryParams[QUERY_NAMES.panel]
+  
   const actions = Actions(useDispatch(), {
-    onChangeTab: (tab) => routerActions.addQueryParams({tab}),
-    onChangePanel: (panel) => routerActions.addQueryParams({panel,tab:''}),
+    onChangeTab: (newTab) => routerActions.addQueryParams({
+      [QUERY_NAMES.tab]: newTab,
+    }),
+    onChangePanel: (newPanel) => routerActions.addQueryParams({
+      [QUERY_NAMES.panel]: newPanel,
+      [QUERY_NAMES.tab]: '',
+    }),
   })
 
   const librarySettings = useSelector(settingsSelectors.librarySettings)
