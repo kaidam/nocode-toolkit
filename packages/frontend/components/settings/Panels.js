@@ -16,6 +16,7 @@ import Panels from '../widgets/Panels'
 
 import Domains from './Domains'
 import PluginInstall from './PluginInstall'
+import Snippets from './Snippets'
 
 import library from '../../library'
 import icons from '../../icons'
@@ -104,12 +105,17 @@ const SettingsPanels = ({
 
   const {
     activePluginMap = {},
+    snippets = [],
   } = values
 
   const onTogglePlugin = (id) => {
     onSetFieldValue('activePluginMap', Object.assign({}, activePluginMap, {
       [id]: activePluginMap[id] ? false : true,
     }))
+  }
+
+  const onUpdateSnippets = (newSnippets) => {
+    onSetFieldValue('snippets', newSnippets)
   }
 
   const librarySettings = useSelector(settingsSelectors.librarySettings)
@@ -224,7 +230,19 @@ const SettingsPanels = ({
     id: 'snippets',
     title: 'Snippets',
     icon: icons.code,
-    body: <div>Snippets</div>
+    body: (
+      <Snippets
+        snippets={ snippets }
+        onUpdate={ onUpdateSnippets }
+      />
+    ),
+    footer: (
+      <SettingsButtons
+        withSubmit
+        onCancel={ onCancel }
+        onSubmit={ onSubmit }
+      />
+    ),
   }
 
   const panelData = [

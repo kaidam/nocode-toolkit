@@ -40,9 +40,11 @@ const settingsInitialValues = createSelector(
     const pluginValues =  plugins
       .filter(plugin => plugin.settings)
       .reduce((all, plugin) => Object.assign({}, all, plugin.settings.initialValues), {})
-    return Object.assign({
+    const baseValues = {
       activePluginMap: {},
-    }, library.initialValues, pluginValues, values)
+      snippets: [],
+    }
+    return Object.assign(baseValues, library.initialValues, pluginValues, values)
   }
 )
 
