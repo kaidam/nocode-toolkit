@@ -4,7 +4,7 @@ import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Loading from './Loading'
 
 const useStyles = makeStyles(theme => createStyles({
-  container: {
+  container: ({loading}) => ({
     position: 'absolute',
     left: '0px',
     top: '0px',
@@ -14,8 +14,10 @@ const useStyles = makeStyles(theme => createStyles({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 1)',
-  },
+    backgroundColor: loading === 'transparent' ?
+      'rgba(255, 255, 255, 0.7)' :
+      'rgba(255, 255, 255, 1)'
+  }),
   loadingContainer: {
     width: '300px',
     height: '200px',
@@ -29,7 +31,7 @@ const useStyles = makeStyles(theme => createStyles({
 const GlobalLoading = ({
   loading,
 }) => {
-  const classes = useStyles()
+  const classes = useStyles({loading})
   if(!loading) return null
   return (
     <div className={ classes.container }>

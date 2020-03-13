@@ -1,26 +1,13 @@
-import axios from 'axios'
 import Promise from 'bluebird'
-// import { v4 as uuidv4 } from 'uuid'
 
 import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
 
-// import nocodeActions from './nocode'
-// import routerActions from './router'
-
-import globals from '../../utils/globals'
-import networkWrapper from '../utils/networkWrapper'
-import apiUtils from '../utils/api'
-
-import jobActions from './job'
 import uiSelectors from '../selectors/ui'
-import nocodeSelectors from '../selectors/nocode'
 
 import { ui as initialState } from '../initialState'
 
 const prefix = 'ui'
-
-const wrapper = networkWrapper.factory(prefix)
 
 const reducers = {
   setConfirmWindow: (state, action) => {

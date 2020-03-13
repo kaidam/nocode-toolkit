@@ -82,6 +82,7 @@ const SnackbarWrapper = ({
         }}
         open={ open }
         autoHideDuration={ 5000 }
+        disableWindowBlurListener={ true }
         onClose={ actions.onClose }
       >
         <SnackbarContent

@@ -132,12 +132,7 @@ const sideEffects = {
     }))
     await dispatch(actions.reload())
   }, {
-    before: async (dispatch, getState) => {
-      dispatch(uiActions.setLoading(true))
-    },
-    after: async (dispatch, getState) => {
-      dispatch(uiActions.setLoading(false))
-    }
+    autoLoading: true,
   }),
 
   // // load a job from the server

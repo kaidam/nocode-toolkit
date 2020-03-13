@@ -2,16 +2,14 @@ import { createSelector } from 'reselect'
 import contentSelectors from './content'
 import library from '../../library'
 
-import {
-  BASIC_TEMPLATE_LAYOUT,
-  DOCUMENTATION_TEMPLATE_LAYOUT,
-} from '../../config'
-
 const DEFAULT_ARRAY = []
 const DEFAULT_LIBRARY_SETTINGS = {
   initialValues: {},
   tabs: [],
 }
+
+const website = state => state.settings.website
+const dnsInfo = state => state.settings.dnsInfo
 
 const settings = contentSelectors.settings
 const librarySettings = state => library.settings || DEFAULT_LIBRARY_SETTINGS
@@ -70,40 +68,9 @@ const afterBodySnippetCode = createSelector(
     .join("\n")
 )
 
-
-const templates = createSelector(
-  settings,
-  (settings) => {
-    const docsTemplate = {
-      id: 'default',
-      name: 'Documentation',
-      system: true,
-      default: true,
-      layout: DOCUMENTATION_TEMPLATE_LAYOUT,
-    }
-
-    const basicTemplate = {
-      id: 'basic',
-      name: 'Basic',
-      system: true,
-      layout: BASIC_TEMPLATE_LAYOUT,
-    }
-
-    const libraryTemplates = library.templates
-
-    let settingsTemplates = []
-
-    if(settings && settings.data && settings.data.templates) {
-      settingsTemplates = settings.data.templates
-    }
-
-    return [docsTemplate,basicTemplate]
-      .concat(libraryTemplates)
-      .concat(settingsTemplates)
-  }
-)
-
 const selectors = {
+  website,
+  dnsInfo,
   settings,
   librarySettings,
   librarySettingsSchema,
@@ -114,7 +81,6 @@ const selectors = {
   headSnippetCode,
   beforeBodySnippetCode,
   afterBodySnippetCode,
-  templates,
 }
 
 export default selectors

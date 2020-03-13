@@ -9,13 +9,13 @@ import CreateActions from '../utils/createActions'
 // import routerActions from './router'
 import dialogActions from './dialog'
 import contentActions from './content'
+import jobActions from './job'
 import snackbarActions from './snackbar'
 
 import globals from '../../utils/globals'
 import networkWrapper from '../utils/networkWrapper'
 import apiUtils from '../utils/api'
 
-import jobActions from './job'
 import systemSelectors from '../selectors/system'
 import nocodeSelectors from '../selectors/nocode'
 
@@ -64,13 +64,16 @@ const sideEffects = {
   },
 
   saveSettings: (data) => wrapper('saveSettings', async (dispatch, getState) => {
-
     await dispatch(contentActions.saveContent({
       content_id: 'settings',
       location: 'singleton:settings',
       data,
     }))
-
+    await dispatch(jobActions.reload())
+    dispatch(dialogActions.close('settings'))
+    dispatch(snackbarActions.setSuccess(`settings updated`))
+  }, {
+    autoLoading: 'transparent',
   }),
   
   // loadWebsite: () => networkWrapper({

@@ -1,4 +1,5 @@
 import apiUtils from './api'
+
 import networkActions from '../modules/network'
 import snackbarActions from '../modules/snackbar'
 
@@ -26,7 +27,17 @@ const networkWrapper = ({
   // whether to show a snackbar error if an error occurs
   snackbarError = true,
 
+  // auto-trigger uiActions.setLoading before and after
+  autoLoading = false,
+
 }) => async (dispatch, getState) => {
+
+  if(autoLoading) {
+    dispatch({
+      type: 'ui/setLoading',
+      payload: autoLoading,
+    })
+  }
 
   if(before) {
     await before(dispatch, getState)
@@ -62,6 +73,13 @@ const networkWrapper = ({
 
   if(after) {
     await after(dispatch, getState)
+  }
+
+  if(autoLoading) {
+    dispatch({
+      type: 'ui/setLoading',
+      payload: false,
+    })
   }
 
   return result
