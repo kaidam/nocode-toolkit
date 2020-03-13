@@ -9,37 +9,42 @@ const DEFAULT_ARRAY = []
   nocode selectors
 
 */
-const nocodeRoutes = (state) => state.nocode.routes || DEFAULT_ARRAY
-const nocodeRouteMap = createSelector(
-  nocodeRoutes,
+const routes = (state) => state.nocode.routes || DEFAULT_ARRAY
+const config = (state) => state.nocode.config || DEFAULT_OBJECT
+const items = (state) => state.nocode.items || DEFAULT_OBJECT
+const externals = (state) => state.nocode.externals || DEFAULT_OBJECT
+
+const nodes = (state) => items(state).node || DEFAULT_OBJECT
+const annotations = (state) => items(state).annotation || DEFAULT_OBJECT
+const sections = (state) => items(state).section || DEFAULT_OBJECT
+const singletons = (state) => items(state).singleton || DEFAULT_OBJECT
+
+const routeMap = createSelector(
+  routes,
   routes => routes.reduce((all, route) => {
     all[route.item] = route
     return all
   }, {})
 )
-const nocodeRoutePathMap = createSelector(
-  nocodeRoutes,
+const routePathMap = createSelector(
+  routes,
   routes => routes.reduce((all, route) => {
     all[route.path] = route
     return all
   }, {})
 )
-const nocodeConfig = (state) => state.nocode.config || DEFAULT_OBJECT
-const nocodeItems = (state) => state.nocode.items || DEFAULT_OBJECT
-const nocodeExternals = (state) => state.nocode.externals || DEFAULT_OBJECT
-const nocodeItemGroup = (type) => createSelector(
-  nocodeItems,
-  (items) => items[type] || DEFAULT_OBJECT,
-)
 
 const selectors = {
-  config: nocodeConfig,
-  items: nocodeItems,
-  externals: nocodeExternals,
-  routes: nocodeRoutes,
-  routeMap: nocodeRouteMap,
-  routePathMap: nocodeRoutePathMap,
-  itemGroup: nocodeItemGroup,
+  config,
+  items,
+  nodes,
+  annotations,
+  sections,
+  singletons,
+  externals,
+  routes,
+  routeMap,
+  routePathMap,
 }
 
 export default selectors

@@ -39,6 +39,7 @@ const DEFAULT_PARAMS = {}
 const DialogLoader = ({
   
 }) => {
+  const loading = useSelector(uiSelectors.loading)
   const confirmWindow = useSelector(uiSelectors.confirmWindow)
   const dialogParams = useSelector(dialogSelectors.dialogParams)
 
@@ -65,7 +66,9 @@ const DialogLoader = ({
         )
       }
       <SnackBar />
-      <GlobalLoading />
+      <GlobalLoading
+        loading={ loading }
+      />
     </div>
   )
 }

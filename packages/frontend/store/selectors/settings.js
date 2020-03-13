@@ -13,7 +13,7 @@ const DEFAULT_LIBRARY_SETTINGS = {
   tabs: [],
 }
 
-const settings = contentSelectors.contentItem('settings')
+const settings = contentSelectors.settings
 const librarySettings = state => library.settings || DEFAULT_LIBRARY_SETTINGS
 
 // the combined settings schema of all things we want to save when editing

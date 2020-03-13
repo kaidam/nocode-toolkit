@@ -12,7 +12,7 @@ import globals from './utils/globals'
 import Router from './router'
 import ThemeContainer from './theme/container'
 
-const Loading = lazy(() => import(/* webpackChunkName: "ui" */ './components/system/Loading'))
+const GlobalLoading = lazy(() => import(/* webpackChunkName: "ui" */ './components/system/GlobalLoading'))
 
 const App = ({
   templates,
@@ -44,7 +44,7 @@ const App = ({
 
   return showUI && !initialised ? (
     <Suspense>
-      <Loading />
+      <GlobalLoading loading />
     </Suspense>
   ) : (
     <ThemeContainer

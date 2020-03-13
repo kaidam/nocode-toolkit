@@ -6,7 +6,7 @@ const previewMode = state => state.ui.previewMode
 const confirmWindow = state => state.ui.confirmWindow
 const loading = state => state.ui.loading
 
-const settings = contentSelectors.contentItem('settings')
+const settings = contentSelectors.settings
 
 const selectors = {
   previewMode,

@@ -9,6 +9,7 @@ import CreateActions from '../utils/createActions'
 // import routerActions from './router'
 import dialogActions from './dialog'
 import contentActions from './content'
+import snackbarActions from './snackbar'
 
 import globals from '../../utils/globals'
 import networkWrapper from '../utils/networkWrapper'
@@ -64,19 +65,12 @@ const sideEffects = {
 
   saveSettings: (data) => wrapper('saveSettings', async (dispatch, getState) => {
 
-    console.log('--------------------------------------------')
-    console.log('posting data')
-    console.dir(data)
-
-    const result = await dispatch(contentActions.saveContent({
+    await dispatch(contentActions.saveContent({
       content_id: 'settings',
       location: 'singleton:settings',
       data,
     }))
 
-    console.log('--------------------------------------------')
-    console.log('have result')
-    console.dir(result)
   }),
   
   // loadWebsite: () => networkWrapper({

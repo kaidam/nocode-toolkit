@@ -75,6 +75,14 @@ const loaders = {
 
 const sideEffects = {
 
+  // reload the preview data from the server
+  // and get the frontend redux store into line
+  reload: () => wrapper('reload', async (dispatch, getState) => {
+    const previewData = await loaders.getPreviewData(getState)
+    window._nocodeRebuildCount = (window._nocodeRebuildCount || 0) + 1
+    window._nocodeData = previewData
+    window._reloadNocodeApp()
+  }),
 
   // load a job from the server
   // only load the logs for the job that we don't have
@@ -116,7 +124,8 @@ const sideEffects = {
   // if yes - then let's start a loop of loading it until it's
   // of status complete or error
   waitForPreviewJob: () => wrapper('waitForPreviewJob', async (dispatch, getState) => {
-    const { previewJobId } = nocodeSelectors.config(getState())
+    const config = nocodeSelectors.config(getState())
+    const { previewJobId } = config
     if(!previewJobId) return 
     await dispatch(actions.waitForJob({
       id: previewJobId,

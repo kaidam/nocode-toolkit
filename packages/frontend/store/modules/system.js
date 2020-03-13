@@ -64,9 +64,9 @@ const sideEffects = {
     dispatch(actions.setConfig(data))
     const user = await loaders.user(getState)
     dispatch(actions.setUser(user))
-    // await dispatch(jobActions.waitForPreviewJob())
-    
     dispatch(actions.setInitialiseCalled())
+
+    dispatch(jobActions.waitForPreviewJob())
     
 
     //dispatch(jobActions.waitForPreviewJob())

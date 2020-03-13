@@ -104,7 +104,7 @@ class Context extends EventEmitter {
   }
 
   del(type, id) {
-    delete(this.data[type][id])
+    delete(this.data.items[type][id])
   }
 
   log(message) {

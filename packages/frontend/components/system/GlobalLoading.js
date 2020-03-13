@@ -2,7 +2,6 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Loading from './Loading'
-import uiSelectors from '../../store/selectors/ui'
 
 const useStyles = makeStyles(theme => createStyles({
   container: {
@@ -15,23 +14,22 @@ const useStyles = makeStyles(theme => createStyles({
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
   },
   loadingContainer: {
     width: '300px',
     height: '200px',
     backgroundColor: '#ffffff',
-    border: '1px solid #e5e5e5',
+    //border: '1px solid #e5e5e5',
     boxShadow: 'none',
     borderRadius: 5,
   }
 }))
 
 const GlobalLoading = ({
-  
+  loading,
 }) => {
   const classes = useStyles()
-  const loading = useSelector(uiSelectors.loading)
   if(!loading) return null
   return (
     <div className={ classes.container }>
