@@ -42,7 +42,6 @@ const DialogLoader = ({
   const loading = useSelector(uiSelectors.loading)
   const confirmWindow = useSelector(uiSelectors.confirmWindow)
   const dialogParams = useSelector(dialogSelectors.dialogParams)
-
   return (
     <div>
       {

@@ -64,7 +64,16 @@ const sideEffects = {
     dispatch(actions.setUser(user))
     await dispatch(settingsActions.initialise())
     dispatch(actions.setInitialiseCalled())
-    dispatch(jobActions.waitForPreviewJob())
+
+
+    
+    await dispatch(jobActions.waitForPreviewJob())
+    const plugins = library.plugins
+    plugins.forEach(plugin => {
+      if(plugin.actions && plugin.actions.initialize) {
+        dispatch(plugin.actions.initialize())
+      }
+    })
     
 
     //dispatch(jobActions.waitForPreviewJob())
