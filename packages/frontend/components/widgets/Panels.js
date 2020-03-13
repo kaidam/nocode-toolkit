@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react'
+import classnames from 'classnames'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Typography from '@material-ui/core/Typography'
@@ -38,7 +39,21 @@ const useStyles = makeStyles(theme => ({
   content: {
     flexGrow: 1,
     height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  contentHeader: {
+    flexGrow: 0,
+  },
+  contentBody: {
+    flexGrow: 1,
+  },
+  contentFooter: {
+    flexGrow: 0,
+  },
+  contentScroll: {
     overflowY: 'auto',
+    overflowX: 'hidden',
   },
   grow: {
     flexGrow: 1,
@@ -60,6 +75,7 @@ const PanelsWrapper = ({
   title,
   panels,
   current,
+  autoScroll = true,
   onChange,
 }) => {
   const classes = useStyles()
@@ -67,6 +83,13 @@ const PanelsWrapper = ({
   if(!panels || panels.length <= 0) return null
   let currentPanel = panels.find(panel => panel.id == current)
   currentPanel = currentPanel || panels[0]
+
+  const contentBodyClassname = classnames({
+    [classes.contentBody]: true,
+    [classes.contentScroll]: typeof(currentPanel.autoScroll) === 'boolean' ?
+      currentPanel.autoScroll :
+      autoScroll,
+  })
 
   return (
     <div className={ classes.container }>
@@ -105,7 +128,21 @@ const PanelsWrapper = ({
       </div>
       <div className={ classes.content }>
         {
-          currentPanel.element
+          currentPanel.header && (
+            <div className={ classes.contentHeader }>
+              { currentPanel.header }
+            </div>
+          )
+        }
+        <div className={ contentBodyClassname }>
+          { currentPanel.body }
+        </div>
+        {
+          currentPanel.footer && (
+            <div className={ classes.contentFooter }>
+              { currentPanel.footer }
+            </div>
+          )
         }
       </div>
     </div>
@@ -114,3 +151,26 @@ const PanelsWrapper = ({
 }
 
 export default PanelsWrapper
+
+
+/*
+
+        {
+          currentPanel.header && (
+            <div className={ classes.contentHeader }>
+              { currentPanel.header }
+            </div>
+          )
+        }
+        <div className={ contentBodyClassname }>
+          { currentPanel.body }
+        </div>
+        {
+          currentPanel.footer && (
+            <div className={ classes.contentFooter }>
+              { currentPanel.footer }
+            </div>
+          )
+        }
+
+*/
