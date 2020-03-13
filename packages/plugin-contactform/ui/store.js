@@ -1,6 +1,7 @@
 import axios from 'axios'
-import CreateReducer from '@nocode-toolkit/website/store/utils/createReducer'
-import CreateActions from '@nocode-toolkit/website/store/utils/createActions'
+
+import CreateReducer from '@nocode-toolkit/frontend/store/utils/createReducer'
+import CreateActions from '@nocode-toolkit/frontend/store/utils/createActions'
 
 import selectors from './selectors'
 import fields from './fields'

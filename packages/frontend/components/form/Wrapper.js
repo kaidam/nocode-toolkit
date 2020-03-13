@@ -25,6 +25,7 @@ const FormWrapper = ({
       {
         ({
           handleSubmit,
+          setFieldValue,
           isValid,
           values,
           errors,
@@ -41,6 +42,7 @@ const FormWrapper = ({
               {
                 children({
                   handleSubmit,
+                  setFieldValue,
                   isValid,
                   values,
                   errors,

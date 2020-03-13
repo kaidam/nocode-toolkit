@@ -13,8 +13,8 @@ const SettingsDialog = ({
 
 }) => {
 
-  const settingsSchema = useSelector(settingsSelectors.librarySettingsSchema)
-  const settingsInitialValues = useSelector(settingsSelectors.librarySettingsInitialValues)
+  const settingsSchema = useSelector(settingsSelectors.settingsSchema)
+  const settingsInitialValues = useSelector(settingsSelectors.settingsInitialValues)
 
   const actions = Actions(useDispatch(), {
     onCancel: settingsActions.closeDialog,
@@ -30,6 +30,7 @@ const SettingsDialog = ({
       {
         ({
           handleSubmit,
+          setFieldValue,
           isValid,
           values,
           errors,
@@ -52,6 +53,7 @@ const SettingsDialog = ({
                 errors={ errors }
                 showErrors={ showErrors }
                 touched={ touched }
+                onSetFieldValue={ setFieldValue }
                 onCancel={ actions.onCancel }
                 onSubmit={ handleSubmit }
               />

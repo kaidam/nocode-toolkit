@@ -1,5 +1,5 @@
 import actions, { reducer } from './store'
-import Schema from './schema'
+import Cell from './cell'
 
 const contactFormPlugin = (opts) => {
   return {
@@ -8,7 +8,7 @@ const contactFormPlugin = (opts) => {
     description: 'Accept feedback from your website via email',
     actions,
     reducer,
-    schema: Schema(opts),
+    cell: Cell(opts),
   }
 }
 

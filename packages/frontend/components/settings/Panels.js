@@ -15,7 +15,9 @@ import Tabs from '../widgets/Tabs'
 import Panels from '../widgets/Panels'
 
 import Domains from './Domains'
+import PluginInstall from './PluginInstall'
 
+import library from '../../library'
 import icons from '../../icons'
 
 const QUERY_NAMES = {
@@ -79,6 +81,7 @@ const SettingsPanels = ({
   errors,
   showErrors,
   touched,
+  onSetFieldValue,
   onSubmit,
   onCancel,
 }) => {
@@ -98,6 +101,16 @@ const SettingsPanels = ({
       [QUERY_NAMES.tab]: '',
     }),
   })
+
+  const {
+    activePluginMap = {},
+  } = values
+
+  const onTogglePlugin = (id) => {
+    onSetFieldValue('activePluginMap', Object.assign({}, activePluginMap, {
+      [id]: activePluginMap[id] ? false : true,
+    }))
+  }
 
   const librarySettings = useSelector(settingsSelectors.librarySettings)
 
@@ -120,8 +133,43 @@ const SettingsPanels = ({
     }
   })
 
-  let currentTab = settingsFormTabs.find(tabItem => tabItem.id == tab)
-  currentTab = currentTab || settingsFormTabs[0]
+  const pluginFormTabs = library.plugins
+    .filter(plugin => plugin.settings ? true : false)
+    .filter(plugin => activePluginMap[plugin.id] ? true : false)
+    .reduce((all, plugin) => {
+      return all.concat(plugin.settings.tabs.map(tab => {
+        return {
+          id: tab.id,
+          title: tab.title,
+          body: (
+            <div className={ classes.formContainer }>
+              <FormRender
+                schema={ tab.schema }
+                values={ values }
+                errors={ errors }
+                showErrors={ showErrors }
+                touched={ touched }
+                isValid={ isValid }
+              />
+            </div>
+          )
+        }
+      }))
+    }, [])
+
+  const pluginTabs = [{
+    id: 'install',
+    title: 'Install Plugins',
+    body: (
+      <PluginInstall
+        active={ activePluginMap }
+        onToggle={ onTogglePlugin }
+      />
+    )
+  }].concat(pluginFormTabs)
+
+  const currentSettingsTab = settingsFormTabs.find(tabItem => tabItem.id == tab) || settingsFormTabs[0]
+  const currentPluginTab = pluginTabs.find(tabItem => tabItem.id == tab) || pluginTabs[0]
 
   const generalPanel = {
     id: 'general',
@@ -130,11 +178,11 @@ const SettingsPanels = ({
     header: (
       <Tabs
         tabs={ settingsFormTabs }
-        current={ currentTab.id }
+        current={ currentSettingsTab.id }
         onChange={ actions.onChangeTab }
       />
     ),
-    body: currentTab.body,
+    body: currentSettingsTab.body,
     footer: (
       <SettingsButtons
         withSubmit
@@ -148,7 +196,21 @@ const SettingsPanels = ({
     id: 'plugins',
     title: 'Plugins',
     icon: icons.plugin,
-    body: <div>Plugins</div>
+    header: (
+      <Tabs
+        tabs={ pluginTabs }
+        current={ currentPluginTab.id }
+        onChange={ actions.onChangeTab }
+      />
+    ),
+    body: currentPluginTab.body,
+    footer: (
+      <SettingsButtons
+        withSubmit
+        onCancel={ onCancel }
+        onSubmit={ onSubmit }
+      />
+    ),
   }
 
   const domainPanel = {

@@ -1,6 +1,6 @@
 import actions, { reducer } from './store'
-import settingsTab from './settingsTab'
-import Schema from './schema'
+import settings from './settings'
+import Cell from './cell'
 
 const stripePlugin = (opts) => {
   return {
@@ -9,8 +9,8 @@ const stripePlugin = (opts) => {
     description: 'Take payments from your website paid directly into your Stripe account',
     actions,
     reducer,
-    settingsTab,
-    schema: Schema(opts),
+    settings,
+    cell: Cell(opts),
   }
 }
 

@@ -4,6 +4,7 @@ import { reduxPlugin } from 'redux-router5'
 import isNode from 'detect-node'
 
 import Data from '../utils/data'
+import library from '../library'
 
 import coreReducers from './reducers'
 
@@ -18,6 +19,12 @@ const Store = ({
   errorLog,
   setRouteResult,
 } = {}) => {
+
+  const pluginReducers = library.plugins.reduce((all, plugin) => {
+    if(!plugin.reducer) return all
+    all[plugin.id] = plugin.reducer
+    return all
+  }, {})
 
   let currentRouter = null
 
@@ -87,6 +94,7 @@ const Store = ({
 
   const reducer = combineReducers({
     ...reducers,
+    ...pluginReducers,
     ...coreReducers,
   })
 

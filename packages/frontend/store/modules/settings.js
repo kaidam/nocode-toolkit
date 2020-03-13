@@ -123,6 +123,37 @@ const sideEffects = {
     dispatch(snackbarActions.setSuccess(`subdomain deleted`))
     if(onComplete) onComplete()
   }),
+
+  togglePlugin: ({
+    id,
+    title,
+    value,
+  }) => wrapper('togglePlugin', async (dispatch, getState) => {
+    const settings = settingsSelectors.settings(getState())
+    const newSettings = Object.assign({}, settings, {
+      activePlugins: Object.assign({}, settings.activePlugins, {
+        [id]: value,
+      })
+    })
+    await dispatch(contentActions.saveContent({
+      content_id: 'settings',
+      location: 'singleton:settings',
+      data: newSettings,
+    }))
+    await dispatch(jobActions.reload())
+
+    const actionTitle = value ?
+      `activated` :
+      `deactivated`
+
+    const actionSnackbarHandler = value ?
+      snackbarActions.setSuccess :
+      snackbarActions.setInfo
+
+    dispatch(actionSnackbarHandler(`${title} plugin ${actionTitle}`))
+  }, {
+    autoLoading: 'transparent',
+  }),
   
   // loadWebsite: () => networkWrapper({
   //   prefix,

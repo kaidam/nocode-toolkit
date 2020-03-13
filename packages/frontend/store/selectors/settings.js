@@ -3,6 +3,7 @@ import contentSelectors from './content'
 import library from '../../library'
 
 const DEFAULT_ARRAY = []
+const DEFAULT_OBJECT = []
 const DEFAULT_LIBRARY_SETTINGS = {
   initialValues: {},
   tabs: [],
@@ -12,21 +13,48 @@ const website = state => state.settings.website
 const dnsInfo = state => state.settings.dnsInfo
 
 const settings = contentSelectors.settings
+const plugins = state => library.plugins
 const librarySettings = state => library.settings || DEFAULT_LIBRARY_SETTINGS
 
-// the combined settings schema of all things we want to save when editing
-// the settings window - basically reduce the tabs array
-const librarySettingsSchema = createSelector(
+const getTabSchema = (tabs) => tabs.reduce((all, tab) => all.concat(tab.schema), [])
+
+// combine the library settings and plugins tabs into a single flat
+// schema used to make a valiation object for the settings dialog form
+const settingsSchema = createSelector(
   librarySettings,
-  (settingsData) => settingsData
-    .tabs
-    .reduce((all, tab) => all.concat(tab.schema), [])
+  plugins,
+  (library, plugins) => {
+    return plugins
+      .filter(plugin => plugin.settings)
+      .reduce((all, plugin) => {
+        return all.concat(getTabSchema(plugin.settings.tabs))
+      }, getTabSchema(library.tabs))
+  }
 )
 
-const librarySettingsInitialValues = createSelector(
-  settings,
+const settingsInitialValues = createSelector(
   librarySettings,
-  (savedData, libraryConfig) => Object.assign({}, libraryConfig.initialValues, savedData),
+  plugins,
+  settings,
+  (library, plugins, values) => {
+    const pluginValues =  plugins
+      .filter(plugin => plugin.settings)
+      .reduce((all, plugin) => Object.assign({}, all, plugin.settings.initialValues), {})
+    return Object.assign({
+      activePluginMap: {},
+    }, library.initialValues, pluginValues, values)
+  }
+)
+
+const activePluginMap = createSelector(
+  settings,
+  data => data.activePluginMap || DEFAULT_OBJECT
+)
+
+const activePlugins = createSelector(
+  activePluginMap,
+  plugins,
+  (activeMap, plugins) => plugins.filter(plugin => activeMap[plugin.id] ? true : false)
 )
 
 const snippets = createSelector(
@@ -73,8 +101,10 @@ const selectors = {
   dnsInfo,
   settings,
   librarySettings,
-  librarySettingsSchema,
-  librarySettingsInitialValues,
+  settingsSchema,
+  settingsInitialValues,
+  activePluginMap,
+  activePlugins,
   snippets,
   pageSnippets,
   globalSnippets,
