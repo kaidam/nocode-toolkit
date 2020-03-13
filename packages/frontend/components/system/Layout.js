@@ -2,7 +2,7 @@ import React, { lazy } from 'react'
 import { useSelector } from 'react-redux'
 import { Helmet } from 'react-helmet-async'
 
-import uiSelectors from '../../store/selectors/ui'
+import systemSelectors from '../../store/selectors/system'
 import settingsSelectors from '../../store/selectors/settings'
 
 import Snippet from './Snippet'
@@ -16,8 +16,8 @@ const Layout = ({
   material = false,
 }) => {
 
-  const showUI = useSelector(uiSelectors.showUI)
-  const settings = useSelector(uiSelectors.settings)
+  const showUI = useSelector(systemSelectors.showUI)
+  const settings = useSelector(settingsSelectors.settings)
 
   const snippets = {
     head: useSelector(settingsSelectors.headSnippetCode),

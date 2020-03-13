@@ -17,13 +17,20 @@ const networkWrapper = ({
   // a function to handle any errors that were caught - normally a snackbar messaage
   errorHandler,
 
+  // function to run before anything else
+  before,
+
   // function to run once the loading status has been set to false
   after,
 
   // whether to show a snackbar error if an error occurs
-  snackbarError,
+  snackbarError = true,
 
 }) => async (dispatch, getState) => {
+
+  if(before) {
+    await before(dispatch, getState)
+  }
 
   const networkName = 
     [prefix, name]
@@ -58,6 +65,15 @@ const networkWrapper = ({
   }
 
   return result
+}
+
+networkWrapper.factory = (prefix) => (name, handler, props = {}) => {
+  networkWrapper({
+    prefix,
+    name,
+    handler,
+    ...props
+  })
 }
 
 export default networkWrapper

@@ -82,7 +82,7 @@ const createWebsiteSettings = async ({
   websiteid,
   data,
 }) => {
-  const data = await axiosWrapper({
+  const dataResult = await axiosWrapper({
     req: {
       method: 'post',
       url: `${apiUrl}/builder/api/${websiteid}/content`,
@@ -99,16 +99,16 @@ const createWebsiteSettings = async ({
     },
     message: 'create website settings',
   })
-  return data
+  return dataResult
 }
 
-const updateWebsiteSettings = ({
+const updateWebsiteSettings = async ({
   apiUrl,
   accessToken,
   websiteid,
   data,
 }) => {
-  const data = await axiosWrapper({
+  const resultData = await axiosWrapper({
     req: {
       method: 'post',
       url: `${apiUrl}/builder/api/${websiteid}/content/settings`,
@@ -122,16 +122,16 @@ const updateWebsiteSettings = ({
     },
     message: 'update website settings',
   })
-  return data
+  return resultData
 }
 
-const createWebsiteSecret = ({
+const createWebsiteSecret = async ({
   apiUrl,
   accessToken,
   websiteid,
   data,
 }) => {
-  const data = await axiosWrapper({
+  const resultData = await axiosWrapper({
     req: {
       method: 'post',
       url: `${apiUrl}/api/v1/secrets/${websiteid}/stripe`,
@@ -143,15 +143,15 @@ const createWebsiteSecret = ({
     },
     message: 'create website secret',
   })
-  return data
+  return resultData
 }
 
-const getWebsiteSecret = ({
+const getWebsiteSecret = async ({
   apiUrl,
   accessToken,
   websiteid,
 }) => {
-  const data = await axiosWrapper({
+  const resultData = await axiosWrapper({
     req: {
       method: 'get',
       url: `${apiUrl}/api/v1/secrets/${websiteid}/stripe`,
@@ -162,7 +162,7 @@ const getWebsiteSecret = ({
     },
     message: 'get website secret',
   })
-  return data
+  return resultData
 }
 
 const App = ({

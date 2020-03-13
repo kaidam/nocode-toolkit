@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from 'react'
 import { useSelector } from 'react-redux'
-import uiSelectors from '../store/selectors/ui'
+import systemSelectors from '../store/selectors/system'
 
 // The switch to either:
 //
@@ -17,7 +17,7 @@ const Theme = ({
 }) => {
 
   // incclude material if any sign there is an editor present
-  const showUI = useSelector(uiSelectors.showCoreUI)
+  const showUI = useSelector(systemSelectors.showCoreUI)
   
   if(showUI) {
     return (

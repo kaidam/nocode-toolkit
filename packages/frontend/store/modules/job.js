@@ -8,6 +8,7 @@ import apiUtils from '../utils/api'
 import { job as initialState } from '../initialState'
 //import uiActions from './ui'
 import snackbarActions from './snackbar'
+import uiActions from './ui'
 
 import nocodeSelectors from '../selectors/nocode'
 import jobSelectors from '../selectors/job'
@@ -18,12 +19,7 @@ import jobSelectors from '../selectors/job'
 
 const prefix = 'job'
 
-const wrapper = (name, handler) => networkWrapper({
-  prefix,
-  name,
-  snackbarError: true,
-  handler,
-})
+const wrapper = networkWrapper.factory(prefix)
 
 const reducers = {
   setData: (state, action) => {
@@ -97,6 +93,7 @@ const sideEffects = {
   // a job has started in the backend - let's wait for to complete
   // this just handles the blocking required to return the job result
   // ui triggers such as loading / job logs should be handled by the controller
+  // this will throw errors and should be wrapped in another handler
   waitForJob: ({
     id,
     throwError = true,
@@ -118,14 +115,21 @@ const sideEffects = {
   // is there a preview job that is building on the server?
   // if yes - then let's start a loop of loading it until it's
   // of status complete or error
-  waitForPreviewJob: () => async (dispatch, getState) => {
+  waitForPreviewJob: () => wrapper('waitForPreviewJob', async (dispatch, getState) => {
     const { previewJobId } = nocodeSelectors.config(getState())
-    if(previewJobId) {
-      dispatch(actions.waitForJob({
-        id: previewJobId,
-      }))
+    if(!previewJobId) return 
+    await dispatch(actions.waitForJob({
+      id: previewJobId,
+    }))
+    await dispatch(actions.reload())
+  }, {
+    before: async (dispatch, getState) => {
+      dispatch(uiActions.setLoading(true))
+    },
+    after: async (dispatch, getState) => {
+      dispatch(uiActions.setLoading(false))
     }
-  },
+  }),
 
   // // load a job from the server
   // // only load the logs for the job that we don't have

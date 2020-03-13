@@ -15,6 +15,7 @@ import Actions from '../../utils/actions'
 import uiActions from '../../store/modules/ui'
 //import jobActions from '../../store/modules/job'
 
+import systemSelectors from '../../store/selectors/system'
 import uiSelectors from '../../store/selectors/ui'
 
 import icons from '../../icons'
@@ -94,7 +95,7 @@ const NocodeTopbar = ({
     onPublish: () => {},//jobActions.publish,
   })
 
-  const user = useSelector(uiSelectors.user)
+  const user = useSelector(systemSelectors.user)
   const previewMode = useSelector(uiSelectors.previewMode)
   //const publishStatus = useSelector(selectors.job.publishStatus)
 

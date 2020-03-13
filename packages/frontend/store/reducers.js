@@ -33,9 +33,11 @@ const reducers = {
   router,
   snackbar,
   search,
+  network: GetReducer('network'),
+  system: GetReducer('system'),
   ui: GetReducer('ui'),
   job: GetReducer('job'),
-  network: GetReducer('network'),
+  
   // finder: GetReducer('finder'),
   // content: GetReducer('content'),
   // job: GetReducer('job'),

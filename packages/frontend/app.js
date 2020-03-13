@@ -1,7 +1,7 @@
 import React, { lazy, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import uiSelectors from './store/selectors/ui'
+import systemSelectors from './store/selectors/system'
 
 import Suspense from './components/system/Suspense'
 import actionLoader from './store/utils/actionLoader'
@@ -20,13 +20,13 @@ const App = ({
   themeProcessor,
 }) => {
   const actions = Actions(useDispatch(), {
-    initialise: actionLoader('ui', 'initialise'),
+    initialise: actionLoader('system', 'initialise'),
   })
 
-  const showUI = useSelector(uiSelectors.showUI)
-  const initialised = useSelector(uiSelectors.initialised)
+  const showUI = useSelector(systemSelectors.showUI)
+  const initialised = useSelector(systemSelectors.initialised)
 
-  const initialiseError = useSelector(uiSelectors.initialiseError)
+  const initialiseError = useSelector(systemSelectors.initialiseError)
 
   useEffect(() => {
     if(!globals.isUIActivated()) return

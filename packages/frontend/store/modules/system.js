@@ -13,42 +13,105 @@ import networkWrapper from '../utils/networkWrapper'
 import apiUtils from '../utils/api'
 
 import jobActions from './job'
-import uiSelectors from '../selectors/ui'
+import systemSelectors from '../selectors/system'
 import nocodeSelectors from '../selectors/nocode'
 
-import { ui as initialState } from '../initialState'
+import { system as initialState } from '../initialState'
 
-const prefix = 'ui'
+const prefix = 'system'
 
 const wrapper = networkWrapper.factory(prefix)
 
 const reducers = {
-  setConfirmWindow: (state, action) => {
-    state.confirmWindow = action.payload
+  setInitialiseCalled: (state, action) => {
+    state.initialiseCalled = true
+    state.initialised = true
+    globals.setWindowInitialised()
   },
-  acceptConfirmWindow: (state, action) => {
-    if(state.confirmWindow) {
-      state.confirmWindow.accepted = true
-    }
+  setConfig: (state, action) => {
+    state.config = action.payload
   },
-  cancelConfirmWindow: (state, action) => {
-    if(state.confirmWindow) {
-      state.confirmWindow.accepted = false
-    }
+  setWebsite: (state, action) => {
+    state.website = action.payload
   },
-  setPreviewMode: (state, action) => {
-    state.previewMode = action.payload
+  setDnsInfo: (state, action) => {
+    state.dnsInfo = action.payload
   },
-  setLoading: (state, action) => {
-    state.loading = action.payload
+  setUser: (state, action) => {
+    state.user = action.payload
   },
 }
 
 const loaders = {
-  
+  config: (getState) => axios.get(apiUtils.websiteUrl(getState, `/config`))
+    .then(apiUtils.process),
+
+  user: () => axios.get(apiUtils.apiUrl(`/auth/status`))
+    .then(apiUtils.process),
+
+  website: (id) => axios.get(apiUtils.apiUrl(`/websites/${id}`))
+    .then(apiUtils.process),
+
+  updateWebsiteMeta: (id, data) => axios.put(apiUtils.apiUrl(`/websites/${id}/meta`), data)
+    .then(apiUtils.process),
+
+  ensureSectionFolders: (getState, {
+    driver,
+    sections,
+  }) => axios.post(apiUtils.websiteUrl(getState, `/remote/${driver}/sections`), {sections})
+    .then(apiUtils.process),
+    
+  setSubdomain: (id, subdomain) => axios.put(apiUtils.apiUrl(`/websites/${id}/subdomain`), {subdomain})
+    .then(apiUtils.process),
+
+  dnsInfo: () => axios.get(apiUtils.apiUrl(`/websites/dnsInfo`))
+    .then(apiUtils.process),
+
+  addUrl: (id, url) => axios.post(apiUtils.apiUrl(`/websites/${id}/urls`), {url})
+    .then(apiUtils.process),
+
+  removeUrl: (id, url) => axios.delete(apiUtils.apiUrl(`/websites/${id}/urls/${encodeURIComponent(url)}`))
+    .then(apiUtils.process),
+
+  logout: () => axios.post(apiUtils.apiUrl('/auth/logout'))
+    .then(apiUtils.process),
 }
 
 const sideEffects = {
+  initialise: () => networkWrapper({
+    prefix,
+    name: 'initialise',
+    snackbarError: false,
+    handler: async (dispatch, getState) => {
+      if(systemSelectors.initialiseCalled(getState())) return
+      const data = await loaders.config(getState)
+      dispatch(actions.setConfig(data))
+      const user = await loaders.user(getState)
+      dispatch(actions.setUser(user))
+      // await dispatch(jobActions.waitForPreviewJob())
+      
+      dispatch(actions.setInitialiseCalled())
+      
+
+      //dispatch(jobActions.waitForPreviewJob())
+      // const rebuildRequired = await dispatch(actions.initialiseWebsite())
+      // dispatch(jobActions.getPublishStatus())
+      // globals.identifyUser(data.user)
+      // // const plugins = library.plugins
+      // // plugins.forEach(plugin => {
+      // //   if(plugin.actions && plugin.actions.initialize) {
+      // //     dispatch(plugin.actions.initialize())
+      // //   }
+      // // })
+      // dispatch(actions.setInitialiseCalled())
+      // if(rebuildRequired) {
+      //   dispatch(jobActions.rebuild())
+      // }
+      // else {
+      //   dispatch(jobActions.waitForPreviewJob())
+      // }
+    }
+  }),
   // open the confirm dialog with a message
   // poll over the closing status of the confirm state
   // return the resulting value (true or false)

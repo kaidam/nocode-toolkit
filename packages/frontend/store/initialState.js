@@ -1,6 +1,6 @@
 import systemUtils from '../utils/system'
 
-export const ui = {
+export const system = {
   initialiseCalled: false,
   initialised: false,
   user: null,
@@ -8,10 +8,14 @@ export const ui = {
   website: {
     meta: {},
   },
+  dnsInfo: null,
+}
+
+
+export const ui = {
+  loading: false,
   confirmWindow: null,
   previewMode: false,
-  dnsInfo: null,
-  loading: false,
 }
 
 export const content = {
@@ -82,6 +86,7 @@ export const fileupload = {
 
 const initialState = {
   ui,
+  system,
   content,
   finder,
   job,

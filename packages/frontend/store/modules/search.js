@@ -3,7 +3,7 @@ import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
 
 import apiUtils from '../utils/api'
-import uiSelectors from '../selectors/ui'
+import systemSelectors from '../selectors/system'
 
 import { search as initialState } from '../initialState'
 
@@ -35,7 +35,7 @@ const sideEffects = {
   search: ({
     query,
   }) => async (dispatch, getState) => {
-    const showUI = uiSelectors.showCoreUI(getState())
+    const showUI = systemSelectors.showCoreUI(getState())
     if(!query) {
       dispatch(actions.setLoading(false))
       dispatch(actions.setResults({hits:[]}))
