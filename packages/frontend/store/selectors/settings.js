@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect'
 import contentSelectors from './content'
+import library from '../../library'
 
 import {
   BASIC_TEMPLATE_LAYOUT,
@@ -7,8 +8,29 @@ import {
 } from '../../config'
 
 const DEFAULT_ARRAY = []
+const DEFAULT_LIBRARY_SETTINGS = {
+  initialValues: {},
+  tabs: [],
+}
 
 const settings = contentSelectors.contentItem('settings')
+const librarySettings = state => library.settings || DEFAULT_LIBRARY_SETTINGS
+
+// the combined settings schema of all things we want to save when editing
+// the settings window - basically reduce the tabs array
+const librarySettingsSchema = createSelector(
+  librarySettings,
+  (settingsData) => settingsData
+    .tabs
+    .reduce((all, tab) => all.concat(tab.schema), [])
+)
+
+const librarySettingsInitialValues = createSelector(
+  settings,
+  librarySettings,
+  (savedData, libraryConfig) => Object.assign({}, libraryConfig.initialValues, savedData),
+)
+
 const snippets = createSelector(
   settings,
   (settings) => settings.snippets || DEFAULT_ARRAY,
@@ -83,6 +105,9 @@ const templates = createSelector(
 
 const selectors = {
   settings,
+  librarySettings,
+  librarySettingsSchema,
+  librarySettingsInitialValues,
   snippets,
   pageSnippets,
   globalSnippets,

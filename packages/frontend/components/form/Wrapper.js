@@ -43,7 +43,6 @@ const FormWrapper = ({
                   handleSubmit,
                   isValid,
                   values,
-                  error,
                   errors,
                   showErrors,
                   touched,
