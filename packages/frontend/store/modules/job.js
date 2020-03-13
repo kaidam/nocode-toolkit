@@ -78,7 +78,7 @@ const sideEffects = {
 
   // load a job from the server
   // only load the logs for the job that we don't have
-  loadJob: (id) => wrapper('loadJob', async (dispatch, getState) => {
+  loadJob: (id) => async (dispatch, getState) => {
     // get the starting point for logs and pass it to the job loader
     const existingJobData = jobSelectors.data(getState())
     let fromLogId = null
@@ -88,7 +88,7 @@ const sideEffects = {
     const job = await loaders.getJobData(getState, id, fromLogId)
     dispatch(actions.setData(job))
     return job
-  }),
+  },
 
   // a job has started in the backend - let's wait for to complete
   // this just handles the blocking required to return the job result

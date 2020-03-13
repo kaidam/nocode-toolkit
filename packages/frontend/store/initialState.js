@@ -25,13 +25,7 @@ export const dialog = {
 }
 
 export const content = {
-  // used when we open a local form to add/edit content
-  // and want to return back to where we were before
-  // we opened the local dialog
-  previousQueryParams: null,
 
-  // the stash we use for the options form editor
-  itemOptions: {},
 }
 
 export const search = {
