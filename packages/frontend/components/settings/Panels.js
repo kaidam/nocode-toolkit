@@ -14,6 +14,8 @@ import FormRender from '../form/Render'
 import Tabs from '../widgets/Tabs'
 import Panels from '../widgets/Panels'
 
+import Domains from './Domains'
+
 import icons from '../../icons'
 
 const QUERY_NAMES = {
@@ -153,7 +155,7 @@ const SettingsPanels = ({
     id: 'domain',
     title: 'Domains',
     icon: icons.domain,
-    body: <div>Domains</div>
+    body: <Domains />
   }
 
   const snippetPanel = {

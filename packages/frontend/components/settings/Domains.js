@@ -14,6 +14,7 @@ import SimpleTable from '../table/SimpleTable'
 import Actions from '../../utils/actions'
 
 import nocodeSelectors from '../../store/selectors/nocode'
+import systemSelectors from '../../store/selectors/system'
 import settingsSelectors from '../../store/selectors/settings'
 import settingsActions from '../../store/modules/settings'
 
@@ -78,6 +79,7 @@ const SettingsDomains = ({
   })
 
   const config = useSelector(nocodeSelectors.config)
+  const systemConfig = useSelector(systemSelectors.config)
   const website = useSelector(settingsSelectors.website)
   
   const defaultSubdomain = `website-${config.websiteId}`
@@ -140,7 +142,7 @@ const SettingsDomains = ({
           </Grid>
           <Grid item xs={ 8 } className={ classes.fullDomain }>
             <Typography>
-              .{ config.main_domain }
+              .{ systemConfig.main_domain }
             </Typography>
           </Grid>
         </Grid>

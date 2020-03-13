@@ -55,6 +55,26 @@ const loaders = {
 }
 
 const sideEffects = {
+
+  initialise: () => async (dispatch, getState) => {
+    await dispatch(actions.loadWebsite())
+    await dispatch(actions.loadDnsInfo())
+  },
+
+  loadWebsite: () => async (dispatch, getState) => {
+    const config = nocodeSelectors.config(getState())
+    const data = await loaders.website(config.websiteId)
+    data.meta = data.meta || {}
+    dispatch(actions.setWebsite(data))
+    return data
+  },
+
+  loadDnsInfo: () => async (dispatch, getState) => {
+    const data = await loaders.dnsInfo()
+    dispatch(actions.setDnsInfo(data))
+    return data
+  },
+
   openDialog: () => (dispatch, getState) => {
     dispatch(dialogActions.open('settings'))
   },
@@ -74,6 +94,34 @@ const sideEffects = {
     dispatch(snackbarActions.setSuccess(`settings updated`))
   }, {
     autoLoading: 'transparent',
+  }),
+
+  setSubdomain: (subdomain) => wrapper('setSubdomain', async (dispatch, getState) => {
+    const config = nocodeSelectors.config(getState())
+    await loaders.setSubdomain(config.websiteId, subdomain)
+    await dispatch(actions.loadWebsite())
+    dispatch(snackbarActions.setSuccess(`subdomain updated`))
+  }),
+
+  addUrl: ({
+    url,
+    onComplete,
+  }) => wrapper('addUrl', async (dispatch, getState) => {
+    const config = nocodeSelectors.config(getState())
+    await loaders.addUrl(config.websiteId, url)
+    await dispatch(actions.loadWebsite())
+    dispatch(snackbarActions.setSuccess(`subdomain updated`))
+    if(onComplete) onComplete()
+  }),
+  removeUrl: ({
+    url,
+    onComplete,
+  }) => wrapper('removeUrl', async (dispatch, getState) => {
+    const config = nocodeSelectors.config(getState())
+    await loaders.removeUrl(config.websiteId, url)
+    await dispatch(actions.loadWebsite())
+    dispatch(snackbarActions.setSuccess(`subdomain deleted`))
+    if(onComplete) onComplete()
   }),
   
   // loadWebsite: () => networkWrapper({

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
@@ -10,11 +10,7 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogActions from '@material-ui/core/DialogActions'
 
-import Actions from '../../utils/actions'
-import selectors from '../../store/selectors'
-import uiActions from '../../store/modules/ui'
-
-import icons from '../../icons'
+import settingsSelectors from '../../store/selectors/settings'
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -47,23 +43,15 @@ const SettingsDomainsAddDialog = ({
 
   const classes = useStyles()
 
-  const actions = Actions(useDispatch(), {
-    onLoadDnsInfo: uiActions.loadDnsInfo,
-  })
-
   const [url, setUrl] = useState('')
   const [touched, setTouched] = useState(false)
   const urlValid = url.match(/^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?$/igm) ? true : false
   const error = touched && url && !urlValid ? true : false
   const saveDisabled = !url || error
 
-  const dnsInfo = useSelector(selectors.ui.dnsInfo)
+  const dnsInfo = useSelector(settingsSelectors.dnsInfo)
 
   const ip = dnsInfo ? dnsInfo.address : ''
-
-  useEffect(() => {
-    actions.onLoadDnsInfo()
-  }, [])
 
   return (
     <Dialog

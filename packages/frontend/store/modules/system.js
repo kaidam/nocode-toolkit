@@ -5,14 +5,12 @@ import Promise from 'bluebird'
 import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
 
-// import nocodeActions from './nocode'
-// import routerActions from './router'
-
 import globals from '../../utils/globals'
 import networkWrapper from '../utils/networkWrapper'
 import apiUtils from '../utils/api'
 
 import jobActions from './job'
+import settingsActions from './settings'
 import systemSelectors from '../selectors/system'
 import nocodeSelectors from '../selectors/nocode'
 
@@ -64,8 +62,8 @@ const sideEffects = {
     dispatch(actions.setConfig(data))
     const user = await loaders.user(getState)
     dispatch(actions.setUser(user))
+    await dispatch(settingsActions.initialise())
     dispatch(actions.setInitialiseCalled())
-
     dispatch(jobActions.waitForPreviewJob())
     
 
