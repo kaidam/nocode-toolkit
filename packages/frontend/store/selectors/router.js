@@ -3,18 +3,18 @@ import { createSelector } from 'reselect'
 import nocodeSelectors from './nocode'
 const DEFAULT_OBJECT = {}
 
-const routerStoreRoute = (state) => state.router.route || DEFAULT_OBJECT
-const routerPreviousRoute = (state) => state.router.previousRoute
-const routerName = (state) => routerStoreRoute(state).name
-const routerPath = (state) => routerStoreRoute(state).path
-const routerParams = (state) => routerStoreRoute(state).params || DEFAULT_OBJECT
-const routerRoute = createSelector(
+const storeRoute = (state) => state.router.route || DEFAULT_OBJECT
+const previousRoute = (state) => state.router.previousRoute
+const name = (state) => storeRoute(state).name
+const path = (state) => storeRoute(state).path
+const queryParams = (state) => storeRoute(state).params || DEFAULT_OBJECT
+const route = createSelector(
   nocodeSelectors.routes,
-  routerName,
+  name,
   (routes, name) => routes.find(r => r.name == name)
 )
-const routerFullRoute = createSelector(
-  routerRoute,
+const fullRoute = createSelector(
+  route,
   nocodeSelectors.externals,
   (route, externals) => {
     const externalIds = route.externals || []
@@ -27,13 +27,54 @@ const routerFullRoute = createSelector(
   }
 )
 
+const routeMap = createSelector(
+  nocodeSelectors.routes,
+  routes => routes.reduce((all, route) => {
+    all[`${route.location}:${route.item}`] = route
+    return all
+  }, {})
+)
+
+const routePathMap = createSelector(
+  nocodeSelectors.routes,
+  routes => routes.reduce((all, route) => {
+    all[route.path] = route
+    return all
+  }, {})
+)
+
+/*
+
+  return an array of items ids
+  who are the parents of the current route item
+
+*/
+const ancestors = createSelector(
+  route,
+  nocodeSelectors.nodes,
+  nocodeSelectors.parentIds,
+  (route, nodes, parentIds) => {
+    const id = route.item
+    const pathToItem = []
+    let nextParentId = parentIds[id]
+    while(nextParentId != null) {
+      pathToItem.unshift(nextParentId)
+      nextParentId = parentIds[nextParentId]
+    }
+    return pathToItem
+  },
+)
+
 const selectors = {
-  name: routerName,
-  path: routerPath,
-  queryParams: routerParams,
-  route: routerRoute,
-  fullRoute: routerFullRoute,
-  previousRoute: routerPreviousRoute,
+  name,
+  path,
+  queryParams,
+  route,
+  fullRoute,
+  previousRoute,
+  routeMap,
+  routePathMap,
+  ancestors,
 }
 
 export default selectors

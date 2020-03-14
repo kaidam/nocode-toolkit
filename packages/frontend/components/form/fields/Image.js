@@ -22,7 +22,7 @@ import fileuploadSelectors from '../../../store/selectors/fileupload'
 
 import icons from '../../../icons'
 
-import useImageUploaders from '../../hooks/imageUploaders'
+import useImageUploaders from '../../hooks/useImageUploaders'
 
 const UploadIcon = icons.upload
 const DeleteIcon = icons.delete

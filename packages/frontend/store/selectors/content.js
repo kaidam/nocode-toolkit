@@ -1,15 +1,9 @@
 import { createSelector } from 'reselect'
-import {
-  props,
-  networkProps,
-  networkErrors,
-  networkLoading,
-} from './utils'
+import childrenUtils from './utils/children'
 
 const DEFAULT_OBJECT = {}
 
 import nocodeSelectors from './nocode'
-import routerSelectors from './router'
 
 const settings = createSelector(
   nocodeSelectors.nodes,
@@ -23,12 +17,31 @@ const sectionTree = () => createSelector(
   nocodeSelectors.locations,
   (_, name) => name,
   (sections, nodes, annotations, locations, name) => {
-    const section = sections[name]
-    const children = section.children.map(id => nodes[id])
-    return {
-      section,
-      children,
+    const getChildren = ({
+      parentId,
+      childIds,
+    }) => {
+      return childrenUtils.sortChildren({
+        children: childIds.map(id => {
+          const child = nodes[id]
+          return Object.assign({}, child, {
+            children: getChildren({
+              parentId: id,
+              childIds: child.children || [],
+            })
+          })
+        }),
+        annotation: annotations[parentId],
+      })
     }
+    return getChildren({
+      parentId: `section:${name}`,
+      childIds: childrenUtils.getSectionChildrenIds({
+        section: sections[name],
+        nodes,
+        locations,
+      }),
+    })
   }
 )
 

@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import Actions from '../../utils/actions'
 
@@ -6,7 +6,7 @@ import settingsActions from '../../store/modules/settings'
 import uiSelectors from '../../store/selectors/ui'
 import icons from '../../icons'
 
-const globalOptions = ({
+const useGetGlobalOptions = ({
   includeExtra = false,
 }) => {
   const actions = Actions(useDispatch(), {
@@ -25,7 +25,7 @@ const globalOptions = ({
 
   const previewMode = useSelector(uiSelectors.previewMode)
 
-  const menuItems = useMemo(() => {
+  const getMenuItems = useCallback(() => {
     return [{
       title: 'Build Website',
       icon: icons.send,
@@ -72,7 +72,7 @@ const globalOptions = ({
     includeExtra,
   ])
 
-  return menuItems
+  return getMenuItems
 }
 
-export default globalOptions
+export default useGetGlobalOptions

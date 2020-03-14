@@ -128,6 +128,7 @@ const MenuButton = ({
   // anchor the menu to the given element
   parentAnchorEl,
 
+  // a function that when called with return
   // an array of items to render
   // each item is an object with
   //
@@ -140,7 +141,7 @@ const MenuButton = ({
   //  * url - if given the item will open the url in a new window
   //
   // if the item is a '-' string - a divider will be rendered
-  items,
+  getItems,
 
 
   // callback for when the menu is opened
@@ -207,7 +208,7 @@ const MenuButton = ({
         <ItemMenu
           anchorEl={ useParentEl }
           header={ header }
-          menuItems={ items }
+          menuItems={ getItems() }
           open={ mainMenuOpen }
           onClose={ handleClose }
           onItemClick={ handleItemClick }
@@ -217,7 +218,6 @@ const MenuButton = ({
     [
       useParentEl,
       header,
-      items,
       mainMenuOpen,
     ]
   )
@@ -239,7 +239,6 @@ const MenuButton = ({
       useParentEl,
       subItems,
       subMenuOpen,
-      items,
     ]
   )
 

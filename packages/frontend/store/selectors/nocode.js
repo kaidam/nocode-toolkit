@@ -20,17 +20,14 @@ const sections = (state) => items(state).section || DEFAULT_OBJECT
 const singletons = (state) => items(state).singleton || DEFAULT_OBJECT
 const locations = (state) => items(state).location || DEFAULT_OBJECT
 
-const routeMap = createSelector(
-  routes,
-  routes => routes.reduce((all, route) => {
-    all[route.item] = route
-    return all
-  }, {})
-)
-const routePathMap = createSelector(
-  routes,
-  routes => routes.reduce((all, route) => {
-    all[route.path] = route
+const parentIds = createSelector(
+  nodes,
+  nodes => Object.keys(nodes).reduce((all, id) => {
+    const item = nodes[id]
+    const childrenIds = item.children || []
+    childrenIds.forEach(childId => {
+      all[childId] = id
+    })
     return all
   }, {})
 )
@@ -45,8 +42,7 @@ const selectors = {
   locations,
   externals,
   routes,
-  routeMap,
-  routePathMap,
+  parentIds,
 }
 
 export default selectors
