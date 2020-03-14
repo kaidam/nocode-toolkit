@@ -11,6 +11,7 @@ import networkWrapper from '../utils/networkWrapper'
 import apiUtils from '../utils/api'
 
 import jobActions from './job'
+import uiActions from './ui'
 import settingsActions from './settings'
 import systemSelectors from '../selectors/system'
 import nocodeSelectors from '../selectors/nocode'
@@ -123,6 +124,17 @@ const sideEffects = {
       dispatch(jobActions.getPublishStatus()),
     ])
 
+    let initialiseResult = null
+
+    // if we have initialise function registered then
+    // call it - this is registered by the template
+    // and used to perform initial setup of linked resources
+    // the initialise function has the option of calling
+    // setInitialiseCalled
+    if(library.initialise) {
+      initialiseResult = await dispatch(library.initialise())
+    }
+
     // now activate the UI
     dispatch(actions.setInitialiseCalled())
 
@@ -137,6 +149,17 @@ const sideEffects = {
 
     // if we have a preview job, let's wait for it
     await dispatch(jobActions.waitForPreviewJob())
+
+    if(initialiseResult) {
+      // if the initialise has done anything that requires a rebuild
+      // do that now  
+
+      if(initialiseResult.rebuild) {
+        console.log('--------------------------------------------')
+        console.log('--------------------------------------------')
+        console.log('triggering rebuild')
+      }
+    }
 
     // dispatch(jobActions.waitForPreviewJob())
     // const rebuildRequired = await dispatch(actions.initialiseWebsite())
@@ -155,7 +178,33 @@ const sideEffects = {
     // else {
     //   dispatch(jobActions.waitForPreviewJob())
     // }
+  }, {
+    errorHandler: async (dispatch, getState, error) => {
+      dispatch(uiActions.setLoading({
+        error,
+      }))
+    }
   }),
+
+  // called by a template if it wants to create
+  // folders for each of it's sections on the users drive
+  createSystemFolders: ({
+    driver,
+    sections,
+  }) => async (dispatch, getState) => {
+    const result = await loaders.ensureSectionFolders(getState, {
+      driver,
+      sections,
+    })
+    return result
+  },
+
+  // merge data into the website meta reccord
+  updateWebsiteMeta: (data) => async (dispatch, getState) => {
+    const website = selectors.ui.website(getState())
+    await loaders.updateWebsiteMeta(website.id, data)
+    await dispatch(actions.loadWebsite())
+  },
 
   /*
   

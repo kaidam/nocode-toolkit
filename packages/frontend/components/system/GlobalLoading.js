@@ -1,7 +1,7 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Loading from './Loading'
+import Error from './Error'
 
 const useStyles = makeStyles(theme => createStyles({
   container: ({transparent}) => ({
@@ -37,15 +37,25 @@ const GlobalLoading = ({
   const {
     transparent = false,
     message = 'loading',
+    error,
   } = loadingValues
   const classes = useStyles({transparent})
   if(!loading) return null
   return (
     <div className={ classes.container }>
       <div className={ classes.loadingContainer }>
-        <Loading
-          message={ message }
-        />
+        {
+          error ? (
+            <Error
+              message={ error }
+            />
+          ) : (
+            <Loading
+              message={ message }
+            />
+          )
+        }
+        
       </div>
     </div>
   )

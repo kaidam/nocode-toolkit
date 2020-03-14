@@ -2,6 +2,7 @@ import React, { lazy, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import systemSelectors from './store/selectors/system'
+import uiSelectors from './store/selectors/ui'
 
 import Suspense from './components/system/Suspense'
 import actionLoader from './store/utils/actionLoader'
@@ -25,8 +26,11 @@ const App = ({
 
   const showUI = useSelector(systemSelectors.showUI)
   const initialised = useSelector(systemSelectors.initialised)
-
   const initialiseError = useSelector(systemSelectors.initialiseError)
+
+  // this allows us to customize the loading message
+  // as things are initialised
+  const loading = useSelector(uiSelectors.loading)
 
   useEffect(() => {
     if(!globals.isUIActivated()) return
@@ -44,7 +48,9 @@ const App = ({
 
   return showUI && !initialised ? (
     <Suspense>
-      <GlobalLoading loading />
+      <GlobalLoading
+        loading={ loading || true }
+      />
     </Suspense>
   ) : (
     <ThemeContainer
