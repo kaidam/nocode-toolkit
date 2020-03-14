@@ -10,7 +10,7 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogActions from '@material-ui/core/DialogActions'
 
-import settingsSelectors from '../../store/selectors/settings'
+import systemSelectors from '../../store/selectors/system'
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -49,7 +49,7 @@ const SettingsDomainsAddDialog = ({
   const error = touched && url && !urlValid ? true : false
   const saveDisabled = !url || error
 
-  const dnsInfo = useSelector(settingsSelectors.dnsInfo)
+  const dnsInfo = useSelector(systemSelectors.dnsInfo)
 
   const ip = dnsInfo ? dnsInfo.address : ''
 

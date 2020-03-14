@@ -13,7 +13,6 @@ import Actions from '../../utils/actions'
 
 import nocodeSelectors from '../../store/selectors/nocode'
 import systemSelectors from '../../store/selectors/system'
-import settingsSelectors from '../../store/selectors/settings'
 import settingsActions from '../../store/modules/settings'
 
 import DomainsAddDialog from './DomainsAddDialog'
@@ -78,7 +77,7 @@ const SettingsDomains = ({
 
   const config = useSelector(nocodeSelectors.config)
   const systemConfig = useSelector(systemSelectors.config)
-  const website = useSelector(settingsSelectors.website)
+  const website = useSelector(systemSelectors.website)
   
   const defaultSubdomain = `website-${config.websiteId}`
   const [subdomain, setSubdomain] = useState(defaultSubdomain)

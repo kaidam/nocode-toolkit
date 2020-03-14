@@ -79,6 +79,7 @@ const PanelsWrapper = ({
   footer,
   current,
   autoScroll = true,
+  theme = {},
   onChange,
 }) => {
   const classes = useStyles()
@@ -88,12 +89,14 @@ const PanelsWrapper = ({
   let currentPanel = panels.find(panel => panel.id == current)
   currentPanel = currentPanel || panels[0]
 
-  const contentBodyClassname = classnames({
-    [classes.contentBody]: true,
+  const bodyClassname = classnames({
     [classes.contentScroll]: typeof(currentPanel.autoScroll) === 'boolean' ?
       currentPanel.autoScroll :
       autoScroll,
-  })
+  }, classes.contentBody, theme.body)
+
+  const headerClassname = classnames(classes.contentHeader, theme.header)
+  const footerClassname = classnames(classes.contentFooter, theme.footer)
 
   return (
     <div className={ classes.container }>
@@ -133,17 +136,17 @@ const PanelsWrapper = ({
       <div className={ classes.content }>
         {
           header && (
-            <div className={ classes.contentHeader }>
+            <div className={ headerClassname }>
               { header }
             </div>
           )
         }
-        <div className={ contentBodyClassname }>
+        <div className={ bodyClassname }>
           { body }
         </div>
         {
           footer && (
-            <div className={ classes.contentFooter }>
+            <div className={ footerClassname }>
               { footer }
             </div>
           )

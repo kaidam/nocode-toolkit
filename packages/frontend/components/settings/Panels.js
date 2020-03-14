@@ -29,6 +29,12 @@ const useStyles = makeStyles(theme => ({
   formContainer: {
     padding: theme.spacing(2),
   },
+  header: {
+    borderBottom: '1px solid #e5e5e5',
+  },
+  footer: {
+    borderTop: '1px solid #e5e5e5',
+  },
 }))
 
 const PANELS = [{
@@ -225,6 +231,10 @@ const SettingsPanels = ({
     <Panels
       panels={ PANELS }
       current={ currentPanel.id }
+      theme={{
+        header: classes.header,
+        footer: classes.footer,
+      }}
       onChange={ actions.onChangePanel }
       {...renderResults}
     />
