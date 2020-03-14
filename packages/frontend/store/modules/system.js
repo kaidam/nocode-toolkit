@@ -12,7 +12,6 @@ import apiUtils from '../utils/api'
 
 import jobActions from './job'
 import uiActions from './ui'
-import settingsActions from './settings'
 import systemSelectors from '../selectors/system'
 import nocodeSelectors from '../selectors/nocode'
 
@@ -84,7 +83,10 @@ const loaders = {
   ensureSectionFolders: (getState, {
     driver,
     sections,
-  }) => axios.post(apiUtils.websiteUrl(getState, `/remote/${driver}/sections`), {sections})
+  }) => axios.post(apiUtils.websiteUrl(getState, `/section/folders`), {
+    driver,
+    sections,
+  })
     .then(apiUtils.process),
 
 
@@ -188,7 +190,7 @@ const sideEffects = {
 
   // called by a template if it wants to create
   // folders for each of it's sections on the users drive
-  createSystemFolders: ({
+  ensureSectionFolders: ({
     driver,
     sections,
   }) => async (dispatch, getState) => {
@@ -201,7 +203,7 @@ const sideEffects = {
 
   // merge data into the website meta reccord
   updateWebsiteMeta: (data) => async (dispatch, getState) => {
-    const website = selectors.ui.website(getState())
+    const website = systemSelectors.website(getState())
     await loaders.updateWebsiteMeta(website.id, data)
     await dispatch(actions.loadWebsite())
   },

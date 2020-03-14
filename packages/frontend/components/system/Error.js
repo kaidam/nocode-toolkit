@@ -1,7 +1,5 @@
 import React from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
-
-import CircularProgress from '@material-ui/core/CircularProgress'
 import Typography from '@material-ui/core/Typography'
 
 import icons from '../../icons'
