@@ -9,6 +9,7 @@ const previewMode = state => state.ui.previewMode
 const user = state => state.system.user
 const config = state => state.system.config
 const website = state => state.system.website
+const dnsInfo = state => state.system.dnsInfo
 const loading = state => state.system.loading
 const initialiseCalled = state => state.system.initialiseCalled
 
@@ -51,6 +52,7 @@ const selectors = {
   user,
   config,
   website,
+  dnsInfo,
   loading,
   showCoreUI,
   showUI,

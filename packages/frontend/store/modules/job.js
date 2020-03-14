@@ -62,7 +62,7 @@ const loaders = {
   publish: (getState) => axios.post(apiUtils.websiteUrl(getState, `/publish`))
     .then(apiUtils.process),
 
-  getPublishStatus: (getState) => axios.get(apiUtils.websiteUrl(getState, `/publish`))
+  getPublishStatus: (getState) => axios.get(apiUtils.websiteUrl(getState, `/publish/status`))
     .then(apiUtils.process),
   
   deploy: (getState, payload) => axios.post(apiUtils.websiteUrl(getState, `/deploy`), payload)
@@ -133,6 +133,11 @@ const sideEffects = {
     await dispatch(actions.reload())
   }, {
     autoLoading: true,
+  }),
+
+  getPublishStatus: () => wrapper('getPublishStatus', async (dispatch, getState) => {
+    const data = await loaders.getPublishStatus(getState)
+    dispatch(actions.setPublishStatus(data))
   }),
 
   // // load a job from the server

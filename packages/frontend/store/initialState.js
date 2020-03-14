@@ -5,6 +5,10 @@ export const system = {
   initialised: false,
   user: null,
   config: systemUtils.isNode ? {} : window._uiConfigData || {},
+  website: {
+    meta: {},
+  },
+  dnsInfo: null,
 }
 
 export const ui = {
@@ -14,10 +18,7 @@ export const ui = {
 }
 
 export const settings = {
-  website: {
-    meta: {},
-  },
-  dnsInfo: null,
+  
 }
 
 export const dialog = {

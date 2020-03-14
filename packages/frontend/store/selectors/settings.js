@@ -9,9 +9,6 @@ const DEFAULT_LIBRARY_SETTINGS = {
   tabs: [],
 }
 
-const website = state => state.settings.website
-const dnsInfo = state => state.settings.dnsInfo
-
 const settings = contentSelectors.settings
 const plugins = state => library.plugins
 const librarySettings = state => library.settings || DEFAULT_LIBRARY_SETTINGS
@@ -99,8 +96,6 @@ const afterBodySnippetCode = createSelector(
 )
 
 const selectors = {
-  website,
-  dnsInfo,
   settings,
   librarySettings,
   settingsSchema,

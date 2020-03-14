@@ -36,13 +36,48 @@ const reducers = {
   setUser: (state, action) => {
     state.user = action.payload
   },
+
+  setWebsite: (state, action) => {
+    state.website = action.payload
+  },
+  setDnsInfo: (state, action) => {
+    state.dnsInfo = action.payload
+  },
 }
 
 const loaders = {
+
+  /*
+  
+    system
+  
+  */
+  logout: () => axios.post(apiUtils.apiUrl('/auth/logout'))
+  .then(apiUtils.process),
+
+  /*
+  
+    loaders
+  
+  */
   config: (getState) => axios.get(apiUtils.websiteUrl(getState, `/config`))
     .then(apiUtils.process),
 
   user: () => axios.get(apiUtils.apiUrl(`/auth/status`))
+    .then(apiUtils.process),
+
+  website: (id) => axios.get(apiUtils.apiUrl(`/websites/${id}`))
+    .then(apiUtils.process),
+
+  dnsInfo: () => axios.get(apiUtils.apiUrl(`/websites/dnsInfo`))
+    .then(apiUtils.process),
+
+  /*
+  
+    updaters
+  
+  */
+  updateWebsiteMeta: (id, data) => axios.put(apiUtils.apiUrl(`/websites/${id}/meta`), data)
     .then(apiUtils.process),
 
   ensureSectionFolders: (getState, {
@@ -50,12 +85,30 @@ const loaders = {
     sections,
   }) => axios.post(apiUtils.websiteUrl(getState, `/remote/${driver}/sections`), {sections})
     .then(apiUtils.process),
-    
-  logout: () => axios.post(apiUtils.apiUrl('/auth/logout'))
+
+
+  /*
+  
+    domains
+  
+  */
+  setSubdomain: (id, subdomain) => axios.put(apiUtils.apiUrl(`/websites/${id}/subdomain`), {subdomain})
+    .then(apiUtils.process),
+
+  addUrl: (id, url) => axios.post(apiUtils.apiUrl(`/websites/${id}/urls`), {url})
+    .then(apiUtils.process),
+
+  removeUrl: (id, url) => axios.delete(apiUtils.apiUrl(`/websites/${id}/urls/${encodeURIComponent(url)}`))
     .then(apiUtils.process),
 }
 
 const sideEffects = {
+
+  /*
+  
+    initialise
+  
+  */
   initialise: () => wrapper('initialise', async (dispatch, getState) => {
 
     // never run this twice
@@ -65,9 +118,9 @@ const sideEffects = {
     await Promise.all([
       dispatch(actions.loadConfig()),
       dispatch(actions.loadUser()),
-      dispatch(settingsActions.loadWebsite()),
-      dispatch(settingsActions.loadDnsInfo()),
-      //dispatch(jobActions.getPublishStatus()),
+      dispatch(actions.loadWebsite()),
+      dispatch(actions.loadDnsInfo()),
+      dispatch(jobActions.getPublishStatus()),
     ])
 
     // now activate the UI
@@ -104,8 +157,14 @@ const sideEffects = {
     // }
   }),
 
+  /*
+  
+    loaders
+  
+  */
   loadUser: () => async (dispatch, getState) => {
     const user = await loaders.user(getState)
+    globals.identifyUser(user)
     dispatch(actions.setUser(user))
   },
 
@@ -113,6 +172,53 @@ const sideEffects = {
     const config = await loaders.config(getState)
     dispatch(actions.setConfig(config))
   },
+
+  loadWebsite: () => async (dispatch, getState) => {
+    const config = nocodeSelectors.config(getState())
+    const data = await loaders.website(config.websiteId)
+    data.meta = data.meta || {}
+    dispatch(actions.setWebsite(data))
+    return data
+  },
+
+  loadDnsInfo: () => async (dispatch, getState) => {
+    const data = await loaders.dnsInfo()
+    dispatch(actions.setDnsInfo(data))
+    return data
+  },
+
+  /*
+  
+    domains
+  
+  */
+  setSubdomain: (subdomain) => wrapper('setSubdomain', async (dispatch, getState) => {
+    const config = nocodeSelectors.config(getState())
+    await loaders.setSubdomain(config.websiteId, subdomain)
+    await dispatch(actions.loadWebsite())
+    dispatch(snackbarActions.setSuccess(`subdomain updated`))
+  }),
+
+  addUrl: ({
+    url,
+    onComplete,
+  }) => wrapper('addUrl', async (dispatch, getState) => {
+    const config = nocodeSelectors.config(getState())
+    await loaders.addUrl(config.websiteId, url)
+    await dispatch(actions.loadWebsite())
+    dispatch(snackbarActions.setSuccess(`subdomain updated`))
+    if(onComplete) onComplete()
+  }),
+  removeUrl: ({
+    url,
+    onComplete,
+  }) => wrapper('removeUrl', async (dispatch, getState) => {
+    const config = nocodeSelectors.config(getState())
+    await loaders.removeUrl(config.websiteId, url)
+    await dispatch(actions.loadWebsite())
+    dispatch(snackbarActions.setSuccess(`subdomain deleted`))
+    if(onComplete) onComplete()
+  }),
   
   // initialiseWebsite: () => networkWrapper({
   //   prefix,
