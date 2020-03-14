@@ -13,8 +13,8 @@ const SettingsDialog = ({
 
 }) => {
 
-  const settingsSchema = useSelector(settingsSelectors.settingsSchema)
-  const settingsInitialValues = useSelector(settingsSelectors.settingsInitialValues)
+  const settingsSchema = useSelector(settingsSelectors.schema)
+  const settingsInitialValues = useSelector(settingsSelectors.settings)
 
   const actions = Actions(useDispatch(), {
     onCancel: settingsActions.closeDialog,

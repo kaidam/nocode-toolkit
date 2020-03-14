@@ -4,12 +4,20 @@ import library from '../../library'
 
 const DEFAULT_ARRAY = []
 const DEFAULT_OBJECT = []
+
+// values we inject into the default settings
+const DEFAULT_SETTINGS = {
+  activePluginMap: {},
+  snippets: [],
+}
+
+// if the template has not given us any instructions
+// we default to using this
 const DEFAULT_LIBRARY_SETTINGS = {
   initialValues: {},
   tabs: [],
 }
 
-const settings = contentSelectors.settings
 const plugins = state => library.plugins
 const librarySettings = state => library.settings || DEFAULT_LIBRARY_SETTINGS
 
@@ -17,7 +25,7 @@ const getTabSchema = (tabs) => tabs.reduce((all, tab) => all.concat(tab.schema),
 
 // combine the library settings and plugins tabs into a single flat
 // schema used to make a valiation object for the settings dialog form
-const settingsSchema = createSelector(
+const schema = createSelector(
   librarySettings,
   plugins,
   (library, plugins) => {
@@ -29,19 +37,17 @@ const settingsSchema = createSelector(
   }
 )
 
-const settingsInitialValues = createSelector(
+// always use the combined settings so we get some defaults if
+// the website has none
+const settings = createSelector(
   librarySettings,
   plugins,
-  settings,
+  contentSelectors.settings,
   (library, plugins, values) => {
     const pluginValues =  plugins
       .filter(plugin => plugin.settings)
       .reduce((all, plugin) => Object.assign({}, all, plugin.settings.initialValues), {})
-    const baseValues = {
-      activePluginMap: {},
-      snippets: [],
-    }
-    return Object.assign(baseValues, library.initialValues, pluginValues, values)
+    return Object.assign(DEFAULT_SETTINGS, library.initialValues, pluginValues, values)
   }
 )
 
@@ -97,11 +103,10 @@ const afterBodySnippetCode = createSelector(
 
 const selectors = {
   settings,
-  librarySettings,
-  settingsSchema,
-  settingsInitialValues,
+  schema,
   activePluginMap,
   activePlugins,
+  librarySettings,
   snippets,
   pageSnippets,
   globalSnippets,

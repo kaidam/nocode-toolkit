@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { createMuiTheme } from '@material-ui/core/styles'
 import deepmerge from 'deepmerge'
 
-import uiSelectors from '../store/selectors/ui'
+import settingsSelectors from '../store/selectors/settings'
 import nocodeSelectors from '../store/selectors/nocode'
 import routerSelectors from '../store/selectors/router'
 
@@ -30,7 +30,7 @@ const getThemeSettings = ({
 }
 
 const useTheme = (processor) => {
-  const settings = useSelector(uiSelectors.settings) 
+  const settings = useSelector(settingsSelectors.settings) 
   const config = useSelector(nocodeSelectors.config)
   const route = useSelector(routerSelectors.route)
   const theme = useMemo(() => {

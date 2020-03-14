@@ -202,6 +202,7 @@ const MenuButton = ({
 
   const mainMenu = useMemo(
     () => {
+      if(!mainMenuOpen) return null
       return (
         <ItemMenu
           anchorEl={ useParentEl }
