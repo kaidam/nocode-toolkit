@@ -18,6 +18,7 @@ const nodes = (state) => items(state).node || DEFAULT_OBJECT
 const annotations = (state) => items(state).annotation || DEFAULT_OBJECT
 const sections = (state) => items(state).section || DEFAULT_OBJECT
 const singletons = (state) => items(state).singleton || DEFAULT_OBJECT
+const locations = (state) => items(state).location || DEFAULT_OBJECT
 
 const routeMap = createSelector(
   routes,
@@ -41,6 +42,7 @@ const selectors = {
   annotations,
   sections,
   singletons,
+  locations,
   externals,
   routes,
   routeMap,

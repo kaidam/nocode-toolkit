@@ -16,8 +16,25 @@ const settings = createSelector(
   nodes => nodes.settings || DEFAULT_OBJECT,
 )
 
+const sectionTree = () => createSelector(
+  nocodeSelectors.sections,
+  nocodeSelectors.nodes,
+  nocodeSelectors.annotations,
+  nocodeSelectors.locations,
+  (_, name) => name,
+  (sections, nodes, annotations, locations, name) => {
+    const section = sections[name]
+    const children = section.children.map(id => nodes[id])
+    return {
+      section,
+      children,
+    }
+  }
+)
+
 const selectors = {
   settings,
+  sectionTree,
 }
 
 export default selectors
