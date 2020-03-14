@@ -136,11 +136,8 @@ const sideEffects = {
     // setInitialiseCalled
     if(library.initialise) {
       const initialiseResult = await dispatch(library.initialise())
-      if(initialiseResult.rebuild) {
-        dispatch(uiActions.setLoading({
-          message: 'Rebuilding...',
-        }))
-        await dispatch(jobActions.rebuild())
+      if(initialiseResult.reload) {
+        await dispatch(jobActions.reload())
       }
     }
 
