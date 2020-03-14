@@ -67,7 +67,7 @@ const sideEffects = {
       dispatch(actions.loadUser()),
       dispatch(settingsActions.loadWebsite()),
       dispatch(settingsActions.loadDnsInfo()),
-      dispatch(jobActions.getPublishStatus()),
+      //dispatch(jobActions.getPublishStatus()),
     ])
 
     // now activate the UI

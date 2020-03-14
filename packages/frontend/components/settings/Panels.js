@@ -3,6 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useSelector, useDispatch } from 'react-redux'
 
 import Button from '@material-ui/core/Button'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
 
 import Actions from '../../utils/actions'
 import settingsSelectors from '../../store/selectors/settings'
@@ -223,7 +225,14 @@ const SettingsPanels = ({
     id: 'domain',
     title: 'Domains',
     icon: icons.domain,
-    body: <Domains />
+    body: (
+      <Domains />
+    ),
+    footer: (
+      <SettingsButtons
+        onCancel={ onCancel }
+      />
+    ),
   }
 
   const snippetPanel = {

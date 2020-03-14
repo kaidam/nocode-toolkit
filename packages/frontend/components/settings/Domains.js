@@ -2,8 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import Grid from '@material-ui/core/Grid'
@@ -194,20 +192,6 @@ const SettingsDomains = ({
             </Button>
           </Grid>
         </Grid>
-      </div>
-      <div className={ classes.appbar }>
-        <AppBar color="default" position="relative">
-          <Toolbar>
-            <div className={classes.grow} />
-            <Button
-              color="default"
-              variant="contained"
-              onClick={ onClose }
-            >
-              Close
-            </Button>
-          </Toolbar>
-        </AppBar>
       </div>
       {
         addDialogOpen && (
