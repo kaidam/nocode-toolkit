@@ -74,6 +74,9 @@ const useStyles = makeStyles(theme => ({
 const PanelsWrapper = ({
   title,
   panels,
+  header,
+  body,
+  footer,
   current,
   autoScroll = true,
   onChange,
@@ -81,6 +84,7 @@ const PanelsWrapper = ({
   const classes = useStyles()
 
   if(!panels || panels.length <= 0) return null
+
   let currentPanel = panels.find(panel => panel.id == current)
   currentPanel = currentPanel || panels[0]
 
@@ -114,7 +118,7 @@ const PanelsWrapper = ({
                   <ListItem
                     key={ i }
                     button
-                    selected={ panel.id == currentPanel.id }
+                    selected={ panel.id == current }
                     onClick={ () => onChange(panel.id) }
                   >
                     <ListItemIcon><panel.icon /></ListItemIcon>
@@ -128,19 +132,19 @@ const PanelsWrapper = ({
       </div>
       <div className={ classes.content }>
         {
-          currentPanel.header && (
+          header && (
             <div className={ classes.contentHeader }>
-              { currentPanel.header }
+              { header }
             </div>
           )
         }
         <div className={ contentBodyClassname }>
-          { currentPanel.body }
+          { body }
         </div>
         {
-          currentPanel.footer && (
+          footer && (
             <div className={ classes.contentFooter }>
-              { currentPanel.footer }
+              { footer }
             </div>
           )
         }
