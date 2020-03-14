@@ -1,5 +1,6 @@
 import React from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
+import Typography from '@material-ui/core/Typography'
 import Loading from './Loading'
 import Error from './Error'
 
@@ -19,12 +20,15 @@ const useStyles = makeStyles(theme => createStyles({
       'rgba(255, 255, 255, 1)'
   }),
   loadingContainer: {
-    width: '300px',
-    height: '200px',
+    width: '600px',
+    height: '300px',
     backgroundColor: '#ffffff',
     //border: '1px solid #e5e5e5',
     boxShadow: 'none',
     borderRadius: 5,
+  },
+  logs: {
+    color: '#999'
   }
 }))
 
@@ -36,8 +40,9 @@ const GlobalLoading = ({
     {}
   const {
     transparent = false,
-    message = 'loading',
+    message = 'loading...',
     error,
+    logs = [],
   } = loadingValues
   const classes = useStyles({transparent})
   if(!loading) return null
@@ -52,10 +57,23 @@ const GlobalLoading = ({
           ) : (
             <Loading
               message={ message }
-            />
+            >
+              {
+                logs.map((log, i) => {
+                  return (
+                    <Typography
+                      variant="body2"
+                      key={ i }
+                      className={ classes.logs }
+                    >
+                      { log }
+                    </Typography>
+                  )
+                })
+              }
+            </Loading>
           )
         }
-        
       </div>
     </div>
   )

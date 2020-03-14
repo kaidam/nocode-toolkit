@@ -97,12 +97,14 @@ const sideEffects = {
     id,
     throwError = true,
     snackbarError = true,
+    onLoop,
   }) => async (dispatch, getState) => {
     let job = await dispatch(actions.loadJob(id))
     if(!job) return null
     while((job.status == 'created' || job.status == 'running')) {
       await Promise.delay(1000)
-      job = await dispatch(actions.loadJob(id)) 
+      job = await dispatch(actions.loadJob(id))
+      if(onLoop) await onLoop()
     }
     if(job.status == 'error') {
       if(snackbarError) dispatch(snackbarActions.setError(job.result.error)) 
@@ -123,6 +125,13 @@ const sideEffects = {
     }))
     await dispatch(actions.waitForJob({
       id: previewJobId,
+      onLoop: async () => {
+        const logs = jobSelectors.logArray(getState())
+        dispatch(uiActions.setLoading({
+          message: 'Loading your data...',
+          logs: logs.slice(Math.max(logs.length - 3, 0)),
+        }))
+      },
     }))
     await dispatch(actions.reload())
   },

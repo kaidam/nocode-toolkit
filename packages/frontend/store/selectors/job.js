@@ -29,6 +29,14 @@ const error = createSelector(
   },
 )
 
+const logArray = createSelector(
+  data,
+  (jobData) => {
+    if(!jobData) return []
+    return jobData.logs || []
+  }
+)
+
 const logs = createSelector(
   data,
   (jobData) => {
@@ -57,6 +65,7 @@ const selectors = {
   status,
   error,
   logs,
+  logArray,
   canCloseWindow,
 }
 

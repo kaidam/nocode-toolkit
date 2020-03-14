@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => createStyles({
     height: '100%',
   },
   container: {
-    maxWidth: '50%'
+    maxWidth: '100%'
   },
   item: {
     textAlign: 'center',
@@ -23,6 +23,7 @@ const useStyles = makeStyles(theme => createStyles({
 const Loading = ({
   color = 'primary',
   message = 'loading',
+  children,
 }) => {
   const classes = useStyles()
   return (
@@ -41,6 +42,9 @@ const Loading = ({
                 { message }
               </Typography>
             )
+          }
+          {
+            children
           }
         </div>
         
