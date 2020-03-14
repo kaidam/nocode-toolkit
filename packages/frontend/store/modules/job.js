@@ -75,15 +75,6 @@ const loaders = {
 
 const sideEffects = {
 
-  // reload the preview data from the server
-  // and get the frontend redux store into line
-  reload: () => wrapper('reload', async (dispatch, getState) => {
-    const previewData = await loaders.getPreviewData(getState)
-    window._nocodeRebuildCount = (window._nocodeRebuildCount || 0) + 1
-    window._nocodeData = previewData
-    window._reloadNocodeApp()
-  }),
-
   // load a job from the server
   // only load the logs for the job that we don't have
   loadJob: (id) => async (dispatch, getState) => {
@@ -123,17 +114,41 @@ const sideEffects = {
   // is there a preview job that is building on the server?
   // if yes - then let's start a loop of loading it until it's
   // of status complete or error
-  waitForPreviewJob: () => wrapper('waitForPreviewJob', async (dispatch, getState) => {
+  waitForPreviewJob: () => async (dispatch, getState) => {
     const config = nocodeSelectors.config(getState())
     const { previewJobId } = config
     if(!previewJobId) return 
+    dispatch(uiActions.setLoading({
+      message: 'Loading your data...',
+    }))
     await dispatch(actions.waitForJob({
       id: previewJobId,
     }))
     await dispatch(actions.reload())
-  }, {
-    autoLoading: true,
-  }),
+  },
+
+  // reload the preview data from the server
+  // and get the frontend redux store into line
+  reload: () => async (dispatch, getState) => {
+    const previewData = await loaders.getPreviewData(getState)
+    window._nocodeRebuildCount = (window._nocodeRebuildCount || 0) + 1
+    window._nocodeData = previewData
+    window._reloadNocodeApp()
+  },
+
+  // trigger a rebuild of the preview data
+  rebuild: ({
+    
+  } = {}) => async (dispatch, getState) => {
+    const previewData = await loaders.getPreviewData(getState, true)
+    const jobId = previewData.config.previewJobId
+    if(jobId) {
+      await dispatch(actions.waitForJob({
+        id: jobId,
+      }))
+      //await dispatch(actions.reload())
+    }
+  },
 
   getPublishStatus: () => wrapper('getPublishStatus', async (dispatch, getState) => {
     const data = await loaders.getPublishStatus(getState)

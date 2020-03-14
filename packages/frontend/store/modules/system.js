@@ -126,7 +126,8 @@ const sideEffects = {
       dispatch(jobActions.getPublishStatus()),
     ])
 
-    let initialiseResult = null
+    // if we have a preview job, let's wait for it
+    await dispatch(jobActions.waitForPreviewJob())
 
     // if we have initialise function registered then
     // call it - this is registered by the template
@@ -134,10 +135,17 @@ const sideEffects = {
     // the initialise function has the option of calling
     // setInitialiseCalled
     if(library.initialise) {
-      initialiseResult = await dispatch(library.initialise())
+      const initialiseResult = await dispatch(library.initialise())
+      if(initialiseResult.rebuild) {
+        dispatch(uiActions.setLoading({
+          message: 'Rebuilding...',
+        }))
+        await dispatch(jobActions.rebuild())
+      }
     }
 
     // now activate the UI
+    dispatch(uiActions.setLoading(false))
     dispatch(actions.setInitialiseCalled())
 
     // now the UI is active - we can
@@ -148,38 +156,6 @@ const sideEffects = {
         dispatch(plugin.actions.initialize())
       }
     })
-
-    // if we have a preview job, let's wait for it
-    await dispatch(jobActions.waitForPreviewJob())
-
-    if(initialiseResult) {
-      // if the initialise has done anything that requires a rebuild
-      // do that now  
-
-      if(initialiseResult.rebuild) {
-        console.log('--------------------------------------------')
-        console.log('--------------------------------------------')
-        console.log('triggering rebuild')
-      }
-    }
-
-    // dispatch(jobActions.waitForPreviewJob())
-    // const rebuildRequired = await dispatch(actions.initialiseWebsite())
-    // dispatch(jobActions.getPublishStatus())
-    // globals.identifyUser(data.user)
-    // // const plugins = library.plugins
-    // // plugins.forEach(plugin => {
-    // //   if(plugin.actions && plugin.actions.initialize) {
-    // //     dispatch(plugin.actions.initialize())
-    // //   }
-    // // })
-    // dispatch(actions.setInitialiseCalled())
-    // if(rebuildRequired) {
-    //   dispatch(jobActions.rebuild())
-    // }
-    // else {
-    //   dispatch(jobActions.waitForPreviewJob())
-    // }
   }, {
     errorHandler: async (dispatch, getState, error) => {
       dispatch(uiActions.setLoading({
