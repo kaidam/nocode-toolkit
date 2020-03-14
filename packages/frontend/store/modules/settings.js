@@ -56,11 +56,6 @@ const loaders = {
 
 const sideEffects = {
 
-  initialise: () => async (dispatch, getState) => {
-    await dispatch(actions.loadWebsite())
-    await dispatch(actions.loadDnsInfo())
-  },
-
   loadWebsite: () => async (dispatch, getState) => {
     const config = nocodeSelectors.config(getState())
     const data = await loaders.website(config.websiteId)

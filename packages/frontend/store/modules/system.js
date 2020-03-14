@@ -5,6 +5,7 @@ import Promise from 'bluebird'
 import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
 
+import library from '../../library'
 import globals from '../../utils/globals'
 import networkWrapper from '../utils/networkWrapper'
 import apiUtils from '../utils/api'
@@ -57,26 +58,34 @@ const loaders = {
 const sideEffects = {
   initialise: () => wrapper('initialise', async (dispatch, getState) => {
 
+    // never run this twice
     if(systemSelectors.initialiseCalled(getState())) return
-    const data = await loaders.config(getState)
-    dispatch(actions.setConfig(data))
-    const user = await loaders.user(getState)
-    dispatch(actions.setUser(user))
-    await dispatch(settingsActions.initialise())
+
+    // load everything that is needed initially
+    await Promise.all([
+      dispatch(actions.loadConfig()),
+      dispatch(actions.loadUser()),
+      dispatch(settingsActions.loadWebsite()),
+      dispatch(settingsActions.loadDnsInfo()),
+      dispatch(jobActions.getPublishStatus()),
+    ])
+
+    // now activate the UI
     dispatch(actions.setInitialiseCalled())
 
-
-    
-    await dispatch(jobActions.waitForPreviewJob())
-    const plugins = library.plugins
+    // now the UI is active - we can
+    // initialize each of the plugins
+    const plugins = library.plugins || []
     plugins.forEach(plugin => {
       if(plugin.actions && plugin.actions.initialize) {
         dispatch(plugin.actions.initialize())
       }
     })
-    
 
-    //dispatch(jobActions.waitForPreviewJob())
+    // if we have a preview job, let's wait for it
+    await dispatch(jobActions.waitForPreviewJob())
+
+    // dispatch(jobActions.waitForPreviewJob())
     // const rebuildRequired = await dispatch(actions.initialiseWebsite())
     // dispatch(jobActions.getPublishStatus())
     // globals.identifyUser(data.user)
@@ -94,6 +103,16 @@ const sideEffects = {
     //   dispatch(jobActions.waitForPreviewJob())
     // }
   }),
+
+  loadUser: () => async (dispatch, getState) => {
+    const user = await loaders.user(getState)
+    dispatch(actions.setUser(user))
+  },
+
+  loadConfig: () => async (dispatch, getState) => {
+    const config = await loaders.config(getState)
+    dispatch(actions.setConfig(config))
+  },
   
   // initialiseWebsite: () => networkWrapper({
   //   prefix,
