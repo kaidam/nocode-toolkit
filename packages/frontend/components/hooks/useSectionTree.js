@@ -5,6 +5,10 @@ import routerSelectors from '../../store/selectors/router'
 
 const useSectionTree = ({
   section,
+  // a function that will process an item before
+  // adding to the list - this is used to configure
+  // the tree item component as to what to render
+  processItem = item => item,
 }) => {
 
   const [ openFolders, setOpenFolders ] = useState({})
@@ -13,14 +17,6 @@ const useSectionTree = ({
     setOpenFolders(Object.assign(openFolders, {
       [id]: openFolders[id] ? false : true,
     }))
-  }
-
-  const onOpenFolders = (ids) => {
-    if(!ids || ids.length <= 0) return
-    setOpenFolders(ids.reduce((all, id) => {
-      all[id] = true
-      return all
-    }), Object.assign({}, openFolders))
   }
 
   const treeSelector = useMemo(contentSelectors.sectionTree, [])
@@ -36,13 +32,24 @@ const useSectionTree = ({
       location,
       depth = 0,
     }) => {
+
+      // get the route and configure the tree item
+      // as to what happens when the item is clicked
+      // the tree options are:
+      //   * open an internal route (if it's a page or folderPages == true)
+      //   * open an external route (if it's a link)
+      //   * toggle the folder (if foldersPages == false)
       const route = routeMap[`${location}:${node.id}`]
-      items.push({
+
+      items.push(processItem({
         node,
         depth,
         route,
         currentPage: currentRoute.item == node.id,
-      })
+      }))
+
+      // if the folder is open, include it's children
+      // adding one to the depth so we can render nested items
       if(openFolders[node.id]) {
         node.children.forEach(child => {
           addItem({
@@ -53,6 +60,8 @@ const useSectionTree = ({
         })
       }
     }
+
+    // add the top level section items to the tree
     tree.forEach(node => addItem({
       node,
       location: `section:${section}`,
@@ -63,11 +72,15 @@ const useSectionTree = ({
     openFolders,
     routeMap,
     currentRoute,
+    processItem,
   ])
 
   // when the route changes - open the ancestor folders
   useEffect(() => {
-    onOpenFolders(ancestors)
+    setOpenFolders(ancestors.reduce((all, id) => {
+      all[id] = true
+      return all
+    }, {}))
   }, [
     ancestors,
   ])

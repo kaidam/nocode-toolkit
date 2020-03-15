@@ -35,6 +35,14 @@ const routeMap = createSelector(
   }, {})
 )
 
+const routeNameMap = createSelector(
+  nocodeSelectors.routes,
+  routes => routes.reduce((all, route) => {
+    all[route.name] = route
+    return all
+  }, {})
+)
+
 const routePathMap = createSelector(
   nocodeSelectors.routes,
   routes => routes.reduce((all, route) => {
@@ -73,6 +81,7 @@ const selectors = {
   fullRoute,
   previousRoute,
   routeMap,
+  routeNameMap,
   routePathMap,
   ancestors,
 }
