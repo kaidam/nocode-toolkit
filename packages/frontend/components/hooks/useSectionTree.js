@@ -1,5 +1,5 @@
-import { useMemo, useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useMemo, useState, useEffect, useCallback } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import contentSelectors from '../../store/selectors/content'
 import routerSelectors from '../../store/selectors/router'
 
@@ -9,11 +9,13 @@ const useSectionTree = ({
 
   const [ openFolders, setOpenFolders ] = useState({})
 
-  const onToggleFolder = (id) => {
+  const onToggleFolder = useCallback((id) => {
     setOpenFolders(Object.assign({}, openFolders, {
       [id]: openFolders[id] ? false : true,
     }))
-  }
+  }, [
+    openFolders,
+  ])
 
   const treeSelector = useMemo(contentSelectors.sectionTree, [])
   const tree = useSelector(state => treeSelector(state, section))
@@ -83,9 +85,9 @@ const useSectionTree = ({
   ])
 
   return {
+    onToggleFolder,
     tree,
     list,
-    onToggleFolder,
   }
 }
 

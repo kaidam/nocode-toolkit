@@ -10,6 +10,8 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 
+import PanelBody from './PanelBody'
+
 const useStyles = makeStyles(theme => ({
   appBar: {
     
@@ -38,22 +40,6 @@ const useStyles = makeStyles(theme => ({
   },
   content: {
     flexGrow: 1,
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  contentHeader: {
-    flexGrow: 0,
-  },
-  contentBody: {
-    flexGrow: 1,
-  },
-  contentFooter: {
-    flexGrow: 0,
-  },
-  contentScroll: {
-    overflowY: 'auto',
-    overflowX: 'hidden',
   },
   grow: {
     flexGrow: 1,
@@ -89,14 +75,9 @@ const PanelsWrapper = ({
   let currentPanel = panels.find(panel => panel.id == current)
   currentPanel = currentPanel || panels[0]
 
-  const bodyClassname = classnames({
-    [classes.contentScroll]: typeof(currentPanel.autoScroll) === 'boolean' ?
-      currentPanel.autoScroll :
-      autoScroll,
-  }, classes.contentBody, theme.body)
-
-  const headerClassname = classnames(classes.contentHeader, theme.header)
-  const footerClassname = classnames(classes.contentFooter, theme.footer)
+  const currentPanelAutoScroll = typeof(currentPanel.autoScroll) === 'boolean' ?
+    currentPanel.autoScroll :
+    autoScroll
 
   return (
     <div className={ classes.container }>
@@ -134,23 +115,14 @@ const PanelsWrapper = ({
         </div>  
       </div>
       <div className={ classes.content }>
-        {
-          header && (
-            <div className={ headerClassname }>
-              { header }
-            </div>
-          )
-        }
-        <div className={ bodyClassname }>
+        <PanelBody
+          autoScroll={ currentPanelAutoScroll }
+          header={ header }
+          footer={ footer }
+          theme={ theme }
+        >
           { body }
-        </div>
-        {
-          footer && (
-            <div className={ footerClassname }>
-              { footer }
-            </div>
-          )
-        }
+        </PanelBody>
       </div>
     </div>
   )

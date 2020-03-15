@@ -12,6 +12,10 @@ const useStyles = makeStyles(theme => ({
   menuText: {
     paddingRight: '50px',
   },
+  headerText: {
+    fontWeight: 'bold',
+    color: theme.palette.secondary.main,
+  },
   menuLink: {
     display: 'flex',
     justifyContent: 'flex-start',
@@ -42,6 +46,9 @@ const ItemMenu = ({
           <MenuItem>
             <ListItemText 
               primary={ header }
+              classes={{
+                primary: classes.headerText,
+              }}
             />
           </MenuItem>
         )
@@ -143,6 +150,8 @@ const MenuButton = ({
   // if the item is a '-' string - a divider will be rendered
   getItems,
 
+  // params to pass to the getItems function
+  getItemsParams = {},
 
   // callback for when the menu is opened
   onOpen,
@@ -155,12 +164,14 @@ const MenuButton = ({
 }) => {
   const [subAnchorEl, setSubAnchorEl] = useState(null)
   const [subItems, setSubItems] = useState(null)
+  const [headers, setHeaders] = useState([])
 
   const handleMenu = useCallback(
     e => {
       e.stopPropagation()
       e.preventDefault()
       if(onOpen) onOpen(e)
+      setHeaders(header ? [header] : [])
       setSubAnchorEl(e.currentTarget)
     },
     []
@@ -185,6 +196,7 @@ const MenuButton = ({
       e.preventDefault()
       if(item.items) {
         setSubItems(item.items)
+        setHeaders(headers.concat([item.title]))
       }
       if(typeof(item.handler) === 'function') {
         item.handler()
@@ -194,7 +206,9 @@ const MenuButton = ({
       }
       if(!item.items) handleClose()
     },
-    []
+    [
+      headers,
+    ]
   )
 
   const useParentEl = subAnchorEl || parentAnchorEl
@@ -207,8 +221,8 @@ const MenuButton = ({
       return (
         <ItemMenu
           anchorEl={ useParentEl }
-          header={ header }
-          menuItems={ getItems() }
+          header={ headers.join(' : ') }
+          menuItems={ getItems(getItemsParams) }
           open={ mainMenuOpen }
           onClose={ handleClose }
           onItemClick={ handleItemClick }
@@ -228,6 +242,7 @@ const MenuButton = ({
       return (
         <ItemMenu
           anchorEl={ useParentEl }
+          header={ headers.join(' : ') }
           menuItems={ subItems }
           open={ subMenuOpen }
           onClose={ handleClose }

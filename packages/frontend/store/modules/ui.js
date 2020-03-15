@@ -46,8 +46,10 @@ const sideEffects = {
     while(open) {
       await Promise.delay(100)
       const currentSettings = uiSelectors.confirmWindow(getState())
-      if(typeof(currentSettings.accepted) == 'boolean') {
-        confirmed = currentSettings.accepted
+      if(!currentSettings || typeof(currentSettings.accepted) == 'boolean') {
+        confirmed = currentSettings ?
+          currentSettings.accepted :
+          false
         open = false
         dispatch(actions.setConfirmWindow(null))
       }

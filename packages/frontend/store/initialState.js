@@ -26,7 +26,7 @@ export const dialog = {
 }
 
 export const content = {
-
+  formWindow: null,
 }
 
 export const search = {

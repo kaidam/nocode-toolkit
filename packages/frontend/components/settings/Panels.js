@@ -11,11 +11,12 @@ import FormRender from '../form/Render'
 
 import Tabs from '../widgets/Tabs'
 import Panels from '../widgets/Panels'
+import DialogButtons from '../widgets/DialogButtons'
 
 import Domains from './Domains'
 import PluginInstall from './PluginInstall'
 import Snippets from './Snippets'
-import PanelButtons from './PanelButtons'
+
 
 import library from '../../library'
 import icons from '../../icons'
@@ -141,7 +142,7 @@ const renderPanel = ({
 }) => {
   const results = panel.render(props)
   results.footer = (
-    <PanelButtons
+    <DialogButtons
       withSubmit={ panel.submitButton === false ? false : true }
       onSubmit={ onSubmit }
       onCancel={ onCancel }

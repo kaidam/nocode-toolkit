@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 
 import Dialog from '@material-ui/core/Dialog'
@@ -60,6 +60,12 @@ const Window = ({
 }) => {
   const classes = useStyles()
 
+  const closeWindow = useCallback(() => {
+    onCancel && onCancel()
+  }, [
+    onCancel,
+  ])
+
   const headerClassname = [
     classNames.header,
   ].filter(c => c).join(' ')
@@ -80,7 +86,7 @@ const Window = ({
   return (
     <Dialog
       open={ open }
-      onClose={ onCancel }
+      onClose={ closeWindow }
       fullWidth
       maxWidth={ size }
       classes={{
@@ -115,7 +121,7 @@ const Window = ({
                       className={ classes.button }
                       type="button"
                       variant="contained"
-                      onClick={ onCancel }
+                      onClick={ closeWindow }
                     >
                       { cancelTitle }
                     </Button>

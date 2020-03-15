@@ -1,9 +1,12 @@
 import { createSelector } from 'reselect'
 import childrenUtils from './utils/children'
+import library from '../../library'
+import nocodeSelectors from './nocode'
 
 const DEFAULT_OBJECT = {}
+const DEFAULT_ARRAY = []
 
-import nocodeSelectors from './nocode'
+const formWindow = state => state.content.formWindow
 
 const settings = createSelector(
   nocodeSelectors.nodes,
@@ -45,9 +48,45 @@ const sectionTree = () => createSelector(
   }
 )
 
+const form = createSelector(
+  formWindow,
+  (formWindow) => {
+    return formWindow ?
+      library.forms[formWindow.name] :
+      {
+        schema: [],
+      }
+  }
+)
+
+const formValues = createSelector(
+  formWindow,
+  (formWindow) => {
+    if(!formWindow) return DEFAULT_OBJECT
+    return formWindow.values || DEFAULT_OBJECT
+  }
+)
+
+const formSchema = createSelector(
+  formWindow,
+  (formWindow) => {
+    if(!formWindow) return DEFAULT_ARRAY
+    const form = library.forms[formWindow.name]
+    if(!form) return DEFAULT_ARRAY
+    const tabSchema = (form.tabs || []).reduce((all, tab) => {
+      return all.concat(tab.schema)
+    }, [])
+    return (form.schema || []).concat(tabSchema)
+  }
+)
+
 const selectors = {
+  formWindow,
   settings,
   sectionTree,
+  form,
+  formValues,
+  formSchema,
 }
 
 export default selectors

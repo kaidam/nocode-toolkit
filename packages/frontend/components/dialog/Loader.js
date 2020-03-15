@@ -18,8 +18,10 @@ import GlobalLoading from '../system/GlobalLoading'
 import uiSelectors from '../../store/selectors/ui'
 import routerSelectors from '../../store/selectors/router'
 import dialogSelectors from '../../store/selectors/dialog'
+import contentSelectors from '../../store/selectors/content'
 
 import ConfirmDialog from './Confirm'
+import ContentDialog from '../content/Dialog'
 import SettingsDialog from '../settings/Dialog'
 
 const dialogs = {
@@ -41,6 +43,7 @@ const DialogLoader = ({
 }) => {
   const loading = useSelector(uiSelectors.loading)
   const confirmWindow = useSelector(uiSelectors.confirmWindow)
+  const formWindow = useSelector(contentSelectors.formWindow)
   const dialogParams = useSelector(dialogSelectors.dialogParams)
   return (
     <div>
@@ -63,6 +66,11 @@ const DialogLoader = ({
         confirmWindow && (
           <ConfirmDialog />
         )
+      }
+      {
+        formWindow && (
+          <ContentDialog />
+        ) 
       }
       <SnackBar />
       <GlobalLoading
