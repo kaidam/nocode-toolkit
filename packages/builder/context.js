@@ -83,7 +83,7 @@ class Context extends EventEmitter {
   }
 
   routes(routes) {
-    if(!routes) throw new Error('routes is required for context.routes')
+    if(!routes) return this.data.routes
     Object.keys(routes).forEach(path => {
       this.route(path, routes[path])
     })

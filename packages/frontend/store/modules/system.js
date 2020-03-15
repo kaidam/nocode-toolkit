@@ -83,7 +83,7 @@ const loaders = {
   ensureSectionFolders: (getState, {
     driver,
     sections,
-  }) => axios.post(apiUtils.websiteUrl(getState, `/section/folders`), {
+  }) => axios.post(apiUtils.websiteUrl(getState, `/remote/folders`), {
     driver,
     sections,
   })
