@@ -41,6 +41,7 @@ const useSectionTree = ({
       const open = openFolders[node.id]
 
       items.push({
+        id: node.id,
         node,
         depth,
         open,

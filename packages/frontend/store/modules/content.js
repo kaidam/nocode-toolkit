@@ -8,6 +8,9 @@ import networkWrapper from '../utils/networkWrapper'
 import apiUtils from '../utils/api'
 
 import contentSelectors from '../selectors/content'
+import jobActions from './job'
+import snackbarActions from './snackbar'
+
 import { content as initialState } from '../initialState'
 import library from '../../library'
 
@@ -45,6 +48,9 @@ const reducers = {
 const loaders = {
   saveContent: (getState, payload) => axios.post(apiUtils.websiteUrl(getState, `/content`), payload)
     .then(apiUtils.process),
+
+  createRemoteContent: (getState, payload) => axios.post(apiUtils.websiteUrl(getState, `/remotecontent`), payload)
+    .then(apiUtils.process),
 }
 
 const sideEffects = {
@@ -80,9 +86,9 @@ const sideEffects = {
      * inject the new content into the tree
   
   */
-  addNode: ({
-    location,
+  createRemoteContent: ({
     driver,
+    parentId,
     form,
   }) => wrapper('addNode', async (dispatch, getState) => {
     const formConfig = library.forms[form]
@@ -94,6 +100,21 @@ const sideEffects = {
       form,
       values: formConfig.initialValues,
     }))
+    if(!confirmed) return
+    const data = formConfig.getData ? formConfig.getData(values) : values
+    const annotation = formConfig.getAnnotation ? formConfig.getAnnotation(values) : null
+    const result = await loaders.createRemoteContent(getState, {
+      driver,
+      parentId,
+      data,
+      annotation,
+    })
+    console.log('--------------------------------------------')
+    console.log('--------------------------------------------')
+    console.dir(result)
+    await dispatch(jobActions.reload())
+    await dispatch(snackbarActions.setSuccess(`item created`))
+    
   }),
 
   /*
