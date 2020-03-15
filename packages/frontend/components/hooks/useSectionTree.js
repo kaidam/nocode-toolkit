@@ -36,17 +36,19 @@ const useSectionTree = ({
       //   * open an external route (if it's a link)
       //   * toggle the folder (if foldersPages == false)
       const route = routeMap[`${location}:${node.id}`]
+      const open = openFolders[node.id]
 
       items.push({
         node,
         depth,
+        open,
         route,
         currentPage: currentRoute.item == node.id,
       })
 
       // if the folder is open, include it's children
       // adding one to the depth so we can render nested items
-      if(openFolders[node.id]) {
+      if(open) {
         node.children.forEach(child => {
           addItem({
             node: child,
