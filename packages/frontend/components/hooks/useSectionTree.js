@@ -29,7 +29,6 @@ const useSectionTree = ({
   const ancestors = useSelector(routerSelectors.ancestors)
   const currentRoute = useSelector(routerSelectors.route)
 
-  console.dir(routeMap)
   const list = useMemo(() => {
     const items = []
     const addItem = ({
@@ -63,6 +62,7 @@ const useSectionTree = ({
     tree,
     openFolders,
     routeMap,
+    currentRoute,
   ])
 
   // when the route changes - open the ancestor folders
