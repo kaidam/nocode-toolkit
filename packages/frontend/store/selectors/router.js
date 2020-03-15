@@ -73,6 +73,15 @@ const ancestors = createSelector(
   },
 )
 
+const ancestorsWithRoute = createSelector(
+  route,
+  ancestors,
+  (route, ancestors) => {
+    const id = route.item
+    return ancestors.concat([id])
+  },
+)
+
 const selectors = {
   name,
   path,
@@ -84,6 +93,7 @@ const selectors = {
   routeNameMap,
   routePathMap,
   ancestors,
+  ancestorsWithRoute,
 }
 
 export default selectors

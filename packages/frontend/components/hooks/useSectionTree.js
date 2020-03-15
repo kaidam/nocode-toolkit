@@ -5,16 +5,12 @@ import routerSelectors from '../../store/selectors/router'
 
 const useSectionTree = ({
   section,
-  // a function that will process an item before
-  // adding to the list - this is used to configure
-  // the tree item component as to what to render
-  processItem = item => item,
 }) => {
 
   const [ openFolders, setOpenFolders ] = useState({})
 
   const onToggleFolder = (id) => {
-    setOpenFolders(Object.assign(openFolders, {
+    setOpenFolders(Object.assign({}, openFolders, {
       [id]: openFolders[id] ? false : true,
     }))
   }
@@ -22,7 +18,7 @@ const useSectionTree = ({
   const treeSelector = useMemo(contentSelectors.sectionTree, [])
   const tree = useSelector(state => treeSelector(state, section))
   const routeMap = useSelector(routerSelectors.routeMap)
-  const ancestors = useSelector(routerSelectors.ancestors)
+  const ancestors = useSelector(routerSelectors.ancestorsWithRoute)
   const currentRoute = useSelector(routerSelectors.route)
 
   const list = useMemo(() => {
@@ -41,12 +37,12 @@ const useSectionTree = ({
       //   * toggle the folder (if foldersPages == false)
       const route = routeMap[`${location}:${node.id}`]
 
-      items.push(processItem({
+      items.push({
         node,
         depth,
         route,
         currentPage: currentRoute.item == node.id,
-      }))
+      })
 
       // if the folder is open, include it's children
       // adding one to the depth so we can render nested items
@@ -72,7 +68,6 @@ const useSectionTree = ({
     openFolders,
     routeMap,
     currentRoute,
-    processItem,
   ])
 
   // when the route changes - open the ancestor folders
