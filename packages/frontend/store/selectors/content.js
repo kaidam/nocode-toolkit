@@ -52,7 +52,7 @@ const form = createSelector(
   formWindow,
   (formWindow) => {
     return formWindow ?
-      library.forms[formWindow.name] :
+      library.forms[formWindow.form] :
       {
         schema: [],
       }
@@ -71,7 +71,7 @@ const formSchema = createSelector(
   formWindow,
   (formWindow) => {
     if(!formWindow) return DEFAULT_ARRAY
-    const form = library.forms[formWindow.name]
+    const form = library.forms[formWindow.form]
     if(!form) return DEFAULT_ARRAY
     const tabSchema = (form.tabs || []).reduce((all, tab) => {
       return all.concat(tab.schema)

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import Actions from '../../utils/actions'
@@ -18,8 +18,12 @@ const ContentDialog = ({
 
   const actions = Actions(useDispatch(), {
     onCancel: contentActions.cancelFormWindow,
-    onSubmit: contentActions.cancelFormWindow,
+    onSubmit: contentActions.acceptFormWindow,
   })
+
+  const onCloseWindow = useCallback(() => {
+    actions.onCancel()
+  }, [])
 
   return (
     <FormWrapper
@@ -45,7 +49,7 @@ const ContentDialog = ({
               noScroll
               noActions
               size="xl"
-              onCancel={ actions.onCancel }
+              onCancel={ onCloseWindow }
             >
               <Form
                 isValid={ isValid }
@@ -55,7 +59,7 @@ const ContentDialog = ({
                 showErrors={ showErrors }
                 touched={ touched }
                 onSubmit={ handleSubmit }
-                onCancel={ actions.onCancel }
+                onCancel={ onCloseWindow }
               />
             </Window>
           )

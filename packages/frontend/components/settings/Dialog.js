@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import Actions from '../../utils/actions'
@@ -20,6 +20,10 @@ const SettingsDialog = ({
     onCancel: settingsActions.closeDialog,
     onSubmit: settingsActions.saveSettings,
   })
+
+  const onCloseWindow = useCallback(() => {
+    actions.onCancel()
+  }, [])
 
   return (
     <FormWrapper
@@ -45,7 +49,7 @@ const SettingsDialog = ({
               noScroll
               noActions
               size="xl"
-              onCancel={ actions.onCancel }
+              onCancel={ onCloseWindow }
             >
               <Panels
                 isValid={ isValid }
@@ -54,7 +58,7 @@ const SettingsDialog = ({
                 showErrors={ showErrors }
                 touched={ touched }
                 onSetFieldValue={ setFieldValue }
-                onCancel={ actions.onCancel }
+                onCancel={ onCloseWindow }
                 onSubmit={ handleSubmit }
               />
             </Window>

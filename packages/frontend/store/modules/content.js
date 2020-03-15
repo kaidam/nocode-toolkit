@@ -29,9 +29,7 @@ const reducers = {
   acceptFormWindow: (state, action) => {
     if(state.formWindow) {
       state.formWindow.accepted = true
-      state.formWindow.finalValues = {
-        final: true,
-      }
+      state.formWindow.finalValues = action.payload
     }
   },
   cancelFormWindow: (state, action) => {
@@ -96,11 +94,6 @@ const sideEffects = {
       form,
       values: formConfig.initialValues,
     }))
-
-    console.log('--------------------------------------------')
-    console.log('--------------------------------------------')
-    console.dir(confirmed)
-    console.dir(values)
   }),
 
   /*
@@ -128,7 +121,7 @@ const sideEffects = {
           currentSettings.accepted :
           false
         open = false
-        if(confirmed) finalValues = currentSettings.values
+        if(confirmed) finalValues = currentSettings.finalValues
         dispatch(actions.clearFormWindow())
       }
     }
