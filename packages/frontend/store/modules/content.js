@@ -99,6 +99,7 @@ const sideEffects = {
     } = await dispatch(actions.waitForForm({
       form,
       values: formConfig.initialValues,
+      autoClose: false,
     }))
     if(!confirmed) return
     const data = formConfig.getData ? formConfig.getData(values) : values
@@ -112,6 +113,8 @@ const sideEffects = {
     console.log('--------------------------------------------')
     console.log('--------------------------------------------')
     console.dir(result)
+    return
+    dispatch(actions.clearFormWindow())
     await dispatch(jobActions.reload())
     await dispatch(snackbarActions.setSuccess(`item created`))
     
@@ -126,6 +129,7 @@ const sideEffects = {
   waitForForm: ({
     form,
     values,
+    autoClose = true,
   }) => async (dispatch, getState) => {
     dispatch(actions.openFormWindow({
       form,
@@ -133,22 +137,21 @@ const sideEffects = {
     }))
     let open = true
     let confirmed = false
-    let finalValues = null
+    let currentSettings = null
     while(open) {
       await Promise.delay(100)
-      const currentSettings = contentSelectors.formWindow(getState())
+      currentSettings = contentSelectors.formWindow(getState())
       if(!currentSettings || typeof(currentSettings.accepted) == 'boolean') {
         confirmed = currentSettings ?
           currentSettings.accepted :
           false
         open = false
-        if(confirmed) finalValues = currentSettings.finalValues
-        dispatch(actions.clearFormWindow())
       }
     }
+    if(autoClose) dispatch(actions.clearFormWindow())
     return {
       confirmed,
-      values: finalValues,
+      values: currentSettings.finalValues,
     }
   },
   
