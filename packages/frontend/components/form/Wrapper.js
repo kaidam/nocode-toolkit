@@ -36,18 +36,16 @@ const FormWrapper = ({
             handleSubmit()
           }
           return (
-            <form
-              onSubmit={ submitWrapper }
-            >
+            <form>
               {
                 children({
-                  handleSubmit,
-                  setFieldValue,
                   isValid,
                   values,
                   errors,
                   showErrors,
                   touched,
+                  onSubmit: submitWrapper,
+                  onSetFieldValue: setFieldValue,
                 })
               }
             </form>

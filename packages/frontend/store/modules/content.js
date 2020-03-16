@@ -1,5 +1,6 @@
 import Promise from 'bluebird'
 import axios from 'axios'
+import deepmerge from 'deepmerge'
 
 import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
@@ -23,11 +24,11 @@ const reducers = {
   openFormWindow: (state, action) => {
     const {
       form,
-      values,
+      initialValues,
     } = action.payload
     state.formWindow = {
       form,
-      values,
+      values: initialValues,
     }
   },
   acceptFormWindow: (state, action) => {
@@ -55,6 +56,22 @@ const loaders = {
 
   createRemoteContent: (getState, payload) => axios.post(apiUtils.websiteUrl(getState, `/remotecontent`), payload)
     .then(apiUtils.process),
+}
+
+// extract the annotation object from forms
+// into it's own object - this is for side effects
+// that deal with item forms where the data and annotation
+// fields are mixed into the same form
+// as long as annoation fields are namespaced annotation.XXX
+// we can extract them using this function
+const processAnnotationValues = (values) => {
+  const data = Object.assign({}, values)
+  const annotation = data.annotation
+  delete(data.annotation)
+  return {
+    data,
+    annotation,
+  }
 }
 
 const sideEffects = {
@@ -95,23 +112,31 @@ const sideEffects = {
     parentId,
     form,
   }) => wrapper('addNode', async (dispatch, getState) => {
-
-    const formConfig = library.forms[form]
-    if(!formConfig) throw new Error(`no form config found for ${form}`)
-
     const result = await dispatch(actions.waitForForm({
       form,
-      values: formConfig.initialValues,
-      onSubmit: async (values) => {
-        const data = formConfig.getData ? formConfig.getData(values) : values
-        const annotation = formConfig.getAnnotation ? formConfig.getAnnotation(values) : null
-        const result = await loaders.createRemoteContent(getState, {
-          driver,
-          parentId,
+      processValues: processAnnotationValues,
+      onSubmit: async ({
+        data,
+        annotation,
+      }) => {
+
+        console.log('--------------------------------------------')
+        console.log('--------------------------------------------')
+        console.dir({
           data,
           annotation,
         })
-        return result
+
+        return {
+          ok: true,
+        }
+        // const result = await loaders.createRemoteContent(getState, {
+        //   driver,
+        //   parentId,
+        //   data,
+        //   annotation,
+        // })
+        // return result
       }
     }))
     if(!result) return
@@ -136,16 +161,23 @@ const sideEffects = {
     return confirmed
   },
 
-  // render a form in a dialog and return the results
-  // this is designed to be called by other side effects
   waitForForm: ({
     form,
-    values,
+    values = {},
+    loadingConfig = {transparent:true},
+    processValues = (values) => values,
     onSubmit,
   }) => async (dispatch, getState) => {
+    if(!onSubmit) throw new Error(`onSubmit function required`)
+    const formConfig = library.forms[form]
+    if(!formConfig) throw new Error(`no form config found for ${form}`)
+    const initialValues = deepmerge.all([
+      formConfig.initialValues,
+      values,
+    ])
     dispatch(actions.openFormWindow({
       form,
-      values,
+      initialValues,
     }))
     let success = false
     let result = null
@@ -154,13 +186,13 @@ const sideEffects = {
         const confirmed = await dispatch(actions.waitForFormWindow())
         if(confirmed) {
           const currentSettings = contentSelectors.formWindow(getState())
-          if(onSubmit) {
-            dispatch(uiActions.setLoading({transparent:true}))
-            result = await onSubmit(currentSettings.values)
-          }
-          else {
-            result = currentSettings.values
-          }
+          dispatch(uiActions.setLoading(loadingConfig))
+          const formValues = processValues(
+            formConfig.processFormValues ?
+              formConfig.processFormValues(currentSettings.values) :
+              currentSettings.values
+          )
+          result = await onSubmit(formValues)
         }
         success = true
       } catch(e) {

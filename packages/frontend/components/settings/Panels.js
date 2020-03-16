@@ -157,9 +157,9 @@ const SettingsPanels = ({
   errors,
   showErrors,
   touched,
-  onSetFieldValue,
   onSubmit,
   onCancel,
+  onSetFieldValue,
 }) => {
 
   const classes = useStyles()
@@ -207,6 +207,7 @@ const SettingsPanels = ({
           showErrors={ showErrors }
           touched={ touched }
           isValid={ isValid }
+          onSetFieldValue={ onSetFieldValue }
         />
       </div>
     )

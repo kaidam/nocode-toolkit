@@ -7,6 +7,7 @@ import SelectField from './Select'
 import ColorPickerField from './ColorPickerField'
 import Image from './Image'
 import RichText from './RichText/Field'
+import Sorting from './Sorting'
 
 const fields = {
   text: TextField,
@@ -18,6 +19,7 @@ const fields = {
   color: ColorPickerField,
   image: Image,
   richtext: RichText,
+  sorting: Sorting,
 }
 
 export const defaultValues = {
@@ -32,6 +34,7 @@ export const defaultValues = {
   },
   image: null,
   richtext: '',
+  sorting: {},
 }
 
 export default fields

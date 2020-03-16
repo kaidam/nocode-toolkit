@@ -31,6 +31,7 @@ const FormWrapperItem = ({
   values,
   errors,
   touched,
+  onSetFieldValue,
 }) => {
 
   const fieldError = dotty.get(errors, item.id)
@@ -44,6 +45,7 @@ const FormWrapperItem = ({
       values={ values }
       error={ fieldError }
       touched={ fieldTouched }
+      onSetFieldValue={ onSetFieldValue }
     />
   )
 }
@@ -54,6 +56,7 @@ const FormWrapperRow = ({
   values,
   errors,
   touched,
+  onSetFieldValue,
 }) => {
   const classes = useStyles()
   if(typeof(row) === 'string') {
@@ -88,6 +91,7 @@ const FormWrapperRow = ({
           values={ values }
           errors={ errors }
           touched={ touched }
+          onSetFieldValue={ onSetFieldValue }
         />
       </Grid>
     ))
@@ -100,6 +104,7 @@ const FormWrapperRow = ({
           values={ values }
           errors={ errors }
           touched={ touched }
+          onSetFieldValue={ onSetFieldValue }
         />
       </Grid>
     )
@@ -116,6 +121,7 @@ const FormRender = ({
   showErrors,
   compact,
   fullHeight,
+  onSetFieldValue,
 }) => {
   const classes = useStyles()
  
@@ -138,6 +144,7 @@ const FormRender = ({
                 values={ values }
                 errors={ errors }
                 touched={ touched }
+                onSetFieldValue={ onSetFieldValue }
               />
             )
           })

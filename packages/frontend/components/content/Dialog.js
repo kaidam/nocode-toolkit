@@ -33,13 +33,13 @@ const ContentDialog = ({
     >
       {
         ({
-          handleSubmit,
-          setFieldValue,
           isValid,
           values,
           errors,
           showErrors,
           touched,
+          onSubmit,
+          onSetFieldValue,
         }) => {
           return (
             <Window
@@ -54,12 +54,12 @@ const ContentDialog = ({
               <Form
                 isValid={ isValid }
                 values={ values }
-                setFieldValue={ setFieldValue }
                 errors={ errors }
                 showErrors={ showErrors }
                 touched={ touched }
-                onSubmit={ handleSubmit }
+                onSubmit={ onSubmit }
                 onCancel={ onCloseWindow }
+                onSetFieldValue={ onSetFieldValue }
               />
             </Window>
           )

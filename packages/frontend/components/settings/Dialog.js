@@ -33,13 +33,13 @@ const SettingsDialog = ({
     >
       {
         ({
-          handleSubmit,
-          setFieldValue,
           isValid,
           values,
           errors,
           showErrors,
           touched,
+          onSubmit,
+          onSetFieldValue,
         }) => {
           return (
             <Window
@@ -57,9 +57,9 @@ const SettingsDialog = ({
                 errors={ errors }
                 showErrors={ showErrors }
                 touched={ touched }
-                onSetFieldValue={ setFieldValue }
                 onCancel={ onCloseWindow }
-                onSubmit={ handleSubmit }
+                onSubmit={ onSubmit }
+                onSetFieldValue={ onSetFieldValue }
               />
             </Window>
           )

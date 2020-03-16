@@ -23,6 +23,7 @@ const ContentForm = ({
   touched,
   onSubmit,
   onCancel,
+  onSetFieldValue,
 }) => {
 
   const classes = useStyles()
@@ -67,6 +68,7 @@ const ContentForm = ({
           showErrors={ showErrors }
           touched={ touched }
           isValid={ isValid }
+          onSetFieldValue={ onSetFieldValue }
         />
       </div>
     </PanelBody>
