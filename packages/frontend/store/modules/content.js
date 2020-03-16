@@ -51,6 +51,9 @@ const loaders = {
 
   createRemoteContent: (getState, payload) => axios.post(apiUtils.websiteUrl(getState, `/remotecontent`), payload)
     .then(apiUtils.process),
+
+  editRemoteContent: (getState, payload) => axios.put(apiUtils.websiteUrl(getState, `/remotecontent/${payload.id}`), payload)
+    .then(apiUtils.process),
 }
 
 // extract the annotation object from forms
@@ -67,6 +70,14 @@ const processAnnotationValues = (values) => {
     data,
     annotation,
   }
+}
+
+const getAnnotationValues = (getState, id) => {
+  const nodes = nocodeSelectors.nodes(getState())
+  const annotations = nocodeSelectors.annotations(getState())
+  return Object.assign({}, nodes[id], {
+    annotation: annotations[id] || {},
+  })
 }
 
 const sideEffects = {
@@ -118,24 +129,13 @@ const sideEffects = {
         data,
         annotation,
       }) => {
-
-        console.log('--------------------------------------------')
-        console.log('--------------------------------------------')
-        console.dir({
+        const result = await loaders.createRemoteContent(getState, {
+          driver,
+          parentId,
           data,
           annotation,
         })
-
-        return {
-          ok: true,
-        }
-        // const result = await loaders.createRemoteContent(getState, {
-        //   driver,
-        //   parentId,
-        //   data,
-        //   annotation,
-        // })
-        // return result
+        return result
       }
     }))
     if(!result) return
@@ -154,14 +154,9 @@ const sideEffects = {
     form,
     id,
   }) => wrapper('addNode', async (dispatch, getState) => {
-    const nodes = nocodeSelectors.nodes(getState())
-    const annotations = nocodeSelectors.annotations(getState())
-    const values = Object.assign({}, nodes[id], {
-      annotation: annotations[id],
-    })
     const result = await dispatch(actions.waitForForm({
       form,
-      values,
+      values: getAnnotationValues(getState, id),
       processValues: processAnnotationValues,
       formWindowConfig: {
         title,
@@ -170,24 +165,13 @@ const sideEffects = {
         data,
         annotation,
       }) => {
-
-        console.log('--------------------------------------------')
-        console.log('--------------------------------------------')
-        console.dir({
+        const result = await loaders.editRemoteContent(getState, {
+          driver,
+          id,
           data,
           annotation,
         })
-
-        return {
-          ok: true,
-        }
-        // const result = await loaders.createRemoteContent(getState, {
-        //   driver,
-        //   parentId,
-        //   data,
-        //   annotation,
-        // })
-        // return result
+        return result
       }
     }))
     if(!result) return

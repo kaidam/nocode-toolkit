@@ -23,6 +23,9 @@ const useStyles = makeStyles(theme => ({
     textDecoration: 'none',
     color: '#000',
   },
+  smallIcon: {
+    transform: 'scale(0.7)',
+  },
 }))
 
 const ItemMenu = ({
@@ -83,7 +86,9 @@ const ItemMenu = ({
               {
                 item.secondaryIcon && (
                   <ListItemSecondaryAction>
-                    <item.secondaryIcon />
+                    <div className={ classes.smallIcon }>
+                      <item.secondaryIcon />
+                    </div>
                   </ListItemSecondaryAction>
                 )
               }

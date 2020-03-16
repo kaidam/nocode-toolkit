@@ -96,6 +96,7 @@ const SortingEditorDragDropEditor = ({
     value,
     id,
   ])
+
   return (
     <DragDropList
       items={ items }
@@ -108,20 +109,15 @@ const SortingEditor = ({
   field: {
     name,
     value = {},
-    onChange,
-    onBlur
   },
-  error,
-  touched,
-  item,
+  values,
   onSetFieldValue,
 }) => {
-
   const useType = value.type || 'name'
   const useOrder = value.order || 'asc'
   const useIds = value.ids || []
-  const editId = value.id
-
+  const editId = values.id
+  
   const onUpdate = (updates = {}) => {
     onSetFieldValue(name, Object.assign({}, value, updates))
   }
