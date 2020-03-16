@@ -10,10 +10,12 @@ import apiUtils from '../utils/api'
 
 import contentSelectors from '../selectors/content'
 import nocodeSelectors from '../selectors/nocode'
+import routerSelectors from '../selectors/router'
 
 import uiActions from './ui'
 import jobActions from './job'
 import snackbarActions from './snackbar'
+import routerActions from './router'
 
 import { content as initialState } from '../initialState'
 import library from '../../library'
@@ -141,6 +143,12 @@ const sideEffects = {
     if(!result) return
     await dispatch(jobActions.reload())
     dispatch(snackbarActions.setSuccess(`item added`))
+    const routeMap = routerSelectors.routeMap(getState())
+    const routeLocation = `node:${parentId}:${result.id}`
+    if(routeMap[routeLocation]) {
+      const route = routeMap[routeLocation]
+      dispatch(routerActions.navigateTo(route.name))
+    }
   }),
 
   /*

@@ -52,7 +52,7 @@ const sortChildren = ({
   childIds,
   annotation,
 }) => {
-  if(!annotation || !annotation.sorting) return childIds
+  if(!annotation || !annotation.sorting || !childIds) return childIds || []
   const {
     type = 'name',
     direction = 'asc',
