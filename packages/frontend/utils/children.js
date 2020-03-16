@@ -1,5 +1,36 @@
-// get the array of children actually in a section
-// this accounts for ghost folders
+// normalize values for sorting
+// the 'date' field is a top level field and should already be a timestamp
+const getValue = (item, field) => {
+  if(field == 'date') {
+    return item.createdTime
+  }
+  const val = item[field]
+  return (val || '').toLowerCase().replace(/\W/g, '')
+}
+
+const fieldSorter = (field, direction) => (a, b) => {
+  if ( getValue(a, field) < getValue(b, field) ) {
+    return direction == 'asc' ? -1 : 1
+  }
+  if ( getValue(a, field) > getValue(b, field) ) {
+    return direction == 'asc' ? 1 : -1
+  }
+  return 0
+}
+
+// sort children based on a value of their field
+const sortByField = ({
+  items,
+  field,
+  direction = 'asc',
+}) => {
+  const sorter = fieldSorter(field, direction)
+  const sortedItems = [].concat(items)
+  sortedItems.sort(sorter)
+  return sortedItems
+}
+
+// explode ghost folder children
 const getSectionChildrenIds = ({
   section,
   nodes,
@@ -17,10 +48,28 @@ const getSectionChildrenIds = ({
 // sort the children of an item based on
 // the annotation settings
 const sortChildren = ({
-  children,
+  nodes,
+  childIds,
   annotation,
 }) => {
-  if(!annotation || !annotation.sort) return children
+  if(!annotation || !annotation.sorting) return childIds
+  const {
+    type = 'name',
+    direction = 'asc',
+    ids,
+  } = annotation.sorting
+
+  if(type == 'manual') {
+    return getSortedIds(childIds, ids)
+  }
+  else {
+    return sortByField({
+      items: childIds.map(id => nodes[id]),
+      field: type,
+      direction,
+    }).map(item => item.id)
+  }
+  
   return children
 }
 

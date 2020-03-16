@@ -25,17 +25,19 @@ const sectionTree = () => createSelector(
       parentId,
       childIds,
     }) => {
-      return childrenUtils.sortChildren({
-        children: childIds.map(id => {
-          const child = nodes[id]
-          return Object.assign({}, child, {
-            children: getChildren({
-              parentId: id,
-              childIds: child.children || [],
-            })
-          })
-        }),
+      const sortedChildIds = childrenUtils.sortChildren({
+        nodes,
+        childIds,
         annotation: annotations[parentId],
+      })
+      return sortedChildIds.map(id => {
+        const node = nodes[id]
+        return Object.assign({}, node, {
+          children: getChildren({
+            parentId: id,
+            childIds: node.children,
+          })
+        })
       })
     }
     return getChildren({

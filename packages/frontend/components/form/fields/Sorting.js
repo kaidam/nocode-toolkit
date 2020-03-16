@@ -51,7 +51,7 @@ const SortingEditorDirectionEditor = ({
 
   const fieldConfig = useMemo(() => {
     return {
-      name: 'order',
+      name: 'direction',
       value,
       onChange: (e) => onChange(e.target.value),
     }
@@ -114,7 +114,7 @@ const SortingEditor = ({
   onSetFieldValue,
 }) => {
   const useType = value.type || 'name'
-  const useOrder = value.order || 'asc'
+  const useDirection = value.direction || 'asc'
   const useIds = value.ids || []
   const editId = values.id
   
@@ -131,8 +131,8 @@ const SortingEditor = ({
       />
     ) : (
       <SortingEditorDirectionEditor
-        value={ useOrder }
-        onChange={ (order) => onUpdate({order}) }
+        value={ useDirection }
+        onChange={ (direction) => onUpdate({direction}) }
       />
     )
   }, [value])
