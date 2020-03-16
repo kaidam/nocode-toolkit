@@ -15,6 +15,7 @@ const ContentDialog = ({
 
   const formValues = useSelector(contentSelectors.formValues)
   const formSchema = useSelector(contentSelectors.formSchema)
+  const formWindow = useSelector(contentSelectors.formWindow)
 
   const actions = Actions(useDispatch(), {
     onCancel: contentActions.cancelFormWindow,
@@ -48,6 +49,7 @@ const ContentDialog = ({
               compact
               noScroll
               noActions
+              title={ formWindow.title }
               size="xl"
               onCancel={ onCloseWindow }
             >

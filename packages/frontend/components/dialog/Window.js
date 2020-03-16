@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
+import classnames from 'classnames'
+import { makeStyles } from '@material-ui/core/styles'
 
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
@@ -7,7 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogActions from '@material-ui/core/DialogActions'
 import Button from '@material-ui/core/Button'
 
-const useStyles = makeStyles(theme => createStyles({
+const useStyles = makeStyles(theme => ({
   paper: {
     backgroundColor: '#fff',
   },
@@ -35,6 +36,9 @@ const useStyles = makeStyles(theme => createStyles({
   noWindowScroll: {
     overflowX: ['hidden', '!important'],
     overflowY: ['hidden', '!important']
+  },
+  header: {
+    padding: theme.spacing(1),
   }
 }))   
 
@@ -56,7 +60,7 @@ const Window = ({
   noActions = false,
   onCancel,
   onSubmit,
-  classNames = {},
+  theme = {},
 }) => {
   const classes = useStyles()
 
@@ -66,23 +70,18 @@ const Window = ({
     onCancel,
   ])
 
-  const headerClassname = [
-    classNames.header,
-  ].filter(c => c).join(' ')
+  const headerClassname = classnames(classes.header, theme.header)
+    
+  const contentClassname = classnames({
+    [classes.compactContent]: compact,
+    [classes.noWindowScroll]: noScroll,
+  }, theme.content)
 
-  const contentClassname = [
-    compact ? classes.compactContent : null,
-    noScroll ? classes.noWindowScroll : null,
-    classNames.content,
-  ].filter(c => c).join(' ')
-
-  const paperClassname = [
-    classes.paper,
-    fullHeight ? classes.fullHeightPaper : null,
-    noScroll ? classes.noWindowScroll : null,
-    classNames.paper,
-  ].filter(c => c).join(' ')
-
+  const paperClassname = classnames({
+    [classes.fullHeightPaper]: fullHeight,
+    [classes.noWindowScroll]: noScroll,
+  }, classes.paper, theme.paper)
+  
   return (
     <Dialog
       open={ open }

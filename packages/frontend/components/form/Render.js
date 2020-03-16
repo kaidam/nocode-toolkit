@@ -113,13 +113,12 @@ const FormWrapperRow = ({
 
 const FormRender = ({
   schema,
-  spacing,
+  spacing = 2,
   error,
   values,
   errors,
   touched,
   showErrors,
-  compact,
   fullHeight,
   onSetFieldValue,
 }) => {
@@ -129,7 +128,7 @@ const FormRender = ({
     <React.Fragment>
       <Grid
         container
-        spacing={ spacing || (compact ? 0 : 4) }
+        spacing={ 2 }
         className={classnames({
           [classes.fullHeight]: fullHeight,
         })}

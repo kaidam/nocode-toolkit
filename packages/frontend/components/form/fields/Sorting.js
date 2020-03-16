@@ -142,7 +142,7 @@ const SortingEditor = ({
   }, [value])
 
   return (
-    <Grid container spacing={ 0 }>
+    <Grid container spacing={ 2 }>
       <Grid item xs={ 12 } sm={ 6 }>
         <SortingEditorTypeEditor
           value={ useType }

@@ -8,10 +8,11 @@ import FormRender from '../form/Render'
 import Tabs from '../widgets/Tabs'
 import DialogButtons from '../widgets/DialogButtons'
 import PanelBody from '../widgets/PanelBody'
+import { Typography } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
   formContainer: {
-    padding: theme.spacing(2),
+    padding: theme.spacing(1),
   },
 }))
 
@@ -30,10 +31,12 @@ const ContentForm = ({
 
   const [ tab, setTab ] = useState(null)
   const form = useSelector(contentSelectors.form)
+  const formWindow = useSelector(contentSelectors.formWindow)
 
   let currentSchema = form.schema || []
 
   let header = null
+
   const footer = (
     <DialogButtons
       withSubmit

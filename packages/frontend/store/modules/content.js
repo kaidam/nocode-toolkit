@@ -22,14 +22,7 @@ const wrapper = networkWrapper.factory(prefix)
 
 const reducers = {
   openFormWindow: (state, action) => {
-    const {
-      form,
-      initialValues,
-    } = action.payload
-    state.formWindow = {
-      form,
-      values: initialValues,
-    }
+    state.formWindow = action.payload
   },
   acceptFormWindow: (state, action) => {
     if(state.formWindow) {
@@ -108,6 +101,7 @@ const sideEffects = {
   
   */
   createRemoteContent: ({
+    title,
     driver,
     form,
     parentId,
@@ -115,6 +109,9 @@ const sideEffects = {
     const result = await dispatch(actions.waitForForm({
       form,
       processValues: processAnnotationValues,
+      formWindowConfig: {
+        title,
+      },
       onSubmit: async ({
         data,
         annotation,
@@ -206,6 +203,7 @@ const sideEffects = {
   waitForForm: ({
     form,
     values = {},
+    formWindowConfig = {},
     loadingConfig = {transparent:true},
     processValues = (values) => values,
     onSubmit,
@@ -219,7 +217,8 @@ const sideEffects = {
     ])
     dispatch(actions.openFormWindow({
       form,
-      initialValues,
+      values: initialValues,
+      ...formWindowConfig
     }))
     let success = false
     let result = null
