@@ -26,19 +26,22 @@ const reducers = {
     } = action.payload
     state.formWindow = {
       form,
-      initialValues: values,
+      values,
     }
   },
   acceptFormWindow: (state, action) => {
     if(state.formWindow) {
       state.formWindow.accepted = true
-      state.formWindow.finalValues = action.payload
+      state.formWindow.values = action.payload
     }
   },
   cancelFormWindow: (state, action) => {
     if(state.formWindow) {
       state.formWindow.accepted = false
     }
+  },
+  resetFormWindow: (state, action) => {
+    state.formWindow.accepted = null
   },
   clearFormWindow: (state, action) => {
     state.formWindow = null
@@ -91,56 +94,38 @@ const sideEffects = {
     parentId,
     form,
   }) => wrapper('addNode', async (dispatch, getState) => {
+
     const formConfig = library.forms[form]
     if(!formConfig) throw new Error(`no form config found for ${form}`)
-    const {
-      confirmed,
-      values,
-    } = await dispatch(actions.waitForForm({
+
+    const result = await dispatch(actions.waitForForm({
       form,
       values: formConfig.initialValues,
-      autoClose: false,
+      onSubmit: async (values) => {
+        const data = formConfig.getData ? formConfig.getData(values) : values
+        const annotation = formConfig.getAnnotation ? formConfig.getAnnotation(values) : null
+        const result = await loaders.createRemoteContent(getState, {
+          driver,
+          parentId,
+          data,
+          annotation,
+        })
+        return result
+      }
     }))
-    if(!confirmed) return
-    const data = formConfig.getData ? formConfig.getData(values) : values
-    const annotation = formConfig.getAnnotation ? formConfig.getAnnotation(values) : null
-    const result = await loaders.createRemoteContent(getState, {
-      driver,
-      parentId,
-      data,
-      annotation,
-    })
+    
     console.log('--------------------------------------------')
     console.log('--------------------------------------------')
     console.dir(result)
-    return
-    dispatch(actions.clearFormWindow())
-    await dispatch(jobActions.reload())
-    await dispatch(snackbarActions.setSuccess(`item created`))
-    
   }),
 
-  /*
-  
-    render a form in a dialog and return the results
-    this is designed to be called by other side effects
-  
-  */
-  waitForForm: ({
-    form,
-    values,
-    autoClose = true,
-  }) => async (dispatch, getState) => {
-    dispatch(actions.openFormWindow({
-      form,
-      values,
-    }))
+  // loop waiting for a change in the formWindow state
+  waitForFormWindow: () => async (dispatch, getState) => {
     let open = true
     let confirmed = false
-    let currentSettings = null
     while(open) {
       await Promise.delay(100)
-      currentSettings = contentSelectors.formWindow(getState())
+      const currentSettings = contentSelectors.formWindow(getState())
       if(!currentSettings || typeof(currentSettings.accepted) == 'boolean') {
         confirmed = currentSettings ?
           currentSettings.accepted :
@@ -148,11 +133,43 @@ const sideEffects = {
         open = false
       }
     }
-    if(autoClose) dispatch(actions.clearFormWindow())
-    return {
-      confirmed,
-      values: currentSettings.finalValues,
+    return confirmed
+  },
+
+  // render a form in a dialog and return the results
+  // this is designed to be called by other side effects
+  waitForForm: ({
+    form,
+    values,
+    onSubmit,
+  }) => async (dispatch, getState) => {
+    dispatch(actions.openFormWindow({
+      form,
+      values,
+    }))
+    let success = false
+    let result = null
+    while(!success) {
+      try {
+        const confirmed = await dispatch(actions.waitForFormWindow())
+        if(confirmed) {
+          const currentSettings = contentSelectors.formWindow(getState())
+          if(onSubmit) {
+            result = await onSubmit(currentSettings.values)
+          }
+          else {
+            result = currentSettings.values
+          }
+        }
+        success = true
+      } catch(e) {
+        dispatch(actions.resetFormWindow())
+        console.error(e)
+        dispatch(snackbarActions.setError(e.toString()))
+      }
     }
+    dispatch(actions.clearFormWindow())
+    return result
   },
   
 }
