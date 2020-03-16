@@ -36,6 +36,7 @@ const ContentForm = ({
   const footer = (
     <DialogButtons
       withSubmit
+      submitDisabled={ isValid ? false : true }
       onSubmit={ onSubmit }
       onCancel={ onCancel }
     />

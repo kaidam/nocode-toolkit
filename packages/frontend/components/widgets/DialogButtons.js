@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
 const SettingsPanelButtons = ({
   onSubmit,
   onCancel,
-  loading = false,
+  submitDisabled = false,
   withSubmit = false,
 }) => {
   const classes = useStyles()
@@ -38,7 +38,7 @@ const SettingsPanelButtons = ({
             type="button"
             variant="contained"
             color="primary"
-            disabled={ loading ? true : false }
+            disabled={ submitDisabled }
             onClick={ onSubmit }
           >
             Save
