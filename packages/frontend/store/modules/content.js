@@ -8,6 +8,7 @@ import networkWrapper from '../utils/networkWrapper'
 import apiUtils from '../utils/api'
 
 import contentSelectors from '../selectors/content'
+import uiActions from './ui'
 import jobActions from './job'
 import snackbarActions from './snackbar'
 
@@ -154,6 +155,7 @@ const sideEffects = {
         if(confirmed) {
           const currentSettings = contentSelectors.formWindow(getState())
           if(onSubmit) {
+            dispatch(uiActions.setLoading({transparent:true}))
             result = await onSubmit(currentSettings.values)
           }
           else {
@@ -162,11 +164,13 @@ const sideEffects = {
         }
         success = true
       } catch(e) {
+        dispatch(uiActions.setLoading(false))
         dispatch(actions.resetFormWindow())
         console.error(e)
         dispatch(snackbarActions.setError(e.toString()))
       }
     }
+    dispatch(uiActions.setLoading(false))
     dispatch(actions.clearFormWindow())
     return result
   },
