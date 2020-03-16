@@ -113,10 +113,9 @@ const sideEffects = {
         return result
       }
     }))
-    
-    console.log('--------------------------------------------')
-    console.log('--------------------------------------------')
-    console.dir(result)
+    if(!result) return
+    await dispatch(jobActions.reload())
+    dispatch(snackbarActions.setSuccess(`item added`))
   }),
 
   // loop waiting for a change in the formWindow state

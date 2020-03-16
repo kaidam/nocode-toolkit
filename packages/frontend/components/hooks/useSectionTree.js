@@ -55,7 +55,7 @@ const useSectionTree = ({
         node.children.forEach(child => {
           addItem({
             node: child,
-            location: `item:${node.id}`,
+            location: `node:${node.id}`,
             depth: depth + 1,
           })
         })
