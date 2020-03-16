@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react'
+import React, { useState, useCallback, useMemo, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Menu from '@material-ui/core/Menu'
@@ -180,6 +180,7 @@ const MenuButton = ({
       setSubAnchorEl(e.currentTarget)
     },
     [
+      onOpen,
       header,
     ]
   )
@@ -193,8 +194,11 @@ const MenuButton = ({
       if(onClose) onClose()
       setSubAnchorEl(null)
       setSubItems(null)
+      setHeaders([])
     },
-    []
+    [
+      onClose,
+    ]
   )
 
   const handleItemClick = useCallback(
@@ -216,6 +220,7 @@ const MenuButton = ({
     [
       getItems,
       headers,
+      onClick,
     ]
   )
 
@@ -243,6 +248,8 @@ const MenuButton = ({
       mainMenuOpen,
       getItems,
       getItemsParams,
+      handleClose,
+      handleItemClick,
     ]
   )
 
@@ -263,14 +270,26 @@ const MenuButton = ({
     [
       useParentEl,
       subItems,
+      headers,
       subMenuOpen,
+      handleClose,
+      handleItemClick,
     ]
   )
 
   const button = useMemo(
     () => getButton(handleMenu),
-    [getButton]
+    [
+      getButton,
+      handleMenu,
+    ]
   )
+
+  useEffect(() => {
+    setHeaders([header])
+  }, [
+    header,
+  ])
 
   return (
     <div>

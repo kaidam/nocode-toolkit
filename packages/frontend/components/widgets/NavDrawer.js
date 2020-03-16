@@ -20,8 +20,8 @@ const useStyles = makeStyles(theme => {
       minWidth: `${theme.layout.drawerWidthSmall}px`,
     },
     uiDrawer: {
-      width: `${theme.layout.drawerWidthSmall}px`,
-      minWidth: `${theme.layout.drawerWidthSmall}px`,
+      width: `${theme.layout.drawerWidthLarge}px`,
+      minWidth: `${theme.layout.drawerWidthLarge}px`,
     },
   }
 })
