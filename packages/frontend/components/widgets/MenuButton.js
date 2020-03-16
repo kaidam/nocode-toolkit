@@ -151,7 +151,7 @@ const MenuButton = ({
   getItems,
 
   // params to pass to the getItems function
-  getItemsParams = {},
+  getItemsParams,
 
   // callback for when the menu is opened
   onOpen,
@@ -174,7 +174,9 @@ const MenuButton = ({
       setHeaders(header ? [header] : [])
       setSubAnchorEl(e.currentTarget)
     },
-    []
+    [
+      header,
+    ]
   )
 
   const handleClose = useCallback(
@@ -207,6 +209,7 @@ const MenuButton = ({
       if(!item.items) handleClose()
     },
     [
+      getItems,
       headers,
     ]
   )
@@ -231,8 +234,10 @@ const MenuButton = ({
     },
     [
       useParentEl,
-      header,
+      headers,
       mainMenuOpen,
+      getItems,
+      getItemsParams,
     ]
   )
 

@@ -9,6 +9,8 @@ import networkWrapper from '../utils/networkWrapper'
 import apiUtils from '../utils/api'
 
 import contentSelectors from '../selectors/content'
+import nocodeSelectors from '../selectors/nocode'
+
 import uiActions from './ui'
 import jobActions from './job'
 import snackbarActions from './snackbar'
@@ -147,13 +149,23 @@ const sideEffects = {
   
   */
   editRemoteContent: ({
+    title,
     driver,
     form,
     id,
   }) => wrapper('addNode', async (dispatch, getState) => {
+    const nodes = nocodeSelectors.nodes(getState())
+    const annotations = nocodeSelectors.annotations(getState())
+    const values = Object.assign({}, nodes[id], {
+      annotation: annotations[id],
+    })
     const result = await dispatch(actions.waitForForm({
       form,
+      values,
       processValues: processAnnotationValues,
+      formWindowConfig: {
+        title,
+      },
       onSubmit: async ({
         data,
         annotation,
