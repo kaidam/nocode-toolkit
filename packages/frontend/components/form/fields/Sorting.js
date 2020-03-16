@@ -1,8 +1,12 @@
-import React, { useMemo, useCallback } from 'react'
+import React, { useMemo } from 'react'
+import { useSelector } from 'react-redux'
 
 import Grid from '@material-ui/core/Grid'
 import SelectField from './Select'
-//import SortingEditorList from './SortingEditorList'
+import DragDropList from '../../widgets/DragDropList'
+
+import childrenUtils from '../../../utils/children'
+import nocodeSelectors from '../../../store/selectors/nocode'
 
 const SortingEditorTypeEditor = ({
   value,
@@ -74,24 +78,30 @@ const SortingEditorDirectionEditor = ({
 }
 
 const SortingEditorDragDropEditor = ({
-  // itemOptions,
-  // allItems,
-  // onSetItemOption,
+  id,
+  value,
+  onChange,
 }) => {
 
-  // const onUpdate = useCallback((ids) => onSetItemOption({
-  //   name: 'sortIds',
-  //   value: ids,
-  // }), [onSetItemOption])
+  const nodes = useSelector(nocodeSelectors.nodes)
 
-  // return (
-  //   <SortingEditorList
-  //     ids={ itemOptions.sortIds }
-  //     allItems={ allItems }
-  //     onUpdate={ onUpdate }
-  //   />
-  // )
-  return null
+  const items = useMemo(() => {
+    const node = nodes[id]
+    if(!node) return []
+    return childrenUtils
+      .getSortedIds(node.children, value)
+      .map(id => nodes[id])
+  }, [
+    nodes,
+    value,
+    id,
+  ])
+  return (
+    <DragDropList
+      items={ items }
+      onChange={ onChange }
+    />
+  )
 }
 
 const SortingEditor = ({
@@ -109,6 +119,8 @@ const SortingEditor = ({
 
   const useType = value.type || 'name'
   const useOrder = value.order || 'asc'
+  const useIds = value.ids || []
+  const editId = value.id
 
   const onUpdate = (updates = {}) => {
     onSetFieldValue(name, Object.assign({}, value, updates))
@@ -117,7 +129,9 @@ const SortingEditor = ({
   const editor = useMemo(() => {
     return useType == 'manual' ? (
       <SortingEditorDragDropEditor
-        
+        id={ editId }
+        value={ useIds }
+        onChange={ (ids) => onUpdate({ids}) }
       />
     ) : (
       <SortingEditorDirectionEditor

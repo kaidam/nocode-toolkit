@@ -109,8 +109,50 @@ const sideEffects = {
   */
   createRemoteContent: ({
     driver,
-    parentId,
     form,
+    parentId,
+  }) => wrapper('addNode', async (dispatch, getState) => {
+    const result = await dispatch(actions.waitForForm({
+      form,
+      processValues: processAnnotationValues,
+      onSubmit: async ({
+        data,
+        annotation,
+      }) => {
+
+        console.log('--------------------------------------------')
+        console.log('--------------------------------------------')
+        console.dir({
+          data,
+          annotation,
+        })
+
+        return {
+          ok: true,
+        }
+        // const result = await loaders.createRemoteContent(getState, {
+        //   driver,
+        //   parentId,
+        //   data,
+        //   annotation,
+        // })
+        // return result
+      }
+    }))
+    if(!result) return
+    await dispatch(jobActions.reload())
+    dispatch(snackbarActions.setSuccess(`item added`))
+  }),
+
+  /*
+  
+    edit a drive item - things like name / settings
+  
+  */
+  editRemoteContent: ({
+    driver,
+    form,
+    id,
   }) => wrapper('addNode', async (dispatch, getState) => {
     const result = await dispatch(actions.waitForForm({
       form,

@@ -5,10 +5,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-
-import ContentIcon from './Icon'
 
 const useStyles = makeStyles(theme => createStyles({
   menuItem: {
@@ -24,26 +21,20 @@ const useStyles = makeStyles(theme => createStyles({
   },
 }))
 
-const SortingEditorList = ({
-  ids,
-  allItems,
-  onUpdate,
+const DragDropList = ({
+  items,
+  onChange,
 }) => {
-
-  const filteredIds = useMemo(() => {
-    return ids.filter(id => allItems[id] ? true : false)
-  }, [ids, allItems])
-
   const classes = useStyles()
   const onDragEnd = useCallback(result => {
     if (!result.destination) return
     const startIndex = result.source.index
     const endIndex = result.destination.index
-    const newIds = Array.from(filteredIds)
+    const newIds = items.map(item => item.id)
     const [removed] = newIds.splice(startIndex, 1)
     newIds.splice(endIndex, 0, removed)
-    onUpdate(newIds)
-  }, [filteredIds, onUpdate])
+    onChange(newIds)
+  }, [items, onChange])
 
   return (
     <DragDropContext onDragEnd={ onDragEnd }>
@@ -55,42 +46,32 @@ const SortingEditorList = ({
           >
             <List>
               {
-                filteredIds
-                  .map((id, index) => {
-                    const item = allItems[id]
-                    return (
-                      <Draggable key={ item.id } draggableId={ item.id } index={ index }>
-                        {(provided, snapshot) => (
-                          <div
-                            ref={ provided.innerRef }
-                            { ...provided.draggableProps }
-                            { ...provided.dragHandleProps }
-                            style={ provided.draggableProps.style }
+                items.map((item, index) => {
+                  return (
+                    <Draggable key={ item.id } draggableId={ item.id } index={ index }>
+                      {(provided, snapshot) => (
+                        <div
+                          ref={ provided.innerRef }
+                          { ...provided.draggableProps }
+                          { ...provided.dragHandleProps }
+                          style={ provided.draggableProps.style }
+                        >
+                          <ListItem
+                            dense
+                            className={ classes.menuItem }
                           >
-                            <ListItem
-                              dense
-                              className={ classes.menuItem }
-                            >
-                              <ListItemIcon
-                                className={ classes.menuIcon }
-                              >
-                                <ContentIcon
-                                  item={ item }
-                                  className={ classes.normalListItem }
-                                />
-                              </ListItemIcon>
-                              <ListItemText
-                                classes={{
-                                  primary: classes.normalListItem
-                                }}
-                                primary={ item.data.name }
-                              />
-                            </ListItem>
-                          </div>
-                        )}
-                      </Draggable>
-                    )
-                  })
+                            <ListItemText
+                              classes={{
+                                primary: classes.normalListItem
+                              }}
+                              primary={ item.name }
+                            />
+                          </ListItem>
+                        </div>
+                      )}
+                    </Draggable>
+                  )
+                })
               }
               { provided.placeholder }
             </List>
@@ -101,4 +82,4 @@ const SortingEditorList = ({
   )
 }
 
-export default SortingEditorList
+export default DragDropList

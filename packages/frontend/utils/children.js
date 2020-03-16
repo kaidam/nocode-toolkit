@@ -24,9 +24,25 @@ const sortChildren = ({
   return children
 }
 
+// return an array of child ids based on the item children array
+// and the sort annotation
+const getSortedIds = (children, sortIds) => {
+  children = children || []
+  sortIds = sortIds || []
+  return sortIds
+    // return the sorted id list excluding any missing items
+    .filter(id => children.indexOf(id) >= 0)
+    // append the children that are not in the sortIds list
+    .concat(
+      children
+        .filter(id => sortIds.indexOf(id) < 0)
+    )
+}
+
 const utils = {
   getSectionChildrenIds,
   sortChildren,
+  getSortedIds,
 }
 
 export default utils

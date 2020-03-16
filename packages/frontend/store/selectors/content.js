@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect'
-import childrenUtils from './utils/children'
+
 import library from '../../library'
+import childrenUtils from '../../utils/children'
 import nocodeSelectors from './nocode'
 
 const DEFAULT_OBJECT = {}
