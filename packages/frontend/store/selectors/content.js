@@ -51,6 +51,31 @@ const sectionTree = () => createSelector(
   }
 )
 
+const section = () => createSelector(
+  nocodeSelectors.nodes,
+  nocodeSelectors.sections,
+  nocodeSelectors.annotations,
+  nocodeSelectors.locations,
+  (_, name) => name,
+  (nodes, sections, annotations, locations, name) => {
+    const section = sections[name]
+    if(!section) return null
+    const annotation = annotations[`section:${name}`] || {}
+    const ghostId = (section.children || []).find(childId => {
+      const childLocation = locations[`section:${name}:${childId}`]
+      return childLocation && childLocation.data.ghost ? true : false
+    })
+    const ghostFolder = ghostId ?
+      nodes[ghostId] :
+      null
+    return {
+      node: section,
+      annotation,
+      ghostFolder,
+    }
+  },
+)
+
 const form = createSelector(
   formWindow,
   (formWindow) => {
@@ -87,6 +112,7 @@ const selectors = {
   formWindow,
   settings,
   sectionTree,
+  section,
   form,
   formValues,
   formSchema,
