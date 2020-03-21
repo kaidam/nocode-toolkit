@@ -15,6 +15,7 @@ export const ui = {
   loading: false,
   confirmWindow: null,
   previewMode: false,
+  scrollToCurrentPage: true,
 }
 
 export const settings = {

@@ -1,11 +1,15 @@
 import { useMemo, useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import uiActions from '../../store/modules/ui'
+import uiSelectors from '../../store/selectors/ui'
 import contentSelectors from '../../store/selectors/content'
 import routerSelectors from '../../store/selectors/router'
 
 const useSectionTree = ({
   section,
 }) => {
+
+  const dispatch = useDispatch()
 
   const [ openFolders, setOpenFolders ] = useState({})
 
@@ -22,6 +26,18 @@ const useSectionTree = ({
   const routeMap = useSelector(routerSelectors.routeMap)
   const ancestors = useSelector(routerSelectors.ancestorsWithRoute)
   const currentRoute = useSelector(routerSelectors.route)
+  const scrollToCurrentPage = useSelector(uiSelectors.scrollToCurrentPage)
+
+  // this is used when a tree item is actually clicked
+  // because they clicked it - we assume that they can see
+  // that tree item and don't want to scroll to it
+  // wait for a render and then re-enable it
+  const onDisableScrollToCurrentPage = useCallback(() => {
+    dispatch(uiActions.setScrollToCurrentPage(false))
+    setTimeout(() => {
+      dispatch(uiActions.setScrollToCurrentPage(true))
+    }, 10)
+  }, [])
 
   const list = useMemo(() => {
     const items = []
@@ -86,9 +102,11 @@ const useSectionTree = ({
   ])
 
   return {
-    onToggleFolder,
     tree,
     list,
+    scrollToCurrentPage,
+    onToggleFolder,
+    onDisableScrollToCurrentPage,
   }
 }
 

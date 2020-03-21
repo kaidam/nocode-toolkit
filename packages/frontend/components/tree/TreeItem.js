@@ -1,4 +1,4 @@
-import React, { lazy, useCallback } from 'react'
+import React, { useRef, useCallback, useEffect } from 'react'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -38,6 +38,9 @@ const TreeItem = ({
   ItemEditorComponent,
   item,
   folderPages,
+  containerRef,
+  scrollToCurrentPage,
+  onDisableScrollToCurrentPage,
   onToggleFolder,
   onClick,
 }) => {
@@ -53,6 +56,8 @@ const TreeItem = ({
     depth,
   })
 
+  const itemRef = useRef()
+
   const listItemClassname = classnames({
     [classes.active]: currentPage,
   }, classes.menuItem)
@@ -62,6 +67,8 @@ const TreeItem = ({
   })
 
   const onClickItem = useCallback(() => {
+    onDisableScrollToCurrentPage()
+
     // if we do not have folder pages - we toggle the
     // folder to show the contents
     if(node.type == 'folder' && !folderPages) {
@@ -77,9 +84,21 @@ const TreeItem = ({
     onClick,
   ])
 
+  // scroll to the current element so when the page initially renders
+  // we can see the selected item
+  useEffect(() => {
+    if(!currentPage || !containerRef.current || !scrollToCurrentPage) return
+    setTimeout(() => {
+      containerRef.current.scrollTop = itemRef.current.offsetTop
+    }, 1)
+  }, [
+    currentPage,
+  ])
+
   const renderedItem = (
     <ListItem
       dense
+      ref={ itemRef }
       className={ listItemClassname }
       selected={ item.currentPage }
       onClick={ onClickItem }

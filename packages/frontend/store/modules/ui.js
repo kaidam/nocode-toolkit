@@ -29,6 +29,9 @@ const reducers = {
   setLoading: (state, action) => {
     state.loading = action.payload
   },
+  setScrollToCurrentPage: (state, action) => {
+    state.scrollToCurrentPage = action.payload
+  }
 }
 
 const loaders = {
