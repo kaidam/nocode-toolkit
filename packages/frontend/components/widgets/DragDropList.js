@@ -8,6 +8,10 @@ import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 
 const useStyles = makeStyles(theme => createStyles({
+  root: {
+    margin: theme.spacing(2),
+    border: '1px solid #cccccc',
+  },
   menuItem: {
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(0.2),
@@ -41,6 +45,7 @@ const DragDropList = ({
       <Droppable droppableId="droppable">
         {(provided, snapshot) => (
           <div
+            className={ classes.root }
             {...provided.droppableProps}
             ref={provided.innerRef}
           >

@@ -59,39 +59,50 @@ const sortChildren = ({
     ids,
   } = annotation.sorting || {}
 
+  const items = childIds.map(id => nodes[id])
+
   if(type == 'manual') {
-    return getSortedIds(childIds, ids)
+    return sortById({
+      items,
+      ids,
+    }).map(item => item.id)
   }
   else {
     return sortByField({
-      items: childIds.map(id => nodes[id]),
+      items,
       field: type,
       direction,
     }).map(item => item.id)
   }
-  
-  return children
 }
 
 // return an array of child ids based on the item children array
 // and the sort annotation
-const getSortedIds = (children, sortIds) => {
-  children = children || []
-  sortIds = sortIds || []
-  return sortIds
+const sortById = ({
+  items,
+  ids,
+}) => {
+  items = items || []
+  ids = ids || []
+  const idMap = items.reduce((all, item) => {
+    all[item.id] = item
+    return all
+  }, {})
+  return ids
     // return the sorted id list excluding any missing items
-    .filter(id => children.indexOf(id) >= 0)
+    .filter(id => idMap[id])
+    .map(id => idMap[id])
     // append the children that are not in the sortIds list
     .concat(
-      children
-        .filter(id => sortIds.indexOf(id) < 0)
+      items
+        .filter(item => ids.indexOf(item.id) < 0)
     )
 }
 
 const utils = {
   getSectionChildrenIds,
   sortChildren,
-  getSortedIds,
+  sortById,
 }
 
 export default utils

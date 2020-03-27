@@ -72,6 +72,7 @@ const getNodeFormValues = (getState, id) => {
 const getSectionFormValues = (getState, id) => {
   const annotations = nocodeSelectors.annotations(getState())
   return {
+    id: `section:${id}`,
     annotation: annotations[`section:${id}`] || {},
   }
 }

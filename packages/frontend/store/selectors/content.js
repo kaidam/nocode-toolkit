@@ -42,13 +42,15 @@ const sectionTree = () => createSelector(
       })
     }
 
+    const childIds = childrenUtils.getSectionChildrenIds({
+      section: sections[name],
+      nodes,
+      locations,
+    })
+
     return getChildren({
       parentId: `section:${name}`,
-      childIds: childrenUtils.getSectionChildrenIds({
-        section: sections[name],
-        nodes,
-        locations,
-      }),
+      childIds,
     })
   }
 )
@@ -75,6 +77,35 @@ const section = () => createSelector(
       annotation,
       ghostFolder,
     }
+  },
+)
+
+const itemChildren = () => createSelector(
+  nocodeSelectors.nodes,
+  nocodeSelectors.sections,
+  nocodeSelectors.annotations,
+  nocodeSelectors.locations,
+  (_, id) => id,
+  (nodes, sections, annotations, locations, id) => {
+    let childIds = []
+    if(id.indexOf('section:') == 0) {
+      const [ _, sectionId ] = id.split(':')
+      childIds = childrenUtils.getSectionChildrenIds({
+        section: sections[sectionId],
+        nodes,
+        locations,
+      })
+    }
+    else {
+      const node = nodes[id]
+      childIds = node.children
+    }
+    const sortedChildIds = childrenUtils.sortChildren({
+      nodes,
+      childIds,
+      annotation: annotations[id],
+    })
+    return sortedChildIds.map(id => nodes[id])
   },
 )
 
@@ -149,6 +180,7 @@ const selectors = {
   sectionTree,
   section,
   itemRoute,
+  itemChildren,
   form,
   formValues,
   formSchema,

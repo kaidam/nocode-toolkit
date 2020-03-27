@@ -7,6 +7,7 @@ import DragDropList from '../../widgets/DragDropList'
 
 import childrenUtils from '../../../utils/children'
 import nocodeSelectors from '../../../store/selectors/nocode'
+import contentSelectors from '../../../store/selectors/content'
 
 const SortingEditorTypeEditor = ({
   value,
@@ -82,19 +83,18 @@ const SortingEditorDragDropEditor = ({
   value,
   onChange,
 }) => {
-
-  const nodes = useSelector(nocodeSelectors.nodes)
+  const itemChildrenSelector = useMemo(contentSelectors.itemChildren, [])
+  const children = useSelector(state => itemChildrenSelector(state, id))
 
   const items = useMemo(() => {
-    const node = nodes[id]
-    if(!node) return []
     return childrenUtils
-      .getSortedIds(node.children, value)
-      .map(id => nodes[id])
+      .sortById({
+        items: children,
+        ids: value,
+      })
   }, [
-    nodes,
+    children,
     value,
-    id,
   ])
 
   return (
