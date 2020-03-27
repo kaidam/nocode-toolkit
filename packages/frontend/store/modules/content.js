@@ -56,6 +56,24 @@ const loaders = {
 
   editRemoteContent: (getState, payload) => axios.put(apiUtils.websiteUrl(getState, `/remotecontent/${payload.id}`), payload)
     .then(apiUtils.process),
+
+  updateSection: (getState, id, annotation) => axios.put(apiUtils.websiteUrl(getState, `/section/${id}`), annotation)
+    .then(apiUtils.process),
+}
+
+const getNodeFormValues = (getState, id) => {
+  const nodes = nocodeSelectors.nodes(getState())
+  const annotations = nocodeSelectors.annotations(getState())
+  return Object.assign({}, nodes[id], {
+    annotation: annotations[id] || {},
+  })
+}
+
+const getSectionFormValues = (getState, id) => {
+  const annotations = nocodeSelectors.annotations(getState())
+  return {
+    annotation: annotations[`section:${id}`] || {},
+  }
 }
 
 // extract the annotation object from forms
@@ -64,7 +82,7 @@ const loaders = {
 // fields are mixed into the same form
 // as long as annoation fields are namespaced annotation.XXX
 // we can extract them using this function
-const processAnnotationValues = (values) => {
+const processNodeFormValues = (values) => {
   const data = Object.assign({}, values)
   const annotation = data.annotation
   delete(data.annotation)
@@ -74,13 +92,7 @@ const processAnnotationValues = (values) => {
   }
 }
 
-const getAnnotationValues = (getState, id) => {
-  const nodes = nocodeSelectors.nodes(getState())
-  const annotations = nocodeSelectors.annotations(getState())
-  return Object.assign({}, nodes[id], {
-    annotation: annotations[id] || {},
-  })
-}
+const processSectionFormValues = (values) => values.annotation
 
 const sideEffects = {
 
@@ -120,7 +132,7 @@ const sideEffects = {
     driver,
     form,
     parentId,
-  }) => wrapper('addNode', async (dispatch, getState) => {
+  }) => wrapper('createRemoteContent', async (dispatch, getState) => {
     const result = await dispatch(actions.waitForForm({
       form,
       processValues: processAnnotationValues,
@@ -164,11 +176,11 @@ const sideEffects = {
     driver,
     form,
     id,
-  }) => wrapper('addNode', async (dispatch, getState) => {
+  }) => wrapper('editRemoteContent', async (dispatch, getState) => {
     const result = await dispatch(actions.waitForForm({
       form,
-      values: getAnnotationValues(getState, id),
-      processValues: processAnnotationValues,
+      values: getNodeFormValues(getState, id),
+      processValues: processNodeFormValues,
       formWindowConfig: {
         title,
       },
@@ -189,6 +201,33 @@ const sideEffects = {
     await dispatch(jobActions.reload())
     dispatch(snackbarActions.setSuccess(`item added`))
   }),
+
+  /*
+  
+    edit a section - mainly it's annotation settings
+  
+  */
+  editSection: ({
+    title,
+    form,
+    id,
+  }) => wrapper('editSection', async (dispatch, getState) => {
+    const result = await dispatch(actions.waitForForm({
+      form,
+      values: getSectionFormValues(getState, id),
+      processValues: processSectionFormValues,
+      formWindowConfig: {
+        title,
+      },
+      onSubmit: async (annotation) => {
+        const result = await loaders.updateSection(getState, id, annotation)
+        return result
+      }
+    }))
+    if(!result) return
+    await dispatch(jobActions.reload())
+    dispatch(snackbarActions.setSuccess(`section updated`))
+}),
 
   // loop waiting for a change in the formWindow state
   waitForFormWindow: () => async (dispatch, getState) => {

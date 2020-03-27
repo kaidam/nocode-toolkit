@@ -12,7 +12,7 @@ import { Typography } from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
   formContainer: {
-    padding: theme.spacing(1),
+    padding: theme.spacing(2),
   },
 }))
 
@@ -52,7 +52,7 @@ const ContentForm = ({
     header = (
       <Tabs
         tabs={ form.tabs }
-        current={ tab }
+        current={ tab || currentTab.id }
         onChange={ setTab }
       />
     )
