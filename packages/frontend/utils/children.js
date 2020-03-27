@@ -50,14 +50,14 @@ const getSectionChildrenIds = ({
 const sortChildren = ({
   nodes,
   childIds,
-  annotation,
+  annotation = {},
 }) => {
-  if(!annotation || !annotation.sorting || !childIds) return childIds || []
+  if(!childIds) return []
   const {
     type = 'name',
     direction = 'asc',
     ids,
-  } = annotation.sorting
+  } = annotation.sorting || {}
 
   if(type == 'manual') {
     return getSortedIds(childIds, ids)

@@ -54,10 +54,10 @@ const loaders = {
   createRemoteContent: (getState, payload) => axios.post(apiUtils.websiteUrl(getState, `/remotecontent`), payload)
     .then(apiUtils.process),
 
-  editRemoteContent: (getState, payload) => axios.put(apiUtils.websiteUrl(getState, `/remotecontent/${payload.id}`), payload)
+  editRemoteContent: (getState, id, payload) => axios.put(apiUtils.websiteUrl(getState, `/remotecontent/${id}`), payload)
     .then(apiUtils.process),
 
-  updateSection: (getState, id, annotation) => axios.put(apiUtils.websiteUrl(getState, `/section/${id}`), annotation)
+  updateSection: (getState, id, payload) => axios.put(apiUtils.websiteUrl(getState, `/section/${id}`), payload)
     .then(apiUtils.process),
 }
 
@@ -92,7 +92,7 @@ const processNodeFormValues = (values) => {
   }
 }
 
-const processSectionFormValues = (values) => values.annotation
+const processSectionFormValues = (values) => values
 
 const sideEffects = {
 
@@ -135,7 +135,7 @@ const sideEffects = {
   }) => wrapper('createRemoteContent', async (dispatch, getState) => {
     const result = await dispatch(actions.waitForForm({
       form,
-      processValues: processAnnotationValues,
+      processValues: processNodeFormValues,
       formWindowConfig: {
         title,
       },
@@ -188,7 +188,7 @@ const sideEffects = {
         data,
         annotation,
       }) => {
-        const result = await loaders.editRemoteContent(getState, {
+        const result = await loaders.editRemoteContent(getState, id, {
           driver,
           id,
           data,
@@ -219,8 +219,10 @@ const sideEffects = {
       formWindowConfig: {
         title,
       },
-      onSubmit: async (annotation) => {
-        const result = await loaders.updateSection(getState, id, annotation)
+      onSubmit: async ({
+        annotation,
+      }) => {
+        const result = await loaders.updateSection(getState, id, {annotation})
         return result
       }
     }))
