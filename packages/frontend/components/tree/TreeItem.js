@@ -89,6 +89,7 @@ const TreeItem = ({
   useEffect(() => {
     if(!currentPage || !containerRef.current || !scrollToCurrentPage) return
     setTimeout(() => {
+      if(!containerRef.current || !itemRef.current) return
       containerRef.current.scrollTop = itemRef.current.offsetTop
     }, 1)
   }, [

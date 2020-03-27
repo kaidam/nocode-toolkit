@@ -88,15 +88,20 @@ const itemRoute = () => createSelector(
   nocodeSelectors.locations,
   (_, params) => params,
   (routeMap, locations, {parentId, itemId} = {}) => {
+
     // search the locations for one matching our parent
     // which tells us that the parent is a ghost folder
     // for a section
-    const parentLocation = Object
+    const parentLocationId = Object
       .keys(locations)
       .find(locationId => {
         const location = locations[locationId]
         return location.content_id == parentId
       })
+
+    const parentLocation = parentLocationId ?
+      locations[parentLocationId] :
+      null
 
     const routeId = parentLocation ?
       `${parentLocation.location}:${itemId}` :
