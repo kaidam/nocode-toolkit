@@ -15,6 +15,7 @@ import React from 'react'
 import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
+import ClearIcon from '@material-ui/icons/Clear'
 import SettingsIcon from '@material-ui/icons/Settings'
 import PublishIcon from '@material-ui/icons/Publish'
 import HistoryIcon from '@material-ui/icons/History'
@@ -94,6 +95,7 @@ const icons = {
   edit: EditIcon,
   delete: DeleteIcon,
   close: CloseIcon,
+  clear: ClearIcon,
   settings: SettingsIcon,
   publish: PublishIcon,
   history: HistoryIcon,
