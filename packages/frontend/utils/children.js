@@ -42,7 +42,7 @@ const getSectionChildrenIds = ({
     const location = locations[`section:${section.id}:${id}`]
     if(!location || !location.data || !location.data.ghost) return all.concat([id])
     const node = nodes[id]
-    return all.concat(node.children)
+    return all.concat(node.children || [])
   }, [])
 
 // sort the children of an item based on

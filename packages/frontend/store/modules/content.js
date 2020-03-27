@@ -143,11 +143,14 @@ const sideEffects = {
     if(!result) return
     await dispatch(jobActions.reload())
     dispatch(snackbarActions.setSuccess(`item added`))
-    const routeMap = routerSelectors.routeMap(getState())
-    const routeLocation = `node:${parentId}:${result.id}`
-    if(routeMap[routeLocation]) {
-      const route = routeMap[routeLocation]
-      dispatch(routerActions.navigateTo(route.name))
+
+    const itemRoute = contentSelectors.itemRoute()(getState(), {
+      parentId,
+      itemId: result.id,
+    })
+
+    if(itemRoute) {
+      dispatch(routerActions.navigateTo(itemRoute.name))
     }
   }),
 

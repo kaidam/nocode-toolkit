@@ -113,7 +113,6 @@ const sideEffects = {
   
   */
   initialise: () => wrapper('initialise', async (dispatch, getState) => {
-
     // never run this twice
     if(systemSelectors.initialiseCalled(getState())) return
 

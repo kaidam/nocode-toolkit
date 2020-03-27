@@ -3,6 +3,7 @@ import { createSelector } from 'reselect'
 import library from '../../library'
 import childrenUtils from '../../utils/children'
 import nocodeSelectors from './nocode'
+import routerSelectors from './router'
 
 const DEFAULT_OBJECT = {}
 const DEFAULT_ARRAY = []
@@ -40,6 +41,7 @@ const sectionTree = () => createSelector(
         })
       })
     }
+
     return getChildren({
       parentId: `section:${name}`,
       childIds: childrenUtils.getSectionChildrenIds({
@@ -73,6 +75,34 @@ const section = () => createSelector(
       annotation,
       ghostFolder,
     }
+  },
+)
+
+// given an item id and it's parent id
+// return the route for that item at that location
+// this handles the fact the parent id might
+// be a ghost folder and resolves into the section
+// if that is the case
+const itemRoute = () => createSelector(
+  routerSelectors.routeMap,
+  nocodeSelectors.locations,
+  (_, params) => params,
+  (routeMap, locations, {parentId, itemId} = {}) => {
+    // search the locations for one matching our parent
+    // which tells us that the parent is a ghost folder
+    // for a section
+    const parentLocation = Object
+      .keys(locations)
+      .find(locationId => {
+        const location = locations[locationId]
+        return location.content_id == parentId
+      })
+
+    const routeId = parentLocation ?
+      `${parentLocation.location}:${itemId}` :
+      `node:${parentId}:${itemId}`
+
+    return routeMap[routeId]
   },
 )
 
@@ -113,6 +143,7 @@ const selectors = {
   settings,
   sectionTree,
   section,
+  itemRoute,
   form,
   formValues,
   formSchema,
