@@ -59,7 +59,9 @@ const sortChildren = ({
     ids,
   } = annotation.sorting || {}
 
-  const items = childIds.map(id => nodes[id])
+  const items = childIds
+    .map(id => nodes[id])
+    .filter(item => item)
 
   if(type == 'manual') {
     return sortById({

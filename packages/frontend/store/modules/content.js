@@ -57,6 +57,9 @@ const loaders = {
   editRemoteContent: (getState, id, payload) => axios.put(apiUtils.websiteUrl(getState, `/remotecontent/${id}`), payload)
     .then(apiUtils.process),
 
+  deleteRemoteContent: (getState, driver, id) => axios.delete(apiUtils.websiteUrl(getState, `/remotecontent/${driver}/${id}`))
+    .then(apiUtils.process),
+
   updateAnnotation: (getState, id, payload) => axios.put(apiUtils.websiteUrl(getState, `/annotation/${id}`), payload)
     .then(apiUtils.process),
 
@@ -206,6 +209,35 @@ const sideEffects = {
     dispatch(snackbarActions.setSuccess(`item added`))
   }),
 
+  deleteRemoteContent: ({
+    id,
+    driver,
+    name,
+  }) => wrapper('deleteRemoteContent', async (dispatch, getState) => {
+    const result = await dispatch(uiActions.waitForConfirmation({
+      title: `Permenantly delete ${name}?`,
+      message: `
+        <p><strong>WARNING:</strong> this will move this item into your Google drive Trash folder.</p>
+        <p>You can choose to restore it from the Trash folder if you didn't mean to delete this item.</p>
+      `,
+      confirmTitle: `Confirm - Delete ${name}`,
+    }))
+    if(!result) return
+
+    dispatch(uiActions.setLoading({
+      transparent: true,
+      message: `deleting ${name}`,
+    }))
+
+    await loaders.deleteRemoteContent(getState, driver, id)
+    await dispatch(jobActions.reload())
+    dispatch(snackbarActions.setSuccess(`${name} deleted`))
+  }, {
+    after: async (dispatch, getState, error) => {
+      dispatch(uiActions.setLoading(false))
+    }
+  }),
+
   /*
   
     edit a section - mainly it's annotation settings
@@ -239,42 +271,62 @@ const sideEffects = {
     id,
     name,
   }) => wrapper('hideContent', async (dispatch, getState) => {
-      const result = await dispatch(uiActions.waitForConfirmation({
-        title: `Hide ${name}?`,
-        message: `
-          <p>Hiding ${name} will <strong>not</strong> delete the item but it won't show up on the website.</p>
-          <p>You can always show the item again by opening the section settings.</p>
-        `,
-        confirmTitle: `Confirm - Hide ${name}`,
-      }))
-      if(!result) return
-      const annotations = nocodeSelectors.annotations(getState())
-      await loaders.updateAnnotation(getState, id, Object.assign(annotations[id] || {}, {
-        hidden: true,
-      }))
-      await dispatch(jobActions.reload())
-      dispatch(snackbarActions.setSuccess(`${name} hidden`))
+    const result = await dispatch(uiActions.waitForConfirmation({
+      title: `Hide ${name}?`,
+      message: `
+        <p>Hiding ${name} will <strong>not</strong> delete the item but it won't show up on the website.</p>
+        <p>You can always show the item again by opening the section settings.</p>
+      `,
+      confirmTitle: `Confirm - Hide ${name}`,
+    }))
+    if(!result) return
+
+    dispatch(uiActions.setLoading({
+      transparent: true,
+      message: `hiding ${name}`,
+    }))
+
+    const annotations = nocodeSelectors.annotations(getState())
+    await loaders.updateAnnotation(getState, id, Object.assign(annotations[id] || {}, {
+      hidden: true,
+    }))
+    await dispatch(jobActions.reload())
+    dispatch(snackbarActions.setSuccess(`${name} hidden`))
+  }, {
+    after: async (dispatch, getState, error) => {
+      dispatch(uiActions.setLoading(false))
+    }
   }),
 
   showContent: ({
     id,
     name,
   }) => wrapper('showContent', async (dispatch, getState) => {
-      const result = await dispatch(uiActions.waitForConfirmation({
-        title: `Show ${name}?`,
-        message: `
-          <p>Showing ${name} will make it show up on the website.</p>
-          <p>You can always hide the item again by opening the item options in the tree.</p>
-        `,
-        confirmTitle: `Confirm - Show ${name}`,
-      }))
-      if(!result) return
-      const annotations = nocodeSelectors.annotations(getState())
-      const annotation = Object.assign({}, annotations[id])
-      delete(annotation.hidden)
-      await loaders.updateAnnotation(getState, id, annotation)
-      await dispatch(jobActions.reload())
-      dispatch(snackbarActions.setSuccess(`${name} shown`))
+    const result = await dispatch(uiActions.waitForConfirmation({
+      title: `Show ${name}?`,
+      message: `
+        <p>Showing ${name} will make it show up on the website.</p>
+        <p>You can always hide the item again by opening the item options in the tree.</p>
+      `,
+      confirmTitle: `Confirm - Show ${name}`,
+    }))
+    if(!result) return
+
+    dispatch(uiActions.setLoading({
+      transparent: true,
+      message: `showing ${name}`,
+    }))
+
+    const annotations = nocodeSelectors.annotations(getState())
+    const annotation = Object.assign({}, annotations[id])
+    delete(annotation.hidden)
+    await loaders.updateAnnotation(getState, id, annotation)
+    await dispatch(jobActions.reload())
+    dispatch(snackbarActions.setSuccess(`${name} shown`))
+  }, {
+    after: async (dispatch, getState, error) => {
+      dispatch(uiActions.setLoading(false))
+    }
   }),
 
   // loop waiting for a change in the formWindow state
