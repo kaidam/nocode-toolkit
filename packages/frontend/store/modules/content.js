@@ -57,6 +57,9 @@ const loaders = {
   editRemoteContent: (getState, id, payload) => axios.put(apiUtils.websiteUrl(getState, `/remotecontent/${id}`), payload)
     .then(apiUtils.process),
 
+  updateAnnotation: (getState, id, payload) => axios.put(apiUtils.websiteUrl(getState, `/annotation/${id}`), payload)
+    .then(apiUtils.process),
+
   updateSection: (getState, id, payload) => axios.put(apiUtils.websiteUrl(getState, `/section/${id}`), payload)
     .then(apiUtils.process),
 }
@@ -230,7 +233,28 @@ const sideEffects = {
     if(!result) return
     await dispatch(jobActions.reload())
     dispatch(snackbarActions.setSuccess(`section updated`))
-}),
+  }),
+
+  hideContent: ({
+    id,
+    name,
+  }) => wrapper('hideContent', async (dispatch, getState) => {
+      const result = await dispatch(uiActions.waitForConfirmation({
+        title: `Hide ${name}?`,
+        message: `
+          <p>Hiding ${name} will <strong>not</strong> delete the item but it won't show up on the website.</p>
+          <p>You can always show the item again by opening the section settings.</p>
+        `,
+        confirmTitle: `Confirm - Hide ${name}`,
+      }))
+      if(!result) return
+      const annotations = nocodeSelectors.annotations(getState())
+      await loaders.updateAnnotation(getState, id, Object.assign(annotations[id] || {}, {
+        hidden: true,
+      }))
+      await dispatch(jobActions.reload())
+      dispatch(snackbarActions.setSuccess(`${name} hidden`))
+  }),
 
   // loop waiting for a change in the formWindow state
   waitForFormWindow: () => async (dispatch, getState) => {
