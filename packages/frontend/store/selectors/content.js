@@ -31,15 +31,20 @@ const sectionTree = () => createSelector(
         childIds,
         annotation: annotations[parentId],
       })
-      return sortedChildIds.map(id => {
-        const node = nodes[id]
-        return Object.assign({}, node, {
-          children: getChildren({
-            parentId: id,
-            childIds: node.children,
+      return sortedChildIds
+        .filter(id => {
+          const annotation = annotations[id]
+          return !annotation || !annotation.hidden
+        })
+        .map(id => {
+          const node = nodes[id]
+          return Object.assign({}, node, {
+            children: getChildren({
+              parentId: id,
+              childIds: node.children,
+            })
           })
         })
-      })
     }
 
     const childIds = childrenUtils.getSectionChildrenIds({
@@ -105,7 +110,12 @@ const itemChildren = () => createSelector(
       childIds,
       annotation: annotations[id],
     })
-    return sortedChildIds.map(id => nodes[id])
+    return sortedChildIds
+      .filter(id => {
+        const annotation = annotations[id]
+        return !annotation || !annotation.hidden
+      })
+      .map(id => nodes[id])
   },
 )
 
