@@ -47,6 +47,7 @@ const Layout = ({
         html={ snippets.head }
       />
       <Suspense
+        coreEnabled
         Component={ EditorTopbar }
       />
       <Snippet

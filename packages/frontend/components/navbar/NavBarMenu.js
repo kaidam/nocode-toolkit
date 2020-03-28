@@ -1,6 +1,9 @@
 import React, { useCallback } from 'react'
+import { useSelector } from 'react-redux'
 import MenuButton from '../widgets/MenuButton'
 import Suspense from '../system/Suspense'
+
+import systemSelectors from '../../store/selectors/system'
 
 const NavBarMenu = ({
   item,
@@ -8,12 +11,14 @@ const NavBarMenu = ({
   getButton,
 }) => {
 
+  const showUI = useSelector(systemSelectors.showUI)
+
   const getMenuItems = useCallback(() => {
     const getItems = (node) => {
       return node.children.map(child => {
         const item = {
           title: child.name,
-          iconElement: ItemEditorComponent ? (
+          iconElement: showUI ? (
             <Suspense
               Component={ ItemEditorComponent }
               props={{
@@ -36,6 +41,7 @@ const NavBarMenu = ({
     }
     return getItems(item)
   }, [
+    showUI,
     item,
   ])
   

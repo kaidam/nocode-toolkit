@@ -90,7 +90,7 @@ const NocodeTopbar = ({
   const classes = useStyles()
 
   const actions = Actions(useDispatch(), {
-    onSetPreviewMode: () => {},//uiActions.setPreviewMode,
+    onSetPreviewMode: uiActions.setPreviewMode,
     onRebuild: () => {},//jobActions.rebuild,
     onPublish: () => {},//jobActions.publish,
   })

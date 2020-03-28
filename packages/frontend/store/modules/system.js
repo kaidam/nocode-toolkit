@@ -32,11 +32,9 @@ const reducers = {
   setConfig: (state, action) => {
     state.config = action.payload
   },
-  
   setUser: (state, action) => {
     state.user = action.payload
   },
-
   setWebsite: (state, action) => {
     state.website = action.payload
   },
