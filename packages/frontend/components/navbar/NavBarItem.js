@@ -5,6 +5,8 @@ import classnames from 'classnames'
 import Suspense from '../system/Suspense'
 import Link from '../widgets/Link'
 
+import NavBarMenu from './NavBarMenu'
+
 import contentSelectors from '../../store/selectors/content'
 import routerSelectors from '../../store/selectors/router'
 
@@ -112,40 +114,69 @@ const NavBarItem = ({
     [classes.itemActive]: item.currentPage,
   })
 
-  const LinkComponent = item.type == 'link' ?
-    NativeLinkComponent :
-    Link
+  let content = null
+  const editorComponent = ItemEditorComponent ?
+   (
+      <Suspense
+        Component={ ItemEditorComponent }
+        props={{
+          node: item,
+          buttonClassname: classes.itemEditor,
+        }}
+      /> 
+   ) : null
 
-  const linkProps = item.type == 'link' ?
-    {
-      href: item.url,
-      target: '_external'
-    } :
-    {
-      name: item.route.name,
+  if(item.type == 'folder') {
+    const getButton = (onClick) => {
+      return (
+        <div
+          className={ itemClass }
+          onClick={ onClick }
+        >
+          { editorComponent }
+          { item.name }
+        </div>
+      )
     }
+    
+    content = (
+      <NavBarMenu
+        item={ item }
+        ItemEditorComponent={ ItemEditorComponent }
+        getButton={ getButton }
+      />
+    )
+  }
+  else {
+    const LinkComponent = item.type == 'link' ?
+      NativeLinkComponent :
+      Link
+
+    const linkProps = item.type == 'link' ?
+      {
+        href: item.url,
+        target: '_external'
+      } :
+      {
+        name: item.route.name,
+      }
+
+    content = (
+      <LinkComponent
+        className={ itemClass }
+        {...linkProps}
+      >
+        { editorComponent }
+        { item.name }
+      </LinkComponent>
+    )
+  }
 
   return (
     <li
       className={ classes.itemContainer }
     >
-      <LinkComponent
-        className={ itemClass }
-        {...linkProps}
-      >
-        {
-          ItemEditorComponent && (
-            <Suspense
-              Component={ ItemEditorComponent }
-              props={{
-                node: item,
-                buttonClassname: classes.itemEditor,
-              }}
-            /> 
-          )
-        }
-        { item.name }
-      </LinkComponent>
+      { content }
     </li>
   )
 }

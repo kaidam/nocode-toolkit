@@ -8,6 +8,8 @@ import ListItemText from '@material-ui/core/ListItemText'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Divider from '@material-ui/core/Divider'
 
+import Link from './Link'
+
 const useStyles = makeStyles(theme => ({
   menuText: {
     paddingRight: '50px',
@@ -76,6 +78,13 @@ const ItemMenu = ({
                   </ListItemIcon>
                 )
               }
+              {
+                item.iconElement && (
+                  <ListItemIcon>
+                    { item.iconElement }
+                  </ListItemIcon>
+                )
+              }
               <ListItemText 
                 primary={ item.title }
                 secondary={ item.help }
@@ -111,6 +120,21 @@ const ItemMenu = ({
               </a>
             )
           }
+          else if(item.route) {
+            contents = (
+              <Link
+                className={ classes.menuLink }
+                name={ item.route.name }
+                onClick={(e) => {
+                  e.stopPropagation()
+                  onClose()
+                  return false
+                }}
+              >
+                { contents }
+              </Link>
+            )
+          }
 
           return (
             <MenuItem
@@ -136,6 +160,9 @@ const MenuButton = ({
 
   // test that appears above the menu in bold with a divider
   header,
+
+  // turn off the auto-sub menu headers
+  noHeader,
 
   // anchor the menu to the given element
   parentAnchorEl,
@@ -234,7 +261,7 @@ const MenuButton = ({
       return (
         <ItemMenu
           anchorEl={ useParentEl }
-          header={ headers.join(' : ') }
+          header={ noHeader ? null : headers.join(' : ') }
           menuItems={ getItems(getItemsParams) }
           open={ mainMenuOpen }
           onClose={ handleClose }
@@ -245,6 +272,7 @@ const MenuButton = ({
     [
       useParentEl,
       headers,
+      noHeader,
       mainMenuOpen,
       getItems,
       getItemsParams,
@@ -259,7 +287,7 @@ const MenuButton = ({
       return (
         <ItemMenu
           anchorEl={ useParentEl }
-          header={ headers.join(' : ') }
+          header={ noHeader ? null : headers.join(' : ') }
           menuItems={ subItems }
           open={ subMenuOpen }
           onClose={ handleClose }
@@ -271,6 +299,7 @@ const MenuButton = ({
       useParentEl,
       subItems,
       headers,
+      noHeader,
       subMenuOpen,
       handleClose,
       handleItemClick,

@@ -33,7 +33,7 @@ const NocodeLink = ({
   const dispatch = useDispatch()
   const openPage = useCallback((e) => {
     if(url) {
-      if(onClick) onClick()
+      if(onClick) onClick(e)
       return true
     }
     e.preventDefault()
@@ -41,7 +41,7 @@ const NocodeLink = ({
     e.nativeEvent.stopImmediatePropagation()
     const routeName = name || utils.routePathToName(path)
     dispatch(routerActions.navigateTo(routeName))
-    if(onClick) onClick()
+    if(onClick) onClick(e)
     return false
   }, [
     path,
