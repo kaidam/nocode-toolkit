@@ -20,10 +20,13 @@ const sectionTree = () => createSelector(
   nocodeSelectors.nodes,
   nocodeSelectors.annotations,
   nocodeSelectors.locations,
+  routerSelectors.routeMap,
+  routerSelectors.route,
   (_, name) => name,
-  (sections, nodes, annotations, locations, name) => {
+  (sections, nodes, annotations, locations, routeMap, currentRoute, name) => {
     const getChildren = ({
       parentId,
+      location,
       childIds,
     }) => {
       const sortedChildIds = childrenUtils.sortChildren({
@@ -37,10 +40,14 @@ const sectionTree = () => createSelector(
           return !annotation || !annotation.hidden
         })
         .map(id => {
+          const route = routeMap[`${location}:${id}`]
           const node = nodes[id]
           return Object.assign({}, node, {
+            route,
+            currentPage: currentRoute.item == node.id,
             children: getChildren({
               parentId: id,
+              location: `node:${id}`,
               childIds: node.children,
             })
           })
@@ -53,6 +60,7 @@ const sectionTree = () => createSelector(
     })
     return getChildren({
       parentId: `section:${name}`,
+      location: `section:${name}`,
       childIds,
     })
   }

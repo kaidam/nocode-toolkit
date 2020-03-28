@@ -109,7 +109,7 @@ const TreeItem = ({
           <Suspense
             Component={ ItemEditorComponent }
             props={{
-              item,
+              node: item.node,
             }}
           /> 
         )

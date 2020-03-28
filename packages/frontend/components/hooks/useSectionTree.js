@@ -23,9 +23,7 @@ const useSectionTree = ({
 
   const treeSelector = useMemo(contentSelectors.sectionTree, [])
   const tree = useSelector(state => treeSelector(state, section))
-  const routeMap = useSelector(routerSelectors.routeMap)
   const ancestors = useSelector(routerSelectors.ancestorsWithRoute)
-  const currentRoute = useSelector(routerSelectors.route)
   const scrollToCurrentPage = useSelector(uiSelectors.scrollToCurrentPage)
 
   // this is used when a tree item is actually clicked
@@ -43,17 +41,8 @@ const useSectionTree = ({
     const items = []
     const addItem = ({
       node,
-      location,
       depth = 0,
     }) => {
-
-      // get the route and configure the tree item
-      // as to what happens when the item is clicked
-      // the tree options are:
-      //   * open an internal route (if it's a page or folderPages == true)
-      //   * open an external route (if it's a link)
-      //   * toggle the folder (if foldersPages == false)
-      const route = routeMap[`${location}:${node.id}`]
       const open = openFolders[node.id]
 
       items.push({
@@ -61,8 +50,8 @@ const useSectionTree = ({
         node,
         depth,
         open,
-        route,
-        currentPage: currentRoute.item == node.id,
+        route: node.route,
+        currentPage: node.currentPage,
       })
 
       // if the folder is open, include it's children
@@ -71,7 +60,6 @@ const useSectionTree = ({
         node.children.forEach(child => {
           addItem({
             node: child,
-            location: `node:${node.id}`,
             depth: depth + 1,
           })
         })
@@ -81,14 +69,11 @@ const useSectionTree = ({
     // add the top level section items to the tree
     tree.forEach(node => addItem({
       node,
-      location: `section:${section}`,
     }))
     return items
   }, [
     tree,
     openFolders,
-    routeMap,
-    currentRoute,
   ])
 
   // when the route changes - open the ancestor folders
