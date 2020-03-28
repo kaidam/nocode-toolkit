@@ -46,13 +46,11 @@ const sectionTree = () => createSelector(
           })
         })
     }
-
     const childIds = childrenUtils.getSectionChildrenIds({
       section: sections[name],
       nodes,
       locations,
     })
-
     return getChildren({
       parentId: `section:${name}`,
       childIds,

@@ -132,7 +132,7 @@ const TreeItem = ({
   )
 
   let linkType = ''
-  if(item.node.type == 'externalLink') linkType = 'external'
+  if(item.node.type == 'link') linkType = 'external'
   else if(item.node.type == 'folder') linkType = folderPages ? 'internal' : ''
   else linkType = 'internal'
 

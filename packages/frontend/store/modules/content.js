@@ -1,6 +1,7 @@
 import Promise from 'bluebird'
 import axios from 'axios'
 import deepmerge from 'deepmerge'
+import { v4 as uuid } from 'uuid'
 
 import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
@@ -236,6 +237,73 @@ const sideEffects = {
     after: async (dispatch, getState, error) => {
       dispatch(uiActions.setLoading(false))
     }
+  }),
+
+  /*
+  
+    used for adding local content to locations
+
+    this will create a content record
+    
+     * open the form schema to collect the values
+     * send a request to create the content
+     * inject the new content into the tree
+  
+  */
+  createLocalContent: ({
+    title,
+    form,
+    location,
+  }) => wrapper('createLocalContent', async (dispatch, getState) => {
+    const result = await dispatch(actions.waitForForm({
+      form,
+      formWindowConfig: {
+        title,
+      },
+      onSubmit: async (data) => {
+        const result = await loaders.saveContent(getState, {
+          driver: 'local',
+          content_id: uuid(),
+          location,
+          data: Object.assign({}, data, {
+            type: form,
+          })
+        })
+        return result
+      }
+    }))
+    if(!result) return
+    await dispatch(jobActions.reload())
+    dispatch(snackbarActions.setSuccess(`${form} added`))
+  }),
+
+  editLocalContent: ({
+    title,
+    form,
+    id,
+    location,
+  }) => wrapper('editLocalContent', async (dispatch, getState) => {
+    const nodes = nocodeSelectors.nodes(getState())
+    const values = nodes[id]
+    const result = await dispatch(actions.waitForForm({
+      form,
+      values,
+      formWindowConfig: {
+        title,
+      },
+      onSubmit: async (data) => {
+        const result = await loaders.saveContent(getState, {
+          driver: 'local',
+          content_id: id,
+          location,
+          data
+        })
+        return result
+      }
+    }))
+    if(!result) return
+    await dispatch(jobActions.reload())
+    dispatch(snackbarActions.setSuccess(`${form} updated`))
   }),
 
   /*

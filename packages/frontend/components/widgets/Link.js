@@ -32,8 +32,8 @@ const NocodeLink = ({
   const routeMap = useSelector(routerSelectors.routeNameMap)
   const dispatch = useDispatch()
   const openPage = useCallback((e) => {
-    if(url && onClick) {
-      onClick()
+    if(url) {
+      if(onClick) onClick()
       return true
     }
     e.preventDefault()
