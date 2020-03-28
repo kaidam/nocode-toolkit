@@ -61,6 +61,9 @@ const loaders = {
   deleteRemoteContent: (getState, driver, id) => axios.delete(apiUtils.websiteUrl(getState, `/remotecontent/${driver}/${id}`))
     .then(apiUtils.process),
 
+  deleteLocalContent: (getState, id) => axios.delete(apiUtils.websiteUrl(getState, `/localcontent/${id}`))
+    .then(apiUtils.process),
+
   updateAnnotation: (getState, id, payload) => axios.put(apiUtils.websiteUrl(getState, `/annotation/${id}`), payload)
     .then(apiUtils.process),
 
@@ -304,6 +307,33 @@ const sideEffects = {
     if(!result) return
     await dispatch(jobActions.reload())
     dispatch(snackbarActions.setSuccess(`${form} updated`))
+  }),
+
+  deleteLocalContent: ({
+    id,
+    name,
+  }) => wrapper('deleteLocalContent', async (dispatch, getState) => {
+    const result = await dispatch(uiActions.waitForConfirmation({
+      title: `Delete ${name}?`,
+      message: `
+        <p><strong>WARNING:</strong> this cannot be undone.</p>
+      `,
+      confirmTitle: `Confirm - Delete ${name}`,
+    }))
+    if(!result) return
+
+    dispatch(uiActions.setLoading({
+      transparent: true,
+      message: `deleting ${name}`,
+    }))
+
+    await loaders.deleteLocalContent(getState, id)
+    await dispatch(jobActions.reload())
+    dispatch(snackbarActions.setSuccess(`${name} deleted`))
+  }, {
+    after: async (dispatch, getState, error) => {
+      dispatch(uiActions.setLoading(false))
+    }
   }),
 
   /*
