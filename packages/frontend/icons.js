@@ -57,6 +57,7 @@ import QuoteIcon from '@material-ui/icons/FormatQuote'
 import LogsIcon from '@material-ui/icons/Reorder'
 import UndoIcon from '@material-ui/icons/Undo'
 import MoveIcon from '@material-ui/icons/OpenWith'
+import MoveVertIcon from '@material-ui/icons/SwapVert'
 import PaymentIcon from '@material-ui/icons/AttachMoney'
 import ContactIcon from '@material-ui/icons/ContactMail'
 import AddPanelTop from '@material-ui/icons/VerticalAlignTop'
@@ -141,6 +142,7 @@ const icons = {
   undo: UndoIcon,
   look: LookIcon,
   move: MoveIcon,
+  movevert: MoveVertIcon,
   payment: PaymentIcon,
   contact: ContactIcon,
   addPanelTop: AddPanelTop,

@@ -1,13 +1,23 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
 
 import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
 import SelectField from './Select'
 import DragDropList from '../../widgets/DragDropList'
 
 import childrenUtils from '../../../utils/children'
-import nocodeSelectors from '../../../store/selectors/nocode'
 import contentSelectors from '../../../store/selectors/content'
+import icons from '../../../icons'
+
+const MoveIcon = icons.movevert
+const useStyles = makeStyles(theme => ({
+  dragDropRoot: {
+    //margin: theme.spacing(2),
+    border: '1px solid #cccccc',
+  },
+}))
 
 const SortingEditorTypeEditor = ({
   value,
@@ -83,9 +93,11 @@ const SortingEditorDragDropEditor = ({
   value,
   onChange,
 }) => {
+
+  const classes = useStyles()
   const itemChildrenSelector = useMemo(contentSelectors.itemChildren, [])
   const children = useSelector(state => itemChildrenSelector(state, id))
-
+  const getTitle = useCallback((item, i) => `${i + 1}. ${item.name}`, [])
   const items = useMemo(() => {
     return childrenUtils
       .sortById({
@@ -98,10 +110,20 @@ const SortingEditorDragDropEditor = ({
   ])
 
   return (
-    <DragDropList
-      items={ items }
-      onChange={ onChange }
-    />
+    <div>
+      <Typography gutterBottom>
+        Drag and drop the items into the order you want them to appear...
+      </Typography>
+      <DragDropList
+        items={ items }
+        theme={{
+          root: classes.dragDropRoot,
+        }}
+        getTitle={ getTitle }
+        IconClass={ MoveIcon }
+        onChange={ onChange }
+      />
+    </div>
   )
 }
 

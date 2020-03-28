@@ -1,17 +1,14 @@
 import React, { useCallback, useMemo } from 'react'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
+import ListItemIcon from '@material-ui/core/ListItemIcon'
 
-const useStyles = makeStyles(theme => createStyles({
-  root: {
-    margin: theme.spacing(2),
-    border: '1px solid #cccccc',
-  },
+const useStyles = makeStyles(theme => ({
   menuItem: {
     marginLeft: theme.spacing(1),
     marginTop: theme.spacing(0.2),
@@ -27,6 +24,9 @@ const useStyles = makeStyles(theme => createStyles({
 
 const DragDropList = ({
   items,
+  theme = {},
+  getTitle = (item, i) => item.name,
+  IconClass,
   onChange,
 }) => {
   const classes = useStyles()
@@ -45,7 +45,7 @@ const DragDropList = ({
       <Droppable droppableId="droppable">
         {(provided, snapshot) => (
           <div
-            className={ classes.root }
+            className={ theme.root }
             {...provided.droppableProps}
             ref={provided.innerRef}
           >
@@ -65,11 +65,18 @@ const DragDropList = ({
                             dense
                             className={ classes.menuItem }
                           >
+                            {
+                              IconClass && (
+                                <ListItemIcon>
+                                  <IconClass />
+                                </ListItemIcon>
+                              )
+                            }
                             <ListItemText
                               classes={{
                                 primary: classes.normalListItem
                               }}
-                              primary={ item.name }
+                              primary={ getTitle(item, index) }
                             />
                           </ListItem>
                         </div>
