@@ -256,6 +256,27 @@ const sideEffects = {
       dispatch(snackbarActions.setSuccess(`${name} hidden`))
   }),
 
+  showContent: ({
+    id,
+    name,
+  }) => wrapper('showContent', async (dispatch, getState) => {
+      const result = await dispatch(uiActions.waitForConfirmation({
+        title: `Show ${name}?`,
+        message: `
+          <p>Showing ${name} will make it show up on the website.</p>
+          <p>You can always hide the item again by opening the item options in the tree.</p>
+        `,
+        confirmTitle: `Confirm - Show ${name}`,
+      }))
+      if(!result) return
+      const annotations = nocodeSelectors.annotations(getState())
+      const annotation = Object.assign({}, annotations[id])
+      delete(annotation.hidden)
+      await loaders.updateAnnotation(getState, id, annotation)
+      await dispatch(jobActions.reload())
+      dispatch(snackbarActions.setSuccess(`${name} shown`))
+  }),
+
   // loop waiting for a change in the formWindow state
   waitForFormWindow: () => async (dispatch, getState) => {
     let open = true

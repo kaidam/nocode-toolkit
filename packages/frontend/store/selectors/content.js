@@ -85,6 +85,43 @@ const section = () => createSelector(
   },
 )
 
+const sectionHiddenItems = () => createSelector(
+  nocodeSelectors.nodes,
+  nocodeSelectors.sections,
+  nocodeSelectors.annotations,
+  nocodeSelectors.locations,
+  (_, name) => name,
+  (nodes, sections, annotations, locations, name) => {
+    const hiddenItems = []
+    const processChildren = ({
+      childIds,
+    }) => {
+      childIds
+        .filter(id => {
+          const annotation = annotations[id]
+          return annotation && annotation.hidden
+        })
+        .forEach(id => {
+          hiddenItems.push(nodes[id])
+        })
+      childIds
+        .forEach(id => processChildren({
+          childIds: nodes[id].children || [],
+        }))
+    }
+
+    processChildren({
+      childIds: childrenUtils.getSectionChildrenIds({
+        section: sections[name],
+        nodes,
+        locations,
+      })
+    })
+
+    return hiddenItems
+  },
+)
+
 const itemChildren = () => createSelector(
   nocodeSelectors.nodes,
   nocodeSelectors.sections,
@@ -188,6 +225,7 @@ const selectors = {
   formWindow,
   settings,
   sectionTree,
+  sectionHiddenItems,
   section,
   itemRoute,
   itemChildren,

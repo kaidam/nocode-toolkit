@@ -14,7 +14,6 @@ import icons from '../../../icons'
 const MoveIcon = icons.movevert
 const useStyles = makeStyles(theme => ({
   dragDropRoot: {
-    //margin: theme.spacing(2),
     border: '1px solid #cccccc',
   },
 }))
