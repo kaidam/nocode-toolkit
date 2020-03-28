@@ -366,14 +366,18 @@ const sideEffects = {
       values: initialValues,
       ...formWindowConfig
     }))
+
     let success = false
     let result = null
+
     while(!success) {
       try {
         const confirmed = await dispatch(actions.waitForFormWindow())
         if(confirmed) {
-          const currentSettings = contentSelectors.formWindow(getState())
+          // not sure why but this delay prevents the loading overlay from flickering
+          await Promise.delay(200)
           dispatch(uiActions.setLoading(loadingConfig))
+          const currentSettings = contentSelectors.formWindow(getState())
           const formValues = processValues(
             formConfig.processFormValues ?
               formConfig.processFormValues(currentSettings.values) :
