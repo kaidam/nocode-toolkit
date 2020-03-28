@@ -155,6 +155,10 @@ const ItemMenu = ({
 }
 
 const MenuButton = ({
+
+  // the classname for the root item
+  className,
+
   // a function that is called (onClick) to render the button
   getButton,
 
@@ -321,7 +325,7 @@ const MenuButton = ({
   ])
 
   return (
-    <div>
+    <div className={ className }>
       { button }
       { mainMenu }
       { subMenu }
