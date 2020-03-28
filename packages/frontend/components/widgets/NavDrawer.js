@@ -23,6 +23,9 @@ const useStyles = makeStyles(theme => {
       width: `${theme.layout.drawerWidthLarge}px`,
       minWidth: `${theme.layout.drawerWidthLarge}px`,
     },
+    icon: {
+      color: theme.palette.primary.main,
+    },
   }
 })
 
@@ -46,6 +49,8 @@ const NavDrawer = ({
     [classes.uiDrawer]: showUI,
   }, classes.drawer)
 
+  const iconClassname = classnames(classes.icon, theme.icon)
+
   const UseIcon = icon || icons.menu
 
   return (
@@ -54,7 +59,7 @@ const NavDrawer = ({
         onClick={ openDrawer }
       >
         <UseIcon
-          className={ theme.icon }
+          className={ iconClassname }
         />
       </IconButton>
       <Drawer 

@@ -1,11 +1,16 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
+import IconButton from '@material-ui/core/IconButton'
 
 import contentSelectors from '../../store/selectors/content'
-import routerSelectors from '../../store/selectors/router'
 
 import NavBarItem from './NavBarItem'
+import NavBarMenu from './NavBarMenu'
+
+import icons from '../../icons'
+
+const MoreVertIcon = icons.moreVert
 
 const useStyles = makeStyles(theme => {
   return {
@@ -17,6 +22,11 @@ const useStyles = makeStyles(theme => {
       fontSize: '1em',
       textAlign: 'right',
     },
+    icon: ({contrast} = {}) => ({
+      color: contrast ?
+        theme.palette.primary.contrastText :
+        theme.palette.primary.main,
+    }),
   }
 })
 
@@ -42,32 +52,60 @@ const NavBar = ({
   onClick,
 }) => {
 
-  const classes = useStyles()
+  const classes = useStyles({
+    contrast,
+  })
 
   const treeSelector = useMemo(contentSelectors.sectionTree, [])
   const tree = useSelector(state => treeSelector(state, section))
 
-  return (
-    <nav>
-      <ul className={ classes.navbar }>
-        {
-          tree.map((item, i) => {
-            return (
-              <NavBarItem
-                key={ i }
-                item={ item }
-                ItemEditorComponent={ ItemEditorComponent }
-                contrast={ contrast }
-                vertical={ vertical }
-                align={ align }
-                onClick={ onClick }
-              />
-            )
-          })
-        }
-      </ul>
-    </nav>
-  )
+  if(small) {
+
+    const getButton = useCallback((onClick) => {
+      return (
+        <IconButton
+          size="small"
+          className={ classes.icon }
+          onClick={ onClick }
+        >
+          <MoreVertIcon fontSize="inherit" />
+        </IconButton>
+      )
+    }, [])
+
+    return (
+      <NavBarMenu
+        children={ tree }
+        ItemEditorComponent={ ItemEditorComponent }
+        getButton={ getButton }
+      />
+    )
+  }
+  else {
+    return (
+      <nav>
+        <ul className={ classes.navbar }>
+          {
+            tree.map((item, i) => {
+              return (
+                <NavBarItem
+                  key={ i }
+                  item={ item }
+                  ItemEditorComponent={ ItemEditorComponent }
+                  contrast={ contrast }
+                  vertical={ vertical }
+                  align={ align }
+                  onClick={ onClick }
+                />
+              )
+            })
+          }
+        </ul>
+      </nav>
+    )
+  }
+
+  
 }
 
 export default NavBar

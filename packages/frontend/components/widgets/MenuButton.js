@@ -262,7 +262,7 @@ const MenuButton = ({
         <ItemMenu
           anchorEl={ useParentEl }
           header={ noHeader ? null : headers.join(' : ') }
-          menuItems={ getItems(getItemsParams) }
+          menuItems={ getItems(getItemsParams, handleClose) }
           open={ mainMenuOpen }
           onClose={ handleClose }
           onItemClick={ handleItemClick }

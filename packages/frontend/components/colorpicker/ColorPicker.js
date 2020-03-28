@@ -161,8 +161,6 @@ const ColorTool = ({
 
   const handleChangeShade = useCallback(
     (event, shade) => {
-      console.log('--------------------------------------------')
-      console.dir(values.hue)
       const color = colors[values.hue][shades[shade]]
       changeValues({
         shade,

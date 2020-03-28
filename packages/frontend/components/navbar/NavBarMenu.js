@@ -6,43 +6,44 @@ import Suspense from '../system/Suspense'
 import systemSelectors from '../../store/selectors/system'
 
 const NavBarMenu = ({
-  item,
+  children,
   ItemEditorComponent,
   getButton,
 }) => {
 
   const showUI = useSelector(systemSelectors.showUI)
 
-  const getMenuItems = useCallback(() => {
-    const getItems = (node) => {
-      return node.children.map(child => {
-        const item = {
+  const getMenuItems = useCallback((_, closeMenu) => {
+    const getItems = (children) => {
+      return children.map(child => {
+        const menuItem = {
           title: child.name,
           iconElement: showUI ? (
             <Suspense
               Component={ ItemEditorComponent }
               props={{
                 node: child,
+                onClick: () => closeMenu(),
               }}
             /> 
           ) : null,
         }
         if(child.type == 'folder') {
-          item.items = getItems(child)
+          menuItem.items = getItems(child.children || [])
         }
         else if(child.type == 'link') {
-          item.url = child.url
+          menuItem.url = child.url
         }
         else {
-          item.route = child.route
+          menuItem.route = child.route
         }
-        return item
+        return menuItem
       })
     }
-    return getItems(item)
+    return getItems(children)
   }, [
     showUI,
-    item,
+    children,
   ])
   
   return (

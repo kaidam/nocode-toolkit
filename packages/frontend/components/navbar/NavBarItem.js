@@ -141,7 +141,7 @@ const NavBarItem = ({
     
     content = (
       <NavBarMenu
-        item={ item }
+        children={ item.children }
         ItemEditorComponent={ ItemEditorComponent }
         getButton={ getButton }
       />
