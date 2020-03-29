@@ -13,7 +13,7 @@ import Hidden from '@material-ui/core/Hidden'
 import Actions from '../../utils/actions'
 
 import uiActions from '../../store/modules/ui'
-//import jobActions from '../../store/modules/job'
+import jobActions from '../../store/modules/job'
 
 import systemSelectors from '../../store/selectors/system'
 import uiSelectors from '../../store/selectors/ui'
@@ -91,7 +91,7 @@ const NocodeTopbar = ({
 
   const actions = Actions(useDispatch(), {
     onSetPreviewMode: uiActions.setPreviewMode,
-    onRebuild: () => {},//jobActions.rebuild,
+    onRebuild: () => jobActions.rebuild({withSnackbar:true}),
     onPublish: () => {},//jobActions.publish,
   })
 

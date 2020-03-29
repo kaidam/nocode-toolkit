@@ -384,7 +384,6 @@ const sideEffects = {
       content_id: newFolder.id
     })
     await dispatch(jobActions.rebuild())
-    await dispatch(actions.reload())
     dispatch(snackbarActions.setSuccess(`section folder updated`))
   }),
 
@@ -393,7 +392,6 @@ const sideEffects = {
   }) => wrapper('resetSectionFolder', async (dispatch, getState) => {
     await loaders.resetSectionFolder(getState, id)
     await dispatch(jobActions.rebuild())
-    await dispatch(jobActions.reload())
     dispatch(snackbarActions.setSuccess(`section folder updated`))
   }),
 

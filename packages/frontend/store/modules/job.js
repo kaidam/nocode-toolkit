@@ -147,15 +147,31 @@ const sideEffects = {
 
   // trigger a rebuild of the preview data
   rebuild: ({
-    
+    withSnackbar = false,
   } = {}) => async (dispatch, getState) => {
     const previewData = await loaders.getPreviewData(getState, true)
     const jobId = previewData.config.previewJobId
     if(jobId) {
+      dispatch(uiActions.setLoading({
+        message: 'Loading your data...',
+        transparent: true,
+      }))
       await dispatch(actions.waitForJob({
         id: jobId,
+        onLoop: async () => {
+          const logs = jobSelectors.logArray(getState())
+          dispatch(uiActions.setLoading({
+            message: 'Loading your data...',
+            logs: logs.slice(Math.max(logs.length - 3, 0)),
+            transparent: true,
+          }))
+        },
       }))
-      //await dispatch(actions.reload())
+      await dispatch(actions.reload())
+      dispatch(uiActions.setLoading(false))
+      if(withSnackbar) {
+        dispatch(snackbarActions.setSuccess(`website rebuilt`))
+      }
     }
   },
 
