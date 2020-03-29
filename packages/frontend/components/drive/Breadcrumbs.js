@@ -30,8 +30,7 @@ const useStyles = makeStyles(theme => ({
 const DriveBreadcrumbs = ({
   ancestors,
   parent,
-  search,
-  resultsSearch,
+  searchActive,
   onOpenFolder,
   onOpenTab,
 }) => {
@@ -46,7 +45,7 @@ const DriveBreadcrumbs = ({
     onOpenTab,
   ])
 
-  if(resultsSearch) {
+  if(searchActive) {
     return (
       <div className={ classes.root }>
         Search results...

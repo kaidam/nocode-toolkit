@@ -1,8 +1,14 @@
-import React, { useMemo } from 'react'
+import React, { useState, useCallback } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 
-import Loading from '../../system/Loading'
+import driveActions from '../../store/modules/drive'
+import driveSelectors from '../../store/selectors/drive'
+
+import Actions from '../../utils/actions'
+
+import Loading from '../system/Loading'
 
 import Header from './Header'
 import Sidebar from './Sidebar'
@@ -61,156 +67,77 @@ const DriveDialog = ({
 }) => {
 
   const classes = useStyles()
+  const [ parent, setParent ] = useState('root')
+  const [ tab, setTab ] = useState('root')
+  const [ search, setSearch ] = useState('')
 
-  const header = useMemo(() => {
-    const title = finderConfig.getFinderTitle()
-    return (
-      <FinderHeader
-        title={ title }
-        finderConfig={ finderConfig }
-        search={ search }
-        resultsSearch={ resultsSearch }
-        onUpdateSearch={ onUpdateSearch }
-        onSearch={ onSearch }
-        onResetSearch={ onResetSearch }
-      />
-    )
+  const items = useSelector(driveSelectors.list)
+  const ancestors = useSelector(driveSelectors.ancestors)
+  const searchActive = useSelector(driveSelectors.searchActive)
+  const window = useSelector(driveSelectors.window)
+  const loading = useSelector(driveSelectors.loading.getList)
+
+  const actions = Actions(useDispatch(), {
+    onGetList: driveActions.getList,
+    onGetAncestors: driveActions.getAncestors,
+    onCancel: driveActions.cancelWindow,
+    onSelect: driveActions.acceptWindow,
+  })
+
+  const onCloseWindow = useCallback(() => {
+    actions.onCancel()
+  }, [])
+
+  const onOpenTab = useCallback((id) => {
+    setTab(id)
+    setParent(id)
+  }, [])
+
+  const onOpenFolder = useCallback((id) => {
+    setParent(id)
+  }, [])
+
+  const onSubmitSearch = useCallback(() => {
+    actions.onGetList({
+      search,
+    })
   }, [
-    finderConfig,
     search,
-    onUpdateSearch,
-    onSearch,
-    onResetSearch,
-  ])
-
-  const sidebar = useMemo(() => {
-    return (
-      <FinderSidebar
-        driver={ driver }
-        parent={ parent }
-        addFilter={ addFilter }
-        finderConfig={ finderConfig }
-        search={ search }
-        tab={ tab }
-        onOpenTab={ onOpenTab }
-      />
-    )
-  }, [
-    driver,
-    parent,
-    finderConfig,
-    search,
-    tab,
-    onOpenTab,
-  ])
-
-  const breadcrumbs = useMemo(() => {
-    return (
-      <FinderBreadcrumbs
-        ancestors={ ancestors }
-        parent={ parent }
-        search={ search }
-        resultsSearch={ resultsSearch }
-        onOpenFolder={ onOpenFolder }
-        onOpenTab={ onOpenTab }
-      />
-    )
-  }, [
-    ancestors,
-    parent,
-    search,
-    onOpenFolder,
-    onOpenTab,
-  ])
-
-  const leftButtons = useMemo(() => {
-    const paginationButtons = finderConfig.hasPagination() && (
-      <React.Fragment>
-        <Button
-          className={ classes.button }
-          type="button"
-          variant="contained"
-          onClick={ onLastPage }
-        >
-          Last Page
-        </Button>
-        <Button
-          className={ classes.button }
-          type="button"
-          variant="contained"
-          onClick={ onNextPage }
-        >
-          Next Page
-        </Button>
-      </React.Fragment>
-    )
-
-    const backButton = withBack && (
-      <Button
-        className={ classes.button }
-        type="button"
-        variant="contained"
-        onClick={ () => window.history.back() }
-      >
-        Back
-      </Button>
-    )
-
-    return (
-      <div className={ classes.buttonContainer }>
-        { backButton }
-        { paginationButtons }
-      </div>
-    )
-  }, [
-    withBack,
-    finderConfig,
-    onLastPage,
-    onNextPage,
-  ])
-
-  const content = useMemo(() => {
-    return (
-      <List
-        driver={ driver }
-        mode={ mode }
-        addFilter={ addFilter }
-        items={ items }
-        onOpenFolder={ onOpenFolder }
-        onAddContent={ onAddContent }
-      />
-    )
-  }, [
-    driver,
-    addFilter,
-    items,
-    onOpenFolder,
-    onAddContent,
   ])
 
   return (
     <Window
       open
-      size="lg"
+      fullHeight
+      compact
+      noScroll
       withCancel
-      onCancel={ onCancel }
-      cancelTitle="Close"
-      leftButtons={ leftButtons }
-      classNames={{
-        content: classes.windowContent,
-        paper: classes.windowPaper,
-      }}
+      size="xl"
+      onCancel={ onCloseWindow }
     >
       <div className={ classes.root }>
         <div className={ classes.sidebar }>
-          { sidebar }
+          <Sidebar
+            tab={ tab }
+            onOpenTab={ onOpenTab }
+          />
         </div>
         <div className={ classes.body }>
           <div className={ classes.header }>
-            { header }
+            <Header
+              search={ search }
+              onChange={ setSearch }
+              onSubmit={ onSubmitSearch }
+            />
           </div>
           <div className={ classes.toolbar }>
-            { breadcrumbs }
+            <Breadcrumbs
+              ancestors={ ancestors }
+              parent={ parent }
+              searchActive={ searchActive }
+              onOpenFolder={ onOpenFolder }
+              onOpenTab={ onOpenTab }
+            />
           </div>
           <div className={ classes.content }>
             {
@@ -218,10 +145,8 @@ const DriveDialog = ({
                 <Loading />
               ) : (
                 <List
-                  addFilter={ addFilter }
                   items={ items }
-                  onOpenFolder={ onOpenFolder }
-                  onAddContent={ onAddContent }
+                  addFilter={ window.addFilter }
                 />
               )
             }
@@ -233,3 +158,50 @@ const DriveDialog = ({
 }
 
 export default DriveDialog
+
+
+  // const leftButtons = useMemo(() => {
+  //   const paginationButtons = finderConfig.hasPagination() && (
+  //     <React.Fragment>
+  //       <Button
+  //         className={ classes.button }
+  //         type="button"
+  //         variant="contained"
+  //         onClick={ onLastPage }
+  //       >
+  //         Last Page
+  //       </Button>
+  //       <Button
+  //         className={ classes.button }
+  //         type="button"
+  //         variant="contained"
+  //         onClick={ onNextPage }
+  //       >
+  //         Next Page
+  //       </Button>
+  //     </React.Fragment>
+  //   )
+
+  //   const backButton = withBack && (
+  //     <Button
+  //       className={ classes.button }
+  //       type="button"
+  //       variant="contained"
+  //       onClick={ () => window.history.back() }
+  //     >
+  //       Back
+  //     </Button>
+  //   )
+
+  //   return (
+  //     <div className={ classes.buttonContainer }>
+  //       { backButton }
+  //       { paginationButtons }
+  //     </div>
+  //   )
+  // }, [
+  //   withBack,
+  //   finderConfig,
+  //   onLastPage,
+  //   onNextPage,
+  // ])

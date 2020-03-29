@@ -59,6 +59,24 @@ const sideEffects = {
     }
     return confirmed
   },
+
+  // loop waiting for a change in the formWindow state
+  waitForWindow: (selector) => async (dispatch, getState) => {
+    let open = true
+    let confirmed = false
+    while(open) {
+      await Promise.delay(100)
+      const currentSettings = selector(getState())
+      if(!currentSettings || typeof(currentSettings.accepted) == 'boolean') {
+        confirmed = currentSettings ?
+          currentSettings.accepted :
+          false
+        open = false
+      }
+    }
+    return confirmed
+  },
+
   // initialiseWebsite: () => networkWrapper({
   //   prefix,
   //   name: 'initialiseWebsite',

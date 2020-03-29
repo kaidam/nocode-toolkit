@@ -25,26 +25,22 @@ const useStyles = makeStyles(theme => createStyles({
 
 const DriveHeader = ({
   search,
-  finderConfig,
-  title,
-  onUpdateSearch,
-  onSearch,
-  onResetSearch,
+  onChange,
+  onSubmit,
 }) => {
 
   const classes = useStyles()
 
   const onUpdateSearchHandler = useCallback((ev) => {
-    onUpdateSearch(ev.target.value)
-  }, [onUpdateSearch])
+    onChange(ev.target.value)
+  }, [onChange])
 
   const onKeyPressHandler = useCallback((ev) => {
-    if(ev.key == 'Enter') onSearch()
-  }, [onSearch])
+    if(ev.key == 'Enter') onSubmit()
+  }, [onSubmit])
 
-  const searchComponent = useMemo(() => {
-    if(!finderConfig.canSearch()) return null
-    return (
+  return (
+    <div className={ classes.root }>
       <div className={ classes.searchContainer }>
         <TextField
           fullWidth
@@ -60,31 +56,11 @@ const DriveHeader = ({
           className={ classes.searchButton }
           variant="contained"
           size="small"
-          onClick={ onSearch }
+          onClick={ onSubmit }
         >
           Search
         </Button>
-        {/* <Button
-          className={ classes.searchButton }
-          variant="contained"
-          size="small"
-          onClick={ onResetSearch }
-        >
-          Clear
-        </Button> */}
       </div>
-    )
-  }, [
-    finderConfig,
-    search,
-    onUpdateSearchHandler,
-    onSearch,
-    onResetSearch,
-  ])
-
-  return (
-    <div className={ classes.root }>
-      { searchComponent }
     </div>
   )
 }

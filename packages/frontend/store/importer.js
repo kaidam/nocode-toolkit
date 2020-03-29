@@ -8,6 +8,7 @@ const importPromises = globals.isUIActivated() ?
     dialog: import(/* webpackChunkName: "ui" */ './modules/dialog'),
     ui: import(/* webpackChunkName: "ui" */ './modules/ui'),
     content: import(/* webpackChunkName: "ui" */ './modules/content'),
+    drive: import(/* webpackChunkName: "ui" */ './modules/drive'),
     job: import(/* webpackChunkName: "ui" */ './modules/job'),
     fileupload: import(/* webpackChunkName: "ui" */ './modules/fileupload'),
     

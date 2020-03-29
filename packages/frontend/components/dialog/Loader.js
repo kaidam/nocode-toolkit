@@ -10,8 +10,6 @@ import { useSelector } from 'react-redux'
 // import ConfirmDialog from './ConfirmDialog'
 // import HelpDialog from './HelpDialog'
 
-
-
 import SnackBar from '../system/Snackbar'
 import GlobalLoading from '../system/GlobalLoading'
 
@@ -19,9 +17,11 @@ import uiSelectors from '../../store/selectors/ui'
 import routerSelectors from '../../store/selectors/router'
 import dialogSelectors from '../../store/selectors/dialog'
 import contentSelectors from '../../store/selectors/content'
+import driveSelectors from '../../store/selectors/drive'
 
 import ConfirmDialog from './Confirm'
 import ContentDialog from '../content/Dialog'
+import DriveDialog from '../drive/Dialog'
 import SettingsDialog from '../settings/Dialog'
 
 const dialogs = {
@@ -44,6 +44,7 @@ const DialogLoader = ({
   const loading = useSelector(uiSelectors.loading)
   const confirmWindow = useSelector(uiSelectors.confirmWindow)
   const formWindow = useSelector(contentSelectors.formWindow)
+  const driveWindow = useSelector(driveSelectors.window)
   const dialogParams = useSelector(dialogSelectors.dialogParams)
   return (
     <div>
@@ -71,6 +72,11 @@ const DialogLoader = ({
         formWindow && (
           <ContentDialog />
         ) 
+      }
+      {
+        driveWindow && (
+          <DriveDialog />
+        )
       }
       <SnackBar />
       <GlobalLoading

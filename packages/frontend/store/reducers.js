@@ -39,6 +39,7 @@ const reducers = {
   dialog: GetReducer('dialog'),
   ui: GetReducer('ui'),
   content: GetReducer('content'),
+  drive: GetReducer('drive'),
   job: GetReducer('job'),
   fileupload: GetReducer('fileupload'),
   

@@ -30,16 +30,16 @@ export const content = {
   formWindow: null,
 }
 
+export const drive = {
+  list: [],
+  ancestors: [],
+  searchActive: false,
+  window: {addFilter: 'folder'},
+}
+
 export const search = {
   loading: false,
   results: null,
-}
-
-export const finder = {
-  list: [],
-  search: '',
-  ancestors: [],
-  resultsSearch: '',
 }
 
 export const document = {
@@ -92,7 +92,7 @@ const initialState = {
   dialog,
   system,
   content,
-  finder,
+  drive,
   job,
   document,
   section,

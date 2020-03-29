@@ -14,6 +14,7 @@ import nocodeSelectors from '../selectors/nocode'
 import routerSelectors from '../selectors/router'
 
 import uiActions from './ui'
+import driveActions from './drive'
 import jobActions from './job'
 import snackbarActions from './snackbar'
 import routerActions from './router'
@@ -365,6 +366,21 @@ const sideEffects = {
     dispatch(snackbarActions.setSuccess(`section updated`))
   }),
 
+  changeSectionFolder: ({
+    id,
+  }) => wrapper('changeSectionFolder', async (dispatch, getState) => {
+    const newFolderId = await dispatch(driveActions.getDriveId({
+      addFilter: 'folder',
+    }))
+
+    if(!newFolderId) return
+
+    console.log('--------------------------------------------')
+    console.log('--------------------------------------------')
+    console.log('we have the id')
+    console.dir(newFolderId)
+  }),
+
   hideContent: ({
     id,
     name,
@@ -427,23 +443,6 @@ const sideEffects = {
     }
   }),
 
-  // loop waiting for a change in the formWindow state
-  waitForFormWindow: () => async (dispatch, getState) => {
-    let open = true
-    let confirmed = false
-    while(open) {
-      await Promise.delay(100)
-      const currentSettings = contentSelectors.formWindow(getState())
-      if(!currentSettings || typeof(currentSettings.accepted) == 'boolean') {
-        confirmed = currentSettings ?
-          currentSettings.accepted :
-          false
-        open = false
-      }
-    }
-    return confirmed
-  },
-
   waitForForm: ({
     form,
     values = {},
@@ -470,7 +469,7 @@ const sideEffects = {
 
     while(!success) {
       try {
-        const confirmed = await dispatch(actions.waitForFormWindow())
+        const confirmed = await dispatch(uiActions.waitForWindow(contentSelectors.formWindow))
         if(confirmed) {
           // not sure why but this delay prevents the loading overlay from flickering
           await Promise.delay(200)
