@@ -90,6 +90,7 @@ const driver = {
   getGoogleLink,
   getItemThumbnail,
   getEditUrl,
+  getBaseMimeType,
 }
 
 export default driver

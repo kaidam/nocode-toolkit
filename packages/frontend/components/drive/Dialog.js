@@ -168,6 +168,8 @@ const DriveDialog = ({
                 <List
                   items={ items }
                   addFilter={ addFilter }
+                  onOpenFolder={ onOpenFolder }
+                  onSelectItem={ actions.onSelect }
                 />
               )
             }

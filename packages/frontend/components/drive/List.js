@@ -1,6 +1,8 @@
 import React from 'react'
+import classnames from 'classnames'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
 
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
@@ -8,6 +10,7 @@ import TableCell from '@material-ui/core/TableCell'
 import TableRow from '@material-ui/core/TableRow'
 
 import driveUtils from '../../utils/drive'
+import icons from '../../icons'
 
 const useStyles = makeStyles(theme => createStyles({
   root: {
@@ -25,6 +28,11 @@ const useStyles = makeStyles(theme => createStyles({
     padding: '0px',
     paddingTop: '5px',
     paddingBottom: '5px',
+  },
+  actionsCell: {
+    width: '200px',
+    textAlign: 'right',
+    paddingRight: theme.spacing(2),
   },
   fileNameContainer: {
     display: 'flex',
@@ -47,12 +55,20 @@ const useStyles = makeStyles(theme => createStyles({
     width: '32px',
     border: '1px solid #999',
   },
+  rowButton: {
+    marginLeft: theme.spacing(1),
+  },
 }))
 
 const FinderList = ({
   items,
+  addFilter = '',
+  onOpenFolder,
+  onSelectItem,
 }) => {
   const classes = useStyles()
+
+  const actionsCellClassname = classnames(classes.tableCell, classes.actionsCell)
 
   if(!items || items.length <= 0) {
     return (
@@ -70,13 +86,19 @@ const FinderList = ({
 
                   const icon = driveUtils.getItemIcon(item)
                   const thumbnail = driveUtils.getItemThumbnail(item)
-                  
+                  const type = driveUtils.getBaseMimeType(item.mimeType)
+
+                  const canAdd = !addFilter || addFilter.indexOf(type) >= 0
+                  const canOpen = type == 'folder'
+
                   return (
                     <TableRow
                       key={ i }
                       hover
-                      onClick={() => handleRowClick(row)}
-                      onDoubleClick={() => handleRowDoubleClick(row)}
+                      onClick={() => {
+                        if(!canOpen) return
+                        onOpenFolder(item.id)
+                      }}
                     >
                       <TableCell className={ classes.tableCell }>
                         <div className={ classes.fileNameContainer }>
@@ -102,6 +124,33 @@ const FinderList = ({
                           </div>
                           { item.name }
                         </div>
+                      </TableCell>
+                      <TableCell className={ actionsCellClassname }>
+                        {
+                          canOpen && (
+                            <Button
+                              size="small"
+                              variant="contained"
+                              className={ classes.rowButton }
+                              onClick={ () => onOpenFolder(item.id) }
+                            >
+                              View
+                            </Button>
+                          )
+                        }
+                        {
+                          canAdd && (
+                            <Button
+                              size="small"
+                              variant="contained"
+                              color="secondary"
+                              className={ classes.rowButton }
+                              onClick={ () => onSelectItem(item) }
+                            >
+                              Select
+                            </Button>
+                          )
+                        }
                       </TableCell>
                     </TableRow>
                   )

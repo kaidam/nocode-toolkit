@@ -44,7 +44,7 @@ const reducers = {
   acceptWindow: (state, action) => {
     if(state.window) {
       state.window.accepted = true
-      state.window.id = action.payload
+      state.window.result = action.payload
     }
   },
   cancelWindow: (state, action) => {

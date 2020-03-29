@@ -34,7 +34,10 @@ export const drive = {
   list: [],
   ancestors: [],
   searchActive: false,
-  window: {addFilter: 'folder'},
+  window: {
+    addFilter: 'folder',
+    listFilter: 'folder,document',
+  },
 }
 
 export const search = {

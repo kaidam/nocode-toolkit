@@ -369,16 +369,16 @@ const sideEffects = {
   changeSectionFolder: ({
     id,
   }) => wrapper('changeSectionFolder', async (dispatch, getState) => {
-    const newFolderId = await dispatch(driveActions.getDriveId({
+    const newFolder = await dispatch(driveActions.getDriveId({
       addFilter: 'folder',
     }))
 
-    if(!newFolderId) return
+    if(!newFolder) return
 
     console.log('--------------------------------------------')
     console.log('--------------------------------------------')
-    console.log('we have the id')
-    console.dir(newFolderId)
+    console.log('we have the folder')
+    console.dir(newFolder)
   }),
 
   hideContent: ({
