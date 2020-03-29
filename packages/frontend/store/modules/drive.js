@@ -95,7 +95,7 @@ const sideEffects = {
     search,
     filter,
     page,
-  } = {}) => wrapper('loadList', async (dispatch, getState) => {
+  } = {}) => wrapper('getList', async (dispatch, getState) => {
     const items = await loaders.getList(getState, {
       driver,
       parent,
@@ -113,7 +113,7 @@ const sideEffects = {
   getAncestors: ({
     driver,
     parent,
-  } = {}) => wrapper('loadAncestors', async (dispatch, getState) => {
+  } = {}) => wrapper('getAncestors', async (dispatch, getState) => {
     const ancestors = await loaders.getAncestors(getState, {
       driver,
       parent,
