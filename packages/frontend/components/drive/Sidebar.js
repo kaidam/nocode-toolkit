@@ -1,6 +1,5 @@
 import React from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
-import Fab from '@material-ui/core/Fab'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
@@ -12,8 +11,6 @@ import MyDriveLogo from '../icons/MyDriveLogo'
 import SharedWithMeLogo from '../icons/SharedWithMeLogo'
 import icons from '../../icons'
 
-const AddIcon = icons.add
-
 const useStyles = makeStyles(theme => createStyles({
   root: {
     display: 'flex',
@@ -24,6 +21,7 @@ const useStyles = makeStyles(theme => createStyles({
     marginLeft: '30px',
     display: 'flex',
   },
+  
   driveTitle: {
     color: '#999',
     display: 'inline-block',
@@ -44,11 +42,6 @@ const useStyles = makeStyles(theme => createStyles({
   extendedIcon: {
     marginRight: theme.spacing(1),
   },
-  addButton: {
-    marginLeft: '20px',
-    marginBottom: '20px',
-    backgroundColor: '#ffffff',
-  }
 }))
 
 const DriveSidebar = ({
@@ -61,10 +54,6 @@ const DriveSidebar = ({
       <div className={ classes.titleContainer }>
         <GoogleDriveLogo /> <span className={ classes.driveTitle }>Drive</span>
       </div>
-      <Fab variant="extended" className={ classes.addButton } onClick={ () => {} }>
-        <AddIcon className={ classes.extendedIcon } />
-        New
-      </Fab>
       <Divider />
       <div className={ classes.tabsContainer }>
         <List component="nav">

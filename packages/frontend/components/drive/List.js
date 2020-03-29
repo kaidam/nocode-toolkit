@@ -66,7 +66,7 @@ const FinderList = ({
           <Table>
             <TableBody>
               {
-                data.map((item, i) => {
+                items.map((item, i) => {
 
                   const icon = driveUtils.getItemIcon(item)
                   const thumbnail = driveUtils.getItemThumbnail(item)

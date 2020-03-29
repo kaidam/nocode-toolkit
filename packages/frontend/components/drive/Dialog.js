@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
@@ -77,6 +77,11 @@ const DriveDialog = ({
   const window = useSelector(driveSelectors.window)
   const loading = useSelector(driveSelectors.loading.getList)
 
+  const {
+    addFilter,
+    listFilter,
+  } = window
+
   const actions = Actions(useDispatch(), {
     onGetList: driveActions.getList,
     onGetAncestors: driveActions.getAncestors,
@@ -99,10 +104,26 @@ const DriveDialog = ({
 
   const onSubmitSearch = useCallback(() => {
     actions.onGetList({
+      driver: 'drive',
       search,
+      parent: tab,
+      filter: listFilter,
     })
   }, [
     search,
+    tab,
+    listFilter,
+  ])
+
+  useEffect(() => {
+    actions.onGetList({
+      driver: 'drive',
+      parent,
+      filter: listFilter,
+    })
+  }, [
+    parent,
+    listFilter,
   ])
 
   return (
@@ -146,7 +167,7 @@ const DriveDialog = ({
               ) : (
                 <List
                   items={ items }
-                  addFilter={ window.addFilter }
+                  addFilter={ addFilter }
                 />
               )
             }
