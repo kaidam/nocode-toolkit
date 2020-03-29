@@ -8,7 +8,6 @@ import routerSelectors from '../../store/selectors/router'
 const useSectionTree = ({
   section,
 }) => {
-
   const dispatch = useDispatch()
 
   const [ openFolders, setOpenFolders ] = useState({})

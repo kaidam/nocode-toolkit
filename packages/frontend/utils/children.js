@@ -35,7 +35,8 @@ const getSectionChildrenIds = ({
   section,
   nodes,
   locations,
-}) => section.children
+}) => {
+  return section.children
   .reduce((all, id) => {
     // if there is a location record present - it will tell us if the item is a ghost
     // if it is a ghost - then include the items children not the item itself
@@ -44,6 +45,7 @@ const getSectionChildrenIds = ({
     const node = nodes[id]
     return all.concat(node.children || [])
   }, [])
+}
 
 // sort the children of an item based on
 // the annotation settings

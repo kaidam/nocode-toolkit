@@ -122,7 +122,7 @@ const sideEffects = {
   }),
 
   // open the finder dialog and return an id (or not if the window was cancelled)
-  getDriveId: (windowProps = {}) => async (dispatch, getState) => {
+  getDriveItem: (windowProps = {}) => async (dispatch, getState) => {
     dispatch(actions.openWindow({
       ...windowProps
     }))
@@ -133,7 +133,7 @@ const sideEffects = {
         const confirmed = await dispatch(uiActions.waitForWindow(driveSelectors.window))
         if(confirmed) {
           const currentSettings = driveSelectors.window(getState())
-          result = currentSettings.id
+          result = currentSettings.result
         }
         success = true
       } catch(e) {

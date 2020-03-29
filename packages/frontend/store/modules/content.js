@@ -70,6 +70,12 @@ const loaders = {
 
   updateSection: (getState, id, payload) => axios.put(apiUtils.websiteUrl(getState, `/section/${id}`), payload)
     .then(apiUtils.process),
+
+  editSectionFolder: (getState, id, payload) => axios.put(apiUtils.websiteUrl(getState, `/section/${id}/folder`), payload)
+    .then(apiUtils.process),
+
+  resetSectionFolder: (getState, id) => axios.delete(apiUtils.websiteUrl(getState, `/section/${id}/folder`))
+    .then(apiUtils.process),
 }
 
 const getNodeFormValues = (getState, id) => {
@@ -366,19 +372,29 @@ const sideEffects = {
     dispatch(snackbarActions.setSuccess(`section updated`))
   }),
 
-  changeSectionFolder: ({
+  editSectionFolder: ({
     id,
-  }) => wrapper('changeSectionFolder', async (dispatch, getState) => {
-    const newFolder = await dispatch(driveActions.getDriveId({
+  }) => wrapper('editSectionFolder', async (dispatch, getState) => {
+    const newFolder = await dispatch(driveActions.getDriveItem({
+      listFilter: 'folder',
       addFilter: 'folder',
     }))
-
     if(!newFolder) return
+    await loaders.editSectionFolder(getState, id, {
+      content_id: newFolder.id
+    })
+    await dispatch(jobActions.rebuild())
+    await dispatch(actions.reload())
+    dispatch(snackbarActions.setSuccess(`section folder updated`))
+  }),
 
-    console.log('--------------------------------------------')
-    console.log('--------------------------------------------')
-    console.log('we have the folder')
-    console.dir(newFolder)
+  resetSectionFolder: ({
+    id,
+  }) => wrapper('resetSectionFolder', async (dispatch, getState) => {
+    await loaders.resetSectionFolder(getState, id)
+    await dispatch(jobActions.rebuild())
+    await dispatch(jobActions.reload())
+    dispatch(snackbarActions.setSuccess(`section folder updated`))
   }),
 
   hideContent: ({
