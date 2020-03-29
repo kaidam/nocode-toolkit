@@ -242,9 +242,9 @@ const MenuButton = ({
       }
       if(typeof(item.handler) === 'function') {
         item.handler()
-      }
-      if(onClick) {
-        onClick(item)
+        if(onClick) {
+          onClick(item)
+        }
       }
       if(!item.items) handleClose()
     },
