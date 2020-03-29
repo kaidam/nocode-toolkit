@@ -1,8 +1,14 @@
 import React, { useCallback, useMemo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import blue from '@material-ui/core/colors/blue'
+import CircularProgress from '@material-ui/core/CircularProgress'
 
 const useStyles = makeStyles(theme => ({
+  loadingRoot: {
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+  },
   root: {
     display: 'flex',
     flexDirection: 'row',
@@ -31,6 +37,7 @@ const DriveBreadcrumbs = ({
   ancestors,
   parent,
   searchActive,
+  loading,
   onOpenFolder,
   onOpenTab,
 }) => {
@@ -91,6 +98,19 @@ const DriveBreadcrumbs = ({
         folder: ancestor.id,
       }
     }))
+  }
+
+  if(loading) {
+    return (
+      <div className={ classes.loadingRoot }>
+        <CircularProgress
+          variant="indeterminate"
+          disableShrink
+          size={16}
+          thickness={2}
+        />
+      </div>
+    )
   }
 
   return (

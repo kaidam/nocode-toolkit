@@ -7,6 +7,7 @@ import {
 
 const NETWORK_NAMES = networkProps('drive', [
   'getList',
+  'getAncestors',
 ])
 
 const list = state => state.drive.list

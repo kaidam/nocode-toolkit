@@ -76,6 +76,7 @@ const DriveDialog = ({
   const searchActive = useSelector(driveSelectors.searchActive)
   const window = useSelector(driveSelectors.window)
   const loading = useSelector(driveSelectors.loading.getList)
+  const ancestorsLoading = useSelector(driveSelectors.loading.getAncestors)
 
   const {
     addFilter,
@@ -85,6 +86,7 @@ const DriveDialog = ({
   const actions = Actions(useDispatch(), {
     onGetList: driveActions.getList,
     onGetAncestors: driveActions.getAncestors,
+    onSetAncestors: driveActions.setAncestors,
     onCancel: driveActions.cancelWindow,
     onSelect: driveActions.acceptWindow,
   })
@@ -109,6 +111,7 @@ const DriveDialog = ({
       parent: tab,
       filter: listFilter,
     })
+    actions.onSetAncestors([])
   }, [
     search,
     tab,
@@ -120,6 +123,10 @@ const DriveDialog = ({
       driver: 'drive',
       parent,
       filter: listFilter,
+    })
+    actions.onGetAncestors({
+      driver: 'drive',
+      parent,
     })
   }, [
     parent,
@@ -156,6 +163,7 @@ const DriveDialog = ({
               ancestors={ ancestors }
               parent={ parent }
               searchActive={ searchActive }
+              loading={ ancestorsLoading }
               onOpenFolder={ onOpenFolder }
               onOpenTab={ onOpenTab }
             />
@@ -168,6 +176,7 @@ const DriveDialog = ({
                 <List
                   items={ items }
                   addFilter={ addFilter }
+                  searchActive={ searchActive }
                   onOpenFolder={ onOpenFolder }
                   onSelectItem={ actions.onSelect }
                 />

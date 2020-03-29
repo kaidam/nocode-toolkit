@@ -63,6 +63,7 @@ const useStyles = makeStyles(theme => createStyles({
 const FinderList = ({
   items,
   addFilter = '',
+  searchActive,
   onOpenFolder,
   onSelectItem,
 }) => {
@@ -71,8 +72,10 @@ const FinderList = ({
   const actionsCellClassname = classnames(classes.tableCell, classes.actionsCell)
 
   if(!items || items.length <= 0) {
-    return (
+    return searchActive ? (
       <Typography>No results found...</Typography>
+    ) : (
+      <Typography>This folder is empty...</Typography>
     )
   }
   else {
