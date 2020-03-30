@@ -148,6 +148,7 @@ const sideEffects = {
   // trigger a rebuild of the preview data
   rebuild: ({
     withSnackbar = false,
+    beforeReload,
   } = {}) => async (dispatch, getState) => {
     const previewData = await loaders.getPreviewData(getState, true)
     const jobId = previewData.config.previewJobId
@@ -167,6 +168,9 @@ const sideEffects = {
           }))
         },
       }))
+      if(beforeReload) {
+        await beforeReload()
+      }
       await dispatch(actions.reload())
       dispatch(uiActions.setLoading(false))
       if(withSnackbar) {

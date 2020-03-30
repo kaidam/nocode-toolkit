@@ -4,6 +4,7 @@ import library from '../../library'
 import childrenUtils from '../../utils/children'
 import nocodeSelectors from './nocode'
 import routerSelectors from './router'
+import systemSelectors from './system'
 
 const DEFAULT_OBJECT = {}
 const DEFAULT_ARRAY = []
@@ -71,8 +72,9 @@ const section = () => createSelector(
   nocodeSelectors.sections,
   nocodeSelectors.annotations,
   nocodeSelectors.locations,
+  systemSelectors.website,
   (_, name) => name,
-  (nodes, sections, annotations, locations, name) => {
+  (nodes, sections, annotations, locations, website, name) => {
     const section = sections[name]
     if(!section) return null
     const annotation = annotations[`section:${name}`] || {}
@@ -83,10 +85,14 @@ const section = () => createSelector(
     const ghostFolder = ghostId ?
       nodes[ghostId] :
       null
+    const defaultFolderId = website && website.meta ?
+      website.meta[`nocodeFolderId_${name}`] :
+      null
     return {
       node: section,
       annotation,
       ghostFolder,
+      defaultFolderId,
     }
   },
 )

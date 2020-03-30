@@ -383,7 +383,11 @@ const sideEffects = {
     await loaders.editSectionFolder(getState, id, {
       content_id: newFolder.id
     })
-    await dispatch(jobActions.rebuild())
+    await dispatch(jobActions.rebuild({
+      beforeReload: async () => {
+        dispatch(routerActions.navigateTo('root'))
+      }
+    }))
     dispatch(snackbarActions.setSuccess(`section folder updated`))
   }),
 
@@ -391,7 +395,11 @@ const sideEffects = {
     id,
   }) => wrapper('resetSectionFolder', async (dispatch, getState) => {
     await loaders.resetSectionFolder(getState, id)
-    await dispatch(jobActions.rebuild())
+    await dispatch(jobActions.rebuild({
+      beforeReload: async () => {
+        dispatch(routerActions.navigateTo('root'))
+      }
+    }))
     dispatch(snackbarActions.setSuccess(`section folder updated`))
   }),
 
