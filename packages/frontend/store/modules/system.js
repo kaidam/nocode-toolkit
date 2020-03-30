@@ -78,12 +78,12 @@ const loaders = {
   updateWebsiteMeta: (id, data) => axios.put(apiUtils.apiUrl(`/websites/${id}/meta`), data)
     .then(apiUtils.process),
 
-  ensureSectionFolders: (getState, {
+  ensureSectionResources: (getState, {
     driver,
-    sections,
-  }) => axios.post(apiUtils.websiteUrl(getState, `/remote/folders`), {
+    resources,
+  }) => axios.post(apiUtils.websiteUrl(getState, `/remote/resources`), {
     driver,
-    sections,
+    resources,
   })
     .then(apiUtils.process),
 
@@ -160,13 +160,13 @@ const sideEffects = {
 
   // called by a template if it wants to create
   // folders for each of it's sections on the users drive
-  ensureSectionFolders: ({
+  ensureSectionResources: ({
     driver,
-    sections,
+    resources,
   }) => async (dispatch, getState) => {
-    const result = await loaders.ensureSectionFolders(getState, {
+    const result = await loaders.ensureSectionResources(getState, {
       driver,
-      sections,
+      resources,
     })
     return result
   },
