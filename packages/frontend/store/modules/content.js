@@ -417,19 +417,35 @@ const sideEffects = {
       addFilter: 'document',
     }))
     if(!newDocument) return
+    dispatch(uiActions.setLoading({
+      transparent: true,
+      message: `updating homepage`,
+    }))
     await loaders.editHomepage(getState, {
       content_id: newDocument.id
     })
     await dispatch(jobActions.reload())
     dispatch(snackbarActions.setSuccess(`homepage updated`))
+  }, {
+    after: async (dispatch, getState, error) => {
+      dispatch(uiActions.setLoading(false))
+    }
   }),
 
   resetHomepage: ({
     
   } = {}) => wrapper('resetHomepage', async (dispatch, getState) => {
+    dispatch(uiActions.setLoading({
+      transparent: true,
+      message: `updating homepage`,
+    }))
     await loaders.resetHomepage(getState)
     await dispatch(jobActions.reload())
     dispatch(snackbarActions.setSuccess(`homepage reset`))
+  }, {
+    after: async (dispatch, getState, error) => {
+      dispatch(uiActions.setLoading(false))
+    }
   }),
 
   hideContent: ({

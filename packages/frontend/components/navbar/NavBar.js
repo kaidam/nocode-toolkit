@@ -63,7 +63,7 @@ const NavBar = ({
   const homeItem = useSelector(contentSelectors.homeItem)
 
   const navbarItems = useMemo(() => {
-    if(!withHome) return tree
+    if(!withHome || !homeItem) return tree
     return [homeItem].concat(tree)
   }, [
     tree,
