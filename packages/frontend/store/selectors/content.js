@@ -97,6 +97,31 @@ const section = () => createSelector(
   },
 )
 
+const homeItem = createSelector(
+  nocodeSelectors.nodes,
+  nocodeSelectors.singletons,
+  systemSelectors.website,
+  routerSelectors.routeNameMap,
+  routerSelectors.route,
+  (nodes, singletons, website, routeMap, currentRoute) => {
+    const route = routeMap['root']
+    const singleton = singletons['home']
+    if(!route || !singleton) return null
+    const node = nodes[singleton.item]
+    if(!node) return nulls
+    const defaultDocumentId = website && website.meta ?
+      website.meta[`nocode_default_resource_id_home`] :
+      null
+    return Object.assign({}, node, {
+      isHome: true,
+      route,
+      currentPage: currentRoute.item == node.id,
+      children: [],
+      defaultDocumentId,
+    })
+  },
+)
+
 const sectionHiddenItems = () => createSelector(
   nocodeSelectors.nodes,
   nocodeSelectors.sections,
@@ -237,6 +262,7 @@ const selectors = {
   formWindow,
   settings,
   sectionTree,
+  homeItem,
   sectionHiddenItems,
   section,
   itemRoute,

@@ -76,6 +76,12 @@ const loaders = {
 
   resetSectionFolder: (getState, id) => axios.delete(apiUtils.websiteUrl(getState, `/section/${id}/folder`))
     .then(apiUtils.process),
+
+  editHomepage: (getState, payload) => axios.put(apiUtils.websiteUrl(getState, `/homepage`), payload)
+    .then(apiUtils.process),
+
+  resetHomepage: (getState) => axios.delete(apiUtils.websiteUrl(getState, `/homepage`))
+    .then(apiUtils.process),
 }
 
 const getNodeFormValues = (getState, id) => {
@@ -401,6 +407,29 @@ const sideEffects = {
       }
     }))
     dispatch(snackbarActions.setSuccess(`section folder updated`))
+  }),
+
+  changeHomepage: ({
+    
+  } = {}) => wrapper('changeHomepage', async (dispatch, getState) => {
+    const newDocument = await dispatch(driveActions.getDriveItem({
+      listFilter: 'folder,document',
+      addFilter: 'document',
+    }))
+    if(!newDocument) return
+    await loaders.editHomepage(getState, {
+      content_id: newDocument.id
+    })
+    await dispatch(jobActions.reload())
+    dispatch(snackbarActions.setSuccess(`homepage updated`))
+  }),
+
+  resetHomepage: ({
+    
+  } = {}) => wrapper('resetHomepage', async (dispatch, getState) => {
+    await loaders.resetHomepage(getState)
+    await dispatch(jobActions.reload())
+    dispatch(snackbarActions.setSuccess(`homepage reset`))
   }),
 
   hideContent: ({

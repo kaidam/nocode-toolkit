@@ -60,24 +60,15 @@ const NavBar = ({
 
   const treeSelector = useMemo(contentSelectors.sectionTree, [])
   const tree = useSelector(state => treeSelector(state, section))
-  const currentRoute = useSelector(routerSelectors.route)
+  const homeItem = useSelector(contentSelectors.homeItem)
 
   const navbarItems = useMemo(() => {
     if(!withHome) return tree
-    return [{
-      id: 'home',
-      name: 'Home',
-      type: 'document',
-      route: {
-        name: 'root',
-      },
-      children: [],
-      currentPage: currentRoute.name == 'root',
-    }].concat(tree)
+    return [homeItem].concat(tree)
   }, [
     tree,
     withHome,
-    currentRoute,
+    homeItem,
   ])
 
   if(small) {
