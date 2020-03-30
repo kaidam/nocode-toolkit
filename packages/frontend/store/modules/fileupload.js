@@ -5,6 +5,7 @@ import CreateActions from '../utils/createActions'
 import { fileupload as initialState } from '../initialState'
 import apiUtils from '../utils/api'
 import networkWrapper from '../utils/networkWrapper'
+import uiActions from './ui'
 
 const prefix = 'fileupload'
 
@@ -151,20 +152,21 @@ const sideEffects = {
 
   syncFiles: ({
     driver,
-    fileid,
-    onComplete,
+    id,
   }) => wrapper('syncFiles', async (dispatch, getState) => {
-
+    dispatch(uiActions.setLoading({
+      transparent: true,
+      message: `uploading image`,
+    }))
     const results = await loaders.syncFiles(getState, {
       driver,
-      fileid,
+      id,
     })
-
-    if(onComplete) {
-      await onComplete(results)
-    }
-
     return results  
+  }, {
+    after: async (dispatch, getState, error) => {
+      dispatch(uiActions.setLoading(false))
+    }
   })
 }
 

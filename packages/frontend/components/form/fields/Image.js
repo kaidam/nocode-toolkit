@@ -15,6 +15,7 @@ import Loading from '../../system/Loading'
 
 import UploadStatus from '../../uploader/UploadStatus'
 
+import driveActions from '../../../store/modules/drive'
 import fileuploadActions from '../../../store/modules/fileupload'
 import fileuploadSelectors from '../../../store/selectors/fileupload'
 
@@ -68,6 +69,7 @@ const ImageField = ({
     onSyncFiles: fileuploadActions.syncFiles,
     onUploadFiles: fileuploadActions.uploadFiles,
     reset: fileuploadActions.reset,
+    getDriveItem: driveActions.getDriveItem,
   })
 
   // const onAddFinderContent = useCallback(({id, data}) => {
@@ -113,6 +115,22 @@ const ImageField = ({
     setFieldValue(name, null)
   }, [name])
 
+  const onChooseDriveImage = useCallback(async () => {
+    const image = await actions.getDriveItem({
+      listFilter: 'folder,image',
+      addFilter: 'image',
+    })
+    if(!image) return
+    const result = await actions.onSyncFiles({
+      driver: 'drive',
+      id: image.id,
+    })
+    console.log('--------------------------------------------')
+    console.log('--------------------------------------------')
+    console.dir(result)
+    setFieldValue(name, result)
+  }, [])
+
   const buttons = useMemo(() => {
     return [{
       title: 'Upload',
@@ -123,8 +141,7 @@ const ImageField = ({
       title: 'Google Drive',
       help: 'Choose an image on your google drive',
       icon: icons.drive,
-      //handler: onOpenUploader,
-      handler: () => {},
+      handler: onChooseDriveImage,
     }, {
       title: 'Unsplash',
       help: 'Choose an image from Unsplash',
