@@ -23,11 +23,12 @@ const useStyles = makeStyles(theme => {
   return {
     itemContainer: ({
       vertical,
-    }) => {
+      align = 'left',
+    } = {}) => {
       return vertical ? {
         
       } : {
-        float: 'left',
+        float: align,
       }
     },
 
@@ -37,13 +38,15 @@ const useStyles = makeStyles(theme => {
 
     item: ({
       contrast,
-      align = 'center',
+      align = 'left',
     } = {}) => ({
       ...theme.typography.button,
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'flex-start',
+      justifyContent: align == 'left' ?
+        'flex-start' :
+        'flex-end',
       fontWeight: '500',
       color: contrast ?
         theme.palette.primary.contrastText :
@@ -97,7 +100,7 @@ const useStyles = makeStyles(theme => {
 const NavBarItem = ({
   item,
   contrast,
-  align,
+  align = 'left',
   vertical,
   ItemEditorComponent,
   onClick,
@@ -133,8 +136,9 @@ const NavBarItem = ({
           className={ itemClass }
           onClick={ onClick }
         >
+          { align == 'right' ? item.name : null }
           { editorComponent }
-          { item.name }
+          { align == 'left' ? item.name : null }
         </div>
       )
     }
@@ -166,8 +170,9 @@ const NavBarItem = ({
         className={ itemClass }
         {...linkProps}
       >
+        { align == 'right' ? item.name : null }
         { editorComponent }
-        { item.name }
+        { align == 'left' ? item.name : null }
       </LinkComponent>
     )
   }
