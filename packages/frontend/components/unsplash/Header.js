@@ -6,7 +6,14 @@ import TextField from '@material-ui/core/TextField'
 const useStyles = makeStyles(theme => createStyles({
   root: {
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+  },
+  titleContainer: {
+    flexGrow: 0,
+    fontSize: '1.4em',
+    textAlign: 'center',
   },
   searchContainer: {
     flexGrow: 1,
@@ -23,27 +30,33 @@ const useStyles = makeStyles(theme => createStyles({
   },
 }))
 
-const DriveHeader = ({
+const UnsplashHeader = ({
   search,
-  finderConfig,
-  onUpdateSearch,
-  onSearch,
-  onResetSearch,
+  onChange,
+  onSubmit,
 }) => {
 
   const classes = useStyles()
 
   const onUpdateSearchHandler = useCallback((ev) => {
-    onUpdateSearch(ev.target.value)
-  }, [onUpdateSearch])
+    onChange(ev.target.value)
+  }, [onChange])
 
   const onKeyPressHandler = useCallback((ev) => {
-    if(ev.key == 'Enter') onSearch()
-  }, [onSearch])
+    if(ev.key == 'Enter') onSubmit()
+  }, [onSubmit])
 
-  const searchComponent = useMemo(() => {
-    if(!finderConfig.canSearch()) return null
-    return (
+  return (
+    <div className={ classes.root }>
+      <div className={ classes.titleContainer }>
+        images by <a
+          style={{
+            color: '#000000',
+          }}
+          target="_blank"
+          href="https://unsplash.com/?utm_source=nocode&utm_medium=referral"
+        >Unsplash</a>
+      </div>
       <div className={ classes.searchContainer }>
         <TextField
           fullWidth
@@ -59,33 +72,13 @@ const DriveHeader = ({
           className={ classes.searchButton }
           variant="contained"
           size="small"
-          onClick={ onSearch }
+          onClick={ onSubmit }
         >
           Search
         </Button>
-        {/* <Button
-          className={ classes.searchButton }
-          variant="contained"
-          size="small"
-          onClick={ onResetSearch }
-        >
-          Clear
-        </Button> */}
       </div>
-    )
-  }, [
-    finderConfig,
-    search,
-    onUpdateSearchHandler,
-    onSearch,
-    onResetSearch,
-  ])
-
-  return (
-    <div className={ classes.root }>
-      { searchComponent }
     </div>
   )
 }
 
-export default DriveHeader
+export default UnsplashHeader

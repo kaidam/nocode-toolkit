@@ -16,6 +16,7 @@ import Loading from '../../system/Loading'
 import UploadStatus from '../../uploader/UploadStatus'
 
 import driveActions from '../../../store/modules/drive'
+import unsplashActions from '../../../store/modules/unsplash'
 import fileuploadActions from '../../../store/modules/fileupload'
 import fileuploadSelectors from '../../../store/selectors/fileupload'
 
@@ -70,6 +71,7 @@ const ImageField = ({
     onUploadFiles: fileuploadActions.uploadFiles,
     reset: fileuploadActions.reset,
     getDriveItem: driveActions.getDriveItem,
+    getUnsplashItem: unsplashActions.getUnsplashItem,
   })
 
   // const onAddFinderContent = useCallback(({id, data}) => {
@@ -128,6 +130,16 @@ const ImageField = ({
     setFieldValue(name, result)
   }, [])
 
+  const onChooseUnsplashImage = useCallback(async () => {
+    const image = await actions.getUnsplashItem({
+      
+    })
+    console.log('--------------------------------------------')
+    console.log('--------------------------------------------')
+    console.dir(image)
+    //setFieldValue(name, result)
+  }, [])
+
   const buttons = useMemo(() => {
     return [{
       title: 'Upload',
@@ -143,8 +155,7 @@ const ImageField = ({
       title: 'Unsplash',
       help: 'Choose an image from Unsplash',
       icon: icons.unsplash,
-      //handler: onOpenUploader,
-      handler: () => {},
+      handler: onChooseUnsplashImage,
     },{
       title: 'Reset',
       help: 'Clear this image',

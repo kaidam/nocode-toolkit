@@ -37,6 +37,12 @@ export const drive = {
   window: null,
 }
 
+export const unsplash = {
+  list: [],
+  searchActive: false,
+  window: null,
+}
+
 export const search = {
   loading: false,
   results: null,
@@ -93,6 +99,7 @@ const initialState = {
   system,
   content,
   drive,
+  unsplash,
   job,
   document,
   section,

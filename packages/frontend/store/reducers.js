@@ -40,6 +40,7 @@ const reducers = {
   ui: GetReducer('ui'),
   content: GetReducer('content'),
   drive: GetReducer('drive'),
+  unsplash: GetReducer('unsplash'),
   job: GetReducer('job'),
   fileupload: GetReducer('fileupload'),
   

@@ -18,10 +18,12 @@ import routerSelectors from '../../store/selectors/router'
 import dialogSelectors from '../../store/selectors/dialog'
 import contentSelectors from '../../store/selectors/content'
 import driveSelectors from '../../store/selectors/drive'
+import unsplashSelectors from '../../store/selectors/unsplash'
 
 import ConfirmDialog from './Confirm'
 import ContentDialog from '../content/Dialog'
 import DriveDialog from '../drive/Dialog'
+import UnsplashDialog from '../unsplash/Dialog'
 import SettingsDialog from '../settings/Dialog'
 
 const dialogs = {
@@ -45,6 +47,7 @@ const DialogLoader = ({
   const confirmWindow = useSelector(uiSelectors.confirmWindow)
   const formWindow = useSelector(contentSelectors.formWindow)
   const driveWindow = useSelector(driveSelectors.window)
+  const unsplashWindow = useSelector(unsplashSelectors.window)
   const dialogParams = useSelector(dialogSelectors.dialogParams)
   return (
     <div>
@@ -76,6 +79,11 @@ const DialogLoader = ({
       {
         driveWindow && (
           <DriveDialog />
+        )
+      }
+      {
+        unsplashWindow && (
+          <UnsplashDialog />
         )
       }
       <SnackBar />

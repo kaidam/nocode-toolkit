@@ -106,7 +106,6 @@ const DriveDialog = ({
 
   const onSubmitSearch = useCallback(() => {
     actions.onGetList({
-      driver: 'drive',
       search,
       parent: tab,
       filter: listFilter,
@@ -120,12 +119,10 @@ const DriveDialog = ({
 
   useEffect(() => {
     actions.onGetList({
-      driver: 'drive',
       parent,
       filter: listFilter,
     })
     actions.onGetAncestors({
-      driver: 'drive',
       parent,
     })
   }, [
@@ -190,50 +187,3 @@ const DriveDialog = ({
 }
 
 export default DriveDialog
-
-
-  // const leftButtons = useMemo(() => {
-  //   const paginationButtons = finderConfig.hasPagination() && (
-  //     <React.Fragment>
-  //       <Button
-  //         className={ classes.button }
-  //         type="button"
-  //         variant="contained"
-  //         onClick={ onLastPage }
-  //       >
-  //         Last Page
-  //       </Button>
-  //       <Button
-  //         className={ classes.button }
-  //         type="button"
-  //         variant="contained"
-  //         onClick={ onNextPage }
-  //       >
-  //         Next Page
-  //       </Button>
-  //     </React.Fragment>
-  //   )
-
-  //   const backButton = withBack && (
-  //     <Button
-  //       className={ classes.button }
-  //       type="button"
-  //       variant="contained"
-  //       onClick={ () => window.history.back() }
-  //     >
-  //       Back
-  //     </Button>
-  //   )
-
-  //   return (
-  //     <div className={ classes.buttonContainer }>
-  //       { backButton }
-  //       { paginationButtons }
-  //     </div>
-  //   )
-  // }, [
-  //   withBack,
-  //   finderConfig,
-  //   onLastPage,
-  //   onNextPage,
-  // ])
