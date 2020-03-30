@@ -95,15 +95,10 @@ const ImageField = ({
     inputRef,
   } = useDropzone({
     onDrop: async (files) => {
-      console.log('--------------------------------------------')
-      console.log('--------------------------------------------')
-      console.dir(files)
       const result = await actions.onUploadFiles({
         files,
       })
-      console.log('--------------------------------------------')
-      console.log('--------------------------------------------')
-      console.dir(result)
+      setFieldValue(name, result[0])
     },
     multiple: false,
   })

@@ -10,7 +10,7 @@ const prefix = 'fileupload'
 
 const wrapper = networkWrapper.factory(prefix)
 
-const getUploadUrl = (getState) => apiUtils.websiteUrl(getState, `/remote/upload`)
+const getUploadUrl = (getState) => apiUtils.websiteUrl(getState, `/storage/upload`)
 
 const resetState = (state) => {
   state.inProgress = false
@@ -119,7 +119,7 @@ const getFileUrlQuery = (file) => {
 }
 
 const loaders = {
-  syncFiles: (getState, payload) => axios.post(apiUtils.websiteUrl(getState, `/remote/sync`), payload)
+  syncFiles: (getState, payload) => axios.post(apiUtils.websiteUrl(getState, `/storage/sync`), payload)
     .then(apiUtils.process),
 }
 
