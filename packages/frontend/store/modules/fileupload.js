@@ -126,7 +126,6 @@ const loaders = {
 const sideEffects = {
   uploadFiles: ({
     files,
-    onComplete,
   }) => wrapper('uploadFiles', async (dispatch, getState) => {
 
     dispatch(actions.startUploads({
@@ -146,11 +145,7 @@ const sideEffects = {
       },
     }))
 
-    if(onComplete) {
-      await onComplete(results)
-      await dispatch(actions.reset())
-    }
-
+    await dispatch(actions.reset())
     return results  
   }),
 

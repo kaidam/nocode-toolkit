@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, useRef } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 
 import { useSelector, useDispatch } from 'react-redux'
@@ -11,8 +11,6 @@ import InputLabel from '@material-ui/core/InputLabel'
 import FormHelperText from '@material-ui/core/FormHelperText'
 
 import Actions from '../../../utils/actions'
-
-//import EmbeddedFinder from '../../finder/Embedded'
 import Loading from '../../system/Loading'
 
 import UploadStatus from '../../uploader/UploadStatus'
@@ -21,8 +19,6 @@ import fileuploadActions from '../../../store/modules/fileupload'
 import fileuploadSelectors from '../../../store/selectors/fileupload'
 
 import icons from '../../../icons'
-
-import useImageUploaders from '../../hooks/useImageUploaders'
 
 const UploadIcon = icons.upload
 const DeleteIcon = icons.delete
@@ -62,9 +58,10 @@ const ImageField = ({
   item,
 }) => {
   const classes = useStyles()
-  const syncLoading = useSelector(fileuploadSelectors.loading.syncFiles)
+  
   const uploadInProgress = useSelector(fileuploadSelectors.inProgress)
   const uploadStatus = useSelector(fileuploadSelectors.status)
+  const syncLoading = useSelector(fileuploadSelectors.loading.syncFiles)
   const uploadError = useSelector(fileuploadSelectors.errors.uploadFiles)
 
   const actions = Actions(useDispatch(), {
@@ -73,44 +70,46 @@ const ImageField = ({
     reset: fileuploadActions.reset,
   })
 
-  const [ finderDriver, setFinderDriver ] = useState(null)
+  // const onAddFinderContent = useCallback(({id, data}) => {
+  //   onCloseFinder()
+  //   actions.onSyncFiles({
+  //     driver: finderDriver,
+  //     fileid: id,
+  //     onComplete: (file) => {
+  //       const finalData = Object.assign({}, data, file, {
+  //         driver: finderDriver,
+  //       })
+  //       setFieldValue(name, finalData)
+  //     }
+  //   })
+  //   // }
+  // }, [setFieldValue, finderDriver, name])
 
-  const onAddFinderContent = useCallback(({id, data}) => {
-    onCloseFinder()
-    actions.onSyncFiles({
-      driver: finderDriver,
-      fileid: id,
-      onComplete: (file) => {
-        const finalData = Object.assign({}, data, file, {
-          driver: finderDriver,
-        })
-        setFieldValue(name, finalData)
-      }
-    })
-    // }
-  }, [setFieldValue, finderDriver, name])
+  // const onAddUploaderContent = useCallback((files) => {
+  //   setFieldValue(name, files[0])
+  // }, [setFieldValue, name])
 
-  const onAddUploaderContent = useCallback((files) => {
-    setFieldValue(name, files[0])
-  }, [setFieldValue, name])
-
-  
   const {
     getRootProps,
     getInputProps,
     inputRef,
   } = useDropzone({
-    onDrop: (files) => {
-      actions.onUploadFiles({
+    onDrop: async (files) => {
+      console.log('--------------------------------------------')
+      console.log('--------------------------------------------')
+      console.dir(files)
+      const result = await actions.onUploadFiles({
         files,
-        onComplete: onAddUploaderContent,
       })
+      console.log('--------------------------------------------')
+      console.log('--------------------------------------------')
+      console.dir(result)
     },
     multiple: false,
   })
 
-  const onOpenFinder = useCallback((driver) => setFinderDriver(driver))
-  const onCloseFinder = useCallback(() => setFinderDriver(null))
+  // const onOpenFinder = useCallback((driver) => setFinderDriver(driver))
+  // const onCloseFinder = useCallback(() => setFinderDriver(null))
   const onOpenUploader = useCallback(() => {
     inputRef.current.click()
   }, [])
@@ -119,31 +118,30 @@ const ImageField = ({
     setFieldValue(name, null)
   }, [name])
 
-  const finderDialog = useMemo(() => {
-    if(!finderDriver) return null
-    // return (
-    //   <EmbeddedFinder
-    //     open
-    //     driver={ finderDriver }
-    //     addFilter="image"
-    //     listFilter="folder,image"
-    //     onAddContent={ onAddFinderContent }
-    //     onCancel={ onCloseFinder }
-    //   />
-    // )
-    return null
-  }, [finderDriver])
-
-  const imageUploaders = useImageUploaders()
-
   const buttons = useMemo(() => {
-    return imageUploaders
-      .concat({
-        title: 'Reset',
-        help: 'Clear this image',
-        icon: DeleteIcon,
-        handler: onResetValue
-      })
+    return [{
+      title: 'Upload',
+      help: 'Upload an image from your computer',
+      icon: icons.upload,
+      handler: onOpenUploader,
+    }, {
+      title: 'Google Drive',
+      help: 'Choose an image on your google drive',
+      icon: icons.drive,
+      //handler: onOpenUploader,
+      handler: () => {},
+    }, {
+      title: 'Unsplash',
+      help: 'Choose an image from Unsplash',
+      icon: icons.unsplash,
+      //handler: onOpenUploader,
+      handler: () => {},
+    },{
+      title: 'Reset',
+      help: 'Clear this image',
+      icon: DeleteIcon,
+      handler: onResetValue
+    }]
       .map((item, i) => {
         const Icon = item.icon
         return (
@@ -157,15 +155,13 @@ const ImageField = ({
               { item.title }&nbsp;&nbsp;&nbsp;<Icon size={ 16 } className={ classes.buttonIcon } />
             </Button>
           </Tooltip>
-          
         )
       })
   }, [
-    imageUploaders,
     onResetValue,
   ])
 
-  const description = item.helperText
+  const helperText = item.helperText
 
   return uploadInProgress || syncLoading ? (
     <div className={ classes.container }>
@@ -192,9 +188,9 @@ const ImageField = ({
           <InputLabel 
             htmlFor={ name }>{ item.title || item.id }</InputLabel>
           {
-            description ? (
-              <FormHelperText error={ false } id={ name + "-description" }>
-                { description }
+            helperText ? (
+              <FormHelperText error={ false } id={ name + "-helperText" }>
+                { helperText }
               </FormHelperText>
             ) : null
           }
@@ -215,7 +211,6 @@ const ImageField = ({
           </div>
         </Grid>
       </Grid>
-      { finderDialog }
     </div>
   )
 }

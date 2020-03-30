@@ -6,8 +6,9 @@ const GoogleDriveLogo = ({
   return (
     <div
       style={{
-        paddingTop: '6px',
-        display: 'inline-block',
+        display: 'flex',
+        height: '100%',
+        alignItems: 'center',
       }}
     >
       <svg width={`${size-4}pt`} height={`${size-4}pt`} viewBox="0 0 512 512" version="1.1" xmlns="http://www.w3.org/2000/svg">
