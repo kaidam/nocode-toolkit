@@ -74,14 +74,13 @@ const DriveDialog = ({
   const items = useSelector(driveSelectors.list)
   const ancestors = useSelector(driveSelectors.ancestors)
   const searchActive = useSelector(driveSelectors.searchActive)
-  const window = useSelector(driveSelectors.window)
-  const loading = useSelector(driveSelectors.loading.getList)
-  const ancestorsLoading = useSelector(driveSelectors.loading.getAncestors)
-
   const {
     addFilter,
     listFilter,
-  } = window
+    size = 'md',
+  } = useSelector(driveSelectors.window)
+  const loading = useSelector(driveSelectors.loading.getList)
+  const ancestorsLoading = useSelector(driveSelectors.loading.getAncestors)
 
   const actions = Actions(useDispatch(), {
     onGetList: driveActions.getList,
@@ -137,7 +136,7 @@ const DriveDialog = ({
       compact
       noScroll
       withCancel
-      size="xl"
+      size={ size }
       onCancel={ onCloseWindow }
     >
       <div className={ classes.root }>

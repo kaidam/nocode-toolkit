@@ -134,10 +134,7 @@ const ImageField = ({
     const image = await actions.getUnsplashItem({
       
     })
-    console.log('--------------------------------------------')
-    console.log('--------------------------------------------')
-    console.dir(image)
-    //setFieldValue(name, result)
+    setFieldValue(name, image)
   }, [])
 
   const buttons = useMemo(() => {

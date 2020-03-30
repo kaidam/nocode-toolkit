@@ -57,7 +57,9 @@ const UnsplashDialog = ({
   const [ page, setPage ] = useState(1)
 
   const items = useSelector(unsplashSelectors.list)
-  const window = useSelector(unsplashSelectors.window)
+  const {
+    size = 'md',
+  } = useSelector(unsplashSelectors.window)
   const loading = useSelector(unsplashSelectors.loading.getList)
 
   const actions = Actions(useDispatch(), {
@@ -82,7 +84,7 @@ const UnsplashDialog = ({
     if(newPage < 1) newPage = 1
     setPage(newPage)
   }, [
-    
+    page,
   ])
 
   useEffect(() => {
@@ -127,7 +129,7 @@ const UnsplashDialog = ({
       compact
       noScroll
       withCancel
-      size="xl"
+      size={ size }
       leftButtons={ leftButtons }
       onCancel={ onCloseWindow }
     >
