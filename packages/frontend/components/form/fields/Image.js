@@ -125,9 +125,6 @@ const ImageField = ({
       driver: 'drive',
       id: image.id,
     })
-    console.log('--------------------------------------------')
-    console.log('--------------------------------------------')
-    console.dir(result)
     setFieldValue(name, result)
   }, [])
 
