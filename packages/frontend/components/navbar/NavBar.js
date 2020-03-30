@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/IconButton'
 
 import contentSelectors from '../../store/selectors/content'
+import routerSelectors from '../../store/selectors/router'
 
 import NavBarItem from './NavBarItem'
 import NavBarMenu from './NavBarMenu'
@@ -39,6 +40,7 @@ const NavBar = ({
   contrast,
   vertical,
   align,
+  withHome,
 
   // the name of the section this navbar is for
   section,
@@ -58,9 +60,27 @@ const NavBar = ({
 
   const treeSelector = useMemo(contentSelectors.sectionTree, [])
   const tree = useSelector(state => treeSelector(state, section))
+  const currentRoute = useSelector(routerSelectors.route)
+
+  const navbarItems = useMemo(() => {
+    if(!withHome) return tree
+    return [{
+      id: 'home',
+      name: 'Home',
+      type: 'document',
+      route: {
+        name: 'root',
+      },
+      children: [],
+      currentPage: currentRoute.name == 'root',
+    }].concat(tree)
+  }, [
+    tree,
+    withHome,
+    currentRoute,
+  ])
 
   if(small) {
-
     const getButton = useCallback((onClick) => {
       return (
         <IconButton
@@ -75,7 +95,7 @@ const NavBar = ({
 
     return (
       <NavBarMenu
-        children={ tree }
+        children={ navbarItems }
         ItemEditorComponent={ ItemEditorComponent }
         getButton={ getButton }
       />
@@ -86,7 +106,7 @@ const NavBar = ({
       <nav>
         <ul className={ classes.navbar }>
           {
-            tree.map((item, i) => {
+            navbarItems.map((item, i) => {
               return (
                 <NavBarItem
                   key={ i }
