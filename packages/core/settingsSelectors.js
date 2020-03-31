@@ -24,6 +24,8 @@ const settingsValue = createSelector(
 )
 
 const plugins = state => library.plugins
+const libraryWidgets = state => library.widgets
+const libraryForms = state => library.forms
 const librarySettings = state => library.settings || DEFAULT_LIBRARY_SETTINGS
 
 const getTabSchema = (tabs) => tabs.reduce((all, tab) => all.concat(tab.schema), [])
@@ -53,6 +55,50 @@ const settings = createSelector(
       .filter(plugin => plugin.settings)
       .reduce((all, plugin) => Object.assign({}, all, plugin.settings.initialValues), {})
     return Object.assign(DEFAULT_SETTINGS, library.initialValues, pluginValues, values)
+  }
+)
+
+const widgets = createSelector(
+  settings,
+  plugins,
+  libraryWidgets,
+  (settings, plugins, widgets) => {
+    const all = widgets.concat(plugins.reduce((all, plugin) => {
+      return plugins.widgets ?
+        all.concat(plugins.widgets) :
+        all
+    }, []))
+    return all.filter(widget => {
+      return widget.isActive ?
+        widget.isActive(settings) :
+        true
+    })
+  }
+)
+
+// combine the library forms with the widget forms
+// return a map of widget_id -> form
+const forms = createSelector(
+  libraryForms,
+  widgets,
+  (libraryForms, widgets) => {
+    const widgetForms = widgets.reduce((all, widget) => {
+      all[widget.id] = widget.form
+      return all
+    }, {})
+
+    return Object.assign({}, widgetForms, libraryForms)
+  }
+)
+
+// return a map of the widgets from id -> renderer
+const widgetRenderers = createSelector(
+  widgets,
+  (widgets) => {
+    return widgets.reduce((all, widget) => {
+      all[widget.id] = widget.Render
+      return all
+    }, {})
   }
 )
 
@@ -112,6 +158,10 @@ const selectors = {
   activePluginMap,
   activePlugins,
   librarySettings,
+  libraryWidgets,
+  widgets,
+  forms,
+  widgetRenderers,
   snippets,
   pageSnippets,
   globalSnippets,

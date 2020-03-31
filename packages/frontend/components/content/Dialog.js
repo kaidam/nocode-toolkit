@@ -14,7 +14,7 @@ const ContentDialog = ({
 }) => {
 
   const formValues = useSelector(contentSelectors.formValues)
-  const formSchema = useSelector(contentSelectors.formSchema)
+  const flatFormSchema = useSelector(contentSelectors.flatFormSchema)
   const formWindow = useSelector(contentSelectors.formWindow)
 
   const actions = Actions(useDispatch(), {
@@ -28,7 +28,7 @@ const ContentDialog = ({
 
   return (
     <FormWrapper
-      schema={ formSchema }
+      schema={ flatFormSchema }
       initialValues={ formValues }
       onSubmit={ actions.onSubmit }
     >

@@ -11,9 +11,6 @@ const selectors = {
     const websiteId = selectors.websiteid(state)
     return `/plugin/api/${websiteId}/stripe`
   },
-  canAddPaymentButton: (state) => {
-
-  },
   router: routerSelectors,
 }
 

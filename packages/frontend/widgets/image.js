@@ -87,7 +87,6 @@ const Render = ({
 }
 
 const form = {
-  id: 'image',
   initialValues: {
     image: null,
     size: 'default',
@@ -118,9 +117,10 @@ const form = {
   }],
 }
 
-const widget = {
+const widget = () => ({
+  id: 'image',
   Render,
   form,
-}
+})
 
 export default widget

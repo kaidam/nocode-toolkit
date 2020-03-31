@@ -31,7 +31,6 @@ const ContentForm = ({
 
   const [ tab, setTab ] = useState(null)
   const form = useSelector(contentSelectors.form)
-  const formWindow = useSelector(contentSelectors.formWindow)
 
   let currentSchema = form.schema || []
 

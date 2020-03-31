@@ -72,7 +72,6 @@ const Render = ({
 }
 
 const form = {
-  id: 'social_links',
   initialValues: {
     facebook: '',
     twitter: '',
@@ -98,9 +97,10 @@ const form = {
   }],
 }
 
-const widget = {
+const widget = () => ({
+  id: 'social_links',
   Render,
   form,
-}
+})
 
 export default widget

@@ -1,7 +1,6 @@
 import Render from './components/Wrapper'
 
 const form = {
-  id: 'stripe_payment_button',
   initialValues: {
     name: '',
     price: 0,
@@ -67,13 +66,14 @@ const form = {
   }],
   // we should not show the payment button if
   // there is not a connected stripe account
-  canAdd: (settings) => {
+  isActive: (settings) => {
     if(!settings || !settings.stripe) return false
     return settings.stripe.connected ? true : false
   },
 }
 
 const widget = {
+  id: 'stripe_payment_button',
   Render,
   form,
 }

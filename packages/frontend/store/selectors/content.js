@@ -5,6 +5,7 @@ import childrenUtils from '../../utils/children'
 import nocodeSelectors from './nocode'
 import routerSelectors from './router'
 import systemSelectors from './system'
+import settingsSelectors from './settings'
 
 const DEFAULT_OBJECT = {}
 const DEFAULT_ARRAY = []
@@ -227,10 +228,11 @@ const itemRoute = () => createSelector(
 )
 
 const form = createSelector(
+  settingsSelectors.forms,
   formWindow,
-  (formWindow) => {
+  (forms, formWindow) => {
     return formWindow ?
-      library.forms[formWindow.form] :
+      forms[formWindow.form] :
       {
         schema: [],
       }
@@ -245,11 +247,11 @@ const formValues = createSelector(
   }
 )
 
-const formSchema = createSelector(
-  formWindow,
-  (formWindow) => {
-    if(!formWindow) return DEFAULT_ARRAY
-    const form = library.forms[formWindow.form]
+// flatten the current (potentially tabbed) schema into a single list
+// this is used for the validation
+const flatFormSchema = createSelector(
+  form,
+  (form) => {
     if(!form) return DEFAULT_ARRAY
     const tabSchema = (form.tabs || []).reduce((all, tab) => {
       return all.concat(tab.schema)
@@ -269,7 +271,7 @@ const selectors = {
   itemChildren,
   form,
   formValues,
-  formSchema,
+  flatFormSchema,
 }
 
 export default selectors

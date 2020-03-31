@@ -1,7 +1,6 @@
 import Render from './components/Wrapper'
 
 const form = {
-  id: 'contactform',
   initialValues: {
     buttonTitle: '',
   },
@@ -13,6 +12,7 @@ const form = {
 }
 
 const widget = {
+  id: 'contactform',
   Render,
   form,
 }

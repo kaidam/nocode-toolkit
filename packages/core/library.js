@@ -8,6 +8,7 @@ const library = {
     pages: {},
   },
   plugins: [],
+  widgets: [],
   forms: {},
 }
 export default library
