@@ -138,27 +138,46 @@ const ImageField = ({
   }, [])
 
   const buttons = useMemo(() => {
-    return [{
+
+    const local = {
       title: 'Upload',
       help: 'Upload an image from your computer',
       icon: icons.upload,
       handler: onOpenUploader,
-    }, {
+    }
+
+    const google = {
       title: 'Google Drive',
       help: 'Choose an image on your google drive',
       icon: icons.drive,
       handler: onChooseDriveImage,
-    }, {
+    }
+
+    const unsplash = {
       title: 'Unsplash',
       help: 'Choose an image from Unsplash',
       icon: icons.unsplash,
       handler: onChooseUnsplashImage,
-    },{
-      title: 'Reset',
-      help: 'Clear this image',
-      icon: DeleteIcon,
-      handler: onResetValue
-    }]
+    }
+
+    return [
+      !item.providers || item.providers.indexOf('local') >= 0 ?
+        local :
+        null,
+      !item.providers || item.providers.indexOf('google') >= 0 ?
+        google :
+        null,
+      !item.providers || item.providers.indexOf('unsplash') >= 0 ?
+        unsplash :
+        null,
+      {
+        title: 'Reset',
+        help: 'Clear this image',
+        icon: DeleteIcon,
+        handler: onResetValue
+      }
+    ]
+      .filter(item => item)
       .map((item, i) => {
         const Icon = item.icon
         return (
