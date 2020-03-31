@@ -26,6 +26,10 @@ export const dialog = {
   
 }
 
+export const layout = {
+  
+}
+
 export const content = {
   formWindow: null,
 }
@@ -105,6 +109,7 @@ const initialState = {
   section,
   fileupload,
   network,
+  layout,
 }
 
 export default initialState

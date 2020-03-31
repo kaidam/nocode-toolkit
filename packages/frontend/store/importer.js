@@ -12,6 +12,7 @@ const importPromises = globals.isUIActivated() ?
     unsplash: import(/* webpackChunkName: "ui" */ './modules/unsplash'),
     job: import(/* webpackChunkName: "ui" */ './modules/job'),
     fileupload: import(/* webpackChunkName: "ui" */ './modules/fileupload'),
+    layout: import(/* webpackChunkName: "ui" */ './modules/layout'),
     
     // finder: import(/* webpackChunkName: "ui" */ './modules/finder'),
     // content: import(/* webpackChunkName: "ui" */ './modules/content'),

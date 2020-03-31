@@ -43,6 +43,7 @@ const reducers = {
   unsplash: GetReducer('unsplash'),
   job: GetReducer('job'),
   fileupload: GetReducer('fileupload'),
+  layout: GetReducer('layout'),
   
   // finder: GetReducer('finder'),
   // content: GetReducer('content'),
