@@ -1,14 +1,14 @@
 import actions, { reducer } from './store'
-import Cell from './cell'
+import widget from './widget'
 
-const contactFormPlugin = (opts) => {
+const contactFormPlugin = (opts = {}) => {
   return {
     id: 'contactform',
     title: 'Contact Form',
     description: 'Accept feedback from your website via email',
     actions,
     reducer,
-    cell: Cell(opts),
+    widgets: [widget],
   }
 }
 

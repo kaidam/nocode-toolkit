@@ -5496,6 +5496,11 @@ immer@^6.0.1:
   resolved "https://registry.yarnpkg.com/immer/-/immer-6.0.1.tgz#7af35e35753d9da6bc9123f0cc99f7e8f2e10681"
   integrity sha512-oXwigCKgznQywsXi1VgrqgWbQEU3wievNCVc4Fcwky6mwXU6YHj6JuYp0WEM/B1EphkqsLr0x18lm5OiuemPcA==
 
+immer@^6.0.2:
+  version "6.0.2"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-6.0.2.tgz#5bc08dc4930c756d0749533a2afbd88c8de0cd19"
+  integrity sha512-56CMvUMZl4kkWJFFUe1TjBgGbyb9ibzpLyHD+RSKSVdytuDXgT/HXO1S+GJVywMVl5neGTdAogoR15eRVEd10Q==
+
 immutable@^4.0.0-rc.12:
   version "4.0.0-rc.12"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.0.0-rc.12.tgz#ca59a7e4c19ae8d9bf74a97bdf0f6e2f2a5d0217"
@@ -8295,6 +8300,13 @@ redux-router5@^8.0.0:
   dependencies:
     router5-transition-path "^8.0.0"
 
+redux-router5@^8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/redux-router5/-/redux-router5-8.0.1.tgz#dc6bd726fa31f0d4e62629a31cfd0d6eb1308dfd"
+  integrity sha512-uMJpvrSdM3OWMOqd97DSu4xk5Aov1DSlpnOIeC1EM8rOjIArypCUXRPOOZE1Qbq8ipVH6GRhVRH0shCIzcjiKQ==
+  dependencies:
+    router5-transition-path "^8.0.1"
+
 redux-thunk@^2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.3.0.tgz#51c2c19a185ed5187aaa9a2d08b666d0d6467622"
@@ -8580,6 +8592,11 @@ router5-transition-path@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/router5-transition-path/-/router5-transition-path-8.0.0.tgz#cd0431d9d7b64dfb9681056ebb4f3dde58ba143a"
   integrity sha512-3z69OYHsZf0WzMIVi20XKfHiSbsZvTBrWjh4DdpEoYwh+LIsB7mb+CqL7hONeBw/mlkHmf/XJL/rzjlYwRgdpw==
+
+router5-transition-path@^8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/router5-transition-path/-/router5-transition-path-8.0.1.tgz#51bfc8adcee3e3b2b6872ac8252d74b501ae3e96"
+  integrity sha512-l7MFEUmasEhe1emrO79t7BkCqQQRZdenz4c3qJmZpe8V6BCerZQR+SYbZL5zmQ3hazY7nR264jCWuNed+cMD2A==
 
 router5@^7.0.0:
   version "7.0.2"

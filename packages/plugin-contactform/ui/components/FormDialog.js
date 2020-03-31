@@ -1,28 +1,12 @@
 import React, { useMemo } from 'react'
 
+import Dialog from '@material-ui/core/Dialog'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogActions from '@material-ui/core/DialogActions'
+import Button from '@material-ui/core/Button'
+import MaterialTextField from '@material-ui/core/TextField'
 import FIELDS from '../fields'
-
-const styles = {
-  root: {
-    position: 'fixed',
-    left: '0px',
-    top: '0px',
-    width: '100%',
-    height: '100%',
-    zIndex: '1000',
-    backgroundColor: 'rgba(255,255,255,0.85)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  content: {
-    padding: '50px',
-    backgroundColor: '#f5f5f5',
-    border: '1px solid #000000',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  }
-}
 
 const TextField = ({
   field,
@@ -30,13 +14,14 @@ const TextField = ({
   value,
 }) => {
   return (
-    <div>
-      <p>{ field.title }</p>
-      <input value={ value } onChange={ (ev) => field.onChange(ev.target.value) } />
-      {
-        error && <p style={{color: 'red'}}>{ error }</p>
-      }
-    </div>
+    <MaterialTextField
+      fullWidth
+      error={ error ? true : false }
+      label={ field.title }
+      helperText={ error || field.description }
+      value={ value }
+      onChange={ (ev) => field.onChange(ev.target.value) } 
+    />
   )
 }
 
@@ -46,13 +31,16 @@ const TextArea = ({
   value,
 }) => {
   return (
-    <div>
-      <p>{ field.title }</p>
-      <textarea value={ value } onChange={ (ev) => field.onChange(ev.target.value) } />
-      {
-        error && <p style={{color: 'red'}}>{ error }</p>
-      }
-    </div>
+    <MaterialTextField
+      fullWidth
+      error={ error ? true : false }
+      label={ field.title }
+      helperText={ error || field.description }
+      value={ value }
+      multiline
+      rows={ 5 }
+      onChange={ (ev) => field.onChange(ev.target.value) } 
+    />
   )
 }
 
@@ -81,10 +69,18 @@ const FormDialog = ({
       })
     })
   }, [FIELDS, onChange])
+
   return (
-    <div style={ styles.root }>
-      <div style={ styles.content }>
-        <h4>Contact Form</h4>
+    <Dialog
+      open={ true }
+      onClose={ onClose }
+      fullWidth
+      maxWidth="md"
+    >
+      <DialogTitle>
+        Contact Form
+      </DialogTitle>
+      <DialogContent>
         <div>
           {
             fields.map((field, i) => {
@@ -94,30 +90,35 @@ const FormDialog = ({
               const error = errors[field.id] || ''
 
               return (
-                <Field
-                  key={ i }
-                  field={ field }
-                  value={ value }
-                  error={ error }
-                />
+                <div key={ i }>
+                  <Field
+                    field={ field }
+                    value={ value }
+                    error={ error }
+                  />
+                </div>
               )
             })
           }
         </div>
-        <p>
-          <button
-            onClick={ onClose }
-          >
-            Close
-          </button>
-          <button
-            onClick={ onSubmit }
-          >
-            Submit
-          </button>
-        </p>
-      </div>
-    </div>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          type="button"
+          variant="contained"
+          onClick={ onClose }
+        >
+          Close
+        </Button>
+        <Button
+          type="button"
+          variant="contained"
+          onClick={ onSubmit }
+        >
+          Submit
+        </Button>
+      </DialogActions>
+    </Dialog>
   )
 }
 

@@ -1,8 +1,8 @@
 import actions, { reducer } from './store'
 import settings from './settings'
-import Cell from './cell'
+import widget from './widget'
 
-const stripePlugin = (opts) => {
+const stripePlugin = (opts = {}) => {
   return {
     id: 'stripe',
     title: 'Stripe',
@@ -10,7 +10,7 @@ const stripePlugin = (opts) => {
     actions,
     reducer,
     settings,
-    cell: Cell(opts),
+    widgets: [widget],
   }
 }
 

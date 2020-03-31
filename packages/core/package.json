@@ -1,0 +1,15 @@
+{
+  "name": "@nocode-toolkit/core",
+  "version": "1.0.0",
+  "description": "Code shared by nocode frontend and plugins",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "immer": "^6.0.2",
+    "redux-router5": "^8.0.1",
+    "reselect": "^4.0.0"
+  },
+  "license": "MIT"
+}

@@ -1,13 +1,2 @@
-const library = {
-  settings: {
-    initialValues: {},
-    tabs: [],
-  },
-  templates: {
-    layouts: {},
-    pages: {},
-  },
-  plugins: [],
-  forms: {},
-}
+import library from '@nocode-toolkit/core/library'
 export default library

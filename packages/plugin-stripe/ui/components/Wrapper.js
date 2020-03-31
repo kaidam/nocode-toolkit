@@ -13,14 +13,9 @@ const CURRENCY_SYMBOLS = {
 let hasInjectedStripeLibrary = false
 
 const PaymentButtonWrapper = ({
-  renderers,
   content,
   cell,
 }) => {
-
-  const RenderButton = renderers.button || Button
-  const RenderConfirmation = renderers.confirmation || Confirmation
-
   useEffect(() => {
     if(hasInjectedStripeLibrary) return
     hasInjectedStripeLibrary = true
@@ -50,7 +45,7 @@ const PaymentButtonWrapper = ({
       dispatch(actions.closeConfirmationWindow())
     }
     confirmWindow =  (
-      <RenderConfirmation
+      <Confirmation
         content={ passContent }
         onClose={ onClose }
       />
@@ -58,7 +53,7 @@ const PaymentButtonWrapper = ({
   }
   return (
     <div>
-      <RenderButton
+      <Button
         content={ passContent }
         cell={ cell }
         onClick={ onClick }

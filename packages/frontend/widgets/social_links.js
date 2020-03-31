@@ -35,7 +35,7 @@ const LINKS = [
 
 let hasInjectedCSS = false
 
-const SocialLinks = ({
+const Render = ({
   content,
 }) => {
   useEffect(() => {
@@ -71,4 +71,36 @@ const SocialLinks = ({
   )
 }
 
-export default SocialLinks
+const form = {
+  id: 'social_links',
+  initialValues: {
+    facebook: '',
+    twitter: '',
+    linkedin: '',
+    youtube: '',
+  },
+  schema: [{
+    id: 'facebook',
+    title: 'Facebook URL',
+    helperText: 'The url of your Facebook profile',
+  },{
+    id: 'twitter',
+    title: 'Twitter URL',
+    helperText: 'The url of your Twitter profile',
+  },{
+    id: 'linkedin',
+    title: 'LinkedIn URL',
+    helperText: 'The url of your LinkedIn profile',
+  },{
+    id: 'youtube',
+    title: 'Youtube URL',
+    helperText: 'The url of your Youtube profile',
+  }],
+}
+
+const widget = {
+  Render,
+  form,
+}
+
+export default widget

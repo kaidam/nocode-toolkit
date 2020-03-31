@@ -75,7 +75,7 @@ const PANELS = [{
   }) => {
     const pluginFormTabs = [{
       id: 'install',
-      title: 'Install Plugins',
+      title: 'Activate Plugins',
     }].concat(
       library.plugins
         .filter(plugin => plugin.settings ? true : false)

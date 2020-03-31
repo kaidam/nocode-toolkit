@@ -1,4 +1,4 @@
-import coreSelectors from '@nocode-toolkit/website/selectors'
+import routerSelectors from '@nocode-toolkit/core/routerSelectors'
 const currentValue = state => state.stripe.value
 
 const selectors = {
@@ -11,7 +11,10 @@ const selectors = {
     const websiteId = selectors.websiteid(state)
     return `/plugin/api/${websiteId}/stripe`
   },
-  router: coreSelectors.router,
+  canAddPaymentButton: (state) => {
+
+  },
+  router: routerSelectors,
 }
 
 export default selectors
