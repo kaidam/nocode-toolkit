@@ -92,6 +92,11 @@ const form = {
     size: 'default',
   },
   schema: [{
+    id: 'image',
+    title: 'Image',
+    helperText: 'Upload an image',
+    component: 'image',
+  },{
     id: 'size',
     title: 'Size',
     helperText: 'How large should the image be displayed',
@@ -109,11 +114,6 @@ const form = {
       title: 'Small',
       value: 'small',
     }]
-  }, {
-    id: 'image',
-    title: 'Image',
-    helperText: 'Upload an image',
-    component: 'image',
   }],
 }
 

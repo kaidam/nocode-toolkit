@@ -1,70 +1,80 @@
-const insertRow = ({
-  layout,
-  rowIndex,
-  params: {
-    location,
-  },
-  cell,
-}) => {
-  const insertCell = cell || {
-    component: 'blank',
-  }
-  const insertIndex = location == 'before' ?
-    rowIndex :
-    rowIndex + 1
-  layout.splice(insertIndex, 0, [insertCell])
-  return layout
-}
+const copyLayout = (layout) => JSON.parse(JSON.stringify(layout || []))
 
-const appendRow = ({
+const insertRow = ({
+  // the existing data we are modifying
   layout,
-  cell,
+  params: {
+    // rowIndex of -1 means append a new row
+    rowIndex = -1,
+    // the actual data we are inserting
+    data,
+  } = {},
 }) => {
-  const insertCell = cell || {
-    component: 'blank',
-  }
-  layout.push([insertCell])
-  return layout
+  const newLayout = copyLayout(layout)
+  const insertIndex = rowIndex >= 0 ? rowIndex : newLayout.length
+  newLayout.splice(insertIndex, 0, [data])
+  return newLayout
 }
 
 const insertCell = ({
   layout,
-  rowIndex,
-  cellIndex,
   params: {
-    location,
+    // this must be defined as we are targeting an existing row
+    rowIndex,
+    // cellIndex of -1 means append a new cell
+    cellIndex = -1,
+    // the actual data we are inserting
+    data,
   },
-  cell,
 }) => {
-  const insertCell = cell || {
-    component: 'blank',
-  }
-  const insertIndex = location == 'before' ?
-    cellIndex :
-    cellIndex + 1
-  layout[rowIndex].splice(insertIndex, 0, insertCell)
-  return layout
+  const newLayout = copyLayout(layout)
+  const row = newLayout[rowIndex]
+  if(!row) throw new Error(`no row found ${rowIndex}`)
+  const insertIndex = cellIndex >= 0 ? cellIndex : row.length
+  row.splice(insertIndex, 0, data)
+  return newLayout
+}
+
+const updateCell = ({
+  layout,
+  params: {
+    rowIndex,
+    cellIndex,
+    data,
+  } = {},
+}) => {
+  const newLayout = copyLayout(layout)
+  const row = newLayout[rowIndex]
+  if(!row) throw new Error(`no row found ${rowIndex}`)
+  const cell = row[cellIndex]
+  if(!cell) throw new Error(`no cell found ${rowIndex}:${cellIndex}`)
+  newLayout[rowIndex][cellIndex] = data
+  return newLayout
 }
 
 const moveCell = ({
   layout,
-  rowIndex,
-  cellIndex,
   params: {
-    location,
+    rowIndex,
+    cellIndex,
+    direction,
     merge,
   },
-  cell,
 }) => {
-  const row = layout[rowIndex]
-  if(location == 'up' && rowIndex <= 0) throw new Error(`the cell is already at the top`)
-  if(location == 'down' && rowIndex >= layout.length - 1) throw new Error(`the cell is already at the bottom`)
-  if(location == 'left' && cellIndex <= 0) throw new Error(`the cell is already at the left`)
-  if(location == 'right' && cellIndex >= row.length - 1) throw new Error(`the cell is already at the right`)
+  const newLayout = copyLayout(layout)
+  const row = newLayout[rowIndex]
+  if(!row) throw new Error(`no row found ${rowIndex}`)
+  const cell = row[cellIndex]
+  if(!cell) throw new Error(`no cell found ${rowIndex}:${cellIndex}`)
 
-  if(location == 'up' || location == 'down') {
+  if(direction == 'up' && rowIndex <= 0) throw new Error(`the cell is already at the top`)
+  if(direction == 'down' && rowIndex >= layout.length - 1) throw new Error(`the cell is already at the bottom`)
+  if(direction == 'left' && cellIndex <= 0) throw new Error(`the cell is already at the left`)
+  if(direction == 'right' && cellIndex >= row.length - 1) throw new Error(`the cell is already at the right`)
 
-    const direction = location == 'up' ? -1 : 1
+  if(direction == 'up' || direction == 'down') {
+
+    const direction = direction == 'up' ? -1 : 1
     const targetRowIndex = rowIndex + direction
 
     // we need to pluck this cell onto it's own row
@@ -75,7 +85,7 @@ const moveCell = ({
     // we just move the whole row
     else {
       // remove the row from the layout
-      layout.splice(rowIndex, 1)
+      newLayout.splice(rowIndex, 1)
     }
 
     if(merge) {
@@ -84,11 +94,11 @@ const moveCell = ({
     }
     else {
       // insert a new row
-      layout.splice(targetRowIndex, 0, [cell])
+      newLayout.splice(targetRowIndex, 0, [cell])
     }
   }
   else {
-    const direction = location == 'left' ? -1 : 1
+    const direction = direction == 'left' ? -1 : 1
     const targetCellIndex = cellIndex + direction
 
     // remove the cell from the row
@@ -98,29 +108,35 @@ const moveCell = ({
     row.splice(targetCellIndex, 0, cell)
   }
 
-  return layout
+  return newLayout
 }
 
 const deleteCell = ({
   layout,
-  rowIndex,
-  cellIndex,
+  params: {
+    rowIndex,
+    cellIndex,
+  } = {},
 }) => {
-  const row = layout[rowIndex]
+  const newLayout = copyLayout(layout)
+  const row = newLayout[rowIndex]
+  if(!row) throw new Error(`no row found ${rowIndex}`)
+  const cell = row[cellIndex]
+  if(!cell) throw new Error(`no cell found ${rowIndex}:${cellIndex}`)
   // if we are deleting the last cell in a row then we are deleting the row
   if(row.length == 1) {
-    layout.splice(rowIndex, 1)
+    newLayout.splice(rowIndex, 1)
   }
   else {
-    layout[rowIndex].splice(cellIndex, 1)
+    newLayout[rowIndex].splice(cellIndex, 1)
   }
-  return layout
+  return newLayout
 }
 
 const EDIT_ACTION_HANDLERS = {
   insertRow,
-  appendRow,
   insertCell,
+  updateCell,
   moveCell,
   deleteCell,
 }
@@ -128,19 +144,13 @@ const EDIT_ACTION_HANDLERS = {
 const editLayout = ({
   layout,
   method,
-  rowIndex,
-  cellIndex,
-  cell,
   params = {},
 }) => {
   const actionHandler = EDIT_ACTION_HANDLERS[method]
   if(!actionHandler) throw new Error(`no action handler found for ${method}`)
   return actionHandler({
-    layout: JSON.parse(JSON.stringify(layout)),
-    rowIndex,
-    cellIndex,
+    layout,
     params,
-    cell,
   })
 }
 

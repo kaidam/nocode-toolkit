@@ -11,7 +11,6 @@ import apiUtils from '../utils/api'
 
 import contentSelectors from '../selectors/content'
 import nocodeSelectors from '../selectors/nocode'
-import routerSelectors from '../selectors/router'
 
 import uiActions from './ui'
 import driveActions from './drive'
@@ -20,7 +19,7 @@ import snackbarActions from './snackbar'
 import routerActions from './router'
 
 import { content as initialState } from '../initialState'
-import library from '../../library'
+import settingsSelectors from '../selectors/settings'
 
 const prefix = 'content'
 
@@ -518,8 +517,8 @@ const sideEffects = {
     processValues = (values) => values,
     onSubmit,
   }) => async (dispatch, getState) => {
-    if(!onSubmit) throw new Error(`onSubmit function required`)
-    const formConfig = library.forms[form]
+    const forms = settingsSelectors.forms(getState())
+    const formConfig = forms[form]
     if(!formConfig) throw new Error(`no form config found for ${form}`)
     const initialValues = deepmerge.all([
       formConfig.initialValues,
@@ -547,7 +546,12 @@ const sideEffects = {
               formConfig.processFormValues(currentSettings.values) :
               currentSettings.values
           )
-          result = await onSubmit(formValues)
+          if(onSubmit) {
+            result = await onSubmit(formValues)
+          }
+          else {
+            result = formValues
+          }
         }
         success = true
       } catch(e) {
