@@ -133,29 +133,12 @@ const deleteCell = ({
   return newLayout
 }
 
-const EDIT_ACTION_HANDLERS = {
+const layoutUtils = {
   insertRow,
   insertCell,
   updateCell,
   moveCell,
   deleteCell,
-}
-
-const editLayout = ({
-  layout,
-  method,
-  params = {},
-}) => {
-  const actionHandler = EDIT_ACTION_HANDLERS[method]
-  if(!actionHandler) throw new Error(`no action handler found for ${method}`)
-  return actionHandler({
-    layout,
-    params,
-  })
-}
-
-const layoutUtils = {
-  editLayout,
 }
 
 export default layoutUtils

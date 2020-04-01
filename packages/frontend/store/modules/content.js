@@ -1,4 +1,3 @@
-import Promise from 'bluebird'
 import axios from 'axios'
 import deepmerge from 'deepmerge'
 import { v4 as uuid } from 'uuid'
@@ -537,9 +536,6 @@ const sideEffects = {
       try {
         const confirmed = await dispatch(uiActions.waitForWindow(contentSelectors.formWindow))
         if(confirmed) {
-          // not sure why but this delay prevents the loading overlay from flickering
-          await Promise.delay(200)
-          dispatch(uiActions.setLoading(loadingConfig))
           const currentSettings = contentSelectors.formWindow(getState())
           const formValues = processValues(
             formConfig.processFormValues ?
@@ -547,6 +543,7 @@ const sideEffects = {
               currentSettings.values
           )
           if(onSubmit) {
+            dispatch(uiActions.setLoading(loadingConfig))
             result = await onSubmit(formValues)
           }
           else {
