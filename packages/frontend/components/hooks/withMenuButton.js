@@ -8,7 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Divider from '@material-ui/core/Divider'
 
-import Link from './Link'
+import Link from '../widgets/Link'
 
 const useStyles = makeStyles(theme => ({
   menuText: {
@@ -154,7 +154,7 @@ const ItemMenu = ({
   )
 }
 
-const MenuButton = ({
+const withMenuButton = ({
 
   // the classname for the root item
   className,
@@ -330,24 +330,11 @@ const MenuButton = ({
     header,
   ])
 
-  if(asFragment) {
-    return (
-      <React.Fragment>
-        { button }
-        { mainMenu }
-        { subMenu }
-      </React.Fragment>
-    )
+  return {
+    button,
+    mainMenu,
+    subMenu,
   }
-  else {
-    return (
-      <div className={ className }>
-        { button }
-        { mainMenu }
-        { subMenu }
-      </div>
-    )
-  }  
 }
 
-export default MenuButton
+export default withMenuButton

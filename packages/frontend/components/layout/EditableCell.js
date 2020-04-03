@@ -7,35 +7,53 @@ import Popper from '@material-ui/core/Popper'
 import Paper from '@material-ui/core/Paper'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 
+import MenuButton from '../widgets/MenuButton'
+import withMenuButton from '../hooks/withMenuButton'
+
 import icons from '@nocode-toolkit/frontend/icons'
 
-const useStyles = makeStyles(theme => ({
-  root: ({open}) => ({
-    position: 'relative',
-    '& .content': {
-      opacity: open ? 0.5 : 1,
-    },
-    '&:hover': {
+const AddIcon = icons.add
+const EditIcon = icons.edit
+const DeleteIcon = icons.delete
+const MoveIcon = icons.move
+
+const useStyles = makeStyles(theme => {
+  return {
+    root: ({open}) => ({
+      position: 'relative',
       '& .content': {
-        opacity: 0.5,
+        opacity: open ? 0.5 : 1,
+      },
+      '&:hover': {
+        '& .content': {
+          opacity: 0.5,
+        }
       }
-    }
-  }),
-  clicker: ({open}) => ({
-    position: 'absolute',
-    left: 0,
-    top: 0,
-    width: '100%',
-    height: '100%',
-    cursor: 'pointer',
-    backgroundColor: theme.palette.primary.main,
-    opacity: open ? 0.2 : 0,
-  }),
-  tooltipContent: {
-    width: '100%',
-    height: '100%',
+    }),
+    clicker: ({open}) => ({
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      width: '100%',
+      height: '100%',
+      cursor: 'pointer',
+      backgroundColor: theme.palette.primary.main,
+      opacity: open ? 0.2 : 0,
+    }),
+    tooltipContent: {
+      width: '100%',
+      height: '100%',
+    },
+    button: {
+      color: theme.palette.grey[600],
+      textTransform: 'lowercase',
+      padding: 0,
+    },
+    buttonIcon: {
+      fontSize: '0.85em',
+    },
   }
-}))
+})
 
 const EditableCell = ({
   children,
@@ -53,6 +71,7 @@ const EditableCell = ({
   const handleClick = (e) => {
     e.preventDefault()
     e.stopPropagation()
+    e.nativeEvent.stopImmediatePropagation()
     if(!anchorEl) {
       setAnchorEl(e.currentTarget)
       setCurrentCellId(id)
@@ -74,8 +93,6 @@ const EditableCell = ({
     currentCellId,
   ])
 
-  
-
   const clicker = (
     <div
       className={ classes.clicker }
@@ -91,34 +108,82 @@ const EditableCell = ({
     </div>
   )
 
+  const getAddButton = (onClick) => {
+    return (
+      <Button
+        className={ classes.button }
+        onClick={ (e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          e.nativeEvent.stopImmediatePropagation()
+          onClick(e)
+        }}
+      >
+        <AddIcon className={ classes.buttonIcon} />&nbsp;add
+      </Button>
+    )
+  }
+
+  const getAddItems = () => {
+    return [{
+      title: 'hello',
+      handler: () => {}
+    }]
+  }
+
+  const addMenu = withMenuButton({
+    getButton: getAddButton,
+    getItems: getAddItems,
+  })
+
   // const tooltippedContent = open ? content : (
   //   <Tooltip title="click to edit..." placement="top" arrow>
   //     { content }
   //   </Tooltip>
   // )
+//<ClickAwayListener onClickAway={ handleClose }>
 
   return (
-    <ClickAwayListener onClickAway={ handleClose }>
+    
       <div className={ classes.root }>
         <div className="content">
           { children }
         </div>
         { clicker }
-        <Popper
-          id="options-popover"
-          open={ open }
-          anchorEl={ anchorEl }
-        >
-          <Paper>
-            <ButtonGroup size="small" aria-label="small outlined button group">
-              <Button>One</Button>
-              <Button>Two</Button>
-              <Button>Three</Button>
-            </ButtonGroup>
-          </Paper>
-        </Popper>
+        {
+          open && (
+            <Popper
+              open
+              id="options-popover"
+              anchorEl={ anchorEl }
+            >
+              <Paper>
+                <ButtonGroup size="small" aria-label="small outlined button group">
+                  { addMenu.button }
+                  { addMenu.mainMenu }
+                  { addMenu.subMenu }
+                  <Button
+                    className={ classes.button }
+                  >
+                    <EditIcon className={ classes.buttonIcon} />&nbsp;edit
+                  </Button>
+                  <Button
+                    className={ classes.button }
+                  >
+                    <MoveIcon className={ classes.buttonIcon} />&nbsp;move
+                  </Button>
+                  <Button
+                    className={ classes.button }
+                  >
+                    <DeleteIcon className={ classes.buttonIcon} />&nbsp;delete
+                  </Button>
+                </ButtonGroup>
+              </Paper>
+            </Popper>
+          )
+        }
       </div>
-    </ClickAwayListener>
+    
     
   )
 }

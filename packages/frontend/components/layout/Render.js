@@ -1,4 +1,4 @@
-import React, { lazy, useState } from 'react'
+import React, { lazy, useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -41,6 +41,12 @@ const LayoutRender = ({
   const widgetRenderers = useSelector(settingsSelectors.widgetRenderers)
   const showUI = useSelector(systemSelectors.showUI)
   const [currentCellId, setCurrentCellId] = useState(null)
+
+  useEffect(() => {
+    const clickHandler = () => setCurrentCellId(null)
+    document.addEventListener('click', clickHandler)
+    return () => document.removeEventListener('click', clickHandler)
+  }, [])
 
   if(!data || data.length <= 0) return null
 
