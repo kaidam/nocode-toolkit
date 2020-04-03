@@ -8,17 +8,21 @@ const SIZES = {
 }
 
 const Render = ({
-  content,
+  data = {},
+  cell,
 }) => {
-  if(!content) return null
+  if(!data) return null
 
   const {
-    url,
-    driver,
-    unsplash = {},
-  } = content.image
+    size,
+    image: {
+      url,
+      driver,
+      unsplash = {},
+    }
+  } = data
 
-  const size = SIZES[content.size] || SIZES.default
+  const useSize = SIZES[size] || SIZES.default
   
   let copyrightContent = null
 
@@ -68,7 +72,7 @@ const Render = ({
     <div
       style={{
         display: 'inline-block',
-        width: size,
+        width: useSize,
       }}
     >
       <div

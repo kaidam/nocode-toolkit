@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { lazy, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
 import settingsSelectors from '../../store/selectors/settings'
+import systemSelectors from '../../store/selectors/system'
+import Suspense from '../system/Suspense'
+
+const EditableCell = lazy(() => import(/* webpackChunkName: "ui" */ './EditableCell'))
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -17,15 +21,9 @@ const useStyles = makeStyles(theme => ({
     flexBasis: '100%',
     flex: 1,
   },
-  border: {
-    borderTop: '1px dotted #e5e5e5',
-    borderLeft: '1px dotted #e5e5e5',
-    borderRight: '1px dotted #e5e5e5',
-    borderBottom: '1px dotted #e5e5e5',
-  }
 }))
 
-const DefaultRenderer = ({
+const UnknownTypeRenderer = ({
   type,
 }) => {
   return (
@@ -41,6 +39,10 @@ const LayoutRender = ({
 
   const classes = useStyles()
   const widgetRenderers = useSelector(settingsSelectors.widgetRenderers)
+  const showUI = useSelector(systemSelectors.showUI)
+  const [currentCellId, setCurrentCellId] = useState(null)
+
+  if(!data || data.length <= 0) return null
 
   return (
     <div className={ classes.root }>
@@ -53,16 +55,39 @@ const LayoutRender = ({
             >
               {
                 row.map((cell, j) => {
-                  const Renderer = widgetRenderers[cell.type] || DefaultRenderer
+                  const Renderer = widgetRenderers[cell.type] || UnknownTypeRenderer
+                  const id = [i,j].join('.')
+
+                  const content = (
+                    <Renderer
+                      data={ cell.data }
+                      cell={{
+                        id,
+                        type: cell.type,
+                        rowIndex: i,
+                        cellIndex: j,
+                      }}
+                    />
+                  )
+
+                  const renderContent = showUI ? (
+                    <Suspense>
+                      <EditableCell
+                        id={ id }
+                        currentCellId={ currentCellId }
+                        setCurrentCellId={ setCurrentCellId }
+                      >
+                        { content }
+                      </EditableCell>
+                    </Suspense>
+                  ) : content
+
                   return (
                     <div
                       key={ j }
                       className={ classes.cell }
                     >
-                      <Renderer
-                        type={ cell.type }
-                        data={ cell.data }
-                      />
+                      { renderContent }
                     </div>
                   )
                 })
@@ -77,3 +102,13 @@ const LayoutRender = ({
 }
 
 export default LayoutRender
+
+/*
+
+  <Suspense>
+                        <div className={ editButtonClassname }>
+                          <EditButton />
+                        </div>
+                      </Suspense>
+
+*/

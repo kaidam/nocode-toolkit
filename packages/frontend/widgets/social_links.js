@@ -36,7 +36,8 @@ const LINKS = [
 let hasInjectedCSS = false
 
 const Render = ({
-  content,
+  data = {},
+  cell,
 }) => {
   useEffect(() => {
     if(hasInjectedCSS) return
@@ -49,9 +50,9 @@ const Render = ({
   }, [hasInjectedCSS])
   
   const links = LINKS
-    .filter(name => content[name] ? true : false)
+    .filter(name => data[name] ? true : false)
     .map((name, i) => {
-      const value = content[name]
+      const value = data[name]
       return (
         <div style={ styles.item } key={ i }>
           <a href={ value }>

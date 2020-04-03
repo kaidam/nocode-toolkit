@@ -8,7 +8,7 @@ import Button from './Button'
 import FormDialog from './FormDialog'
 
 const ContactFormWrapper = ({
-  content,
+  data = {},
   cell,
 }) => {
 
@@ -38,7 +38,7 @@ const ContactFormWrapper = ({
   return (
     <div>
       <Button
-        content={ content }
+        content={ data }
         onClick={ onButtonClick }
       />
       {
