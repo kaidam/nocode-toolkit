@@ -94,7 +94,6 @@ const EditableCell = ({
         </div>
         { clicker }
         <Popper
-          placement="top"
           id="options-popover"
           open={ open }
           anchorEl={ anchorEl }
