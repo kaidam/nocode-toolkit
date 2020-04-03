@@ -1,29 +1,36 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Tooltip from '@material-ui/core/Tooltip'
-import Typography from '@material-ui/core/Typography'
+import ButtonGroup from '@material-ui/core/ButtonGroup'
+import Button from '@material-ui/core/Button'
 import Popper from '@material-ui/core/Popper'
+import Paper from '@material-ui/core/Paper'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
 
 import icons from '@nocode-toolkit/frontend/icons'
 
 const useStyles = makeStyles(theme => ({
-  root: {
+  root: ({open}) => ({
     position: 'relative',
+    '& .content': {
+      opacity: open ? 0.5 : 1,
+    },
     '&:hover': {
       '& .content': {
         opacity: 0.5,
       }
     }
-  },
-  clicker: {
+  }),
+  clicker: ({open}) => ({
     position: 'absolute',
     left: 0,
     top: 0,
     width: '100%',
     height: '100%',
     cursor: 'pointer',
-  },
+    backgroundColor: theme.palette.primary.main,
+    opacity: open ? 0.2 : 0,
+  }),
   tooltipContent: {
     width: '100%',
     height: '100%',
@@ -36,8 +43,12 @@ const EditableCell = ({
   currentCellId,
   setCurrentCellId,
 }) => {
-  const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
+
+  const classes = useStyles({
+    open,
+  })
 
   const handleClick = (e) => {
     e.preventDefault()
@@ -63,7 +74,7 @@ const EditableCell = ({
     currentCellId,
   ])
 
-  const open = Boolean(anchorEl)
+  
 
   const clicker = (
     <div
@@ -98,7 +109,13 @@ const EditableCell = ({
           open={ open }
           anchorEl={ anchorEl }
         >
-          <Typography className={classes.typography}>The content of the Popover.</Typography>
+          <Paper>
+            <ButtonGroup size="small" aria-label="small outlined button group">
+              <Button>One</Button>
+              <Button>Two</Button>
+              <Button>Three</Button>
+            </ButtonGroup>
+          </Paper>
         </Popper>
       </div>
     </ClickAwayListener>
