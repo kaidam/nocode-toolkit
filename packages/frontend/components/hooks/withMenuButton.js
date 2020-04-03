@@ -10,6 +10,8 @@ import Divider from '@material-ui/core/Divider'
 
 import Link from '../widgets/Link'
 
+import eventUtils from '../../utils/events'
+
 const useStyles = makeStyles(theme => ({
   menuText: {
     paddingRight: '50px',
@@ -111,7 +113,7 @@ const ItemMenu = ({
                 href={ item.url }
                 target="_blank"
                 onClick={(e) => {
-                  e.stopPropagation()
+                  eventUtils.cancelEvent(e)
                   onClose()
                   return false
                 }}
@@ -126,7 +128,7 @@ const ItemMenu = ({
                 className={ classes.menuLink }
                 name={ item.route.name }
                 onClick={(e) => {
-                  e.stopPropagation()
+                  eventUtils.cancelEvent(e)
                   onClose()
                   return false
                 }}
@@ -139,9 +141,10 @@ const ItemMenu = ({
           return (
             <MenuItem
               key={ i }
-              onClick={ (event) => {
+              onClick={ (e) => {
+                eventUtils.cancelEvent(e)
                 if(item.url) return
-                onItemClick(event, item)
+                onItemClick(e, item)
               }}
             >
               { contents }
@@ -156,12 +159,6 @@ const ItemMenu = ({
 
 const withMenuButton = ({
 
-  // the classname for the root item
-  className,
-
-  // a function that is called (onClick) to render the button
-  getButton,
-
   // test that appears above the menu in bold with a divider
   header,
 
@@ -170,9 +167,6 @@ const withMenuButton = ({
 
   // anchor the menu to the given element
   parentAnchorEl,
-
-  // whether we want to return a fragment or a div wrapper
-  asFragment,
 
   // a function that when called with return
   // an array of items to render
@@ -207,9 +201,7 @@ const withMenuButton = ({
 
   const handleMenu = useCallback(
     e => {
-      e.stopPropagation()
-      e.nativeEvent.stopImmediatePropagation()
-      e.preventDefault()
+      eventUtils.cancelEvent(e)
       if(onOpen) onOpen(e)
       setHeaders(header ? [header] : [])
       setSubAnchorEl(e.currentTarget)
@@ -222,11 +214,7 @@ const withMenuButton = ({
 
   const handleClose = useCallback(
     (e) => {
-      if(e) {
-        e.stopPropagation()
-        e.nativeEvent.stopImmediatePropagation()
-        e.preventDefault()
-      }
+      eventUtils.cancelEvent(e)
       if(onClose) onClose()
       setSubAnchorEl(null)
       setSubItems(null)
@@ -239,9 +227,7 @@ const withMenuButton = ({
 
   const handleItemClick = useCallback(
     (e, item) => {
-      e.stopPropagation()
-      e.nativeEvent.stopImmediatePropagation()
-      e.preventDefault()
+      eventUtils.cancelEvent(e)
       if(item.items) {
         setSubItems(item.items)
         setHeaders(headers.concat([item.title]))
@@ -316,24 +302,22 @@ const withMenuButton = ({
     ]
   )
 
-  const button = useMemo(
-    () => getButton(handleMenu),
-    [
-      getButton,
-      handleMenu,
-    ]
-  )
-
   useEffect(() => {
     setHeaders([header])
   }, [
     header,
   ])
 
+  const menus = (
+    <React.Fragment>
+      { mainMenu }
+      { subMenu }
+    </React.Fragment>
+  )
+
   return {
-    button,
-    mainMenu,
-    subMenu,
+    menus,
+    onClick: handleMenu,
   }
 }
 

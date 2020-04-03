@@ -132,7 +132,6 @@ const EditableCell = ({
   }
 
   const addMenu = withMenuButton({
-    getButton: getAddButton,
     getItems: getAddItems,
   })
 
@@ -159,25 +158,31 @@ const EditableCell = ({
             >
               <Paper>
                 <ButtonGroup size="small" aria-label="small outlined button group">
-                  { addMenu.button }
-                  { addMenu.mainMenu }
-                  { addMenu.subMenu }
                   <Button
                     className={ classes.button }
+                    onClick={ addMenu.onClick }
                   >
-                    <EditIcon className={ classes.buttonIcon} />&nbsp;edit
+                    <AddIcon className={ classes.buttonIcon } />&nbsp;add
                   </Button>
                   <Button
                     className={ classes.button }
                   >
-                    <MoveIcon className={ classes.buttonIcon} />&nbsp;move
+                    <EditIcon className={ classes.buttonIcon } />&nbsp;edit
                   </Button>
                   <Button
                     className={ classes.button }
                   >
-                    <DeleteIcon className={ classes.buttonIcon} />&nbsp;delete
+                    <MoveIcon className={ classes.buttonIcon } />&nbsp;move
+                  </Button>
+                  <Button
+                    className={ classes.button }
+                  >
+                    <DeleteIcon className={ classes.buttonIcon } />&nbsp;delete
                   </Button>
                 </ButtonGroup>
+                {
+                  addMenu.menus
+                }
               </Paper>
             </Popper>
           )
