@@ -1,10 +1,14 @@
 import React, { useCallback } from 'react'
+import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import ButtonGroup from '@material-ui/core/ButtonGroup'
 import Button from '@material-ui/core/Button'
 import Popper from '@material-ui/core/Popper'
 import Paper from '@material-ui/core/Paper'
 import withMenuButton from '../hooks/withMenuButton'
+
+import Actions from '../../utils/actions'
+import layoutActions from '../../store/modules/layout'
 
 import icons from '@nocode-toolkit/frontend/icons'
 
@@ -33,21 +37,22 @@ const EditableCellMenu = ({
   cellIndex,
   anchorEl,
   getAddMenu,
-  onDeleteCell,
   onClose,
 }) => {
   const classes = useStyles()
 
+  const actions = Actions(useDispatch(), {
+    onLayoutDelete: layoutActions.delete,
+  })
+
   const getAddMenuItems = useCallback(() => getAddMenu(rowIndex), [rowIndex])
 
-  const onDelete = useCallback(() => onDeleteCell({
+  const onDelete = () => actions.onLayoutDelete({
+    content_id,
+    layout_id,
     rowIndex,
     cellIndex,
-  }), [
-    rowIndex,
-    cellIndex,
-    onDeleteCell,
-  ])
+  })
 
   const addMenu = withMenuButton({
     getItems: getAddMenuItems,

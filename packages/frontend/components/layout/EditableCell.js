@@ -43,7 +43,6 @@ const EditableCell = ({
   currentCellId,
   setCurrentCellId,
   getAddMenu,
-  onDeleteCell,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
@@ -108,7 +107,6 @@ const EditableCell = ({
               rowIndex={ rowIndex }
               cellIndex={ cellIndex }
               getAddMenu={ getAddMenu }
-              onDeleteCell={ onDeleteCell }
               onClose={ handleClose }
             />
           )
