@@ -103,6 +103,7 @@ const EditableCell = ({
             <EditableCellMenu
               anchorEl={ anchorEl }
               getAddMenu={ getAddMenu }
+              onClose={ handleClose }
             />
           )
         }

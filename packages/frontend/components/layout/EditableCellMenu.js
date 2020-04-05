@@ -33,6 +33,7 @@ const EditableCellMenu = ({
   cellIndex,
   anchorEl,
   getAddMenu,
+  onClose,
 }) => {
   const classes = useStyles()
 
@@ -40,6 +41,7 @@ const EditableCellMenu = ({
 
   const addMenu = withMenuButton({
     getItems: getAddMenuItems,
+    onClose,
   })
 
   return (
