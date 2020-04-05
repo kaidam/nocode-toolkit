@@ -38,6 +38,7 @@ const Render = ({
   content_id,
   layout_id,
   getAddMenu,
+  onDeleteCell,
 }) => {
 
   const classes = useStyles()
@@ -94,6 +95,7 @@ const Render = ({
                         currentCellId={ currentCellId }
                         setCurrentCellId={ setCurrentCellId }
                         getAddMenu={ getAddMenu }
+                        onDeleteCell={ onDeleteCell }
                       >
                         { content }
                       </EditableCell>

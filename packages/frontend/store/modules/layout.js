@@ -11,6 +11,7 @@ import nocodeSelectors from '../selectors/nocode'
 import nocodeActions from './nocode'
 import contentActions from './content'
 import snackbarActions from './snackbar'
+import uiActions from './ui'
 
 import layoutUtils from '../../utils/layout'
 
@@ -58,7 +59,7 @@ const sideEffects = {
     layout_id,
     form,
     rowIndex = -1,
-  }) => wrapper('hideContent', async (dispatch, getState) => {
+  }) => wrapper('add', async (dispatch, getState) => {
     const values = await dispatch(contentActions.waitForForm({
       form,
       formWindowConfig: {
@@ -76,6 +77,33 @@ const sideEffects = {
           type: form,
           data: values,
         }
+      }
+    }))
+    await dispatch(snackbarActions.setSuccess(`layout updated`))
+  }),
+
+  delete: ({
+    content_id,
+    layout_id,
+    rowIndex,
+    cellIndex,
+  }) => wrapper('delete', async (dispatch, getState) => {
+    const confirm = await dispatch(uiActions.waitForConfirmation({
+      title: `Delete item?`,
+      message: `
+        <p>Are you sure you want to delete this item?.</p>
+        <p><strong>WARNING:</strong> this cannot be undone.</p>
+      `,
+      confirmTitle: `Confirm - Delete ${name}`,
+    }))
+    if(!confirm) return
+    await dispatch(actions.update({
+      content_id,
+      layout_id,
+      handler: layoutUtils.deleteCell,
+      params: {
+        rowIndex,
+        cellIndex,
       }
     }))
     await dispatch(snackbarActions.setSuccess(`layout updated`))

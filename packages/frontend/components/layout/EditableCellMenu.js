@@ -33,11 +33,21 @@ const EditableCellMenu = ({
   cellIndex,
   anchorEl,
   getAddMenu,
+  onDeleteCell,
   onClose,
 }) => {
   const classes = useStyles()
 
   const getAddMenuItems = useCallback(() => getAddMenu(rowIndex), [rowIndex])
+
+  const onDelete = useCallback(() => onDeleteCell({
+    rowIndex,
+    cellIndex,
+  }), [
+    rowIndex,
+    cellIndex,
+    onDeleteCell,
+  ])
 
   const addMenu = withMenuButton({
     getItems: getAddMenuItems,
@@ -70,6 +80,7 @@ const EditableCellMenu = ({
           </Button>
           <Button
             className={ classes.button }
+            onClick={ onDelete }
           >
             <DeleteIcon className={ classes.buttonIcon } />&nbsp;delete
           </Button>

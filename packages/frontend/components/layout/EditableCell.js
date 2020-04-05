@@ -43,6 +43,7 @@ const EditableCell = ({
   currentCellId,
   setCurrentCellId,
   getAddMenu,
+  onDeleteCell,
 }) => {
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
@@ -102,7 +103,12 @@ const EditableCell = ({
           open && (
             <EditableCellMenu
               anchorEl={ anchorEl }
+              content_id={ content_id }
+              layout_id={ layout_id }
+              rowIndex={ rowIndex }
+              cellIndex={ cellIndex }
               getAddMenu={ getAddMenu }
+              onDeleteCell={ onDeleteCell }
               onClose={ handleClose }
             />
           )
