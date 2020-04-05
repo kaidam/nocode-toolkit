@@ -29,7 +29,7 @@ const loaders = {
 
 const sideEffects = {
 
-  updateLayout: ({
+  update: ({
     content_id,
     layout_id,
     handler,
@@ -53,7 +53,7 @@ const sideEffects = {
   },
 
   // appends a new widget to the last row of a layout
-  insertRow: ({
+  add: ({
     content_id,
     layout_id,
     form,
@@ -65,7 +65,8 @@ const sideEffects = {
         title: `Create ${form}`,
       },
     }))
-    await dispatch(actions.updateLayout({
+    if(!values) return
+    await dispatch(actions.update({
       content_id,
       layout_id,
       handler: layoutUtils.insertRow,

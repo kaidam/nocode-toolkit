@@ -36,9 +36,10 @@ const LINKS = [
 let hasInjectedCSS = false
 
 const Render = ({
-  data = {},
+  data,
   cell,
 }) => {
+  data = data || {}
   useEffect(() => {
     if(hasInjectedCSS) return
     hasInjectedCSS = true

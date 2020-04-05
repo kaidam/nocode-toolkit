@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import settingsSelectors from '../../store/selectors/settings'
 import systemSelectors from '../../store/selectors/system'
+import nocodeSelectors from '../../store/selectors/nocode'
 import Suspense from '../system/Suspense'
 
 const EditableCell = lazy(() => import(/* webpackChunkName: "ui" */ './EditableCell'))
@@ -33,11 +34,17 @@ const UnknownTypeRenderer = ({
   )
 }
 
-const LayoutRender = ({
-  data,
+const Render = ({
+  content_id,
+  layout_id,
+  getAddMenu,
 }) => {
 
   const classes = useStyles()
+
+  const annotations = useSelector(nocodeSelectors.annotations)
+  const annotation = annotations[content_id] || {}
+  const data = annotation[layout_id]
   const widgetRenderers = useSelector(settingsSelectors.widgetRenderers)
   const showUI = useSelector(systemSelectors.showUI)
   const [currentCellId, setCurrentCellId] = useState(null)
@@ -80,14 +87,19 @@ const LayoutRender = ({
                     <Suspense>
                       <EditableCell
                         id={ id }
+                        content_id={ content_id }
+                        layout_id={ layout_id }
+                        rowIndex={ i }
+                        cellIndex={ j }
                         currentCellId={ currentCellId }
                         setCurrentCellId={ setCurrentCellId }
+                        getAddMenu={ getAddMenu }
                       >
                         { content }
                       </EditableCell>
                     </Suspense>
                   ) : content
-
+                  
                   return (
                     <div
                       key={ j }
@@ -104,17 +116,6 @@ const LayoutRender = ({
       }
     </div>
   )
-
 }
 
-export default LayoutRender
-
-/*
-
-  <Suspense>
-                        <div className={ editButtonClassname }>
-                          <EditButton />
-                        </div>
-                      </Suspense>
-
-*/
+export default Render
