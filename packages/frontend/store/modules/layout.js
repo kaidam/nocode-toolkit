@@ -82,6 +82,40 @@ const sideEffects = {
     await dispatch(snackbarActions.setSuccess(`layout updated`))
   }),
 
+  edit: ({
+    content_id,
+    layout_id,
+    rowIndex,
+    cellIndex,
+  }) => wrapper('add', async (dispatch, getState) => {
+    const annotations = nocodeSelectors.annotations(getState())
+    const annotation = annotations[content_id] || {}
+    const layout = annotation[layout_id]
+    if(!layout) throw new Error(`no layout found`)
+    const cell = layout[rowIndex][cellIndex]
+    const values = await dispatch(contentActions.waitForForm({
+      form: cell.type,
+      values: cell.data,
+      formWindowConfig: {
+        title: `Edit ${cell.type}`,
+      },
+    }))
+    if(!values) return
+    await dispatch(actions.update({
+      content_id,
+      layout_id,
+      handler: layoutUtils.updateCell,
+      params: {
+        rowIndex,
+        cellIndex,
+        data: Object.assign({}, cell, {
+          data: values,
+        })
+      }
+    }))
+    await dispatch(snackbarActions.setSuccess(`layout updated`))
+  }),
+
   delete: ({
     content_id,
     layout_id,

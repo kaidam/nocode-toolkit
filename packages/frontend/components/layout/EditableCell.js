@@ -35,6 +35,8 @@ const useStyles = makeStyles(theme => {
 
 const EditableCell = ({
   id,
+  layout,
+  cell,
   content_id,
   layout_id,
   rowIndex,
@@ -102,6 +104,8 @@ const EditableCell = ({
           open && (
             <EditableCellMenu
               anchorEl={ anchorEl }
+              layout={ layout }
+              cell={ cell }
               content_id={ content_id }
               layout_id={ layout_id }
               rowIndex={ rowIndex }

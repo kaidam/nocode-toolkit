@@ -31,6 +31,8 @@ const useStyles = makeStyles(theme => {
 })
 
 const EditableCellMenu = ({
+  layout,
+  cell,
   content_id,
   layout_id,
   rowIndex,
@@ -42,10 +44,18 @@ const EditableCellMenu = ({
   const classes = useStyles()
 
   const actions = Actions(useDispatch(), {
+    onLayoutEdit: layoutActions.edit,
     onLayoutDelete: layoutActions.delete,
   })
 
-  const getAddMenuItems = useCallback(() => getAddMenu(rowIndex), [rowIndex])
+  const getAddMenuItems = useCallback(() => getAddMenu(rowIndex+1), [rowIndex])
+
+  const onEdit = () => actions.onLayoutEdit({
+    content_id,
+    layout_id,
+    rowIndex,
+    cellIndex,
+  })
 
   const onDelete = () => actions.onLayoutDelete({
     content_id,
@@ -75,6 +85,7 @@ const EditableCellMenu = ({
           </Button>
           <Button
             className={ classes.button }
+            onClick={ onEdit }
           >
             <EditIcon className={ classes.buttonIcon } />&nbsp;edit
           </Button>

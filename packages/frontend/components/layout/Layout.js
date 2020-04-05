@@ -87,6 +87,7 @@ const Render = ({
                     <Suspense>
                       <EditableCell
                         id={ id }
+                        layout={ data }
                         content_id={ content_id }
                         layout_id={ layout_id }
                         rowIndex={ i }
