@@ -1,13 +1,12 @@
-import React, { lazy, useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
 import settingsSelectors from '../../store/selectors/settings'
 import systemSelectors from '../../store/selectors/system'
 import nocodeSelectors from '../../store/selectors/nocode'
-import Suspense from '../system/Suspense'
 
-const EditableCell = lazy(() => import(/* webpackChunkName: "ui" */ './EditableCell'))
+import Cell from './Cell'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,23 +17,9 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     alignItems: 'stretch',
   },
-  cell: {
-    flexBasis: '100%',
-    flex: 1,
-  },
 }))
 
-const UnknownTypeRenderer = ({
-  type,
-}) => {
-  return (
-    <div>
-      Error unknown cell type {type}
-    </div>
-  )
-}
-
-const Render = ({
+const Layout = ({
   content_id,
   layout_id,
   getAddMenu,
@@ -68,46 +53,21 @@ const Render = ({
             >
               {
                 row.map((cell, j) => {
-                  const Renderer = widgetRenderers[cell.type] || UnknownTypeRenderer
-                  const id = [i,j].join('.')
-
-                  const content = (
-                    <Renderer
-                      data={ cell.data }
-                      cell={{
-                        id,
-                        type: cell.type,
-                        rowIndex: i,
-                        cellIndex: j,
-                      }}
-                    />
-                  )
-
-                  const renderContent = showUI ? (
-                    <Suspense>
-                      <EditableCell
-                        id={ id }
-                        layout={ data }
-                        content_id={ content_id }
-                        layout_id={ layout_id }
-                        rowIndex={ i }
-                        cellIndex={ j }
-                        currentCellId={ currentCellId }
-                        setCurrentCellId={ setCurrentCellId }
-                        getAddMenu={ getAddMenu }
-                      >
-                        { content }
-                      </EditableCell>
-                    </Suspense>
-                  ) : content
-                  
                   return (
-                    <div
+                    <Cell
                       key={ j }
-                      className={ classes.cell }
-                    >
-                      { renderContent }
-                    </div>
+                      cell={ cell }
+                      layout={ data }
+                      widgetRenderers={ widgetRenderers }
+                      showUI={ showUI }
+                      content_id={ content_id }
+                      layout_id={ layout_id }
+                      rowIndex={ i }
+                      cellIndex={ j }
+                      currentCellId={ currentCellId }
+                      setCurrentCellId={ setCurrentCellId }
+                      getAddMenu={ getAddMenu }
+                    />
                   )
                 })
               }
@@ -119,4 +79,4 @@ const Render = ({
   )
 }
 
-export default Render
+export default Layout
