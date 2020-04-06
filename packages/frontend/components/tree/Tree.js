@@ -1,8 +1,16 @@
-import React, { useCallback } from 'react'
+import React from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 
 import List from '@material-ui/core/List'
 import TreeItem from './TreeItem'
 import useSectionTree from '../hooks/useSectionTree'
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    paddingTop: 0,
+    paddingBottom: 0,
+  },
+}))
 
 const Tree = ({
 
@@ -36,8 +44,10 @@ const Tree = ({
     section,
   })
 
+  const classes = useStyles()
+
   return (
-    <List>
+    <List className={ classes.root }>
       {
         list.map((item, i) => {
           return (

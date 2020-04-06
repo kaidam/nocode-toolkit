@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+
 import Tooltip from '@material-ui/core/Tooltip'
+
+import colorUtils from '../../utils/color'
 import EditableCellMenu from './EditableCellMenu'
 
 const useStyles = makeStyles(theme => {
@@ -23,8 +26,12 @@ const useStyles = makeStyles(theme => {
       width: '100%',
       height: '100%',
       cursor: 'pointer',
-      backgroundColor: theme.palette.primary.main,
-      opacity: open ? 0.2 : 0,
+      backgroundColor: open ? colorUtils.getAlpha(theme.palette.primary.main, 0.2) : null,
+      border: open ? `1px dotted ${theme.palette.primary.main}` : null,
+      boxShadow: open ? `5px 5px 5px 0px rgba(0,0,0,0.3)` : null,
+      '&:hover': {
+        backgroundColor: colorUtils.getAlpha(theme.palette.primary.main, open ? 0.2 : 0.1),
+      }
     }),
     tooltipContent: {
       width: '100%',
