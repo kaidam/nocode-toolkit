@@ -287,6 +287,20 @@ const flatFormSchema = createSelector(
   }
 )
 
+const document = createSelector(
+  routerSelectors.route,
+  nocodeSelectors.nodes,
+  nocodeSelectors.externals,
+  (route, nodes, externalMap) => {
+    const node = nodes[route.item]
+    const externals = (route.externals || []).map(id => externalMap[id])
+    return {
+      node,
+      html: externals[0],
+    }
+  },
+)
+
 const selectors = {
   formWindow,
   settings,
@@ -299,6 +313,7 @@ const selectors = {
   form,
   formValues,
   flatFormSchema,
+  document,
 }
 
 export default selectors

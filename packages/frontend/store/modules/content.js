@@ -14,6 +14,7 @@ import nocodeSelectors from '../selectors/nocode'
 import uiActions from './ui'
 import driveActions from './drive'
 import jobActions from './job'
+import nocodeActions from './nocode'
 import snackbarActions from './snackbar'
 import routerActions from './router'
 
@@ -79,6 +80,9 @@ const loaders = {
     .then(apiUtils.process),
 
   resetHomepage: (getState) => axios.delete(apiUtils.websiteUrl(getState, `/homepage`))
+    .then(apiUtils.process),
+
+  reloadExternalContent: (getState, driver, id) => axios.get(apiUtils.websiteUrl(getState, `/remotecontent/reload/${driver}/${id}`))
     .then(apiUtils.process),
 }
 
@@ -508,6 +512,21 @@ const sideEffects = {
     }
   }),
 
+  reloadExternalContent: ({
+    driver,
+    id,
+  }) => wrapper('reloadExternalContent', async (dispatch, getState) => {
+    const result = await loaders.reloadExternalContent(getState, driver, id)
+    // the name has changed so we need to do a full rebuild
+    if(result.nameChanged) {
+      await dispatch(jobActions.rebuild())
+    }
+    // otherwise just reload the external
+    else {
+      await dispatch(nocodeActions.loadExternal(`${driver}:${id}.html`))
+    }
+  }),
+
   waitForForm: ({
     forms,
     values = {},
@@ -568,7 +587,7 @@ const sideEffects = {
     dispatch(actions.clearFormWindow())
     return result
   },
-  
+
 }
 
 const reducer = CreateReducer({

@@ -15,6 +15,11 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'row',
     width: '100%',
+    padding: '0px',
+  },
+  searchBox: {
+    padding: '0px', 
+    margin: '0px',
   },
   popper: {
     zIndex: '2000',
@@ -107,6 +112,7 @@ const Search = ({
   return (
     <div className={ classes.root }>
       <TextField
+        className={ classes.searchBox }
         label="Search"
         variant="outlined"
         fullWidth

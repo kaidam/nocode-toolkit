@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => {
       border: open ? `1px solid ${theme.palette.grey[300]}` : null,
       boxShadow: open ? `5px 5px 5px 0px rgba(0,0,0,0.3)` : null,
       '&:hover': {
-        backgroundColor: colorUtils.getAlpha(theme.palette.grey[500], open ? 0.1 : 0.05),
+        backgroundColor: colorUtils.getAlpha(theme.palette.grey[500], 0.1),
       }
     }),
     tooltipContent: {
