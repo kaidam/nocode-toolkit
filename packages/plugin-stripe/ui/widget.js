@@ -66,18 +66,18 @@ const form = {
       ],
     }
   }],
-  // we should not show the payment button if
-  // there is not a connected stripe account
-  isActive: (settings) => {
-    if(!settings || !settings.stripe) return false
-    return settings.stripe.connected ? true : false
-  },
 }
 
 const widget = {
   id: 'stripe_payment_button',
   Render,
   form,
+  // we should not show the payment button if
+  // there is not a connected stripe account
+  isActive: (settings) => {
+    if(!settings || !settings.stripe) return false
+    return settings.stripe.connected ? true : false
+  },
 }
 
 export default widget

@@ -72,28 +72,31 @@ const sideEffects = {
     content_id,
     layout_id,
     form,
+    data,
     rowIndex = -1,
   }) => wrapper('add', async (dispatch, getState) => {
     const storeForms = settingsSelectors.forms(getState())
     const storeForm = storeForms[form]
     const values = await dispatch(contentActions.waitForForm({
-      forms: [form, `cell.settings`],
+      forms: [storeForm ? form : null, `cell.settings`].filter(i => i),
       formWindowConfig: {
-        title: `Create ${storeForm.title}`,
+        title: `Create ${storeForm ? storeForm.title : 'Item'}`,
       },
       processValues: processCellSettings,
     }))
     if(!values) return
+    const itemData = {
+      type: form,
+      settings: values.settings,
+      data: data || values.data,
+    }
     await dispatch(actions.update({
       content_id,
       layout_id,
       handler: 'insertRow',
       params: {
         rowIndex,
-        data: {
-          type: form,
-          ...values
-        }
+        data: itemData,
       }
     }))
     await dispatch(snackbarActions.setSuccess(`layout updated`))
@@ -114,13 +117,13 @@ const sideEffects = {
     const storeForms = settingsSelectors.forms(getState())
     const storeForm = storeForms[cell.type]
     const values = await dispatch(contentActions.waitForForm({
-      forms: [cell.type, `cell.settings`],
+      forms: [storeForm ? cell.type : null, `cell.settings`].filter(i => i),
       values: {
         settings: cell.settings,
         ...cell.data
       },
       formWindowConfig: {
-        title: `Edit ${storeForm.title}`,
+        title: `Edit ${storeForm ? storeForm.title : 'Item'}`,
       },
       processValues: processCellSettings,
     }))

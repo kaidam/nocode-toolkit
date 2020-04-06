@@ -13,6 +13,7 @@ const DialogLoader = lazy(() => import(/* webpackChunkName: "ui" */ '../dialog/L
 
 const Layout = ({
   children,
+  head,
   material = false,
 }) => {
 
@@ -40,6 +41,9 @@ const Layout = ({
         }
         {
           (material || showUI) && <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+        }
+        {
+          head
         }
       </Helmet>
       <Snippet

@@ -63,11 +63,11 @@ const widgets = createSelector(
   plugins,
   libraryWidgets,
   (settings, plugins, widgets) => {
-    const all = widgets.concat(plugins.reduce((all, plugin) => {
-      return plugins.widgets ?
-        all.concat(plugins.widgets) :
+    const all = plugins.reduce((all, plugin) => {
+      return plugin.widgets ?
+        all.concat(plugin.widgets) :
         all
-    }, []))
+    }, widgets)
     return all.filter(widget => {
       return widget.isActive ?
         widget.isActive(settings) :
