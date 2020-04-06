@@ -516,13 +516,17 @@ const sideEffects = {
     driver,
     id,
   }) => wrapper('reloadExternalContent', async (dispatch, getState) => {
-    const result = await loaders.reloadExternalContent(getState, driver, id)
+    const {
+      reloadPreview,
+      reloadDocument,
+    } = await loaders.reloadExternalContent(getState, driver, id)
+
     // the name has changed so we need to do a full rebuild
-    if(result.nameChanged) {
-      await dispatch(jobActions.rebuild())
+    if(reloadPreview) {
+      await dispatch(jobActions.reload())
     }
     // otherwise just reload the external
-    else {
+    else if (reloadDocument) {
       await dispatch(nocodeActions.loadExternal(`${driver}:${id}.html`))
     }
   }),

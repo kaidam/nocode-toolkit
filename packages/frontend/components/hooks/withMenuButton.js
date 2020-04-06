@@ -126,6 +126,7 @@ const ItemMenu = ({
                 onClick={(e) => {
                   eventUtils.cancelEvent(e)
                   onClose()
+                  window.open(item.url)
                   return false
                 }}
               >
