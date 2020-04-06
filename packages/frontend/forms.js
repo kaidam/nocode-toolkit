@@ -32,6 +32,7 @@ const forms = {
       settings: {
         horizontal_align: 'left',
         vertical_align: 'top',
+        padding: 8,
       },
     },
     tabs: [{
@@ -68,6 +69,14 @@ const forms = {
             title: 'Bottom',
             value: 'bottom',
           }]
+        }],
+        [{
+          id: 'settings.padding',
+          title: 'Padding',
+          helperText: 'The padding in pixels for this cell',
+          inputProps: {
+            type: 'number',
+          },
         }],
       ]
     }],
