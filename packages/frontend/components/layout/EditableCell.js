@@ -8,16 +8,12 @@ import EditableCellMenu from './EditableCellMenu'
 
 const useStyles = makeStyles(theme => {
   return {
-    root: ({open}) => ({
+    root: ({faded}) => ({
       position: 'relative',
+      height: '100%',
       '& .content': {
-        opacity: open ? 0.5 : 1,
+        opacity: faded ? 0.5 : 1,
       },
-      '&:hover': {
-        '& .content': {
-          opacity: 0.5,
-        }
-      }
     }),
     clicker: ({open}) => ({
       position: 'absolute',
@@ -57,6 +53,7 @@ const EditableCell = ({
   const open = Boolean(anchorEl)
 
   const classes = useStyles({
+    faded: currentCellId && currentCellId != id,
     open,
   })
 
@@ -76,6 +73,11 @@ const EditableCell = ({
 
   const handleClose = () => {
     setAnchorEl(null)
+  }
+
+  const handleReset = () => {
+    setAnchorEl(null)
+    setCurrentCellId(null)
   }
 
   useEffect(() => {
@@ -119,6 +121,7 @@ const EditableCell = ({
               cellIndex={ cellIndex }
               getAddMenu={ getAddMenu }
               onClose={ handleClose }
+              onReset={ handleReset }
             />
           )
         }

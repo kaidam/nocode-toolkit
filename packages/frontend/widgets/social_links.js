@@ -11,6 +11,8 @@ const styles = {
     display: 'inline-block',
     flex: 1,
     textAlign: 'center',
+    paddingLeft: '8px',
+    paddingRight: '8px',
   },
   facebook: {
     color: '#4166B2',

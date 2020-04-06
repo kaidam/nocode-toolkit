@@ -20,6 +20,7 @@ const Render = ({
 
   const id = youtubeId(data.url)
   const useStyle ={
+    width: '100%',
     maxWidth: '100%',
   }
 

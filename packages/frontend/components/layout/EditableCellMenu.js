@@ -23,26 +23,28 @@ const DownIcon = icons.down
 const LeftIcon = icons.left
 const RightIcon = icons.right
 
-const IconCombo = (Left, Right) => () => (
-  <div>
-    <Left />
-    <Right />
-  </div>
-)
-
 const useStyles = makeStyles(theme => {
   return {
     button: {
-      //color: theme.palette.grey[600],
-      color: theme.palette.secondary.main,
+      color: theme.palette.grey[500],
       textTransform: 'lowercase',
       padding: theme.spacing(0.5),
+      '&:hover': {
+        color: theme.palette.secondary.main,
+      }
     },
     buttonIcon: {
       fontSize: '1em',
     },
   }
 })
+
+const IconCombo = (Left, Right) => () => (
+  <div>
+    <Left />
+    <Right />
+  </div>
+)
 
 const EditableCellMenu = ({
   layout,
@@ -54,6 +56,7 @@ const EditableCellMenu = ({
   anchorEl,
   getAddMenu,
   onClose,
+  onReset,
 }) => {
   const classes = useStyles()
 
@@ -77,27 +80,31 @@ const EditableCellMenu = ({
     cellIndex,
   })
 
-  const getOnMoveHandler = ({
-    direction,
-    merge,
-  }) => () => actions.onLayoutMove({
-    content_id,
-    layout_id,
-    rowIndex,
-    cellIndex,
-    direction,
-    merge,
-  })
-
   const getAddMenuItems = useCallback(() => getAddMenu(rowIndex+1), [rowIndex])
   const getMoveMenuItems = useCallback(() => {
 
+    const getOnMoveHandler = ({
+      direction,
+      merge,
+    }) => () => actions.onLayoutMove({
+      content_id,
+      layout_id,
+      rowIndex,
+      cellIndex,
+      direction,
+      merge,
+    })
+
     const row = layout[rowIndex]
 
-    const up = rowIndex > 0 ? {
+    const up = (rowIndex > 0 || row.length > 1) ? {
       title: 'Up',
       icon: IconCombo(UpIcon, RowIcon),
-      items: [{
+      handler: rowIndex == 0 ? getOnMoveHandler({
+        direction: 'up',
+        merge: false,
+      }) : null,
+      items: rowIndex == 0 ? null : [{
         title: 'Up: Own Row',
         icon: IconCombo(UpIcon, RowIcon),
         handler: getOnMoveHandler({
@@ -114,10 +121,14 @@ const EditableCellMenu = ({
       }]
     } : null
 
-    const down = rowIndex < layout.length - 1 ? {
+    const down = (rowIndex < layout.length - 1 || row.length > 1) ? {
       title: 'Down',
       icon: IconCombo(DownIcon, RowIcon),
-      items: [{
+      handler: rowIndex == layout.length - 1 ? getOnMoveHandler({
+        direction: 'down',
+        merge: false,
+      }) : null,
+      items: rowIndex == layout.length - 1 ? null : [{
         title: 'Down: Own Row',
         icon: IconCombo(DownIcon, RowIcon),
         handler: getOnMoveHandler({
@@ -167,12 +178,14 @@ const EditableCellMenu = ({
   const addMenu = withMenuButton({
     getItems: getAddMenuItems,
     noHeader: true,
+    onClick: onReset,
     onClose,
   })
 
   const moveMenu = withMenuButton({
     getItems: getMoveMenuItems,
     noHeader: true,
+    onClick: onReset,
     onClose,
   })
 

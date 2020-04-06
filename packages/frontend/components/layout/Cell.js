@@ -9,9 +9,29 @@ const useStyles = makeStyles(theme => ({
     flexBasis: '100%',
     flex: 1,
   },
-  cell: (settings) => ({
-    padding: settings.padding,
-  }),
+  cell: ({
+    horizontal_align,
+    vertical_align,
+    padding,
+  }) => {
+
+    let hAlign = horizontal_align
+    let vAlign = vertical_align
+
+    if(hAlign == 'left') hAlign = 'flex-start'
+    else if(hAlign == 'right') hAlign = 'flex-end'
+
+    if(vAlign == 'top') vAlign = 'flex-start'
+    else if(vAlign == 'bottom') vAlign = 'flex-end'
+
+    return {
+      padding: padding,
+      height: '100%',
+      display: 'flex',
+      justifyContent: hAlign,
+      alignItems: vAlign,
+    }
+  },
 }))
 
 const UnknownTypeRenderer = ({

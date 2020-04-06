@@ -66,17 +66,8 @@ const moveCell = ({
   if(!row) throw new Error(`no row found ${rowIndex}`)
   const cell = row[cellIndex]
   if(!cell) throw new Error(`no cell found ${rowIndex}:${cellIndex}`)
-
-  if(direction == 'up' && rowIndex <= 0) throw new Error(`the cell is already at the top`)
-  if(direction == 'down' && rowIndex >= layout.length - 1) throw new Error(`the cell is already at the bottom`)
-  if(direction == 'left' && cellIndex <= 0) throw new Error(`the cell is already at the left`)
-  if(direction == 'right' && cellIndex >= row.length - 1) throw new Error(`the cell is already at the right`)
-
   if(direction == 'up' || direction == 'down') {
-
-    const directionNumeric = direction == 'up' ? -1 : 1
-    const targetRowIndex = rowIndex + directionNumeric
-
+    let targetRowIndex = rowIndex + (direction == 'up' ? -1 : 1)
     // we need to pluck this cell onto it's own row
     if(row.length > 1) {
       // remove the cell from the existing row
@@ -86,14 +77,15 @@ const moveCell = ({
     else {
       // remove the row from the layout
       newLayout.splice(rowIndex, 1)
+      targetRowIndex = (merge && direction == 'down') ? targetRowIndex - 1 : targetRowIndex
     }
 
     if(merge) {
       const targetRow = newLayout[targetRowIndex]
+      if(!targetRow) throw new Error(`could not find row to merge at index ${targetRowIndex}`)
       targetRow.push(cell)
     }
     else {
-      // insert a new row
       newLayout.splice(targetRowIndex, 0, [cell])
     }
   }
