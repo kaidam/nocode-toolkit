@@ -1,6 +1,8 @@
 import Render from './components/Wrapper'
 
 const form = {
+  id: 'contactform',
+  title: 'Contact Form',
   initialValues: {
     buttonTitle: '',
   },

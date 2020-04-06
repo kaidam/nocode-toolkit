@@ -1,6 +1,8 @@
 import Render from './components/Wrapper'
 
 const form = {
+  id: 'stripe_payment_button',
+  title: 'Payment Button',
   initialValues: {
     name: '',
     price: 0,

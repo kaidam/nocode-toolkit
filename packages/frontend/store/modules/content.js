@@ -156,7 +156,7 @@ const sideEffects = {
     parentId,
   }) => wrapper('createRemoteContent', async (dispatch, getState) => {
     const result = await dispatch(actions.waitForForm({
-      form,
+      forms: [form],
       processValues: processNodeFormValues,
       formWindowConfig: {
         title,
@@ -200,7 +200,7 @@ const sideEffects = {
     id,
   }) => wrapper('editRemoteContent', async (dispatch, getState) => {
     const result = await dispatch(actions.waitForForm({
-      form,
+      forms: [form],
       values: getNodeFormValues(getState, id),
       processValues: processNodeFormValues,
       formWindowConfig: {
@@ -270,7 +270,7 @@ const sideEffects = {
     location,
   }) => wrapper('createLocalContent', async (dispatch, getState) => {
     const result = await dispatch(actions.waitForForm({
-      form,
+      forms: [form],
       formWindowConfig: {
         title,
       },
@@ -300,7 +300,7 @@ const sideEffects = {
     const nodes = nocodeSelectors.nodes(getState())
     const values = nodes[id]
     const result = await dispatch(actions.waitForForm({
-      form,
+      forms: [form],
       values,
       formWindowConfig: {
         title,
@@ -358,7 +358,7 @@ const sideEffects = {
     id,
   }) => wrapper('editSection', async (dispatch, getState) => {
     const result = await dispatch(actions.waitForForm({
-      form,
+      forms: [form],
       values: getSectionFormValues(getState, id),
       processValues: processSectionFormValues,
       formWindowConfig: {
@@ -509,22 +509,25 @@ const sideEffects = {
   }),
 
   waitForForm: ({
-    form,
+    forms,
     values = {},
     formWindowConfig = {},
     loadingConfig = {transparent:true},
     processValues = (values) => values,
     onSubmit,
   }) => async (dispatch, getState) => {
-    const forms = settingsSelectors.forms(getState())
-    const formConfig = forms[form]
-    if(!formConfig) throw new Error(`no form config found for ${form}`)
-    const initialValues = deepmerge.all([
-      formConfig.initialValues,
-      values,
-    ])
+    const storeForms = settingsSelectors.forms(getState())
+    const missingConfig = forms.find(name => storeForms[name] ? false : true)
+    if(missingConfig) throw new Error(`no form config found for ${missingConfig}`)
+    // merge the initial values from the form array
+    const initialValues = deepmerge.all(
+      forms.map(name => {
+        const formConfig = storeForms[name]
+        return formConfig.initialValues
+      }).concat([values])  
+    )
     dispatch(actions.openFormWindow({
-      form,
+      forms,
       values: initialValues,
       ...formWindowConfig
     }))
@@ -538,9 +541,12 @@ const sideEffects = {
         if(confirmed) {
           const currentSettings = contentSelectors.formWindow(getState())
           const formValues = processValues(
-            formConfig.processFormValues ?
-              formConfig.processFormValues(currentSettings.values) :
-              currentSettings.values
+            forms.reduce((all, name) => {
+              const formConfig = storeForms[name]
+              return formConfig.processFormValues ?
+                formConfig.processFormValues(all) :
+                all
+            }, currentSettings.values)
           )
           if(onSubmit) {
             dispatch(uiActions.setLoading(loadingConfig))

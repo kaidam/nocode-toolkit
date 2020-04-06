@@ -91,6 +91,8 @@ const Render = ({
 }
 
 const form = {
+  id: 'image',
+  title: 'Image',
   initialValues: {
     image: null,
     size: 'default',

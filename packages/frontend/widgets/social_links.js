@@ -74,6 +74,8 @@ const Render = ({
 }
 
 const form = {
+  id: 'social_links',
+  title: 'Social Links',
   initialValues: {
     facebook: '',
     twitter: '',

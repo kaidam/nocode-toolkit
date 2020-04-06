@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect'
-
-import library from '../../library'
+import deepmerge from 'deepmerge'
 import childrenUtils from '../../utils/children'
 import nocodeSelectors from './nocode'
 import routerSelectors from './router'
@@ -230,12 +229,40 @@ const itemRoute = () => createSelector(
 const form = createSelector(
   settingsSelectors.forms,
   formWindow,
-  (forms, formWindow) => {
-    return formWindow ?
-      forms[formWindow.form] :
-      {
+  (storeForms, formWindow) => {
+    const formNames = formWindow.forms || []
+    if(formNames.length <= 1) {
+      return storeForms[formNames[0]] || {
         schema: [],
       }
+    }
+    const initialValues = deepmerge.all(
+      formNames.map(name => {
+        const formConfig = storeForms[name]
+        return formConfig.initialValues
+      }).concat([formWindow.values])  
+    )
+    const tabs = formNames.reduce((all, name) => {
+      const formConfig = storeForms[name]
+      if(formConfig.tabs) {
+        return all.concat(formConfig.tabs)
+      }
+      else if(formConfig.schema) {
+        return all.concat([{
+          id: formConfig.id,
+          title: formConfig.title,
+          schema: formConfig.schema,
+        }])
+      }
+      else {
+        return all
+      }
+    }, [])
+
+    return {
+      tabs,
+      initialValues,
+    }
   }
 )
 

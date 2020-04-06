@@ -31,6 +31,8 @@ const Render = ({
 }
 
 const form = {
+  id: 'video',
+  title: 'Video',
   initialValues: {
     url: '',
   },

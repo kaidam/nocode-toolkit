@@ -13,6 +13,8 @@ import contentActions from './content'
 import snackbarActions from './snackbar'
 import uiActions from './ui'
 
+import settingsSelectors from '../selectors/settings'
+
 import layoutUtils from '../../utils/layout'
 
 const prefix = 'layout'
@@ -26,6 +28,16 @@ const reducers = {
 const loaders = {
   updateAnnotation: (getState, id, payload) => axios.put(apiUtils.websiteUrl(getState, `/annotation/${id}`), payload)
     .then(apiUtils.process),
+}
+
+const processCellSettings = (values) => {
+  const data = Object.assign({}, values)
+  const settings = data.settings
+  delete(data.settings)
+  return {
+    data,
+    settings,
+  }
 }
 
 const sideEffects = {
@@ -60,11 +72,14 @@ const sideEffects = {
     form,
     rowIndex = -1,
   }) => wrapper('add', async (dispatch, getState) => {
+    const storeForms = settingsSelectors.forms(getState())
+    const storeForm = storeForms[form]
     const values = await dispatch(contentActions.waitForForm({
-      form,
+      forms: [form, `cell.settings`],
       formWindowConfig: {
-        title: `Create ${form}`,
+        title: `Create ${storeForm.title}`,
       },
+      processValues: processCellSettings,
     }))
     if(!values) return
     await dispatch(actions.update({
@@ -75,7 +90,7 @@ const sideEffects = {
         rowIndex,
         data: {
           type: form,
-          data: values,
+          ...values
         }
       }
     }))
@@ -93,12 +108,19 @@ const sideEffects = {
     const layout = annotation[layout_id]
     if(!layout) throw new Error(`no layout found`)
     const cell = layout[rowIndex][cellIndex]
+    if(!cell) throw new Error(`no cell found`)
+    const storeForms = settingsSelectors.forms(getState())
+    const storeForm = storeForms[cell.type]
     const values = await dispatch(contentActions.waitForForm({
-      form: cell.type,
-      values: cell.data,
-      formWindowConfig: {
-        title: `Edit ${cell.type}`,
+      forms: [cell.type, `cell.settings`],
+      values: {
+        settings: cell.settings,
+        ...cell.data
       },
+      formWindowConfig: {
+        title: `Edit ${storeForm.title}`,
+      },
+      processValues: processCellSettings,
     }))
     if(!values) return
     await dispatch(actions.update({
@@ -108,9 +130,7 @@ const sideEffects = {
       params: {
         rowIndex,
         cellIndex,
-        data: Object.assign({}, cell, {
-          data: values,
-        })
+        data: Object.assign({}, cell, values),
       }
     }))
     await dispatch(snackbarActions.setSuccess(`layout updated`))
