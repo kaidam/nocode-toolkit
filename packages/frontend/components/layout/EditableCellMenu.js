@@ -20,12 +20,13 @@ const MoveIcon = icons.move
 const useStyles = makeStyles(theme => {
   return {
     button: {
-      color: theme.palette.grey[600],
+      //color: theme.palette.grey[600],
+      color: theme.palette.secondary.main,
       textTransform: 'lowercase',
-      padding: 0,
+      padding: theme.spacing(0.5),
     },
     buttonIcon: {
-      fontSize: '0.85em',
+      fontSize: '1em',
     },
   }
 })
