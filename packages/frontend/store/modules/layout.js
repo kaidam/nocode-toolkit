@@ -48,9 +48,11 @@ const sideEffects = {
     handler,
     params,
   }) => async (dispatch, getState) => {
+    const handlerFn = layoutUtils[handler]
+    if(!handlerFn) throw new Error(`no handler found ${handler}`)
     const annotations = nocodeSelectors.annotations(getState())
     const annotation = annotations[content_id] || {}
-    const layout = handler({
+    const layout = handlerFn({
       layout: annotation[layout_id] || [],
       params
     })
@@ -85,7 +87,7 @@ const sideEffects = {
     await dispatch(actions.update({
       content_id,
       layout_id,
-      handler: layoutUtils.insertRow,
+      handler: 'insertRow',
       params: {
         rowIndex,
         data: {
@@ -126,7 +128,7 @@ const sideEffects = {
     await dispatch(actions.update({
       content_id,
       layout_id,
-      handler: layoutUtils.updateCell,
+      handler: 'updateCell',
       params: {
         rowIndex,
         cellIndex,
@@ -154,10 +156,32 @@ const sideEffects = {
     await dispatch(actions.update({
       content_id,
       layout_id,
-      handler: layoutUtils.deleteCell,
+      handler: 'deleteCell',
       params: {
         rowIndex,
         cellIndex,
+      }
+    }))
+    await dispatch(snackbarActions.setSuccess(`layout updated`))
+  }),
+
+  move: ({
+    content_id,
+    layout_id,
+    rowIndex,
+    cellIndex,
+    direction,
+    merge,
+  }) => wrapper('move', async (dispatch, getState) => {
+    await dispatch(actions.update({
+      content_id,
+      layout_id,
+      handler: 'moveCell',
+      params: {
+        rowIndex,
+        cellIndex,
+        direction,
+        merge,
       }
     }))
     await dispatch(snackbarActions.setSuccess(`layout updated`))

@@ -74,8 +74,8 @@ const moveCell = ({
 
   if(direction == 'up' || direction == 'down') {
 
-    const direction = direction == 'up' ? -1 : 1
-    const targetRowIndex = rowIndex + direction
+    const directionNumeric = direction == 'up' ? -1 : 1
+    const targetRowIndex = rowIndex + directionNumeric
 
     // we need to pluck this cell onto it's own row
     if(row.length > 1) {
@@ -89,7 +89,7 @@ const moveCell = ({
     }
 
     if(merge) {
-      const targetRow = layout[targetRowIndex]
+      const targetRow = newLayout[targetRowIndex]
       targetRow.push(cell)
     }
     else {

@@ -16,6 +16,19 @@ const AddIcon = icons.add
 const EditIcon = icons.edit
 const DeleteIcon = icons.delete
 const MoveIcon = icons.move
+const RowIcon = icons.row
+const CellIcon = icons.cell
+const UpIcon = icons.up
+const DownIcon = icons.down
+const LeftIcon = icons.left
+const RightIcon = icons.right
+
+const IconCombo = (Left, Right) => () => (
+  <div>
+    <Left />
+    <Right />
+  </div>
+)
 
 const useStyles = makeStyles(theme => {
   return {
@@ -47,9 +60,8 @@ const EditableCellMenu = ({
   const actions = Actions(useDispatch(), {
     onLayoutEdit: layoutActions.edit,
     onLayoutDelete: layoutActions.delete,
+    onLayoutMove: layoutActions.move,
   })
-
-  const getAddMenuItems = useCallback(() => getAddMenu(rowIndex+1), [rowIndex])
 
   const onEdit = () => actions.onLayoutEdit({
     content_id,
@@ -65,8 +77,102 @@ const EditableCellMenu = ({
     cellIndex,
   })
 
+  const getOnMoveHandler = ({
+    direction,
+    merge,
+  }) => () => actions.onLayoutMove({
+    content_id,
+    layout_id,
+    rowIndex,
+    cellIndex,
+    direction,
+    merge,
+  })
+
+  const getAddMenuItems = useCallback(() => getAddMenu(rowIndex+1), [rowIndex])
+  const getMoveMenuItems = useCallback(() => {
+
+    const row = layout[rowIndex]
+
+    const up = rowIndex > 0 ? {
+      title: 'Up',
+      icon: IconCombo(UpIcon, RowIcon),
+      items: [{
+        title: 'Up: Own Row',
+        icon: IconCombo(UpIcon, RowIcon),
+        handler: getOnMoveHandler({
+          direction: 'up',
+          merge: false,
+        })
+      }, {
+        title: 'Up: Merge',
+        icon: IconCombo(UpIcon, RowIcon),
+        handler: getOnMoveHandler({
+          direction: 'up',
+          merge: true,
+        })
+      }]
+    } : null
+
+    const down = rowIndex < layout.length - 1 ? {
+      title: 'Down',
+      icon: IconCombo(DownIcon, RowIcon),
+      items: [{
+        title: 'Down: Own Row',
+        icon: IconCombo(DownIcon, RowIcon),
+        handler: getOnMoveHandler({
+          direction: 'down',
+          merge: false,
+        })
+      }, {
+        title: 'Down: Merge',
+        icon: IconCombo(DownIcon, RowIcon),
+        handler: getOnMoveHandler({
+          direction: 'down',
+          merge: true,
+        })
+      }]
+    } : null
+
+    const left = cellIndex > 0 ? {
+      title: 'Left',
+      icon: IconCombo(LeftIcon, CellIcon),
+      handler: getOnMoveHandler({
+        direction: 'left',
+      })
+    } : null
+
+    const right = cellIndex < row.length - 1 ? {
+      title: 'Right',
+      icon: IconCombo(RightIcon, CellIcon),
+      handler: getOnMoveHandler({
+        direction: 'right',
+      })
+    } : null
+
+    return [
+      up,
+      down,
+      left,
+      right,
+    ].filter(i => i)
+  }, [
+    layout,
+    content_id,
+    layout_id,
+    rowIndex,
+    cellIndex,
+  ])
+
   const addMenu = withMenuButton({
     getItems: getAddMenuItems,
+    noHeader: true,
+    onClose,
+  })
+
+  const moveMenu = withMenuButton({
+    getItems: getMoveMenuItems,
+    noHeader: true,
     onClose,
   })
 
@@ -92,6 +198,7 @@ const EditableCellMenu = ({
           </Button>
           <Button
             className={ classes.button }
+            onClick={ moveMenu.onClick }
           >
             <MoveIcon className={ classes.buttonIcon } />&nbsp;move
           </Button>
@@ -104,6 +211,9 @@ const EditableCellMenu = ({
         </ButtonGroup>
         {
           addMenu.menus
+        }
+        {
+          moveMenu.menus
         }
       </Paper>
     </Popper>

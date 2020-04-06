@@ -13,6 +13,14 @@ import Link from '../widgets/Link'
 import eventUtils from '../../utils/events'
 
 const useStyles = makeStyles(theme => ({
+  list: {
+    paddingTop: theme.spacing(0.5),
+    paddingBottom: theme.spacing(0.5),
+  },
+  menuItem: {
+    paddingTop: theme.spacing(0.5),
+    paddingBottom: theme.spacing(0.5),
+  },
   menuText: {
     paddingRight: '50px',
   },
@@ -43,6 +51,9 @@ const ItemMenu = ({
   const classes = useStyles()
   return (
     <Menu
+      classes={{
+        list: classes.list,
+      }}
       anchorEl={ anchorEl }
       open={ open }
       onClose={ onClose }
@@ -141,6 +152,7 @@ const ItemMenu = ({
           return (
             <MenuItem
               key={ i }
+              className={ classes.menuItem }
               onClick={ (e) => {
                 eventUtils.cancelEvent(e)
                 if(item.url) return
