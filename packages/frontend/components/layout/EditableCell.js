@@ -13,6 +13,7 @@ const useStyles = makeStyles(theme => {
       height: '100%',
       '& .content': {
         opacity: faded ? 0.5 : 1,
+        height: '100%',
       },
     }),
     clicker: ({open}) => ({
@@ -23,7 +24,7 @@ const useStyles = makeStyles(theme => {
       height: '100%',
       cursor: 'pointer',
       backgroundColor: open ? colorUtils.getAlpha(theme.palette.primary.main, 0.2) : null,
-      border: open ? `1px dotted ${theme.palette.primary.main}` : null,
+      //border: open ? `1px dotted ${theme.palette.primary.main}` : null,
       boxShadow: open ? `5px 5px 5px 0px rgba(0,0,0,0.3)` : null,
       '&:hover': {
         backgroundColor: colorUtils.getAlpha(theme.palette.primary.main, open ? 0.2 : 0.1),

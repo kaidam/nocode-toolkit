@@ -67,8 +67,8 @@ const RichTextField = ({
         className={ classes.editorContainer }
         ref={ containerRef }
         style={{
-          height: useContainerHeight,
-          maxHeight: useContainerHeight,
+          height: '250px',
+          maxHeight: '250px',
         }}
       >
         <Editor
