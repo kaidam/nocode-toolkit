@@ -159,6 +159,7 @@ const icons = {
   help: HelpIcon,
   save: SaveIcon,
   template: TemplateIcon,
+  widget: TemplateIcon,
   info: InfoIcon,
   backnext: BackNextIcon,
   search: SearchIcon,

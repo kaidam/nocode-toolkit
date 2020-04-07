@@ -20,24 +20,26 @@ const Folder = ({
   const children = useSelector(contentSelectors.routeChildren)
   return (
     <div className={ classes.root }>
-      {
-        children
-          .map((child, i) => {
-            return (
-              <div
-                key={ i }
-                className={ classes.row }
-              >
-                <Link
-                  path={ child.route.path }
-                  name={ child.route.name }
+      <ul>
+        {
+          children
+            .map((child, i) => {
+              return (
+                <li
+                  key={ i }
+                  className={ classes.row }
                 >
-                  { child.name }
-                </Link>
-              </div>
-            )
-          })
-      }
+                  <Link
+                    path={ child.route.path }
+                    name={ child.route.name }
+                  >
+                    { child.name }
+                  </Link>
+                </li>
+              )
+            })
+        }
+      </ul>
     </div>
   )
 }
