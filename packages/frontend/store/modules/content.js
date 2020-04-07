@@ -380,6 +380,30 @@ const sideEffects = {
     dispatch(snackbarActions.setSuccess(`section updated`))
   }),
 
+  editNode: ({
+    title,
+    form,
+    id,
+  }) => wrapper('editNode', async (dispatch, getState) => {
+    const result = await dispatch(actions.waitForForm({
+      forms: [form],
+      values: getNodeFormValues(getState, id),
+      processValues: processNodeFormValues,
+      formWindowConfig: {
+        title,
+      },
+      onSubmit: async ({
+        annotation,
+      }) => {
+        const result = await loaders.updateAnnotation(getState, id, annotation)
+        return result
+      }
+    }))
+    if(!result) return
+    await dispatch(jobActions.reload())
+    dispatch(snackbarActions.setSuccess(`item updated`))
+  }),
+
   editSectionFolder: ({
     id,
   }) => wrapper('editSectionFolder', async (dispatch, getState) => {
@@ -546,7 +570,7 @@ const sideEffects = {
     const initialValues = deepmerge.all(
       forms.map(name => {
         const formConfig = storeForms[name]
-        return formConfig.initialValues
+        return formConfig.initialValues || {}
       }).concat([values])  
     )
     dispatch(actions.openFormWindow({
@@ -566,8 +590,11 @@ const sideEffects = {
           const formValues = processValues(
             forms.reduce((all, name) => {
               const formConfig = storeForms[name]
+              const formContext = formConfig.contextSelector ?
+                formConfig.contextSelector(getState()) :
+                {}
               return formConfig.processFormValues ?
-                formConfig.processFormValues(all) :
+                formConfig.processFormValues(all, formContext) :
                 all
             }, currentSettings.values)
           )

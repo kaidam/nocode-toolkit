@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
 
@@ -31,6 +31,14 @@ const ContentForm = ({
 
   const [ tab, setTab ] = useState(null)
   const form = useSelector(contentSelectors.form)
+
+  // this is so form handlers can be given a context
+  // that they have selected from the store
+  const handlerContext = useSelector(state => {
+    return form.contextSelector ?
+      form.contextSelector(state) :
+      {}
+  })
 
   let currentSchema = form.schema || []
 
@@ -71,6 +79,8 @@ const ContentForm = ({
           touched={ touched }
           isValid={ isValid }
           onSetFieldValue={ onSetFieldValue }
+          handlers={ form.handlers }
+          handlerContext={ handlerContext }
         />
       </div>
     </PanelBody>

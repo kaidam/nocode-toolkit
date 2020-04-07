@@ -252,6 +252,7 @@ const form = createSelector(
           id: formConfig.id,
           title: formConfig.title,
           schema: formConfig.schema,
+          handers: formConfig.handers,
         }])
       }
       else {
@@ -290,12 +291,15 @@ const flatFormSchema = createSelector(
 const document = createSelector(
   routerSelectors.route,
   nocodeSelectors.nodes,
+  nocodeSelectors.annotations,
   nocodeSelectors.externals,
-  (route, nodes, externalMap) => {
+  (route, nodes, annotations, externalMap) => {
     const node = nodes[route.item]
     const externals = (route.externals || []).map(id => externalMap[id])
+    const annotation = annotations[node.id] || {}
     return {
       node,
+      annotation,
       html: externals[0],
     }
   },
