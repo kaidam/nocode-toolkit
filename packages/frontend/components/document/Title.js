@@ -9,40 +9,18 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const Render = ({
-  data,
+const Title = ({
+  node,
 }) => {
   const classes = useStyles()
-  const title = data ?
-    data.title :
-    ''
   return (
     <Typography 
       variant="h5" 
       className={ classes.heading }
     >
-      { title }
+      { node.name }
     </Typography>
   )
 }
 
-const form = {
-  id: 'heading',
-  title: 'Heading',
-  initialValues: {
-    title: '',
-  },
-  schema: [{
-    id: 'title',
-    title: 'title',
-    helperText: 'Enter the text for the title',
-  }],
-}
-
-const widget = () => ({
-  id: 'heading',
-  Render,
-  form,
-})
-
-export default widget
+export default Title
