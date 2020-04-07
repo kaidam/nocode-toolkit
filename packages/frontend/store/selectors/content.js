@@ -299,11 +299,76 @@ const document = createSelector(
     const annotation = annotations[node.id] || {}
     return {
       node,
+      route,
       annotation,
       html: externals[0],
     }
   },
 )
+
+const routeItems = createSelector(
+  routerSelectors.route,
+  nocodeSelectors.nodes,
+  routerSelectors.routePathMap,
+  (route, nodes, routePathMap) => {
+    let currentRoute = route
+    const pathToItem = []
+    while(currentRoute) {
+      pathToItem.unshift({
+        route: currentRoute,
+        node: nodes[currentRoute.item],
+      })
+      const parts = currentRoute.path.split('/')
+      parts.pop()
+      const parentRoutePath = parts.join('/')
+      currentRoute = routePathMap[parentRoutePath]
+    }
+    return pathToItem
+  },
+)
+
+// tells you the section (or singleton)
+// that is the ultimate parent of the current route
+const routeBaseLocation = createSelector(
+  routeItems,
+  (routeItems) => {
+    const baseRoute = routeItems[0]
+    if(!baseRoute) return null
+    return baseRoute.route.location
+  }
+)
+
+// const sectionPageList = () => {
+//   const treeSelector = sectionTree()
+//   return createSelector(
+//     sectionAll,
+//     contentAll,
+//     core.nocode.routeMap,
+//     (_, name) => name,
+//     (sections, content, routeMap, name) => {
+//       const section = sections[name]
+//       const tree = _createTree(content, section)
+//       const list = []
+//       const addChildrenToList = (children) => {
+//         children
+//           .filter(item => {
+//             const route = routeMap[item.id]
+//             return route ? true : false
+//           })
+//           .forEach(item => {
+//             const route = routeMap[item.id]
+//             if(route.isFolder) {
+//               addChildrenToList(item.children)
+//             }
+//             else {
+//               list.push(item.id)
+//             }
+//           })
+//       }
+//       if(tree) addChildrenToList(tree.children)
+//       return list
+//     }
+//   )
 
 const selectors = {
   formWindow,
@@ -318,6 +383,8 @@ const selectors = {
   formValues,
   flatFormSchema,
   document,
+  routeItems,
+  routeBaseLocation,
 }
 
 export default selectors

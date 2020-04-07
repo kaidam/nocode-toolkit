@@ -1,32 +1,31 @@
 import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import Link from '@nocode-toolkit/website/Link'
-import selectors from '../../store/selectors'
+import Link from '../widgets/Link'
+
+import contentSelectors from '../../store/selectors/content'
 
 const BreadCrumbs = ({
-  content,
-}) => {
 
-  const pathToItem = useSelector(selectors.content.routeItems)
-  const routeMap = useSelector(selectors.nocode.routeMap)
+} = {}) => {
 
+  const pathToItem = useSelector(contentSelectors.routeItems)
   const breadcrumbs = useMemo(() => {
+    const useItems = pathToItem.filter(item => item.route.location == 'singleton:home' ? false : true)
     return [{
       title: 'Home',
       path: '/',
       name: 'root',
     }]
-      .concat(pathToItem.map(item => {
-        const route = routeMap[item.id]
+      .concat(useItems.map(item => {
         return {
-          title: item.data.name,
-          path: route.path,
-          name: route.name,
+          title: item.node.name,
+          path: item.route.path,
+          name: item.route.name,
         }
       }))
+      .filter(i => i)
   }, [
     pathToItem,
-    routeMap,
   ])
 
   return (

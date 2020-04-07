@@ -13,12 +13,13 @@ const Title = ({
   node,
 }) => {
   const classes = useStyles()
+  const title = (node.name || '').replace(/^(\w)/, st => st.toUpperCase())
   return (
     <Typography 
       variant="h5" 
       className={ classes.heading }
     >
-      { node.name }
+      { title }
     </Typography>
   )
 }

@@ -14,19 +14,18 @@ const styles = {
   }
 }
 const DocumentInfo = ({
-  content,
+  node,
 }) => {
-
   const {
-    modified,
-    modifiedBy,
-  } = content
+    modifiedTime,
+    lastModifyingUser,
+  } = node
 
-  if(!modified || !modifiedBy) return null
+  if(!modifiedTime || !lastModifyingUser) return null
 
   return (
     <div style={ styles.root }>
-      Updated <span style={ styles.bold }>{ new Date(modified).toLocaleString() }</span> by <span style={ styles.bold }>{ modifiedBy }</span>
+      Updated <span style={ styles.bold }>{ new Date(modifiedTime).toLocaleString() }</span> by <span style={ styles.bold }>{ lastModifyingUser }</span>
     </div>
   )
 }
