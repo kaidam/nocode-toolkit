@@ -306,7 +306,7 @@ const document = createSelector(
   },
 )
 
-const routeItems = createSelector(
+const routeAncestors = createSelector(
   routerSelectors.route,
   nocodeSelectors.nodes,
   routerSelectors.routePathMap,
@@ -330,45 +330,35 @@ const routeItems = createSelector(
 // tells you the section (or singleton)
 // that is the ultimate parent of the current route
 const routeBaseLocation = createSelector(
-  routeItems,
-  (routeItems) => {
-    const baseRoute = routeItems[0]
+  routeAncestors,
+  (routeAncestors) => {
+    const baseRoute = routeAncestors[0]
     if(!baseRoute) return null
     return baseRoute.route.location
   }
 )
 
-// const sectionPageList = () => {
-//   const treeSelector = sectionTree()
-//   return createSelector(
-//     sectionAll,
-//     contentAll,
-//     core.nocode.routeMap,
-//     (_, name) => name,
-//     (sections, content, routeMap, name) => {
-//       const section = sections[name]
-//       const tree = _createTree(content, section)
-//       const list = []
-//       const addChildrenToList = (children) => {
-//         children
-//           .filter(item => {
-//             const route = routeMap[item.id]
-//             return route ? true : false
-//           })
-//           .forEach(item => {
-//             const route = routeMap[item.id]
-//             if(route.isFolder) {
-//               addChildrenToList(item.children)
-//             }
-//             else {
-//               list.push(item.id)
-//             }
-//           })
-//       }
-//       if(tree) addChildrenToList(tree.children)
-//       return list
-//     }
-//   )
+const routeChildren = createSelector(
+  routerSelectors.route,
+  nocodeSelectors.nodes,
+  nocodeSelectors.annotations,
+  routerSelectors.routeMap,
+  (route, nodes, annotations, routeMap) => {
+    const item = nodes[route.item]
+    const sortedChildIds = childrenUtils.sortChildren({
+      nodes,
+      childIds: item.children,
+      annotation: annotations[item.id],
+    })
+    return sortedChildIds.map(id => {
+      const node = nodes[id]
+      const route = routeMap[`node:${item.id}:${id}`]
+      return Object.assign({}, node, {
+        route,
+      })
+    })
+  },
+)
 
 const selectors = {
   formWindow,
@@ -383,8 +373,9 @@ const selectors = {
   formValues,
   flatFormSchema,
   document,
-  routeItems,
+  routeAncestors,
   routeBaseLocation,
+  routeChildren,
 }
 
 export default selectors

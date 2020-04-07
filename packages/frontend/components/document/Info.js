@@ -1,6 +1,7 @@
 import React from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 
-const styles = {
+const useStyles = makeStyles(theme => ({
   root: {
     color:'#999',
     paddingTop: '5px',
@@ -12,10 +13,13 @@ const styles = {
     fontWeight: 500,
     color:'#666',
   }
-}
+}))
+
 const DocumentInfo = ({
   node,
 }) => {
+
+  const classes = useStyles()
   const {
     modifiedTime,
     lastModifyingUser,
@@ -24,8 +28,8 @@ const DocumentInfo = ({
   if(!modifiedTime || !lastModifyingUser) return null
 
   return (
-    <div style={ styles.root }>
-      Updated <span style={ styles.bold }>{ new Date(modifiedTime).toLocaleString() }</span> by <span style={ styles.bold }>{ lastModifyingUser }</span>
+    <div className={ classes.root }>
+      Updated <span className={ classes.bold }>{ new Date(modifiedTime).toLocaleString() }</span> by <span className={ classes.bold }>{ lastModifyingUser }</span>
     </div>
   )
 }

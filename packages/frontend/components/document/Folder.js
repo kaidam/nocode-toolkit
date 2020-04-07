@@ -1,83 +1,45 @@
-import React, { useMemo } from 'react'
+import React from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
 import Link from '@nocode-toolkit/website/Link'
-import selectors from '../../store/selectors'
+import contentSelectors from '../../store/selectors/content'
 
-import cellTypes from './cellTypes'
-import defaultRenderers from './renderers'
+const useStyles = makeStyles(theme => ({
+  root: {
+    
+  },
+  row: {
+    marginTop: theme.spacing(1), 
+  }
+}))
 
-const FolderLayout = ({
-  data,
-  renderers = {},
+const Folder = ({
+  node,
 }) => {
-
-  const folder = data.item
-
-  const childrenListSelector = useMemo(selectors.content.childrenList, [])
-  const childrenList = useSelector(state => childrenListSelector(state, folder.id))
-  const routeMap = useSelector(selectors.nocode.routeMap)
-
-  const titleConfig = cellTypes.getCellConfig('title')
-  const TitleComponent = titleConfig.component 
-  
-  const pageLinks = childrenList
-    .filter(child => {
-      const route = routeMap[child.id]
-      return route ? true : false
-    })
-    .map((child, i) => {
-      const route = routeMap[child.id]
-      return (
-        <div key={ i }>
-          <Link
-            path={ route.path }
-            name={ route.name }
-          >
-            { child.data.name }
-          </Link>
-        </div>
-      )
-    })
-
-  const content = [
-    <TitleComponent
-      content={{
-        title: folder.data.name,
-      }}
-    />
-  ].concat(pageLinks)
-
-  const showUI = useSelector(selectors.ui.showUI)
-
-  const RootRenderer = renderers.root || defaultRenderers.root
-  const RowRenderer = renderers.row || defaultRenderers.row
-  const CellRenderer = renderers.cell || defaultRenderers.cell
-
-  const rows = content.map((row, i) => {
-    const cell = (
-      <CellRenderer
-        showUI={ showUI }
-        cell={{
-          settings: {
-            align: 'left',
-          }
-        }}
-        content={ row }
-      />
-    )
-    return (
-      <RowRenderer
-        key={ i }
-        cells={ [cell] }
-      />
-    )             
-  })
-
+  const classes = useStyles()
+  const children = useSelector(contentSelectors.routeChildren)
   return (
-    <RootRenderer>
-      { rows }
-    </RootRenderer>
+    <div className={ classes.root }>
+      {
+        children
+          .map((child, i) => {
+            return (
+              <div
+                key={ i }
+                className={ classes.row }
+              >
+                <Link
+                  path={ child.route.path }
+                  name={ child.route.name }
+                >
+                  { child.name }
+                </Link>
+              </div>
+            )
+          })
+      }
+    </div>
   )
 }
 
-export default FolderLayout
+export default Folder

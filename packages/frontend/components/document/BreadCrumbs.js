@@ -8,7 +8,7 @@ const BreadCrumbs = ({
 
 } = {}) => {
 
-  const pathToItem = useSelector(contentSelectors.routeItems)
+  const pathToItem = useSelector(contentSelectors.routeAncestors)
   const breadcrumbs = useMemo(() => {
     const useItems = pathToItem.filter(item => item.route.location == 'singleton:home' ? false : true)
     return [{
