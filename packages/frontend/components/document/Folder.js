@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { lazy } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
 import Link from '@nocode-toolkit/website/Link'
 import contentSelectors from '../../store/selectors/content'
+import Suspense from '../system/Suspense'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -15,9 +16,20 @@ const useStyles = makeStyles(theme => ({
 
 const Folder = ({
   node,
+  DefaultFolder,
 }) => {
   const classes = useStyles()
   const children = useSelector(contentSelectors.routeChildren)
+
+  if(!children || children.length <= 0) {
+    return (
+      <Suspense>
+        <DefaultFolder
+          node={ node }
+        />
+      </Suspense>
+    )
+  }
   return (
     <div className={ classes.root }>
       <ul>
