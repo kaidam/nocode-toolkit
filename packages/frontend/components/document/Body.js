@@ -18,6 +18,13 @@ import { makeStyles } from '@material-ui/core/styles'
 const useStyles = makeStyles(theme => ({
   googleHTML: {
      // put styles for the body container here
+     '& p': {
+      paddingTop: ['18.6667px', '!important'],
+     },
+     '& ul': {
+      paddingTop: ['18.6667px', '!important'],
+      paddingBottom: ['18.6667px', '!important'],
+     }
   },
 }))
 
