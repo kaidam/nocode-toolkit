@@ -13,6 +13,14 @@ import driveUtils from '../../utils/drive'
 
 import Suspense from '../system/Suspense'
 
+import { makeStyles } from '@material-ui/core/styles'
+
+const useStyles = makeStyles(theme => ({
+  googleHTML: {
+     // put styles for the body container here
+  },
+}))
+
 const DefaultBody = lazy(() => import(/* webpackChunkName: "ui" */ './DefaultBody'))
 const ReloadTrigger = lazy(() => import(/* webpackChunkName: "ui" */ './ReloadTrigger'))
 
@@ -20,6 +28,8 @@ const DocumentBody = ({
   node,
   html,
 }) => {
+
+  const classes = useStyles()
 
   const actions = Actions(useDispatch(), {
     navigateTo: routerActions.navigateTo,
@@ -123,6 +133,7 @@ const DocumentBody = ({
   ) : (
     <div 
       id="nocode-document-html"
+      className={ classes.googleHTML }
       ref={ contentRef }
       dangerouslySetInnerHTML={{__html: html }}
       style={{
