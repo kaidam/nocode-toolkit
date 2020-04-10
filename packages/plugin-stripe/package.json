@@ -1,6 +1,6 @@
 {
   "name": "@nocode-works/plugin-stripe",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Stripe plugin for nocode templates",
   "publishConfig": {
     "access": "public"
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@material-ui/core": "^4.3.3",
-    "@nocode-works/store": "^1.0.0",
+    "@nocode-works/store": "^1.0.1",
     "axios": "0.19.0",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",

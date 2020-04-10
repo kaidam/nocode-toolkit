@@ -1,6 +1,6 @@
 {
   "name": "@nocode-works/template",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Build templates for nocode",
   "scripts": {},
   "bin": {
@@ -10,23 +10,22 @@
     "access": "public"
   },
   "dependencies": {
-    "@nocode-toolkit/builder": "^1.0.48",
-    "archiver": "^3.1.1",
-    "async": "^3.1.0",
-    "bluebird": "^3.7.1",
-    "chalk": "^3.0.0",
-    "express": "^4.16.4",
-    "express-static-gzip": "^2.0.5",
-    "pino": "^5.14.0",
-    "yargs": "^15.0.2",
     "@hot-loader/react-dom": "^16.12.0",
     "@material-ui/core": "^4.3.3",
-    "@nocode-works/store": "^1.0.0",
+    "@nocode-toolkit/builder": "^1.0.48",
+    "@nocode-works/store": "^1.0.1",
     "@types/react": "^16.9.23",
+    "archiver": "^3.1.1",
+    "async": "^3.1.0",
     "axios": "^0.19.2",
+    "bluebird": "^3.7.1",
+    "chalk": "^3.0.0",
     "deepmerge": "^4.2.2",
     "detect-node": "^2.0.4",
+    "express": "^4.16.4",
+    "express-static-gzip": "^2.0.5",
     "immer": "^6.0.1",
+    "pino": "^5.14.0",
     "react": "^16.13.0",
     "react-beautiful-dnd": "^13.0.0",
     "react-dom": "^16.13.0",
@@ -42,6 +41,7 @@
     "router5-plugin-browser": "^8.0.0",
     "router5-transition-path": "^8.0.0",
     "uuid": "^7.0.2",
+    "yargs": "^15.0.2",
     "yup": "^0.28.3"
   },
   "license": "MIT"
