@@ -77,6 +77,9 @@ const addCli = (cli) => {
     .option('alias-links', {
       describe: 'used if you have a linked version of @nocode-works/template (mainly for internal development)',
     })
+    .option('skip-build', {
+      describe: 'use if you have already done a build of your content',
+    })
     .option('build', {
       describe: 'Build the template before doing a preview?',
     })

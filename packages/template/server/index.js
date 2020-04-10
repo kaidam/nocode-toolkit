@@ -20,6 +20,11 @@ const Server = ({
   render,
 }) => {
 
+  console.log('--------------------------------------------')
+  console.log('--------------------------------------------')
+  console.log('here')
+  console.dir(route)
+
   let routeResult = null
 
   const helmetContext = {}

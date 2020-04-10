@@ -17,8 +17,8 @@ const createJob = ({
   method: 'post',
   url: api.getUrl('/publish'),
   headers: api.getAuthHeaders(),
-  params: {
-    local: 'yes'
+  data: {
+    local: true,
   },
 })
   .then(res => res.data)
@@ -26,13 +26,13 @@ const createJob = ({
 const loadJob = ({
   api,
   id,
-  lastLogId = '',
+  fromLogId = '',
 }) => axios({
   method: 'get',
   url: api.getUrl(`/job/${id}`),
   headers: api.getAuthHeaders(),
   params: {
-    lastLogId,
+    fromLogId,
   },
 })
   .then(res => res.data)
@@ -60,24 +60,30 @@ const waitForPublishJob = async ({
   logger(loggers.info(`job created: ${id}`))
 
   let job = await loadJob({api, id})
-  let lastLogId = ''
+  let fromLogId = ''
 
   while(job.status == 'created' || job.status == 'running') {
     job = await loadJob({
       api,
       id,
-      lastLogId,
+      fromLogId,
     })
-    lastLogId = job.lastLogId
-    logger(job.logs.join("\n"))
+    if(job.fromLogId) {
+      fromLogId = job.fromLogId
+      logger(job.logs.join("\n"))
+    }
     await Promise.delay(1000)
   }
 
   job = await loadJob({
     api,
     id,
-    lastLogId,
+    fromLogId,
   })
+
+  if(job.status == 'error') {
+    throw new Error(job.result.error)
+  }
 
   const {
     filename,
@@ -157,10 +163,12 @@ const Preview = async ({
   logger,
 }) => {
 
-  await Build({
-    options,
-    logger,
-  })
+  if(!options.skipBuild) {
+    await Build({
+      options,
+      logger,
+    })
+  }
   
   const collection = await waitForPublishJob({
     options,

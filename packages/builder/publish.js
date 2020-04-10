@@ -256,14 +256,18 @@ const Publish = async ({
     }
   }
 
-  // loop over all routes and process them
-  await Promise.map(allRoutes, async route => {
-    await processRoute({
-      route,
-    })
-  }, {concurrency: concurrency || 1})
+  try {
+    // loop over all routes and process them
+    await Promise.map(allRoutes, async route => {
+      await processRoute({
+        route,
+      })
+    }, {concurrency: concurrency || 1})
+  } catch(e) {
+    externalsServer.close()
+    throw e
+  }
 
-  // cleanup
   externalsServer.close()
 }
 
