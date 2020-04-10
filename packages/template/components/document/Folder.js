@@ -1,7 +1,7 @@
 import React, { lazy } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
-import Link from '@nocode-toolkit/website/Link'
+import Link from '../widgets/Link'
 import contentSelectors from '../../store/selectors/content'
 import Suspense from '../system/Suspense'
 

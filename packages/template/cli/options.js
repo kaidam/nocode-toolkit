@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const BuilderOptions = require('@nocode-toolkit/builder/options')
+const BuilderOptions = require('@nocode-works/builder/options')
 
 const DEFAULT_OPTIONS = {
   accessToken: process.env.ACCESS_TOKEN,
@@ -75,7 +75,7 @@ const addCli = (cli) => {
       describe: 'the id of the website you want to develop against',
     })
     .option('alias-links', {
-      describe: 'used if you have a linked version of @nocode-toolkit/ui (mainly for internal development)',
+      describe: 'used if you have a linked version of @nocode-works/template (mainly for internal development)',
     })
     .option('build', {
       describe: 'Build the template before doing a preview?',

@@ -1,4 +1,4 @@
-const NocodeBuild = require('@nocode-toolkit/builder/build')
+const NocodeBuild = require('@nocode-works/builder/build')
 const loggers = require('./loggers')
 
 const Build = async ({

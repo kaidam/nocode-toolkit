@@ -10,7 +10,7 @@ import withMenuButton from '../hooks/withMenuButton'
 import Actions from '../../utils/actions'
 import layoutActions from '../../store/modules/layout'
 
-import icons from '@nocode-toolkit/frontend/icons'
+import icons from '../../icons'
 
 const AddIcon = icons.add
 const EditIcon = icons.edit

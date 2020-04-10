@@ -2,7 +2,7 @@ const path = require('path')
 const express = require('express')
 const axios = require('axios')
 const request = require('request')
-const PreviewServer = require('@nocode-toolkit/builder/previewServer')
+const PreviewServer = require('@nocode-works/builder/previewServer')
 
 const Api = require('./api')
 const loggers = require('./loggers')
