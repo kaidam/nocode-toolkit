@@ -1,7 +1,7 @@
 import axios from 'axios'
-import CreateReducer from '@nocode-toolkit/core/createReducer'
-import CreateActions from '@nocode-toolkit/core/createActions'
-import routerActions from '@nocode-toolkit/core/routerActions'
+import CreateReducer from '@nocode-works/store/createReducer'
+import CreateActions from '@nocode-works/store/createActions'
+import routerActions from '@nocode-works/store/routerActions'
 
 import selectors from './selectors'
 

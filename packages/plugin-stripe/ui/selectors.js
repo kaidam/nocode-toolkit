@@ -1,4 +1,4 @@
-import routerSelectors from '@nocode-toolkit/core/routerSelectors'
+import routerSelectors from '@nocode-works/store/routerSelectors'
 const currentValue = state => state.stripe.value
 
 const selectors = {
