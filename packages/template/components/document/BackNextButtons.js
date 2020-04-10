@@ -78,7 +78,7 @@ const BackNextButtons = ({
   let prevLink = null
   let nextLink = null
 
-  if(prevId && itemMap[prevId]) {
+  if(prevId && itemMap[prevId] && itemMap[prevId].route) {
     const prevItem = itemMap[prevId]
     prevLink = (
       <Link
@@ -90,7 +90,7 @@ const BackNextButtons = ({
     )
   }
 
-  if(nextId && itemMap[nextId]) {
+  if(nextId && itemMap[nextId] && itemMap[nextId].route) {
     const nextItem = itemMap[nextId]
     nextLink = (
       <Link

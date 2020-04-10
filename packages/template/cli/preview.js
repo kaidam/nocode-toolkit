@@ -55,39 +55,42 @@ const waitForPublishJob = async ({
     options,
   })
 
-  logger(loggers.info(`creating remote publish job`))
-  const { id } = await createJob({api})
-  logger(loggers.info(`job created: ${id}`))
+  let filename = options.previewFile
 
-  let job = await loadJob({api, id})
-  let fromLogId = ''
+  if(!filename) {
 
-  while(job.status == 'created' || job.status == 'running') {
+    logger(loggers.info(`creating remote publish job`))
+    const { id } = await createJob({api})
+    logger(loggers.info(`job created: ${id}`))
+
+    let job = await loadJob({api, id})
+    let fromLogId = ''
+
+    while(job.status == 'created' || job.status == 'running') {
+      job = await loadJob({
+        api,
+        id,
+        fromLogId,
+      })
+      if(job.fromLogId) {
+        fromLogId = job.fromLogId
+        logger(job.logs.join("\n"))
+      }
+      await Promise.delay(1000)
+    }
+
     job = await loadJob({
       api,
       id,
       fromLogId,
     })
-    if(job.fromLogId) {
-      fromLogId = job.fromLogId
-      logger(job.logs.join("\n"))
+
+    if(job.status == 'error') {
+      throw new Error(job.result.error)
     }
-    await Promise.delay(1000)
+
+    filename = job.result.filename
   }
-
-  job = await loadJob({
-    api,
-    id,
-    fromLogId,
-  })
-
-  if(job.status == 'error') {
-    throw new Error(job.result.error)
-  }
-
-  const {
-    filename,
-  } = job.result
 
   logger(loggers.success(`job complete`))
   logger(loggers.info(`downloading results: ${filename}`))
@@ -104,14 +107,7 @@ const waitForPublishJob = async ({
 
 const publishWebsite = async ({
   options,
-  collection: {
-    items,
-    sections,
-    singletons,
-    config,
-    routes,
-    externals,
-  },
+  collection,
   logger,
 }) => {
   logger(loggers.info(`building website HTML`))
@@ -119,16 +115,7 @@ const publishWebsite = async ({
     options: Options.get({}),
     plugins: () => [
       (context) => {
-        context.data = {
-          items: {
-            content: items,
-            sections,
-            singletons,
-          },
-          config,
-          routes,
-          externals,
-        }
+        context.data = collection
       }
     ],
     onProgress: (data) => {},

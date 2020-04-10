@@ -80,6 +80,12 @@ const addCli = (cli) => {
     .option('skip-build', {
       describe: 'use if you have already done a build of your content',
     })
+    .option('debug-build', {
+      describe: 'don\'t minify server code (for debugging)',
+    })
+    .option('preview-file', {
+      describe: 'use an existing preview file',
+    })
     .option('build', {
       describe: 'Build the template before doing a preview?',
     })

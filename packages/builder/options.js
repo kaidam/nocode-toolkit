@@ -38,6 +38,8 @@ const DEFAULT_OPTIONS = {
   nocodeWebpack: process.env.NOCODE_WEBPACK || 'nocode-webpack.js',
   // whether we should generate a webpack-bundle-analyzer file
   analyze: process.env.ANALYZE,
+  // used to not minify the server side code for debugging
+  debugBuild: process.env.DEBUG_BUILD,
 }
 
 /*
@@ -127,6 +129,9 @@ const addCli = (cli) => {
     })
     .option('analyze', {
       describe: 'analyze the modules used in your build',
+    })
+    .option('debug-build', {
+      describe: 'don\'t minify the server code (for debugging)',
     })
   return cli
 }
