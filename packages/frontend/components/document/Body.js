@@ -16,16 +16,23 @@ import Suspense from '../system/Suspense'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(theme => ({
-  googleHTML: {
-     // put styles for the body container here
-     '& p': {
+  defaultHTML: ({showUI}) => ({
+    marginTop: showUI ? '0px' : '12px',
+  }),
+  googleHTML: ({showUI}) => ({
+    marginTop: showUI ? '0px' : '12px',
+    // put styles for the body container here
+    '& p': {
       paddingTop: ['18.6667px', '!important'],
-     },
-     '& ul': {
+    },
+    '& p:nth-child(1)': {
+      paddingTop: ['0px', '!important'],
+    },
+    '& ul': {
       paddingTop: ['18.6667px', '!important'],
       paddingBottom: ['18.6667px', '!important'],
-     }
-  },
+    },
+  }),
 }))
 
 const DefaultBody = lazy(() => import(/* webpackChunkName: "ui" */ './DefaultBody'))
@@ -36,8 +43,6 @@ const DocumentBody = ({
   html,
 }) => {
 
-  const classes = useStyles()
-
   const actions = Actions(useDispatch(), {
     navigateTo: routerActions.navigateTo,
   })
@@ -47,6 +52,9 @@ const DocumentBody = ({
   const config = useSelector(nocodeSelectors.config)
 
   const contentRef = useRef(null)
+  const classes = useStyles({
+    showUI,
+  })
 
   const editUrl = driveUtils.getItemUrl(node)
 
@@ -126,10 +134,8 @@ const DocumentBody = ({
   const content = showUI && !hasContent ? (
     <div
       id="nocode-document-html"
+      className={ classes.defaultHTML }
       ref={ contentRef }
-      style={{
-        marginTop: showUI ? '0px' : '12px',
-      }}
     >
       <Suspense>
         <DefaultBody
@@ -143,9 +149,6 @@ const DocumentBody = ({
       className={ classes.googleHTML }
       ref={ contentRef }
       dangerouslySetInnerHTML={{__html: html }}
-      style={{
-        marginTop: showUI ? '0px' : '12px',
-      }}
     >
     </div>
   )
