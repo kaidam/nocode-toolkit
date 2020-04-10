@@ -30,6 +30,7 @@ const fullRoute = createSelector(
 const routeMap = createSelector(
   nocodeSelectors.routes,
   routes => routes.reduce((all, route) => {
+    if(!route.location || !route.item) return all
     all[`${route.location}:${route.item}`] = route
     return all
   }, {})
