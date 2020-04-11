@@ -84,7 +84,6 @@ const DocumentBody = ({
   // this will not trigger a router reload
   useEffect(() => {
     if(systemUtils.isNode) return
-    
     const internalLinks = Array.prototype.slice.call(
       contentRef.current.querySelectorAll('a[data-nocode-internal-route]')
     )
@@ -95,7 +94,8 @@ const DocumentBody = ({
         const findUrl = (config.baseUrl + url).replace(/\/\//g, '/')
         const route = routePathMap[findUrl]
         if(!route) return
-        eventUtils.cancelEvent(e)
+        e.stopImmediatePropagation()
+        e.preventDefault()        
         actions.navigateTo(route.name)        
         return false
       })

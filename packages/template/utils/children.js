@@ -36,6 +36,7 @@ const getSectionChildrenIds = ({
   nodes,
   locations,
 }) => {
+  if(!section) return []
   return section.children
   .reduce((all, id) => {
     // if there is a location record present - it will tell us if the item is a ghost

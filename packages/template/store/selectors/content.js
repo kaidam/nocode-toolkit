@@ -108,7 +108,7 @@ const homeItem = createSelector(
     const singleton = singletons['home']
     if(!route || !singleton) return null
     const node = nodes[singleton.item]
-    if(!node) return nulls
+    if(!node) return null
     const defaultDocumentId = website && website.meta ?
       website.meta[`nocode_default_resource_id_home`] :
       null

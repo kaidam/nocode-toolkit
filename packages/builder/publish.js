@@ -126,9 +126,11 @@ const Publish = async ({
 
   const cleanFiles = fileList.filter(filename => {
     if(CLEAN_BUILD_FILES.indexOf(filename) >= 0) return true
-    if(filename.match(/server.js$/i)) return true
+    if(filename.match(/server\.js$/i)) return true
+    if(filename.match(/\.map$/i)) return true
     if(filename.indexOf('vendors~ui-bundle') == 0) return true
     if(filename.indexOf('ui-bundle') == 0) return true
+    return false
   })
 
   // remove the CLEAN_BUILD_FILES
