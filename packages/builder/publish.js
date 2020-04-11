@@ -7,6 +7,7 @@ const getPort = require('get-port')
 const { promisify } = require('util')
 const statAsync = promisify(fs.stat)
 const writeFileAsync = promisify(fs.writeFile)
+const readDirAsync = promisify(fs.readdir)
 
 const data = require('./data')
 const Context = require('./context')
@@ -109,7 +110,6 @@ const Publish = async ({
   // if the media folder does not exist dont throw just continue
   let shouldCopyMediaFolder = false
   try {
-    
     const mediaStat = await statAsync(mediaSourceFolder)
     shouldCopyMediaFolder = mediaStat ? true : false
   } catch(e) {
@@ -121,10 +121,18 @@ const Publish = async ({
     logger(`making copy of media folder: ${mediaSourceFolder} -> ${mediaDestFolder}`)
     await fsextra.copy(mediaSourceFolder, mediaDestFolder)
   }
-  
+
+  const fileList = await readDirAsync(publishFolder)
+
+  const cleanFiles = fileList.filter(filename => {
+    if(CLEAN_BUILD_FILES.indexOf(filename) >= 0) return true
+    if(filename.match(/server.js$/i)) return true
+    if(filename.indexOf('vendors~ui-bundle') == 0) return true
+    if(filename.indexOf('ui-bundle') == 0) return true
+  })
 
   // remove the CLEAN_BUILD_FILES
-  await Promise.each(CLEAN_BUILD_FILES, async removeFilePath => {
+  await Promise.each(cleanFiles, async removeFilePath => {
     const fullRemoveFilePath = path.join(publishFolder, removeFilePath)
     logger(`removing build file from publish: ${removeFilePath}`)
     await fsextra.remove(fullRemoveFilePath)
