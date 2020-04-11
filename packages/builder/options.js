@@ -22,6 +22,8 @@ const DEFAULT_OPTIONS = {
   serverBuildFilename: process.env.SERVER_BUILD_FILENAME || 'server.js',
   // the folder the build is written to (relative to projectFolder)
   buildPath: process.env.BUILD_PATH || 'build',
+  // whether to build only the browser or server
+  buildTarget: process.env.BUILD_TARGET,
   // the folder the published website is written to (relative to projectFolder)
   publishPath: process.env.PUBLISH_PATH || 'public',
   // the folder to load static assets from
@@ -105,6 +107,9 @@ const addCli = (cli) => {
     })
     .option('build-path', {
       describe: 'where to write the build',
+    })
+    .option('build-target', {
+      describe: 'set to one of {browser,server} to only build that target',
     })
     .option('publish-path', {
       describe: 'where to write the published website',

@@ -80,6 +80,9 @@ const addCli = (cli) => {
     .option('skip-build', {
       describe: 'use if you have already done a build of your content',
     })
+    .option('build-target', {
+      describe: 'set to one of {browser,server} to only build that target',
+    })
     .option('debug-build', {
       describe: 'don\'t minify server code (for debugging)',
     })

@@ -203,7 +203,7 @@ const Publish = async ({
     }
 
     // turn the render results into a string
-    if(renderResults.type == 'render') {
+    if(renderResults && renderResults.type == 'render') {
       const { 
         store,
         helmet,
@@ -214,8 +214,8 @@ const Publish = async ({
       const initialState = data.processInitialState(store.getState())
 
       routeHtml = HTML({
-        buildInfo: stash.buildInfo,
-        hash: stash.buildInfo.hash,
+        buildInfo,
+        hash: buildInfo.hash,
         initialState,
         helmet,
         injectedHTML,
@@ -223,7 +223,7 @@ const Publish = async ({
         baseUrl,
       })
     }
-    else if(renderResults.type == 'redirect') {
+    else if(renderResults && renderResults.type == 'redirect') {
       routeHtml = `
 <html>
 <head>
@@ -237,7 +237,7 @@ const Publish = async ({
 `
     }
     else {
-      throw new Error(`unknown renderResult type: ${renderResults.type}`)
+      throw new Error(renderResults ? `unknown renderResult type: ${renderResults.type || 'unknown'}` : 'empty render result')
     }
 
     // create the folder for the route and write the page HTML

@@ -53,6 +53,8 @@ const Build = async ({
     buildinfoFilename,
     nocodeWebpack,
     webpackProcessors,
+    buildTarget,
+    debugBuild,
   } = options
 
   const webpackConfigProcessor = WebpackConfigProcessor({
@@ -70,32 +72,44 @@ const Build = async ({
   logger(`removing build folder ${buildPath}`)
   await fsextra.emptyDir(buildFolder)
 
-  logger(`building server`)
-  await runBuild({
-    name: 'server',
-    logger,
-    config: webpackConfigProcessor(WebpackConfigServer(options), options, {
-      environment: 'production',
-      target: 'server',
-    }),
-  })
+  if(!buildTarget || buildTarget == 'server') {
+    logger(`building server`)
+    const serverStats = await runBuild({
+      name: 'server',
+      logger,
+      config: webpackConfigProcessor(WebpackConfigServer(options), options, {
+        environment: 'production',
+        target: 'server',
+      }),
+    })
 
-  logger(`building browser`)
-  const browserStats = await runBuild({
-    name: 'browser',
-    logger,
-    config: webpackConfigProcessor(WebpackConfigBrowser(options, true), options, {
-      environment: 'production',
-      target: 'browser',
-    }),
-  })
+    if(debugBuild) {
+      // we create this for server only debug builds
+      logger(`writing build info: ${buildinfoFilename}`)
+      const outputDir = serverStats.compilation.outputOptions.path
+      const buildInfo = BuildInfo(serverStats, options)
+      await writeFileAsync(path.join(outputDir, buildinfoFilename), JSON.stringify(buildInfo), 'utf8')
+    } 
+  }
 
-  // output the filenames that we created so the publish handler can know
-  // where the index.js file is
-  logger(`writing build info: ${buildinfoFilename}`)
-  const outputDir = browserStats.compilation.outputOptions.path
-  const buildInfo = BuildInfo(browserStats, options)
-  await writeFileAsync(path.join(outputDir, buildinfoFilename), JSON.stringify(buildInfo), 'utf8')
+  if(!buildTarget || buildTarget == 'browser') {
+    logger(`building browser`)
+    const browserStats = await runBuild({
+      name: 'browser',
+      logger,
+      config: webpackConfigProcessor(WebpackConfigBrowser(options, true), options, {
+        environment: 'production',
+        target: 'browser',
+      }),
+    })
+
+    // output the filenames that we created so the publish handler can know
+    // where the index.js file is
+    logger(`writing build info: ${buildinfoFilename}`)
+    const outputDir = browserStats.compilation.outputOptions.path
+    const buildInfo = BuildInfo(browserStats, options)
+    await writeFileAsync(path.join(outputDir, buildinfoFilename), JSON.stringify(buildInfo), 'utf8')
+  }
 }
 
 module.exports = Build
