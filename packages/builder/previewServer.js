@@ -48,7 +48,7 @@ const BuildPreviewServer = ({
     const filename = req.params[0]
     const websiteId = getWebsiteId(req)
     try {
-      const buildFolder = await getBuildFolder(websiteId)
+      const buildFolder = await getBuildFolder(websiteId, req)
       const filePath = path.join(buildFolder, filename)
       const stat = await statAsync(filePath)
       if(!stat) return next()
