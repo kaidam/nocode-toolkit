@@ -237,7 +237,7 @@ const Publish = async ({
 `
     }
     else {
-      throw new Error(renderResults ? `unknown renderResult type: ${renderResults.type || 'unknown'}` : 'empty render result')
+      throw new Error(renderResults ? `unknown renderResult type: ${route} ${renderResults.type || 'unknown'}` : `empty render result: ${route}`)
     }
 
     // create the folder for the route and write the page HTML
@@ -267,7 +267,7 @@ const Publish = async ({
     externalsServer.close()
     throw e
   }
-
+  
   externalsServer.close()
 }
 
