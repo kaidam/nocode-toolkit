@@ -169,10 +169,12 @@ const Publish = async ({
     data: templateData,
   })
 
-  await Build({
-    options,
-    logger,
-  })
+  if(!options.skipBuild) {
+    await Build({
+      options,
+      logger,
+    })
+  }
 
   await uploadFiles({
     options,
