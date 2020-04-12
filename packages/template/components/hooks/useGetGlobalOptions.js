@@ -3,6 +3,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import Actions from '../../utils/actions'
 
 import settingsActions from '../../store/modules/settings'
+import systemActions from '../../store/modules/system'
+import dialogActions from '../../store/modules/dialog'
+import uiActions from '../../store/modules/ui'
+import jobActions from '../../store/modules/job'
 import uiSelectors from '../../store/selectors/ui'
 import icons from '../../icons'
 
@@ -11,12 +15,12 @@ const useGetGlobalOptions = ({
 }) => {
   const actions = Actions(useDispatch(), {
     onOpenSettings: settingsActions.openDialog,
-    onSetPreviewMode: () => {},/*uiActions.setPreviewMode,*/
-    onLogout: () => {},/*uiActions.logout,*/
-    onRebuild: () => {},/*jobActions.rebuild,*/
-    onPublish: () => {},/*jobActions.publish,*/
-    onViewHistory: () => {},/*jobActions.openHistory,*/
-    onViewHelp: () => {},/*uiActions.openHelp,*/
+    onSetPreviewMode: uiActions.setPreviewMode,
+    onRebuild: () => jobActions.rebuild({withSnackbar:true}),
+    onPublish: jobActions.publish,
+    onViewHistory: jobActions.openHistory,
+    onLogout: systemActions.logout,
+    onViewHelp: () => dialogActions.open('help'),
   })
 
   const onEnablePreview = () => actions.onSetPreviewMode(true)

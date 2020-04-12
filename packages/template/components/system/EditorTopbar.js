@@ -15,6 +15,7 @@ import Actions from '../../utils/actions'
 import uiActions from '../../store/modules/ui'
 import jobActions from '../../store/modules/job'
 
+import jobSelectors from '../../store/selectors/job'
 import systemSelectors from '../../store/selectors/system'
 import uiSelectors from '../../store/selectors/ui'
 
@@ -97,7 +98,7 @@ const NocodeTopbar = ({
 
   const user = useSelector(systemSelectors.user)
   const previewMode = useSelector(uiSelectors.previewMode)
-  //const publishStatus = useSelector(selectors.job.publishStatus)
+  const publishStatus = useSelector(jobSelectors.publishStatus)
 
   const handleChange = useCallback(event => {
     actions.onSetPreviewMode(event.target.checked)
@@ -105,9 +106,9 @@ const NocodeTopbar = ({
 
   let siteUrl = null
   
-  // if(publishStatus && publishStatus.production) {
-  //   siteUrl = publishStatus.production.urls[publishStatus.production.urls.length-1]
-  // }
+  if(publishStatus && publishStatus.production) {
+    siteUrl = publishStatus.production.urls[publishStatus.production.urls.length-1]
+  }
 
   const getGlobalOptionsButton = useCallback((onClick) => {
     return (

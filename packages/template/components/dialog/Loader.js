@@ -1,20 +1,10 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-// import ContentFormDialog from '../content/Dialog'
-// import SettingsDialog from './SettingsDialog'
-// import FinderDialog from '../finder/Dialog'
-// import JobDialog from '../job/Dialog'
-// import JobHistoryDialog from '../job/HistoryDialog'
-// import JobPublishedDialog from '../job/PublishedDialog'
-// import ConfirmDialog from './ConfirmDialog'
-// import HelpDialog from './HelpDialog'
-
 import SnackBar from '../system/Snackbar'
 import GlobalLoading from '../system/GlobalLoading'
 
 import uiSelectors from '../../store/selectors/ui'
-import routerSelectors from '../../store/selectors/router'
 import dialogSelectors from '../../store/selectors/dialog'
 import contentSelectors from '../../store/selectors/content'
 import driveSelectors from '../../store/selectors/drive'
@@ -28,20 +18,14 @@ import SettingsDialog from '../settings/Dialog'
 import PublishDialog from '../publish/PublishDialog'
 import PublishSummaryDialog from '../publish/SummaryDialog'
 import PublishHistoryDialog from '../publish/HistoryDialog'
+import HelpDialog from '../system/HelpDialog'
 
 const dialogs = {
   settings: SettingsDialog,
   publish: PublishDialog,
   publishSummary: PublishSummaryDialog,
   publishHistory: PublishHistoryDialog,
-  // contentForm: ContentFormDialog,
-  // settings: SettingsDialog,
-  // finder: FinderDialog,
-  // jobStatus: JobDialog,
-  // jobHistory: JobHistoryDialog,
-  // jobPublished: JobPublishedDialog,
-  // confirm: ConfirmDialog,
-  // help: HelpDialog,
+  help: HelpDialog,
 }
 
 const DEFAULT_PARAMS = {}
