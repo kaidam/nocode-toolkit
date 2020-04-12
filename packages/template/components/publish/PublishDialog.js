@@ -1,18 +1,19 @@
 import React, { useEffect, useMemo } from 'react'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import { useSelector, useDispatch } from 'react-redux'
 
-import Actions from '../../utils/actions'
 import Button from '@material-ui/core/Button'
+import Actions from '../../utils/actions'
 
-import selectors from '../../store/selectors'
 import jobActions from '../../store/modules/job'
+import jobSelectors from '../../store/selectors/job'
+import routerSelectors from '../../store/selectors/router'
 
-import Window from '../system/Window'
+import Window from '../dialog/Window'
 import Logs from './Logs'
-import PublishProgress from './PublishProgress'
+import PublishProgress from './Progress'
 
-const useStyles = makeStyles(theme => createStyles({
+const useStyles = makeStyles(theme => ({
   contentContainer: {
     display: 'flex',
     flexDirection: 'row',
@@ -42,62 +43,30 @@ const JobDialog = ({
     onLoad: jobActions.loadJob,
   })
 
-  const queryParams = useSelector(selectors.router.queryParams)
-  const data = useSelector(selectors.job.data)
-  const status = useSelector(selectors.job.status)
-  const error = useSelector(selectors.job.error)
-  const logs = useSelector(selectors.job.logs)
-  const canCloseWindow = useSelector(selectors.job.canCloseWindow)
+  const queryParams = useSelector(routerSelectors.queryParams)
+  const data = useSelector(jobSelectors.data)
+  const status = useSelector(jobSelectors.status)
+  const error = useSelector(jobSelectors.error)
+  const logs = useSelector(jobSelectors.logs)
+  const canCloseWindow = useSelector(jobSelectors.canCloseWindow)
 
+  // if there is a jobid it means we are looking at an old job
+  // not the currently publishing one
   const {
-    id,
-    load,
-    type,
-    back,
+    jobid,
   } = queryParams
-
-  useEffect(() => {
-    if(load) actions.onLoad(id)
-  }, [id, load])
-
-  const content = useMemo(() => {
-    const logScreen = (
-      <Logs
-        status={ status }
-        error={ error }
-        logText={ logs }
-      />
-    )
-
-    return type == 'publish' ? (
-      <div className={ classes.contentContainer }>
-        <div className={ classes.contentProgress }>
-          <PublishProgress
-            jobData={ data }
-          />
-        </div>
-        <div className={ classes.contentLogs }>
-          { logScreen }
-        </div>
-      </div>
-    ) : logScreen
-  }, [
-    status,
-    error,
-    logs,
-    type,
-    data,
-  ])
 
   return (
     <Window
       open
-      size="lg"
+      fullHeight
+      size="xl"
+      noScroll
       cancelTitle="Close"
       withCancel={ canCloseWindow }
       onCancel={ actions.onClose }
       leftButtons={
-        back ? (
+        jobid ? (
           <Button
             type="button"
             variant="contained"
@@ -108,7 +77,20 @@ const JobDialog = ({
         ) : null
       }
     >
-      { content }
+      <div className={ classes.contentContainer }>
+        <div className={ classes.contentProgress }>
+          <PublishProgress
+            jobData={ data }
+          />
+        </div>
+        <div className={ classes.contentLogs }>
+          <Logs
+            status={ status }
+            error={ error }
+            logText={ logs }
+          />
+        </div>
+      </div>
     </Window>
   )
 }

@@ -1,16 +1,15 @@
 import React, { useRef, useEffect, useCallback } from 'react'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import DialogContentText from '@material-ui/core/DialogContentText'
 
-const useStyles = makeStyles(theme => createStyles({
+const useStyles = makeStyles(theme => ({
   paper: {
     height: '100%',
     backgroundColor: '#000',
     fontSize: '0.8em',
     display: 'flex',
     flexDirection: 'column',
-    //boxShadow: '10px 10px 20px 0px rgba(0,0,0,0.4)',
   },
   errorContainer: {
     flexGrow: 0,

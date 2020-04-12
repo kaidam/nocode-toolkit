@@ -6,16 +6,13 @@ import CreateActions from '../utils/createActions'
 import networkWrapper from '../utils/networkWrapper'
 import apiUtils from '../utils/api'
 import { job as initialState } from '../initialState'
-//import uiActions from './ui'
+
 import snackbarActions from './snackbar'
 import uiActions from './ui'
+import dialogActions from './dialog'
 
 import nocodeSelectors from '../selectors/nocode'
 import jobSelectors from '../selectors/job'
-
-// import {
-//   RELOAD_APP_JOBS,
-// } from '../../config'
 
 const prefix = 'job'
 
@@ -59,7 +56,7 @@ const loaders = {
   })
     .then(apiUtils.process),
 
-  publish: (getState) => axios.post(apiUtils.websiteUrl(getState, `/publish`))
+  publish: (getState, payload) => axios.post(apiUtils.websiteUrl(getState, `/publish`), payload)
     .then(apiUtils.process),
 
   getPublishStatus: (getState) => axios.get(apiUtils.websiteUrl(getState, `/publish/status`))
@@ -182,6 +179,46 @@ const sideEffects = {
   getPublishStatus: () => wrapper('getPublishStatus', async (dispatch, getState) => {
     const data = await loaders.getPublishStatus(getState)
     dispatch(actions.setPublishStatus(data))
+  }),
+
+  publish: ({
+    localModeOverride = false,
+  } = {}) => wrapper('publish', async (dispatch, getState) => {
+    const nocodeConfig = nocodeSelectors.config(getState())
+    if(nocodeConfig.publishDisabled && !localModeOverride) {
+      const result = await dispatch(uiActions.waitForConfirmation({
+        title: 'Local Development Mode',
+        message: `
+          <p>Because you are in local development mode - your local template will not be used.</p>
+          <p>Instead the most recently uploaded template will be used instead.</p>
+          <p>Are you sure you want to build?</p>
+        `,
+        confirmTitle: "I'm sure - build anyway",
+      }))
+
+      if(!result) return
+
+      dispatch(actions.publish({
+        localModeOverride: true,
+      }))
+    }
+    else {
+      dispatch(actions.resetData())
+
+      const publishJob = await loaders.publish(getState, {})
+      dispatch(dialogActions.open('publish'))
+      dispatch(actions.waitForJob({
+        id: publishJob.id,
+      }))
+
+      // await dispatch(actions.waitForJob({
+      //   loader: () => loaders.publish(getState),
+      //   type: 'publish',
+      //   showWindow: true,
+      //   showWindowImmediately: true,
+      //   snackbarError: true,
+      // }))
+    }    
   }),
 
   // // load a job from the server

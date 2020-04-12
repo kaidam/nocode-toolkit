@@ -25,9 +25,11 @@ import ContentDialog from '../content/Dialog'
 import DriveDialog from '../drive/Dialog'
 import UnsplashDialog from '../unsplash/Dialog'
 import SettingsDialog from '../settings/Dialog'
+import PublishDialog from '../publish/PublishDialog'
 
 const dialogs = {
   settings: SettingsDialog,
+  publish: PublishDialog,
   // contentForm: ContentFormDialog,
   // settings: SettingsDialog,
   // finder: FinderDialog,

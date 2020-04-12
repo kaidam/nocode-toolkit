@@ -92,7 +92,7 @@ const NocodeTopbar = ({
   const actions = Actions(useDispatch(), {
     onSetPreviewMode: uiActions.setPreviewMode,
     onRebuild: () => jobActions.rebuild({withSnackbar:true}),
-    onPublish: () => {},//jobActions.publish,
+    onPublish: jobActions.publish,
   })
 
   const user = useSelector(systemSelectors.user)
