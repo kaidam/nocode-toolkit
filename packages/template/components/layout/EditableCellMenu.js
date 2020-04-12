@@ -6,7 +6,9 @@ import Button from '@material-ui/core/Button'
 import Popper from '@material-ui/core/Popper'
 import Paper from '@material-ui/core/Paper'
 import withMenuButton from '../hooks/withMenuButton'
-
+import Tooltip from '@material-ui/core/Tooltip'
+import IconButton from '@material-ui/core/IconButton'
+import colorUtils from '../../utils/color'
 import Actions from '../../utils/actions'
 import layoutActions from '../../store/modules/layout'
 
@@ -25,6 +27,31 @@ const RightIcon = icons.right
 
 const useStyles = makeStyles(theme => {
   return {
+    root: {
+      display: 'flex',
+      flexDirection: 'row',
+      borderRadius: '24px',
+      padding: theme.spacing(0.75),
+      backgroundColor: theme.palette.grey[200],
+      boxShadow: `5px 5px 5px 0px rgba(0,0,0,0.3)`,
+    },
+    iconSection: {
+      flexGrow: 1,
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+    },
+    iconContainer: {
+      marginLeft: theme.spacing(0.25),
+      marginRight: theme.spacing(0.25),
+      padding: theme.spacing(0.2),
+      borderRadius: '16px',
+      backgroundColor: '#fff',
+    },
+    icon: {
+      fontSize: '0.85em',
+    },
     button: {
       color: theme.palette.grey[500],
       textTransform: 'lowercase',
@@ -195,7 +222,77 @@ const EditableCellMenu = ({
       id="options-popover"
       anchorEl={ anchorEl }
     >
-      <Paper>
+      <div className={ classes.root }>
+        <div className={ classes.iconSection }>
+          <div className={ classes.iconContainer }>
+            <Tooltip title="Edit" placement="top">
+              <IconButton
+                size="small"
+                onClick={ onEdit }
+              >
+                <EditIcon
+                  fontSize="inherit"
+                  color="primary"
+                  className={ classes.icon }
+                />
+              </IconButton>
+            </Tooltip>
+          </div>
+          <div className={ classes.iconContainer }>
+            <Tooltip title="Move" placement="top">
+              <IconButton
+                size="small"
+                onClick={ moveMenu.onClick }
+              >
+                <MoveIcon
+                  fontSize="inherit"
+                  color="primary"
+                  className={ classes.icon }
+                />
+              </IconButton>
+            </Tooltip>
+          </div>
+          <div className={ classes.iconContainer }>
+            <Tooltip title="Delete" placement="top">
+              <IconButton
+                size="small"
+                onClick={ onDelete }
+              >
+                <DeleteIcon
+                  fontSize="inherit"
+                  color="primary"
+                  className={ classes.icon }
+                />
+              </IconButton>
+            </Tooltip>
+          </div>
+          <div className={ classes.iconContainer }>
+            <Tooltip title="Add" placement="top">
+              <IconButton
+                size="small"
+                onClick={ addMenu.onClick }
+              >
+                <AddIcon
+                  fontSize="inherit"
+                  color="secondary"
+                  className={ classes.icon }
+                />
+              </IconButton>
+            </Tooltip>
+          </div>
+        </div>
+      </div>
+    </Popper>
+  )
+}
+
+export default EditableCellMenu
+
+
+
+/*
+
+  <Paper>
         <ButtonGroup size="small" aria-label="small outlined button group">
           <Button
             className={ classes.button }
@@ -229,8 +326,5 @@ const EditableCellMenu = ({
           moveMenu.menus
         }
       </Paper>
-    </Popper>
-  )
-}
 
-export default EditableCellMenu
+*/

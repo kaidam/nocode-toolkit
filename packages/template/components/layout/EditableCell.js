@@ -23,11 +23,11 @@ const useStyles = makeStyles(theme => {
       width: '100%',
       height: '100%',
       cursor: 'pointer',
-      backgroundColor: open ? colorUtils.getAlpha(theme.palette.grey[500], 0.1) : null,
-      border: open ? `1px solid ${theme.palette.grey[300]}` : null,
+      backgroundColor: open ? colorUtils.getAlpha(theme.palette.primary.main, 0.2) : null,
+      border: open ? `1px solid ${theme.palette.grey[400]}` : null,
       boxShadow: open ? `5px 5px 5px 0px rgba(0,0,0,0.3)` : null,
       '&:hover': {
-        backgroundColor: colorUtils.getAlpha(theme.palette.grey[500], 0.1),
+        backgroundColor: colorUtils.getAlpha(theme.palette.primary.main, 0.2),
       }
     }),
     tooltipContent: {
