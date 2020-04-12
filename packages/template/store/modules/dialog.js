@@ -41,6 +41,10 @@ const sideEffects = {
     }, {})
     dispatch(routerActions.addQueryParams(mappedParams))
   },
+  replace: (name, params = {}) => (dispatch, getState) => {
+    dispatch(actions.closeAll())
+    dispatch(actions.open(name, params))
+  },
   close: (name) => (dispatch, getState) => {
     dispatch(routerActions.removeQueryParams(id => id.indexOf(`dialog_${name}_`) == 0 ? false : true))
   },

@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useCallback } from 'react'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
+import React, { useEffect } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 import { useSelector, useDispatch } from 'react-redux'
 
 import Button from '@material-ui/core/Button'
@@ -8,10 +8,13 @@ import green from '@material-ui/core/colors/green'
 import blue from '@material-ui/core/colors/blue'
 
 import Actions from '../../utils/actions'
-import selectors from '../../store/selectors'
-import jobActions from '../../store/modules/job'
 
-import Window from '../system/Window'
+import jobActions from '../../store/modules/job'
+import dialogActions from '../../store/modules/dialog'
+import systemSelectors from '../../store/selectors/system'
+import jobSelectors from '../../store/selectors/job'
+
+import Window from '../dialog/Window'
 import Loading from '../system/Loading'
 import SimpleTable from '../table/SimpleTable'
 
@@ -21,15 +24,12 @@ import jobUtils from '../../utils/job'
 const ErrorIcon = icons.error
 const SuccessIcon = icons.success
 const WaitingIcon = icons.waiting
-const OpenIcon = icons.open
 const LogsIcon = icons.logs
-const UndoIcon = icons.undo
 const PublishIcon = icons.publish
 const BuildIcon = icons.build
 const LookIcon = icons.look
-const RebuildIcon = icons.refresh
 
-const useStyles = makeStyles(theme => createStyles({
+const useStyles = makeStyles(theme => ({
   screenshot: {
     border: '1px solid #000',
     height: '48px',
@@ -87,17 +87,17 @@ const fields =[{
   numeric: true,
 }]
 
-const JobHistoryDialog = ({
+const HistoryDialog = ({
 
 }) => {
   const classes = useStyles()
-  const config = useSelector(state => state.ui.config)
-  const publishStatus = useSelector(selectors.job.publishStatus)
-  const data = useSelector(selectors.job.list)
-  const loading = useSelector(selectors.job.loading.loadHistory)
+  const config = useSelector(systemSelectors.config)
+  const publishStatus = useSelector(jobSelectors.publishStatus)
+  const data = useSelector(jobSelectors.list)
+  const loading = useSelector(jobSelectors.loading.loadHistory)
 
   const actions = Actions(useDispatch(), {
-    onClose: jobActions.closeWindow,
+    onClose: dialogActions.closeAll,
     onViewLogs: jobActions.viewLogs,
     onPublish: jobActions.publish,
     onRebuild: jobActions.rebuild,
@@ -199,7 +199,7 @@ const JobHistoryDialog = ({
               <Button 
                 size="small"
                 className={ classes.rowButton }
-                onClick={ () => actions.onDeploy({job: job.jobid, type: 'production'}) }
+                onClick={ () => actions.onDeploy({job}) }
               >
                 <PublishIcon />&nbsp;&nbsp;Publish
               </Button>
@@ -251,42 +251,4 @@ const JobHistoryDialog = ({
   )
 }
 
-export default JobHistoryDialog
-
-// {
-//   loading ? (
-//     <Loading />
-//   ) : (
-//     <SimpleTable
-//       data={ tableData }
-//       fields={ fields }
-//     />
-//   )
-// }
-
-/*
-
-  rightButtons={(
-        <React.Fragment>
-          <Button
-            type="button"
-            variant="contained"
-            onClick={ actions.onRebuild }
-            className={ classes.publishButton }
-          >
-            <RebuildIcon /> Rebuild Preview
-          </Button>
-          <Button
-            type="button"
-            variant="contained"
-            color="secondary"
-            onClick={ actions.onPublish }
-            className={ classes.publishButton }
-          >
-            <PublishIcon /> Publish Now
-          </Button>
-        </React.Fragment>
-        
-      )}
-
-*/
+export default HistoryDialog

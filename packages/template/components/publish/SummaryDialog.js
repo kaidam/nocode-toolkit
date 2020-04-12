@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo } from 'react'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import { useSelector, useDispatch } from 'react-redux'
 import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
 import Grid from '@material-ui/core/Grid'
 import {CopyToClipboard} from 'react-copy-to-clipboard'
 
@@ -9,26 +10,25 @@ import Actions from '../../utils/actions'
 import green from '@material-ui/core/colors/green'
 import blue from '@material-ui/core/colors/blue'
 
-import selectors from '../../store/selectors'
 import jobActions from '../../store/modules/job'
+import dialogActions from '../../store/modules/dialog'
 import snackbarActions from '../../store/modules/snackbar'
+import dialogSelectors from '../../store/selectors/dialog'
+import systemSelectors from '../../store/selectors/system'
+import jobSelectors from '../../store/selectors/job'
 
-import Window from '../system/Window'
+import Window from '../dialog/Window'
 
 import icons from '../../icons'
-import { Typography } from '@material-ui/core'
 import jobUtils from '../../utils/job'
 
 const SuccessIcon = icons.success
-const LogsIcon = icons.logs
 const PublishIcon = icons.publish
 const HistoryIcon = icons.history
 const LookIcon = icons.look
 const ClipboardIcon = icons.clipboard
 
-const DIALOG = 'jobPublished'
-
-const useStyles = makeStyles(theme => createStyles({
+const useStyles = makeStyles(theme => ({
   container: {
     textAlign: 'center',
   },
@@ -81,52 +81,91 @@ const useStyles = makeStyles(theme => createStyles({
   }
 }))
 
-const JobPublishedDialog = ({
+const SummaryDialog = ({
 
 }) => {
   const classes = useStyles()
-  const queryParams = useSelector(selectors.router.queryParams)
-  const config = useSelector(state => state.ui.config)
-  const publishStatus = useSelector(selectors.job.publishStatus)
-  const job = useSelector(selectors.job.data)
+
+  const dialogParams = useSelector(dialogSelectors.dialogParams)
+  const config = useSelector(systemSelectors.config)
+  const publishStatus = useSelector(jobSelectors.publishStatus)
+  const job = useSelector(jobSelectors.data)
+
+  const isJobLive = (
+    job &&
+    publishStatus &&
+    publishStatus.production &&
+    publishStatus.production.job == job.jobid
+  )
 
   const {
     id,
-    type = 'preview',
-  } = queryParams
+  } = (dialogParams.publishSummary || {})
 
   const actions = Actions(useDispatch(), {
-    onClose: jobActions.closeWindow,
+    onClose: dialogActions.closeAll,
     onViewLogs: jobActions.viewLogs,
-    onPublish: jobActions.publish,
-    onDeploy: jobActions.deployFromPublished,
+    onDeploy: jobActions.deploy,
     onOpenHistory: jobActions.openHistory,
-    onViewLogs: jobActions.viewLogs,
     onLoadPublished: jobActions.loadPublished,
     onSetSuccess: snackbarActions.setSuccess,
   })
 
   useEffect(() => {
+    if(!id) return
     actions.onLoadPublished(id)
-  }, [])
+  }, [
+    id,
+  ])
 
-  const content = useMemo(() => {
-    if(!job) return null
+  if(!job) return null
 
-    let url = ''
+  let url = ''
 
-    if(publishStatus) {
-      const publishData = type == 'live' ? publishStatus.production : null
-      if(publishData && publishData.urls) url = publishData.urls[publishData.urls.length-1]
-    }
+  if(publishStatus) {
+    const publishData = isJobLive ? publishStatus.production : null
+    if(publishData && publishData.urls) url = publishData.urls[publishData.urls.length-1]
+  }
 
-    if(!url) {
-      url = jobUtils.getJobUrl(config, job)
-    }
+  if(!url) {
+    url = jobUtils.getJobUrl(config, job)
+  }
 
-    const colorClassname = type == 'live' ? classes.success : classes.info
+  const colorClassname = isJobLive ? classes.success : classes.info
 
-    return (
+  return (
+    <Window
+      open
+      size="lg"
+      cancelTitle="Close"
+      withCancel
+      onCancel={ actions.onClose }
+      rightButtons={(
+        <React.Fragment>
+          <Button
+            type="button"
+            variant="contained"
+            onClick={ actions.onOpenHistory }
+            className={ classes.rightButton }
+          >
+            <HistoryIcon />&nbsp;&nbsp;History
+          </Button>
+          {
+            !isJobLive && (
+              <Button
+                type="button"
+                variant="contained"
+                color="secondary"
+                onClick={ () => actions.onDeploy({job}) }
+                className={ classes.rightButton }
+              >
+                <PublishIcon />&nbsp;&nbsp;Publish
+              </Button>
+            )
+          }
+        </React.Fragment>
+      )}
+    >
       <div className={ classes.container }>
         <Grid container>
           <Grid item xs={ 12 } sm={ 6 }>
@@ -139,7 +178,7 @@ const JobPublishedDialog = ({
                 className={colorClassname}
               >
                 {
-                  type == 'live' ? 
+                  isJobLive ? 
                     "Your website is now live" : 
                     "Your website has been built"
                 }
@@ -189,7 +228,7 @@ const JobPublishedDialog = ({
                 <Typography
                   variant="h6"
                 >
-                  { type == 'live' ? 'Website' : 'Preview' } URL
+                  { isJobLive ? 'Website' : 'Preview' } URL
                 </Typography>
               </div>
 
@@ -197,9 +236,34 @@ const JobPublishedDialog = ({
                 <Typography className={ classes.link }><a target="_blank" href={ url }>{ url }</a></Typography>
               </div>
 
+              <div className={ classes.buttons }>
+                <Button
+                  type="button"
+                  size="small"
+                  variant="contained"
+                  onClick={ () => window.open(url) }
+                  className={ classes.rightButton }
+                >
+                  <LookIcon />&nbsp;&nbsp;View Website
+                </Button>
+                <CopyToClipboard
+                  text={ url }
+                  onCopy={ () => actions.onSetSuccess(`url copied to clipboard`) }
+                >
+                  <Button
+                    type="button"
+                    size="small"
+                    variant="contained"
+                    className={ classes.rightButton }
+                  >
+                    <ClipboardIcon />&nbsp;&nbsp;Copy URL to clipboard
+                  </Button>
+                </CopyToClipboard>    
+              </div>
+
               <div className={ classes.textBlock }>
                 {
-                  type == 'live' ? (
+                  isJobLive ? (
                     <React.Fragment>
                       <Typography>
                         Your website is now live at the address shown above.  You can give this address
@@ -221,7 +285,7 @@ const JobPublishedDialog = ({
 
               <div className={ classes.textBlock }>
                 {
-                  type == 'live' ? (
+                  isJobLive ? (
                     <React.Fragment>
                       <Typography>
                         If you have made a mistake - you can publish a previous build by clicking the <strong>"History"</strong>
@@ -232,10 +296,7 @@ const JobPublishedDialog = ({
                     <React.Fragment>
                       <Typography>
                         When you are happy that everything is correct, click the <strong>"Publish"</strong> button below and
-                        your website will be live.<br /><br />
-                      </Typography>
-                      <Typography>
-                        If you want to publish this build later, you can use the <strong>"History"</strong> button to publish any of your builds.
+                        your website will be live.  If you want to publish this build later, you can use the <strong>"History"</strong> button to publish any of your builds.
                       </Typography>
                     </React.Fragment>
                   )
@@ -247,74 +308,8 @@ const JobPublishedDialog = ({
         </Grid>
         
       </div>
-    )
-  }, [
-    job,
-    config,
-    type,
-    publishStatus,
-  ])
-
-  return (
-    <Window
-      open
-      size="md"
-      cancelTitle="Close"
-      withCancel
-      onCancel={ actions.onClose }
-      rightButtons={(
-        <React.Fragment>
-          <Button
-            type="button"
-            variant="contained"
-            onClick={ actions.onOpenHistory }
-            className={ classes.rightButton }
-          >
-            <HistoryIcon />&nbsp;&nbsp;History
-          </Button>
-          {
-            type != 'live' && (
-              <Button
-                type="button"
-                variant="contained"
-                color="secondary"
-                onClick={ () => actions.onDeploy({viewid: job.id, jobid: job.jobid, type: 'production'}) }
-                className={ classes.rightButton }
-              >
-                <PublishIcon />&nbsp;&nbsp;Publish
-              </Button>
-            )
-          }
-        </React.Fragment>
-      )}
-    >
-      {
-        content
-      }
     </Window>
   )
 }
 
-export default JobPublishedDialog
-
-
-/*
-
-  <Button
-            type="button"
-            variant="contained"
-            onClick={ () => actions.onViewLogs({id: job.id, type: 'publish'}) }
-            className={ classes.rightButton }
-          >
-            <LogsIcon />&nbsp;&nbsp;Logs
-          </Button>
-          <Button
-            type="button"
-            variant="contained"
-            onClick={ actions.onOpenHistory }
-            className={ classes.rightButton }
-          >
-            <HistoryIcon />&nbsp;&nbsp;Build History
-          </Button>
-
-*/
+export default SummaryDialog

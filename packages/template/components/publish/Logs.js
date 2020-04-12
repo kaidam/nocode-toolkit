@@ -6,10 +6,11 @@ import DialogContentText from '@material-ui/core/DialogContentText'
 const useStyles = makeStyles(theme => ({
   paper: {
     height: '100%',
-    backgroundColor: '#000',
+    backgroundColor: '#fff',
     fontSize: '0.8em',
     display: 'flex',
     flexDirection: 'column',
+    border: '1px solid #ccc',
   },
   errorContainer: {
     flexGrow: 0,
@@ -22,7 +23,7 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: theme.spacing(2),
   },
   logContainer: {
-    color: '#0f0',
+    color: '#666',
     fontFamily: 'Courier',
   },
   scrollMarker: {
@@ -59,7 +60,7 @@ const JobLogs = ({
   }, [logText])
 
   return (
-    <Paper className={ classes.paper }>
+    <div className={ classes.paper }>
       <div 
         className={ classes.scrollerContainer }
         ref={ scrollerContainerRef }
@@ -83,7 +84,7 @@ const JobLogs = ({
           </div>
         )
       }
-    </Paper>
+    </div>
   )
 }
 

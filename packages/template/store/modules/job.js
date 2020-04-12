@@ -62,7 +62,7 @@ const loaders = {
   getPublishStatus: (getState) => axios.get(apiUtils.websiteUrl(getState, `/publish/status`))
     .then(apiUtils.process),
   
-  deploy: (getState, payload) => axios.post(apiUtils.websiteUrl(getState, `/deploy`), payload)
+  deploy: (getState, payload) => axios.post(apiUtils.websiteUrl(getState, `/publish/deploy`), payload)
     .then(apiUtils.process),
 
   getJobList: (getState, type) => axios.get(apiUtils.websiteUrl(getState, `/job/type/${type}`))
@@ -78,8 +78,8 @@ const sideEffects = {
     // get the starting point for logs and pass it to the job loader
     const existingJobData = jobSelectors.data(getState())
     let fromLogId = null
-    if(existingJobData && existingJobData.id == id && existingJobData.lastLogId) {
-      fromLogId = existingJobData.lastLogId
+    if(existingJobData && existingJobData.id == id && existingJobData.fromLogId) {
+      fromLogId = existingJobData.fromLogId
     }
     const job = await loaders.getJobData(getState, id, fromLogId)
     dispatch(actions.setData(job))
@@ -181,6 +181,13 @@ const sideEffects = {
     dispatch(actions.setPublishStatus(data))
   }),
 
+  loadPublished: (id) => wrapper('loadPublished', async (dispatch, getState) => {
+    await Promise.all([
+      dispatch(actions.loadJob(id)),
+      dispatch(actions.getPublishStatus()),
+    ])
+  }),
+
   publish: ({
     localModeOverride = false,
   } = {}) => wrapper('publish', async (dispatch, getState) => {
@@ -204,21 +211,56 @@ const sideEffects = {
     }
     else {
       dispatch(actions.resetData())
-
-      const publishJob = await loaders.publish(getState, {})
-      dispatch(dialogActions.open('publish'))
-      dispatch(actions.waitForJob({
-        id: publishJob.id,
+      const {
+        id,
+      } = await loaders.publish(getState, {})
+      dispatch(dialogActions.open('publish', {}))
+      await dispatch(actions.waitForJob({
+        id,
       }))
-
-      // await dispatch(actions.waitForJob({
-      //   loader: () => loaders.publish(getState),
-      //   type: 'publish',
-      //   showWindow: true,
-      //   showWindowImmediately: true,
-      //   snackbarError: true,
-      // }))
+      dispatch(dialogActions.replace('publishSummary', {
+        id,
+      }))
     }    
+  }),
+
+  viewLogs: ({id}) => async (dispatch, getState) => {
+    dispatch(actions.resetData())
+    dispatch(dialogActions.replace('publish', {
+      id,
+    }))
+  },
+
+  openHistory: () => async (dispatch, getState) => {
+    dispatch(dialogActions.replace('publishHistory'))
+  },
+
+  deploy: ({
+    job,
+  }) => wrapper('deploy', async (dispatch, getState) => {
+    dispatch(snackbarActions.setInfo(`deploying website`))
+    await loaders.deploy(getState, {
+      job: job.jobid,
+    })
+    await dispatch(actions.getPublishStatus())
+    dispatch(snackbarActions.setSuccess(`your website is now live`))
+    dispatch(dialogActions.replace('publishSummary', {
+      id: job.id,
+    }))
+  }),
+
+  getJobs: (type = 'publish') => wrapper('getJobs', async (dispatch, getState) => {
+    const data = await loaders.getJobList(getState, type)
+    dispatch(actions.setList(data.slice(0, 10)))
+  }),
+
+  loadHistory: () => wrapper('loadHistory', async (dispatch, getState) => {
+    await dispatch(actions.setList([]))
+    await dispatch(actions.setPublishStatus(null))
+    await Promise.all([
+      dispatch(actions.getJobs()),
+      dispatch(actions.getPublishStatus()),
+    ])
   }),
 
   // // load a job from the server

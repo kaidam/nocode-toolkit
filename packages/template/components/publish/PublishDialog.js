@@ -6,12 +6,17 @@ import Button from '@material-ui/core/Button'
 import Actions from '../../utils/actions'
 
 import jobActions from '../../store/modules/job'
+import dialogActions from '../../store/modules/dialog'
 import jobSelectors from '../../store/selectors/job'
-import routerSelectors from '../../store/selectors/router'
+import dialogSelectors from '../../store/selectors/dialog'
 
 import Window from '../dialog/Window'
 import Logs from './Logs'
 import PublishProgress from './Progress'
+
+import icons from '../../icons'
+
+const HistoryIcon = icons.history
 
 const useStyles = makeStyles(theme => ({
   contentContainer: {
@@ -20,13 +25,13 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
   },
   contentProgress: {
-    width: '40%',
+    width: '50%',
     height: '100%',
     overflowY: 'auto',
     marginRight: theme.spacing(2),
   },
   contentLogs: {
-    width: '60%',
+    width: '50%',
     height: '100%',
   },
   allheight: {
@@ -39,40 +44,48 @@ const JobDialog = ({
 }) => {
   const classes = useStyles()
   const actions = Actions(useDispatch(), {
-    onClose: jobActions.closeWindow,
+    onClose: dialogActions.closeAll,
     onLoad: jobActions.loadJob,
+    onOpenHistory: jobActions.openHistory,
   })
 
-  const queryParams = useSelector(routerSelectors.queryParams)
+  const dialogParams = useSelector(dialogSelectors.dialogParams)
   const data = useSelector(jobSelectors.data)
   const status = useSelector(jobSelectors.status)
   const error = useSelector(jobSelectors.error)
   const logs = useSelector(jobSelectors.logs)
   const canCloseWindow = useSelector(jobSelectors.canCloseWindow)
 
-  // if there is a jobid it means we are looking at an old job
-  // not the currently publishing one
+  // if we have an id param - it means we are viewing
+  // this page from the publish history page
   const {
-    jobid,
-  } = queryParams
+    id,
+  } = (dialogParams.publish || {})
+
+  useEffect(() => {
+    if(!id) return
+    actions.onLoad(id)
+  }, [
+    id,
+  ])
 
   return (
     <Window
       open
       fullHeight
-      size="xl"
+      size="md"
       noScroll
       cancelTitle="Close"
       withCancel={ canCloseWindow }
       onCancel={ actions.onClose }
       leftButtons={
-        jobid ? (
+        canCloseWindow ? (
           <Button
             type="button"
             variant="contained"
-            onClick={ () => window.history.back() }
+            onClick={ actions.onOpenHistory }
           >
-            Back
+            <HistoryIcon />&nbsp;&nbsp;History
           </Button>
         ) : null
       }
