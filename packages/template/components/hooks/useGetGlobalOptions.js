@@ -43,11 +43,11 @@ const useGetGlobalOptions = ({
       icon: icons.settings,
       handler: actions.onOpenSettings,
     },
-    includeExtra ? {
+    {
       title: 'Reload',
       icon: icons.refresh,
       handler: actions.onRebuild,
-    } : null,
+    },
     includeExtra && !previewMode ? {
       title: 'Enable Preview',
       icon: icons.look,
@@ -55,7 +55,7 @@ const useGetGlobalOptions = ({
     } : null,
     includeExtra && previewMode ? {
       title: 'Disable Preview',
-      icon: icons.look,
+      icon: icons.hide,
       handler: onDisablePreview,
     } : null,
     '-', {

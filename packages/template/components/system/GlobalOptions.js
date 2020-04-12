@@ -10,7 +10,7 @@ const GlobalOptions = ({
 }) => {
 
   const theme = useTheme()
-  const matches = useMediaQuery(theme.breakpoints.up('sm'))
+  const matches = useMediaQuery(theme.breakpoints.up('md'))
 
   const getGlobalOptions = useGetGlobalOptions({
     includeExtra: matches ? false : true,

@@ -2,10 +2,6 @@ import React, { useCallback } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSelector, useDispatch } from 'react-redux'
 
-import FormGroup from '@material-ui/core/FormGroup'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import Button from '@material-ui/core/Button'
-import Switch from '@material-ui/core/Switch'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Hidden from '@material-ui/core/Hidden'
@@ -19,14 +15,10 @@ import jobSelectors from '../../store/selectors/job'
 import systemSelectors from '../../store/selectors/system'
 import uiSelectors from '../../store/selectors/ui'
 
-import icons from '../../icons'
-
 import NocodeLogo from '../widgets/NocodeLogo'
 import GlobalOptions from './GlobalOptions'
 import UserAvatar from './UserAvatar'
-
-const RefreshIcon = icons.refresh
-const BuildIcon = icons.send
+import EditorTopbarMenu from './EditorTopbarMenu'
 
 const useStyles = makeStyles(theme => ({
   appBar: {
@@ -54,6 +46,9 @@ const useStyles = makeStyles(theme => ({
   optionsContainer: {
     paddingTop: '5px',
     flexGrow: 0,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   filler: {
     flexGrow: 1,
@@ -146,54 +141,23 @@ const NocodeTopbar = ({
             <GlobalOptions
               getButton={ getGlobalOptionsButton }
             />
+            <Hidden smDown>
+              {
+                siteUrl && (
+                  <div className={ classes.urlContainer }>
+                    <a href={ siteUrl } target="_blank">
+                      { siteUrl }
+                    </a>
+                  </div>
+                )
+              }
+            </Hidden>
           </div>
           <div className={ classes.filler }>
           
           </div>
           <Hidden smDown>
-            {
-              siteUrl && (
-                <div className={ classes.urlContainer }>
-                  <a href={ siteUrl } target="_blank">
-                    { siteUrl }
-                  </a>
-                </div>
-              )
-            }
-            <div className={ classes.buttonContainer }>
-              <FormGroup row>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={ previewMode }
-                      onChange={ handleChange }
-                      color="secondary"
-                    />
-                  }
-                  label="preview"
-                  classes={{
-                    label: classes.previewModeLabel,
-                  }}
-                />
-              </FormGroup>
-              <Button
-                variant="contained"
-                size="small"
-                startIcon={<RefreshIcon />}
-                onClick={ actions.onRebuild }
-              >
-                Reload
-              </Button>
-              <Button
-                variant="contained"
-                size="small"
-                className={classes.button}
-                startIcon={<BuildIcon />}
-                onClick={ actions.onPublish }
-              >
-                Build Website
-              </Button>
-            </div>
+            <EditorTopbarMenu />
           </Hidden>
         </div>
       </Toolbar>
