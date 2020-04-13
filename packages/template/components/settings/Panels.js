@@ -1,6 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSelector, useDispatch } from 'react-redux'
+import Typography from '@material-ui/core/Typography'
 
 import Actions from '../../utils/actions'
 import settingsSelectors from '../../store/selectors/settings'
@@ -14,9 +15,9 @@ import Panels from '../widgets/Panels'
 import DialogButtons from '../widgets/DialogButtons'
 
 import Domains from './Domains'
+import Security from './Security'
 import PluginInstall from './PluginInstall'
 import Snippets from './Snippets'
-
 
 import library from '../../library'
 import icons from '../../icons'
@@ -36,6 +37,9 @@ const useStyles = makeStyles(theme => ({
   footer: {
     borderTop: '1px solid #e5e5e5',
   },
+  headingTitle: {
+    padding: theme.spacing(1),
+  }
 }))
 
 const PANELS = [{
@@ -110,7 +114,12 @@ const PANELS = [{
   title: 'Domains',
   icon: icons.domain,
   submitButton: false,
-  render: () => ({
+  render: ({
+    classes,
+  }) => ({
+    header: (
+      <Typography variant="h6" className={ classes.headingTitle }>Nocode Subdomain</Typography>
+    ),
     body: (
       <Domains />
     )
@@ -132,6 +141,21 @@ const PANELS = [{
       )
     }
   }
+}, {
+  id: 'security',
+  title: 'Security',
+  icon: icons.lock,
+  submitButton: false,
+  render: ({
+    classes,
+  }) => ({
+    header: (
+      <Typography variant="h6" className={ classes.headingTitle }>Website Security</Typography>
+    ),
+    body: (
+      <Security />
+    )
+  })
 }]
 
 const renderPanel = ({
@@ -216,6 +240,7 @@ const SettingsPanels = ({
   const currentPanel = PANELS.find(panelItem => panelItem.id == panel) || PANELS[0]
 
   const renderResults = renderPanel({
+    classes,
     panel: currentPanel,
     currentTabId: tab,
     activePluginMap,

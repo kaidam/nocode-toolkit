@@ -160,6 +160,52 @@ const forms = {
       }
     }],
   },
+  'security.user': {
+    initialValues: {
+      username: '',
+      password: '',
+    },
+    schema: [{
+      id: 'username',
+      title: 'Username',
+      helperText: 'Enter the username for this user',
+      validate: {
+        type: 'string',
+        methods: [
+          ['required', 'The name is required'],
+        ],
+      }
+    }, {
+      id: 'password',
+      title: 'Password',
+      helperText: 'Enter the password for this user',
+      inputProps: {
+        type: 'password',
+      },
+      validate: {
+        type: 'string',
+        methods: [
+          ['required', 'The password is required'],
+        ],
+      }
+    }],
+  },
+  'security.rule': {
+    initialValues: {
+      rule: '',
+    },
+    schema: [{
+      id: 'rule',
+      title: 'Match email',
+      helperText: 'Enter a portion or an entire email address to grant access',
+      validate: {
+        type: 'string',
+        methods: [
+          ['required', 'The rule is required'],
+        ],
+      }
+    }],
+  },
 }
 
 export default forms

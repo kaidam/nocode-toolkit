@@ -12,6 +12,7 @@ import apiUtils from '../utils/api'
 
 import jobActions from './job'
 import uiActions from './ui'
+import snackbarActions from './snackbar'
 import systemSelectors from '../selectors/system'
 import nocodeSelectors from '../selectors/nocode'
 
@@ -21,6 +22,10 @@ const prefix = 'system'
 
 const wrapper = networkWrapper.factory(prefix, {
   snackbarError: false,
+})
+
+const snackbarWrapper = networkWrapper.factory(prefix, {
+  snackbarError: true,
 })
 
 const reducers = {
@@ -76,6 +81,9 @@ const loaders = {
   
   */
   updateWebsiteMeta: (id, data) => axios.put(apiUtils.apiUrl(`/websites/${id}/meta`), data)
+    .then(apiUtils.process),
+
+  saveSecuritySettings: (id, data) => axios.put(apiUtils.apiUrl(`/websites/${id}/security`), data)
     .then(apiUtils.process),
 
   ensureSectionResources: (getState, {
@@ -240,6 +248,13 @@ const sideEffects = {
     await dispatch(actions.loadWebsite())
     dispatch(snackbarActions.setSuccess(`subdomain deleted`))
     if(onComplete) onComplete()
+  }),
+
+  saveSecuritySettings: (data) => snackbarWrapper('saveSecuritySettings', async (dispatch, getState) => {
+    const website = systemSelectors.website(getState())
+    await loaders.saveSecuritySettings(website.id, data)
+    await dispatch(actions.loadWebsite())
+    dispatch(snackbarActions.setSuccess(`security settings updated`))
   }),
 
   logout: ({

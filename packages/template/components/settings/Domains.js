@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 0,
   },
   content: {
-    padding: theme.spacing(5),
+    padding: theme.spacing(2),
     flexGrow: 1,
     overflowY: 'auto',
   },
@@ -120,11 +120,6 @@ const SettingsDomains = ({
   return (
     <div className={ classes.container }>
       <div className={ classes.content }>
-        <Grid container>
-          <Grid item xs={ 12 }>
-            <Typography variant="h6">Nocode Subdomain</Typography>
-          </Grid>
-        </Grid>
         <Grid container>
           <Grid item xs={ 4 }>
             <TextField

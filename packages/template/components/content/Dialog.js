@@ -45,12 +45,16 @@ const ContentDialog = ({
           return (
             <Window
               open
-              fullHeight
+              fullHeight={ 
+                typeof(formWindow.fullHeight) === 'boolean' ?
+                  formWindow.fullHeight :
+                  true
+              }
               compact
               noScroll
               noActions
               title={ formWindow.title }
-              size="xl"
+              size={ formWindow.size || "xl" }
               onCancel={ onCloseWindow }
             >
               <Form

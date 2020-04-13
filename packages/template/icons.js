@@ -84,6 +84,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle'
 import SyncIcon from '@material-ui/icons/Sync'
 import SendIcon from '@material-ui/icons/Send'
 import MenuIcon from '@material-ui/icons/Menu'
+import LockIcon from '@material-ui/icons/Lock'
 
 import UnsplashLogo from './components/icons/UnsplashLogo'
 import GoogleDriveLogo from './components/icons/GoogleDriveLogo'
@@ -169,6 +170,7 @@ const icons = {
   sync: SyncIcon,
   send: SendIcon,
   menu: MenuIcon,
+  lock: LockIcon,
 }
 
 export default icons

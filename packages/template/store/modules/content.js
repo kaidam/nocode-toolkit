@@ -605,7 +605,7 @@ const sideEffects = {
             result = await onSubmit(formValues)
           }
           else {
-            //result = formValues
+            result = formValues
           }
         }
         success = true
