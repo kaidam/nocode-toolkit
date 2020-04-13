@@ -254,7 +254,6 @@ const sideEffects = {
     const website = systemSelectors.website(getState())
     await loaders.saveSecuritySettings(website.id, data)
     await dispatch(actions.loadWebsite())
-    dispatch(snackbarActions.setSuccess(`security settings updated`))
   }),
 
   logout: ({

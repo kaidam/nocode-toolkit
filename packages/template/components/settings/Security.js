@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react'
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -47,6 +47,8 @@ const SettingsSecurity = ({
 }) => {
 
   const classes = useStyles()
+
+  const initiallyRendered = useRef(false)
   const [mode, setMode] = useState('off')
   const [users, setUsers] = useState([])
   const [rules, setRules] = useState([])
@@ -90,7 +92,6 @@ const SettingsSecurity = ({
   const website = useSelector(systemSelectors.website)
 
   useEffect(() => {
-    if(!website) return
     const {
       password_mode,
       password_users,
@@ -99,11 +100,9 @@ const SettingsSecurity = ({
     if(password_mode) setMode(password_mode)
     if(password_users) setUsers(password_users)
     if(password_rules) setRules(password_rules)
-  }, [
-    website,
-  ])
+  }, [])
 
-  const onSaveSettings = useCallback(() => {
+  useEffect(() => {
     actions.saveSecuritySettings({
       password_mode: mode,
       password_users: users,
@@ -187,17 +186,7 @@ const SettingsSecurity = ({
                   </RadioGroup>
                 </FormControl>
               </Grid>
-              <Grid item xs={ 12 }>
-                <Button
-                  className={ classes.saveButton }
-                  size="small"
-                  color="secondary"
-                  variant="contained"
-                  onClick={ onSaveSettings }
-                >
-                  Save Security Settings
-                </Button>
-              </Grid>
+              
             </Grid>
           </Grid>
           <Grid item xs={ 12 } md={ 6 }>
