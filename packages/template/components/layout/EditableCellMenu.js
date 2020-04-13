@@ -281,6 +281,12 @@ const EditableCellMenu = ({
             </Tooltip>
           </div>
         </div>
+        {
+          addMenu.menus
+        }
+        {
+          moveMenu.menus
+        }
       </div>
     </Popper>
   )

@@ -17,8 +17,7 @@ const Render = ({
     size,
     image: {
       url,
-      driver,
-      unsplash = {},
+      unsplash,
     }
   } = data
 
@@ -26,7 +25,7 @@ const Render = ({
   
   let copyrightContent = null
 
-  if(driver == 'unsplash') {
+  if(unsplash) {
     const {
       user: {
         fullname,

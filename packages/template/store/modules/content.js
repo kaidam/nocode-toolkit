@@ -1,3 +1,4 @@
+import Promise from 'bluebird'
 import axios from 'axios'
 import deepmerge from 'deepmerge'
 import { v4 as uuid } from 'uuid'
@@ -599,11 +600,12 @@ const sideEffects = {
             }, currentSettings.values)
           )
           if(onSubmit) {
+            await Promise.delay(100)
             dispatch(uiActions.setLoading(loadingConfig))
             result = await onSubmit(formValues)
           }
           else {
-            result = formValues
+            //result = formValues
           }
         }
         success = true
