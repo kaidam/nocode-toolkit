@@ -112,7 +112,7 @@ const NocodeTopbar = ({
       >
         {
           user && (
-            <Hidden smDown>
+            <Hidden smDown implementation="css">
               <div className={ classes.userContainer }>
                 <UserAvatar
                   user={ user }
@@ -141,7 +141,7 @@ const NocodeTopbar = ({
             <GlobalOptions
               getButton={ getGlobalOptionsButton }
             />
-            <Hidden smDown>
+            <Hidden smDown implementation="css">
               {
                 siteUrl && (
                   <div className={ classes.urlContainer }>
@@ -156,7 +156,7 @@ const NocodeTopbar = ({
           <div className={ classes.filler }>
           
           </div>
-          <Hidden smDown>
+          <Hidden smDown implementation="css">
             <EditorTopbarMenu />
           </Hidden>
         </div>
