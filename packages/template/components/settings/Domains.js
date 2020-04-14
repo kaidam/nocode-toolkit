@@ -13,7 +13,7 @@ import Actions from '../../utils/actions'
 
 import nocodeSelectors from '../../store/selectors/nocode'
 import systemSelectors from '../../store/selectors/system'
-import settingsActions from '../../store/modules/settings'
+import systemActions from '../../store/modules/system'
 
 import DomainsAddDialog from './DomainsAddDialog'
 import DomainsDeleteDialog from './DomainsDeleteDialog'
@@ -70,9 +70,9 @@ const SettingsDomains = ({
   const classes = useStyles()
 
   const actions = Actions(useDispatch(), {
-    onSetSubdomain: settingsActions.setSubdomain,
-    onAddUrl: settingsActions.addUrl,
-    onRemoveUrl: settingsActions.removeUrl,
+    onSetSubdomain: systemActions.setSubdomain,
+    onAddUrl: systemActions.addUrl,
+    onRemoveUrl: systemActions.removeUrl,
   })
 
   const config = useSelector(nocodeSelectors.config)

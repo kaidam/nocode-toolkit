@@ -19,7 +19,7 @@ export const ui = {
 }
 
 export const settings = {
-  
+  dnsInfo: null,
 }
 
 export const dialog = {

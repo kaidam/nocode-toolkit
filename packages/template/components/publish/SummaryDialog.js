@@ -94,8 +94,7 @@ const SummaryDialog = ({
   const isJobLive = (
     job &&
     publishStatus &&
-    publishStatus.production &&
-    publishStatus.production.job == job.jobid
+    publishStatus.job == job.jobid
   )
 
   const {
@@ -118,13 +117,18 @@ const SummaryDialog = ({
     id,
   ])
 
-  if(!job) return null
+  if(!job || !job.result) return null
 
   let url = ''
 
-  if(publishStatus) {
-    const publishData = isJobLive ? publishStatus.production : null
-    if(publishData && publishData.urls) url = publishData.urls[publishData.urls.length-1]
+  if(
+    isJobLive &&
+    publishStatus &&
+    publishStatus.meta &&
+    publishStatus.meta.urls &&
+    publishStatus.meta.urls.length > 0
+  ) {
+    url = publishStatus.meta.urls[0]
   }
 
   if(!url) {

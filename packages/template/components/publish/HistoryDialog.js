@@ -155,12 +155,13 @@ const HistoryDialog = ({
   const tableData = data.map((job, index) => {
     let deployed = ''
     let screenshot = ''
-    let publishAction = null
     let urls = [jobUtils.getJobUrl(config, job)]
 
-    if(publishStatus && publishStatus.production && publishStatus.production.job == job.jobid) {
+    if(publishStatus && publishStatus.job == job.jobid) {
       deployed = 'live'
-      urls = publishStatus.production.urls
+      if(publishStatus.meta && publishStatus.meta.urls) {
+        urls = publishStatus.meta.urls
+      }
     }
   
     if(job.result && job.result.screenshotUrl) {
@@ -185,8 +186,8 @@ const HistoryDialog = ({
         <div className={ classes.link }>
           {
             deployed == 'live' && (
-              <a href={ urls[urls.length-1] } target="_blank">
-                { urls[urls.length-1] }
+              <a href={ urls[0] } target="_blank">
+                { urls[0] }
               </a>
             )
           }
@@ -210,7 +211,7 @@ const HistoryDialog = ({
               <Button 
                 size="small"
                 className={ classes.rowButton }
-                onClick={ () => window.open(urls[urls.length-1]) }
+                onClick={ () => window.open(urls[0]) }
               >
                 <LookIcon />&nbsp;&nbsp;View
               </Button>
