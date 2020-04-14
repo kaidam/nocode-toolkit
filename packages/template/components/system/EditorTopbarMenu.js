@@ -99,6 +99,9 @@ const EditorTopbarMenu = ({
   return (
     <div className={ classes.root }>
       <div className={ classes.iconSection }>
+        <GlobalOptions
+          getButton={ getGlobalOptionsButton }
+        />
         <div className={ classes.iconContainer }>
           <Tooltip title={ previewMode ? "Disable Preview" : "Enable Preview" } placement="bottom">
             <IconButton
@@ -127,9 +130,6 @@ const EditorTopbarMenu = ({
             </IconButton>
           </Tooltip>
         </div>
-        <GlobalOptions
-          getButton={ getGlobalOptionsButton }
-        />
         <div className={ classes.iconContainer }>
           <Tooltip title="Settings" placement="bottom">
             <IconButton

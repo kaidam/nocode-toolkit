@@ -101,8 +101,8 @@ const NocodeTopbar = ({
 
   let siteUrl = null
   
-  if(publishStatus && publishStatus.production) {
-    siteUrl = publishStatus.production.urls[publishStatus.production.urls.length-1]
+  if(publishStatus && publishStatus.meta && publishStatus.meta.urls) {
+    siteUrl = publishStatus.meta.urls[0]
   }
 
   const getGlobalOptionsButton = useCallback((onClick) => {

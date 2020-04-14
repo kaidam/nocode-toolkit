@@ -129,8 +129,8 @@ const SettingsSecurity = ({
 
   const onDeleteRule = useCallback(async (rule) => {
     const confirmed = await actions.waitForConfirmation({
-      title: `Delete user ${username}...`,
-      message: `Are you sure you want to delete the ${username} user?`,
+      title: `Delete rule ${rule}...`,
+      message: `Are you sure you want to delete the ${rule} rule?`,
     })
     if(!confirmed) return
     setRules(rules.filter(r => r.rule != rule))
