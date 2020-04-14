@@ -35,11 +35,11 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const UnknownTypeRenderer = ({
-  type,
+  cell,
 }) => {
   return (
     <div>
-      Error unknown cell type {type}
+      Error unknown cell type {cell.type}
     </div>
   )
 }

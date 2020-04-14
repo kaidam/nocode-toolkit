@@ -12,6 +12,7 @@ const useStyles = makeStyles(theme => ({
 const Render = ({
   data,
 }) => {
+
   const classes = useStyles()
   const title = data ?
     data.title :

@@ -30,6 +30,11 @@ const sectionTree = () => createSelector(
       location,
       childIds,
     }) => {
+      if(location.indexOf('section:') == 0) {
+        console.log('--------------------------------------------')
+        console.dir(location)
+        console.dir(annotations[parentId])
+      }
       const sortedChildIds = childrenUtils.sortChildren({
         nodes,
         childIds,
@@ -80,7 +85,7 @@ const section = () => createSelector(
     const annotation = annotations[`section:${name}`] || {}
     const ghostId = (section.children || []).find(childId => {
       const childLocation = locations[`section:${name}:${childId}`]
-      return childLocation && childLocation.data.ghost ? true : false
+      return childLocation && childLocation.data && childLocation.data.ghost ? true : false
     })
     const ghostFolder = ghostId ?
       nodes[ghostId] :

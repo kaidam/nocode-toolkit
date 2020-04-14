@@ -5,6 +5,9 @@ const HTML = ({
 }) => {
   return (
     <div 
+      style={{
+        width: '100%',
+      }}
       dangerouslySetInnerHTML={{__html: html }}
     >
     </div>
