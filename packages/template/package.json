@@ -29,7 +29,6 @@
     "express-static-gzip": "^2.0.5",
     "formik": "^2.1.4",
     "immer": "^6.0.1",
-    "is-hotkey": "^0.1.6",
     "pino": "^5.14.0",
     "pretty-bytes": "^5.3.0",
     "react": "^16.13.0",
@@ -50,9 +49,6 @@
     "router5": "^8.0.0",
     "router5-plugin-browser": "^8.0.0",
     "router5-transition-path": "^8.0.0",
-    "slate": "^0.57.1",
-    "slate-history": "^0.57.1",
-    "slate-react": "^0.57.1",
     "uuid": "^7.0.2",
     "yargs": "^15.0.2",
     "yup": "^0.28.3"

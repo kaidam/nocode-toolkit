@@ -6,7 +6,6 @@ import MultipleCheckboxField from './MultipleCheckbox'
 import SelectField from './Select'
 import ColorPickerField from './ColorPickerField'
 import Image from './Image'
-import RichText from './RichText/Field'
 import Sorting from './Sorting'
 import HiddenItems from './HiddenItems'
 
@@ -19,7 +18,6 @@ const fields = {
   select: SelectField,
   color: ColorPickerField,
   image: Image,
-  richtext: RichText,
   sorting: Sorting,
   hiddenItems: HiddenItems,
 }
@@ -35,7 +33,6 @@ export const defaultValues = {
     color: ''
   },
   image: null,
-  richtext: '',
   sorting: {},
   hiddenItems: {},
 }

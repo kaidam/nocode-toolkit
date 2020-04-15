@@ -30,11 +30,6 @@ const sectionTree = () => createSelector(
       location,
       childIds,
     }) => {
-      if(location.indexOf('section:') == 0) {
-        console.log('--------------------------------------------')
-        console.dir(location)
-        console.dir(annotations[parentId])
-      }
       const sortedChildIds = childrenUtils.sortChildren({
         nodes,
         childIds,
