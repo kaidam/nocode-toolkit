@@ -114,6 +114,7 @@ const homeItem = createSelector(
       null
     return Object.assign({}, node, {
       isHome: true,
+      name: 'Home',
       route,
       currentPage: currentRoute.item == node.id,
       children: [],
