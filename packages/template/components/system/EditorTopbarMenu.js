@@ -80,7 +80,6 @@ const EditorTopbarMenu = ({
           >
             <MenuIcon
               fontSize="inherit"
-              color="primary"
               className={ classes.icon }
             />
           </IconButton>
@@ -110,7 +109,6 @@ const EditorTopbarMenu = ({
             >
               <PreviewIcon
                 fontSize="inherit"
-                color="primary"
                 className={ classes.icon }
               />
             </IconButton>
@@ -124,7 +122,6 @@ const EditorTopbarMenu = ({
             >
               <ReloadIcon
                 fontSize="inherit"
-                color="primary"
                 className={ classes.icon }
               />
             </IconButton>
@@ -138,7 +135,6 @@ const EditorTopbarMenu = ({
             >
               <SettingsIcon
                 fontSize="inherit"
-                color="primary"
                 className={ classes.icon }
               />
             </IconButton>

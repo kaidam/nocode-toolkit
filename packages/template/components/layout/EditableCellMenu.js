@@ -232,7 +232,6 @@ const EditableCellMenu = ({
               >
                 <EditIcon
                   fontSize="inherit"
-                  color="primary"
                   className={ classes.icon }
                 />
               </IconButton>
@@ -246,7 +245,6 @@ const EditableCellMenu = ({
               >
                 <MoveIcon
                   fontSize="inherit"
-                  color="primary"
                   className={ classes.icon }
                 />
               </IconButton>
@@ -260,7 +258,6 @@ const EditableCellMenu = ({
               >
                 <DeleteIcon
                   fontSize="inherit"
-                  color="primary"
                   className={ classes.icon }
                 />
               </IconButton>

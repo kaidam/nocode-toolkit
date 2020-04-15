@@ -7,9 +7,6 @@ import Link from '../widgets/Link'
 
 import NavBarMenu from './NavBarMenu'
 
-import contentSelectors from '../../store/selectors/content'
-import routerSelectors from '../../store/selectors/router'
-
 const NativeLinkComponent = ({
   children,
   ...props
@@ -75,7 +72,7 @@ const useStyles = makeStyles(theme => {
       '& .navbar-ui-icon': {
         color: contrast ?
           theme.palette.primary.contrastText :
-          theme.palette.primary.main,
+          theme.palette.text.main,
       },
     }),
 
