@@ -31,6 +31,10 @@ class Context extends EventEmitter {
     }
   }
 
+  setConfig(data) {
+    this.data.config = data
+  }
+
   item(type, id, data) {
     if(!type) throw new Error('type is required for context.item')
     if(!id) throw new Error('id is required for context.item')
@@ -49,6 +53,21 @@ class Context extends EventEmitter {
     }
   }
 
+  items(type, data) {
+    if(!type) throw new Error('type is required for context.items')
+    if(typeof(data) !== 'undefined') {
+      if(!this.data.items[type]) this.data.items[type] = {}
+      this.data.items[type] = Object.assign({}, this.data.items[type], data)
+      this.emit('items', {
+        type,
+        data,
+      })
+    }
+    else {
+      return this.data.items[type]
+    }
+  }
+
   route(path, data) {
     if(!path) throw new Error('path is required for context.route')
     if(typeof(data) !== 'undefined') {
@@ -64,7 +83,7 @@ class Context extends EventEmitter {
   }
 
   routes(routes) {
-    if(!routes) throw new Error('routes is required for context.routes')
+    if(!routes) return this.data.routes
     Object.keys(routes).forEach(path => {
       this.route(path, routes[path])
     })
@@ -82,6 +101,10 @@ class Context extends EventEmitter {
     else {
       return this.data.externals[id]
     }
+  }
+
+  del(type, id) {
+    delete(this.data.items[type][id])
   }
 
   log(message) {

@@ -8,8 +8,7 @@ import Button from './Button'
 import FormDialog from './FormDialog'
 
 const ContactFormWrapper = ({
-  renderers,
-  content,
+  data = {},
   cell,
 }) => {
 
@@ -36,20 +35,15 @@ const ContactFormWrapper = ({
     dispatch(actions.setFormId(null))
   }, [])
 
-
-
-  const RenderButton = renderers.button || Button
-  const RenderFormDialog = renderers.formDialog || FormDialog
-
   return (
     <div>
-      <RenderButton
-        content={ content }
+      <Button
+        content={ data }
         onClick={ onButtonClick }
       />
       {
         isFormOpen && (
-          <RenderFormDialog
+          <FormDialog
             values={ values }
             errors={ errors }
             onChange={ onFormChange }

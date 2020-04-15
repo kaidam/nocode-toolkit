@@ -1,46 +1,49 @@
 import React from 'react'
 
-const styles = {
-  root: {
-    position: 'fixed',
-    left: '0px',
-    top: '0px',
-    width: '100%',
-    height: '100%',
-    zIndex: '1000',
-    backgroundColor: 'rgba(255,255,255,0.85)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  content: {
-    padding: '50px',
-    backgroundColor: '#f5f5f5',
-    border: '1px solid #000000',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  }
-}
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 
-const PaymentConfirmation = ({
+import Dialog from '@material-ui/core/Dialog'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import DialogActions from '@material-ui/core/DialogActions'
+import Button from '@material-ui/core/Button'
+
+const useStyles = makeStyles(theme => createStyles({
+  
+}))  
+
+const PaymentConfirmationMaterial = ({
   content,
   onClose,
 }) => {
+
   return (
-    <div style={ styles.root }>
-      <div style={ styles.content }>
-        <h4>Purchase complete!</h4>
-        <p>You have purchased { content.name } for { content.currencySymbol }{ content.price }.</p>
-        <p>
-          <button
-            onClick={ onClose }
-          >
-            Close
-          </button>
-        </p>
-      </div>
-    </div>
+    <Dialog
+      open={ true }
+      onClose={ onClose }
+      fullWidth
+      maxWidth="md"
+    >
+      <DialogTitle>
+        Purchase complete!
+      </DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          You have purchased { content.name } for { content.currencySymbol }{ content.price }.
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button
+          type="button"
+          variant="contained"
+          onClick={ onClose }
+        >
+          Close
+        </Button>
+      </DialogActions>
+    </Dialog>
   )
 }
 
-export default PaymentConfirmation
+export default PaymentConfirmationMaterial

@@ -1,10 +1,13 @@
+const Promise = require('bluebird')
 const path = require('path')
-const async = require('async')
 const fs = require('fs')
 const fsextra = require('fs-extra')
 const express = require('express')
 const getPort = require('get-port')
-
+const { promisify } = require('util')
+const statAsync = promisify(fs.stat)
+const writeFileAsync = promisify(fs.writeFile)
+const readDirAsync = promisify(fs.readdir)
 
 const data = require('./data')
 const Context = require('./context')
@@ -14,14 +17,14 @@ const utils = require('./utils')
 const HTML = require('./html')
 const ExternalsServer = require('./externalsServer')
 
-const Publish = ({
+const Publish = async ({
   options,
   logger,
   plugins,
   pluginConfig,
   onProgress,
   concurrency,
-}, done) => {
+}) => {
 
   const {
     projectFolder,
@@ -62,8 +65,6 @@ const Publish = ({
 
   utils.contextLogger(context, logger)
 
-  const stash = {}
-
   const dataFactoryWithExternalsUrl = (url) => {
     const {
       config,
@@ -82,226 +83,202 @@ const Publish = ({
     })
   }
 
-  async.series([
+  // check the build folder exists
+  try {
+    await statAsync(buildFolder)
+  } catch(e) {
+    throw new Error(`build folder does not exist: ${buildFolder}`)
+  }
 
-    // check the build folder exists
-    next => {
-      fs.stat(buildFolder, (err, stat) => {
-        if(err) return next(`build folder does not exist: ${buildFolder}`)
-        return next()
-      })
-    },
+  // remove public folder
+  logger(`removing publish folder ${publishPath}`)
+  await fsextra.emptyDir(publishFolder)
 
-    // remove public folder
-    next => {
-      logger(`removing publish folder ${publishPath}`)
-      fsextra.emptyDir(publishFolder, next)
-    },
+  // run the plugins
+  await RunPlugins(context, usePlugins(usePluginConfig))
 
-    // run the plugins
-    next => RunPlugins(context, usePlugins(usePluginConfig), next),
+  // import the server code
+  const server = require(serverModulePath)
 
-    // import the server code
-    next => {
-      try {
-        stash.Server = require(serverModulePath)
-      } catch(e) {
-        return next(e)
-      }
+  // import the build info
+  const buildInfo = require(buildInfoPath)
 
-      return next()
-    },
+  // copy the build to publish
+  logger(`making copy of build folder: ${buildPath} -> ${publishPath}`)
+  await fsextra.copy(buildFolder, publishFolder)
 
-    // import the build info
-    next => {
-      try {
-        stash.buildInfo = require(buildInfoPath)
-      } catch(e) {
-        return next(e)
-      }
+  // if the media folder does not exist dont throw just continue
+  let shouldCopyMediaFolder = false
+  try {
+    const mediaStat = await statAsync(mediaSourceFolder)
+    shouldCopyMediaFolder = mediaStat ? true : false
+  } catch(e) {
 
-      return next()
-    },
+  }
 
-    // copy the build to publish
-    next => {
-      logger(`making copy of build folder: ${buildPath} -> ${publishPath}`)
-      fsextra.copy(buildFolder, publishFolder, next)
-    },
+  // copy the media to publish
+  if(shouldCopyMediaFolder) {
+    logger(`making copy of media folder: ${mediaSourceFolder} -> ${mediaDestFolder}`)
+    await fsextra.copy(mediaSourceFolder, mediaDestFolder)
+  }
 
-    // copy the media to publish
-    next => {
-      fs.stat(mediaSourceFolder, (err, stat) => {
-        if(err) return next()
-        logger(`making copy of media folder: ${mediaSourceFolder} -> ${mediaDestFolder}`)
-        fsextra.copy(mediaSourceFolder, mediaDestFolder, next)
-      })
-    },
+  const fileList = await readDirAsync(publishFolder)
 
-    // remove the CLEAN_BUILD_FILES
-    next => {
-      async.each(CLEAN_BUILD_FILES, (removeFilePath, nextFile) => {
-        const fullRemoveFilePath = path.join(publishFolder, removeFilePath)
-        logger(`removing build file from publish: ${removeFilePath}`)
-        fsextra.remove(fullRemoveFilePath, nextFile)
-      }, next)
-    },
+  const cleanFiles = fileList.filter(filename => {
+    if(CLEAN_BUILD_FILES.indexOf(filename) >= 0) return true
+    if(filename.match(/server\.js$/i)) return true
+    if(filename.match(/\.map$/i)) return true
+    if(filename.indexOf('vendors~ui-bundle') == 0) return true
+    if(filename.indexOf('ui-bundle') == 0) return true
+    return false
+  })
 
-    // write the data script for items and routes
-    // we only pass routes here because the items will be present in the
-    // initialState rendered into the HTML
-    next => {
-      const nocodeData = dataFactoryWithExternalsUrl(externalsPath)
-      
-      const dataScriptOutputPath = path.join(publishFolder, nocodeDataPath)
-      logger(`writing data file: ${nocodeDataPath}`)
-      fs.writeFile(dataScriptOutputPath, data.script(nocodeData), 'utf8', next)
-    },
-
-    // create the externals data folder in the publish directory
-    next => {
-      logger(`making externals data folder: ${externalsPath}`)
-      fsextra.ensureDir(externalsFolder, next)
-    },
-
-    // loop over all files and write them out
-    next => {
-      const {
-        externals,
-      } = context.state
-
-      async.eachSeries(Object.keys(externals || {}), (filename, nextFile) => {
-        const externalDataOutputPath = path.join(externalsFolder, filename)
-        logger(`writing external file: ${filename}`)
-        fs.writeFile(externalDataOutputPath, externals[filename], 'utf8', nextFile)
-      }, next)
-    },
-
-    // start the externals server
-    async next => {
-      const {
-        externals,
-      } = context.state
-
-      const externalsApp = express()
-      externalsApp.get(`/${externalsPath}/*`, ExternalsServer(externals))
-
-      stash.externalsPort = await getPort()
-
-      logger(`starting externals server on port ${stash.externalsPort}`)
-      stash.externalsServer = externalsApp.listen(stash.externalsPort, next)
-    },
-
-    // loop over the merged routes and server render each of them
-    // write the result to a HTML page in the publish folder
-    next => {
-
-      const globals = dataFactoryWithExternalsUrl(`http://127.0.0.1:${stash.externalsPort}/${externalsPath}`)
-
-      const allRoutes = Object.keys(globals.routes)
-      let progressCount = 0
-      const progressTotal = allRoutes.length
-      async.eachLimit(allRoutes, concurrency || 1, (route, nextRoute) => {
-
-        const routeOutputPath = route.replace(/^\//, '')
-        const routeOutputFolder = path.join(publishFolder, routeOutputPath)
-        const routeOutputFile = path.join(routeOutputFolder, 'index.html')
-        let routeHtml = ''
-
-        async.series([
-
-          nexts => {
-            logger(`creating route folder: ${routeOutputPath}`)
-            fsextra.ensureDir(routeOutputFolder, nexts)
-          },
-
-          nexts => {
-            logger(`rendering route html: ${route}`)
-
-            let routerError = null
-
-            stash.Server({
-              route: utils.processPath(baseUrl, route),
-              globals,
-              errorLog: (err) => {
-                routerError = err
-              },
-            }, (err, renderResults) => {
-              if(err) return nexts(routerError || err)
-
-              if(renderResults.type == 'render') {
-                const { 
-                  store,
-                  helmet,
-                  injectedHTML,
-                  bodyHtml,
-                } = renderResults
-  
-                const initialState = data.processInitialState(store.getState())
-  
-                routeHtml = HTML({
-                  buildInfo: stash.buildInfo,
-                  hash: stash.buildInfo.hash,
-                  initialState,
-                  helmet,
-                  injectedHTML,
-                  bodyHtml,
-                  baseUrl,
-                })
-
-                nexts()
-              }
-              else if(renderResults.type == 'redirect') {
-                routeHtml = `
-<html>
-  <head>
-    <meta http-equiv="refresh" content="0;url=${renderResults.url}" />
-  </head>
-  <body style="font-family: Arial;">
-    <p>redirecting...</p>
-    <p>if the page does not load automatically <a href="${renderResults.url}">click here...</a></p>
-  </body>
-</html>
-`
-                nexts()
-              }
-              else {
-                return nexts(`unknown renderResult type: ${renderResults.type}`)
-              }
-            })
-          },
-  
-          nexts => {
-            logger(`creating route folder: ${routeOutputPath}`)
-            fsextra.ensureDir(routeOutputFolder, nexts)
-          },
-
-          nexts => {
-            logger(`writing route html: ${routeOutputPath}/index.html`)
-            fs.writeFile(routeOutputFile, routeHtml, 'utf8', nexts)
-          },
-
-          nexts => {
-            if(onProgress) {
-              progressCount++
-              onProgress({
-                current: progressCount,
-                total: progressTotal,
-              })
-            }
-            nexts()
-          },
-
-        ], nextRoute)
-
-      }, next) 
-    }
-  ], (err) => {
-    if(stash.externalsServer) stash.externalsServer.close()
-    if(err) return done(err)
-    done()
+  // remove the CLEAN_BUILD_FILES
+  await Promise.each(cleanFiles, async removeFilePath => {
+    const fullRemoveFilePath = path.join(publishFolder, removeFilePath)
+    logger(`removing build file from publish: ${removeFilePath}`)
+    await fsextra.remove(fullRemoveFilePath)
   })
   
+  // write the data script for items and routes
+  // we only pass routes here because the items will be present in the
+  // initialState rendered into the HTML
+  const nocodeData = dataFactoryWithExternalsUrl(externalsPath)
+  const dataScriptOutputPath = path.join(publishFolder, nocodeDataPath)
+  logger(`writing data file: ${nocodeDataPath}`)
+  await writeFileAsync(dataScriptOutputPath, data.script(nocodeData), 'utf8')
+  
+  // create the externals data folder in the publish directory
+  logger(`making externals data folder: ${externalsPath}`)
+  await fsextra.ensureDir(externalsFolder)
+
+  // loop over all files and write them out
+  const {
+    externals,
+  } = context.state
+
+  await Promise.mapSeries(Object.keys(externals || {}), async filename => {
+    const externalDataOutputPath = path.join(externalsFolder, filename)
+    logger(`writing external file: ${filename}`)
+    await writeFileAsync(externalDataOutputPath, externals[filename], 'utf8')
+  })
+
+  // start the externals server
+  const externalsApp = express()
+  externalsApp.get(`/${externalsPath}/*`, ExternalsServer(externals))
+
+  const externalsPort = await getPort()
+  let externalsServer = null
+
+  logger(`starting externals server on port ${externalsPort}`)
+  await new Promise((resolve, reject) => {
+    externalsServer = externalsApp.listen(externalsPort, (err) => {
+      if(err) return reject(err)
+      resolve()
+    })
+  })
+
+  const globals = dataFactoryWithExternalsUrl(`http://127.0.0.1:${ externalsPort }/${ externalsPath }`)
+
+  const allRoutes = Object.keys(globals.routes)
+  let progressCount = 0
+  const progressTotal = allRoutes.length
+
+  // loop over the merged routes and server render each of them
+  // write the result to a HTML page in the publish folder
+  const processRoute = async ({
+    route,
+  }) => {
+    
+    const routeOutputPath = route.replace(/^\//, '')
+    const routeOutputFolder = path.join(publishFolder, routeOutputPath)
+    const routeOutputFile = path.join(routeOutputFolder, 'index.html')
+    let routeHtml = ''
+
+    // get the render results
+    logger(`rendering route html: ${route}`)
+    let routerError = null
+    let renderResults = null
+
+    try {
+      renderResults = await server({
+        route: utils.processPath(baseUrl, route),
+        globals,
+        errorLog: (err) => {
+          routerError = err
+        },
+      })
+    } catch(e) {
+      throw new Error(routerError || e)
+    }
+
+    // turn the render results into a string
+    if(renderResults && renderResults.type == 'render') {
+      const { 
+        store,
+        helmet,
+        injectedHTML,
+        bodyHtml,
+      } = renderResults
+
+      const initialState = data.processInitialState(store.getState())
+
+      routeHtml = HTML({
+        buildInfo,
+        hash: buildInfo.hash,
+        initialState,
+        helmet,
+        injectedHTML,
+        bodyHtml,
+        baseUrl,
+      })
+    }
+    else if(renderResults && renderResults.type == 'redirect') {
+      routeHtml = `
+<html>
+<head>
+<meta http-equiv="refresh" content="0;url=${renderResults.url}" />
+</head>
+<body style="font-family: Arial;">
+<p>redirecting...</p>
+<p>if the page does not load automatically <a href="${renderResults.url}">click here...</a></p>
+</body>
+</html>
+`
+    }
+    else {
+      throw new Error(renderResults ? `unknown renderResult type: ${route} ${renderResults.type || 'unknown'}` : `empty render result: ${route}`)
+    }
+
+    // create the folder for the route and write the page HTML
+    logger(`creating route folder: ${routeOutputPath}`)
+    await fsextra.ensureDir(routeOutputFolder)
+
+    logger(`writing route html: ${routeOutputPath}/index.html`)
+    await writeFileAsync(routeOutputFile, routeHtml, 'utf8')
+
+    if(onProgress) {
+      progressCount++
+      onProgress({
+        current: progressCount,
+        total: progressTotal,
+      })
+    }
+  }
+
+  try {
+    // loop over all routes and process them
+    await Promise.map(allRoutes, async route => {
+      await processRoute({
+        route,
+      })
+    }, {concurrency: concurrency || 1})
+  } catch(e) {
+    externalsServer.close()
+    throw e
+  }
+  
+  externalsServer.close()
 }
 
 module.exports = Publish

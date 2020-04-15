@@ -11,6 +11,7 @@ const ServerConfig = (options) => {
     baseUrl,
     entryPointServer,
     serverBuildFilename,
+    debugBuild,
   } = options
 
   const webpackConfig = {
@@ -36,7 +37,10 @@ const ServerConfig = (options) => {
         'process.env.NODE_ENV': JSON.stringify('production'),
         'process.env.NOCODE_ENV': JSON.stringify('server'),
       }),
-    ]
+    ],
+    optimization: {
+      minimize: debugBuild ? false : true,
+    },
   }
 
   return webpackConfig

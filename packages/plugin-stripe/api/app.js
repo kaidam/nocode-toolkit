@@ -1,12 +1,30 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const qs = require('qs')
 const jwt = require('jsonwebtoken')
-const request = require('request')
+const axios = require('axios')
 const Stripe = require('stripe')
 
 const pino = require('pino')({
   name: 'stripe-plugin',
 })
+
+const axiosWrapper = async ({
+  req,
+  message,
+}) => {
+  try {
+    const res = await axios(req)
+    return res.data
+  } catch(err) {
+    if (err.response) {
+      throw new Error(`${message}: ${err.response.status} ${err.response.data}`)
+    }
+    else {
+      throw new Error(`${message}: ${e.toString()}`)
+    }
+  }
+}
 
 /*
   
@@ -16,149 +34,136 @@ const pino = require('pino')({
      -d grant_type=authorization_code
     
   */
-const getStripeConnection = ({
+const getStripeConnection = async ({
   secret_key,
   code,
-}) => new Promise((resolve, reject) => {
-  request({
-    method: 'POST',
-    url: 'https://connect.stripe.com/oauth/token',
-    formData: {
-      client_secret: secret_key,
-      code,
-      grant_type: 'authorization_code',
-    }
-  }, (err, res, body) => {
-    if(err) return reject(err)
-
-    let data = null
-    try {
-      data = JSON.parse(body)
-    } catch(e) {
-      return reject(`there was an error getting the oauth token from stripe: ${e.toString()}`)
-    }
-    resolve(data)
+}) => {
+  const data = await axiosWrapper({
+    req: {
+      method: 'post',
+      url: 'https://connect.stripe.com/oauth/token',
+      responseType: 'json',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      data: qs.stringify({
+        client_secret: secret_key,
+        code,
+        grant_type: 'authorization_code',
+      }),
+    },
+    message: `get stripe oauth token`,
   })
-})
+  return data
+}
 
-const getWebsiteSettings = ({
+const getWebsiteSettings = async ({
   apiUrl,
   accessToken,
   websiteid,
-}) => new Promise((resolve, reject) => {
-  request({
-    method: 'GET',
-    url: `${apiUrl}/builder/api/${websiteid}/content/settings`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    }
-  }, (err, res, body) => {
-    if(err) return reject(err)
-    let data = null
-    if(body) {
-      try {
-        data = JSON.parse(body)
-      } catch(e) {
-        return reject(`there was an error getting the website settings: ${e.toString()}`)
+}) => {
+  const data = await axiosWrapper({
+    req: {
+      method: 'get',
+      url: `${apiUrl}/builder/api/${websiteid}/content/settings`,
+      responseType: 'json',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
       }
-    }
-    resolve(data)
+    },
+    message: 'get website settings',
   })
-})
+  return data
+}
 
-const createWebsiteSettings = ({
+const createWebsiteSettings = async ({
   apiUrl,
   accessToken,
   websiteid,
   data,
-}) => new Promise((resolve, reject) => {
-  request({
-    method: 'POST',
-    url: `${apiUrl}/builder/api/${websiteid}/content`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
+}) => {
+  const dataResult = await axiosWrapper({
+    req: {
+      method: 'post',
+      url: `${apiUrl}/builder/api/${websiteid}/content`,
+      responseType: 'json',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: {
+        driver: 'local',
+        content_id: 'settings',
+        location: 'singleton:settings',
+        data
+      },
     },
-    json: true,
-    body: {
-      driver: 'local',
-      content_id: 'settings',
-      location: 'singleton:settings',
-      data
-    },
-  }, (err, res, body) => {
-    if(err) return reject(err)
-    if(res.statusCode >= 400) return reject(body.error)
-    resolve(body)
+    message: 'create website settings',
   })
-})
+  return dataResult
+}
 
-const updateWebsiteSettings = ({
+const updateWebsiteSettings = async ({
   apiUrl,
   accessToken,
   websiteid,
   data,
-}) => new Promise((resolve, reject) => {
-  request({
-    method: 'POST',
-    url: `${apiUrl}/builder/api/${websiteid}/content/settings`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
+}) => {
+  const resultData = await axiosWrapper({
+    req: {
+      method: 'post',
+      url: `${apiUrl}/builder/api/${websiteid}/content/settings`,
+      responseType: 'json',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: {
+        data,
+      },
     },
-    json: true,
-    body: {data},
-  }, (err, res, body) => {
-    if(err) return reject(err)
-    if(res.statusCode >= 400) return reject(body.error)
-    resolve(body)
+    message: 'update website settings',
   })
-})
+  return resultData
+}
 
-const createWebsiteSecret = ({
+const createWebsiteSecret = async ({
   apiUrl,
   accessToken,
   websiteid,
   data,
-}) => new Promise((resolve, reject) => {
-  request({
-    method: 'POST',
-    url: `${apiUrl}/api/v1/secrets/${websiteid}/stripe`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
+}) => {
+  const resultData = await axiosWrapper({
+    req: {
+      method: 'post',
+      url: `${apiUrl}/api/v1/secrets/${websiteid}/stripe`,
+      responseType: 'json',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: data,
     },
-    json: true,
-    body: data,
-  }, (err, res, body) => {
-    if(err) return reject(err)
-    if(res.statusCode >= 400) return reject(body.error)
-    resolve(body)
+    message: 'create website secret',
   })
-})
+  return resultData
+}
 
-const getWebsiteSecret = ({
+const getWebsiteSecret = async ({
   apiUrl,
   accessToken,
   websiteid,
-}) => new Promise((resolve, reject) => {
-  request({
-    method: 'GET',
-    url: `${apiUrl}/api/v1/secrets/${websiteid}/stripe`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
+}) => {
+  const resultData = await axiosWrapper({
+    req: {
+      method: 'get',
+      url: `${apiUrl}/api/v1/secrets/${websiteid}/stripe`,
+      responseType: 'json',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
     },
-  }, (err, res, body) => {
-    if(err) return reject(err)
-    if(res.statusCode >= 400) return reject(`bad status code loading stripe secret: ${res.statusCode}`)
-    let data = null
-    if(body) {
-      try {
-        data = JSON.parse(body)
-      } catch(e) {
-        return reject(`there was an error getting the website secret: ${e.toString()}`)
-      }
-    }
-    resolve(data)
+    message: 'get website secret',
   })
-})
+  return resultData
+}
 
 const App = ({
   jwt_secret_key,

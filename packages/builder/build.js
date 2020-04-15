@@ -1,8 +1,9 @@
-const async = require('async')
 const fs = require('fs')
 const path = require('path')
 const fsextra = require('fs-extra')
 const webpack = require('webpack')
+const { promisify } = require('util')
+const writeFileAsync = promisify(fs.writeFile)
 
 const WebpackConfigBrowser = require('./webpack/browser')
 const WebpackConfigServer = require('./webpack/server')
@@ -10,96 +11,105 @@ const WebpackConfigProcessor = require('./webpack/configProcessor')
 
 const BuildInfo = require('./buildInfo')
 
-const runBuild = ({
+const runBuild = async ({
   name,
   config,
   logger,
-}, done) => {
-  logger(`building ${name}`)
+}) => {
   const compiler = webpack(config)
   let compileErrors = []
   compiler.hooks.afterCompile.tap('compileMessage', (data) => {
     compileErrors = data.errors
   })
-  compiler.run((err, stats) => {
-    if(err) return done(err)
-    logger(`done - ${name} build stats:`)
-    logger('')
-    logger(stats.toString({
-      colors: true
-    }))
-    logger('')
-    const returnError = compileErrors && compileErrors.length > 0 ? `
-there was an problem building your website
-please check above for errors
-` : null
-    done(returnError, stats)
+  const results = await new Promise((resolve, reject) => {
+    compiler.run((err, stats) => {
+      if(err) return reject(err)
+      logger(`done - ${name} build stats:`)
+      logger('')
+      logger(stats.toString({
+        colors: true
+      }))
+      logger('')
+      const returnError = compileErrors && compileErrors.length > 0 ? `
+  there was an problem building your website
+  please check above for errors
+  ` : null
+      if(returnError) return reject(returnError)
+      resolve(stats)
+    })
   })
+  return results
 }
 
-const Build = ({
+const Build = async ({
   options,
   logger,
-}, done) => {
+}) => {
 
   const {
     projectFolder,
     buildPath,
     mediaPath,
     buildinfoFilename,
+    nocodeWebpack,
+    webpackProcessors,
+    buildTarget,
+    debugBuild,
   } = options
 
   const webpackConfigProcessor = WebpackConfigProcessor({
-    projectFolder: options.projectFolder,
-    nocodeWebpack: options.nocodeWebpack,
-    webpackProcessors: options.webpackProcessors,
+    projectFolder,
+    nocodeWebpack,
+    webpackProcessors,
   })
 
-  async.series([
+  const mediaFolder = path.join(projectFolder, mediaPath)
+  const buildFolder = path.join(projectFolder, buildPath)
 
-    // remove media folder
-    (next) => {
-      const mediaFolder = path.join(projectFolder, mediaPath)
-      console.log(`removing media folder ${mediaPath}`)
-      fsextra.remove(mediaFolder, next)
-    },
+  logger(`removing media folder ${mediaPath}`)
+  await fsextra.remove(mediaFolder)
 
-    // remove build folder
-    next => {
-      const buildFolder = path.join(projectFolder, buildPath)
-      logger(`removing build folder ${buildPath}`)
-      fsextra.emptyDir(buildFolder, next)
-    },
+  logger(`removing build folder ${buildPath}`)
+  await fsextra.emptyDir(buildFolder)
 
-    // build server
-    next => runBuild({
+  if(!buildTarget || buildTarget == 'server') {
+    logger(`building server`)
+    const serverStats = await runBuild({
       name: 'server',
       logger,
       config: webpackConfigProcessor(WebpackConfigServer(options), options, {
         environment: 'production',
         target: 'server',
       }),
-    }, next),
+    })
 
-    // build client
-    next => runBuild({
+    if(debugBuild) {
+      // we create this for server only debug builds
+      logger(`writing build info: ${buildinfoFilename}`)
+      const outputDir = serverStats.compilation.outputOptions.path
+      const buildInfo = BuildInfo(serverStats, options)
+      await writeFileAsync(path.join(outputDir, buildinfoFilename), JSON.stringify(buildInfo), 'utf8')
+    } 
+  }
+
+  if(!buildTarget || buildTarget == 'browser') {
+    logger(`building browser`)
+    const browserStats = await runBuild({
       name: 'browser',
       logger,
       config: webpackConfigProcessor(WebpackConfigBrowser(options, true), options, {
         environment: 'production',
         target: 'browser',
       }),
-    }, (err, webpackStats) => {
-      if(err) return next(err)
-      // output the filenames that we created so the publish handler can know
-      // where the index.js file is
-      logger(`writing build info: ${buildinfoFilename}`)
-      const outputDir = webpackStats.compilation.outputOptions.path
-      const buildInfo = BuildInfo(webpackStats, options)
-      fs.writeFile(path.join(outputDir, buildinfoFilename), JSON.stringify(buildInfo), 'utf8', next)
-    }),
+    })
 
-  ], done)
+    // output the filenames that we created so the publish handler can know
+    // where the index.js file is
+    logger(`writing build info: ${buildinfoFilename}`)
+    const outputDir = browserStats.compilation.outputOptions.path
+    const buildInfo = BuildInfo(browserStats, options)
+    await writeFileAsync(path.join(outputDir, buildinfoFilename), JSON.stringify(buildInfo), 'utf8')
+  }
 }
 
 module.exports = Build

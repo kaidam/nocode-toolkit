@@ -13,13 +13,14 @@ const CURRENCY_SYMBOLS = {
 let hasInjectedStripeLibrary = false
 
 const PaymentButtonWrapper = ({
-  renderers,
-  content,
+  data = {},
   cell,
 }) => {
 
-  const RenderButton = renderers.button || Button
-  const RenderConfirmation = renderers.confirmation || Confirmation
+  const {
+    currency,
+    buttonTitle = `Purchase ${data.name}`,
+  } = data
 
   useEffect(() => {
     if(hasInjectedStripeLibrary) return
@@ -31,16 +32,15 @@ const PaymentButtonWrapper = ({
   }, [hasInjectedStripeLibrary])
 
   const dispatch = useDispatch()
-  const currencySymbol = CURRENCY_SYMBOLS[content.currency]
-  const buttonTitle = content.buttonTitle || `Purchase ${content.name}`
-  const passContent = Object.assign({}, content, {
+  const currencySymbol = CURRENCY_SYMBOLS[currency]
+  const passContent = Object.assign({}, data, {
     currencySymbol,
     buttonTitle,
   })
   const onClick = () => {
     dispatch(actions.purchase({
       id: cell.id,
-      ...content,
+      ...data,
     }))
   }
   const purchasedProductId = useSelector(state => state.stripe.purchasedProductId)
@@ -50,7 +50,7 @@ const PaymentButtonWrapper = ({
       dispatch(actions.closeConfirmationWindow())
     }
     confirmWindow =  (
-      <RenderConfirmation
+      <Confirmation
         content={ passContent }
         onClose={ onClose }
       />
@@ -58,7 +58,7 @@ const PaymentButtonWrapper = ({
   }
   return (
     <div>
-      <RenderButton
+      <Button
         content={ passContent }
         cell={ cell }
         onClick={ onClick }

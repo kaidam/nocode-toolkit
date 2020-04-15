@@ -1,37 +1,36 @@
 const Promise = require('bluebird')
 const express = require('express')
-const request = require('request')
+const axios = require('axios')
 const bodyParser = require('body-parser')
 
 const pino = require('pino')({
   name: 'contact-form-plugin',
 })
 
-const getWebsiteOwners = ({
+const getWebsiteOwners = async ({
   apiUrl,
   accessToken,
   websiteid,
-}) => new Promise((resolve, reject) => {
-  request({
-    method: 'GET',
-    url: `${apiUrl}/api/v1/websites/${websiteid}/owners`,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-    },
-  }, (err, res, body) => {
-    if(err) return reject(err)
-    if(res.statusCode >= 400) return reject(`bad status code loading contact form website owners: ${res.statusCode}`)
-    let data = null
-    if(body) {
-      try {
-        data = JSON.parse(body)
-      } catch(e) {
-        return reject(`there was an error getting the contact form website owners: ${e.toString()}`)
-      }
+}) => {
+  try {
+    const res = await axios({
+      method: 'get',
+      url: `${apiUrl}/api/v1/websites/${websiteid}/owners`,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      responseType: 'json',
+    })
+    return res.data
+  } catch(err) {
+    if (err.response) {
+      throw new Error(`there was an error getting the contact form website owners: ${err.response.status} ${err.response.data}`)
     }
-    resolve(data)
-  })
-})
+    else {
+      throw new Error(`there was an error getting the contact form website owners: ${e.toString()}`)
+    }
+  }
+}
 
 const sendEmail = async ({
   zapier_url,
@@ -40,23 +39,27 @@ const sendEmail = async ({
   subject,
   message_text,
 }) => {
-  return new Promise((resolve, reject) => {
-    request({
-      method: 'POST',
+  try {
+    const res = await axios({
+      method: 'post',
       url: zapier_url,
-      json: true,
-      body: {
+      responseType: 'json',
+      data: {
         from_email,
         to_email,
         subject,
         message_text,
       },
-    }, (err, res, body) => {
-      if(err) return reject(err)
-      if(res.statusCode >= 400) return reject(`bad status code from zapier ${res.statusCode}`)
-      resolve(body)
     })
-  })
+    return res.data
+  } catch(err) {
+    if (err.response) {
+      throw new Error(`there was an error from zapier posting the contact form: ${err.response.status} ${err.response.data}`)
+    }
+    else {
+      throw new Error(`there was an error from zapier posting the contact form: ${e.toString()}`)
+    }
+  }
 }
 
 const App = ({

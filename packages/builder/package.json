@@ -1,11 +1,10 @@
 {
-  "name": "@nocode-toolkit/builder",
-  "version": "1.0.48",
+  "name": "@nocode-works/builder",
+  "version": "1.0.6",
   "description": "Build static websites using React and dynamic data sources.",
   "main": "index.js",
   "scripts": {
-    "test": "tape **/*.test.js | tap-spec",
-    "lint": "eslint build.js"
+    "test": "tape **/*.test.js | tap-spec"
   },
   "bin": {
     "nocode": "./cli.js"
@@ -31,6 +30,7 @@
     "@babel/preset-react": "^7.0.0",
     "async": "^3.1.0",
     "babel-loader": "^8.0.5",
+    "bluebird": "^3.7.2",
     "copy-webpack-plugin": "^5.0.2",
     "detect-node": "^2.0.4",
     "express": "^4.16.4",
@@ -47,12 +47,8 @@
     "yargs": "^15.0.1"
   },
   "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.0.0",
-    "eslint-plugin-import": "^2.20.1",
     "tap-spec": "^5.0.0",
     "tape": "^4.10.1"
   },
-  "license": "MIT",
-  "gitHead": "2a59326a1daf8ae60420ffee3b9e9fc09cc01740"
+  "license": "MIT"
 }

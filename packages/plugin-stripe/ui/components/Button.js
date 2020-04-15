@@ -1,4 +1,6 @@
 import React from 'react'
+import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
 
 const PaymentButton = ({
   content,
@@ -7,18 +9,20 @@ const PaymentButton = ({
   return (
     <div>
       <div>
-        <button
+        <Button
+          variant="contained"
+          color="primary"
           onClick={ onClick }
         >
           { content.buttonTitle } ({content.currencySymbol}{content.price})
-        </button>
+        </Button> 
       </div>
       {
         content.description && (
           <div style={{marginTop: '10px'}}>
-            <p>
+            <Typography>
               { content.description }
-            </p>
+            </Typography>
           </div>
         )
       }
