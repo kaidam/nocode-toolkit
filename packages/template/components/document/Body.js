@@ -21,20 +21,20 @@ const useStyles = makeStyles(theme => ({
   }),
   googleHTML: ({showUI}) => ({
     marginTop: showUI ? '0px' : '12px',
-    // put styles for the body container here
-    '& p': {
-     paddingTop: ['18.6667px', '!important'],
-     wordBreak: 'break-word',
-     wordWrap: 'break-word',
-     overflowWrap: 'break-word',
-    },
-    '& p:nth-child(1)': {
-      paddingTop: ['0px', '!important'],
-    },
-    '& ul': {
-     paddingTop: ['18.6667px', '!important'],
-     paddingBottom: ['18.6667px', '!important'],
-    }
+    // TODO - decide on if/how we will get the google doc looking the same
+    // '& p': {
+    //  paddingTop: ['18.6667px', '!important'],
+    //  wordBreak: 'break-word',
+    //  wordWrap: 'break-word',
+    //  overflowWrap: 'break-word',
+    // },
+    // '& p:nth-child(1)': {
+    //   paddingTop: ['0px', '!important'],
+    // },
+    // '& ul': {
+    //  paddingTop: ['18.6667px', '!important'],
+    //  paddingBottom: ['18.6667px', '!important'],
+    // }
   }),
 }))
 
