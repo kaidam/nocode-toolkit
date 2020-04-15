@@ -6,8 +6,8 @@ const Render = ({
 }) => {
   data = data || {}
   return (
-    <Typography variant={ data.style }>
-      { data.text || 'TEXT HERE' }
+    <Typography variant={ data.style || 'body1' }>
+      { data.text || 'text...' }
     </Typography>
   )
 }
