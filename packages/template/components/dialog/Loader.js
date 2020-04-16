@@ -19,6 +19,7 @@ import PublishDialog from '../publish/PublishDialog'
 import PublishSummaryDialog from '../publish/SummaryDialog'
 import PublishHistoryDialog from '../publish/HistoryDialog'
 import HelpDialog from '../system/HelpDialog'
+import library from '../../library'
 
 const dialogs = {
   settings: SettingsDialog,
@@ -76,7 +77,11 @@ const DialogLoader = ({
           <UnsplashDialog />
         )
       }
-      <SnackBar />
+      {
+        library.autoSnackbar && (
+          <SnackBar />
+        )
+      }
       <GlobalLoading
         loading={ loading }
       />

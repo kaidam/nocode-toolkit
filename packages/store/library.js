@@ -10,5 +10,6 @@ const library = {
   plugins: [],
   widgets: [],
   forms: {},
+  autoSnackbar: true,
 }
 export default library

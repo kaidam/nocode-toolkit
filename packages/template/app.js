@@ -12,6 +12,7 @@ import globals from './utils/globals'
 
 import Router from './router'
 import ThemeContainer from './theme/container'
+import library from './library'
 
 const GlobalLoading = lazy(() => import(/* webpackChunkName: "ui" */ './components/system/GlobalLoading'))
 
@@ -20,6 +21,7 @@ const App = ({
   ThemeModule,
   themeProcessor,
 }) => {
+  const dispatch = useDispatch()
   const actions = Actions(useDispatch(), {
     initialise: actionLoader('system', 'initialise'),
   })
@@ -33,8 +35,20 @@ const App = ({
   const loading = useSelector(uiSelectors.loading)
 
   useEffect(() => {
-    if(!globals.isUIActivated()) return
-    actions.initialise()
+    const handler = async () => {
+      if(globals.isUIActivated()) {
+        await actions.initialise()  
+      }
+      // now the UI is active - we can
+      // initialize each of the plugins
+      const plugins = library.plugins || []
+      plugins.forEach(plugin => {
+        if(plugin.actions && plugin.actions.initialize) {
+          dispatch(plugin.actions.initialize())
+        }
+      })
+    }
+    handler()
   }, [initialised])
   
   if(initialiseError) return (

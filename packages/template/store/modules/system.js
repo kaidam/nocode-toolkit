@@ -148,16 +148,7 @@ const sideEffects = {
 
     // now activate the UI
     dispatch(uiActions.setLoading(false))
-    dispatch(actions.setInitialiseCalled())
-
-    // now the UI is active - we can
-    // initialize each of the plugins
-    const plugins = library.plugins || []
-    plugins.forEach(plugin => {
-      if(plugin.actions && plugin.actions.initialize) {
-        dispatch(plugin.actions.initialize())
-      }
-    })
+    dispatch(actions.setInitialiseCalled())    
   }, {
     errorHandler: async (dispatch, getState, error) => {
       dispatch(uiActions.setLoading({
