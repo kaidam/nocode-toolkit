@@ -29,11 +29,16 @@ const useStyles = makeStyles(theme => {
   return {
     root: {
       display: 'flex',
-      flexDirection: 'row',
-      borderRadius: '24px',
-      padding: theme.spacing(0.75),
-      backgroundColor: theme.palette.grey[200],
-      boxShadow: `5px 5px 5px 0px rgba(0,0,0,0.3)`,
+      flexDirection: 'column',
+      paddingTop: theme.spacing(0.1),
+      paddingLeft: theme.spacing(0.5),
+      paddingRight: theme.spacing(0.5),
+      paddingBottom: theme.spacing(0.1),
+      marginLeft: '-85%',
+      marginRight: '85%',
+      backgroundColor: '#fff',
+      boxShadow: `0px 5px 12px 0px rgba(0, 0, 0, 0.2)`,
+      borderRadius: '40px',
     },
     iconSection: {
       flexGrow: 1,
@@ -41,27 +46,27 @@ const useStyles = makeStyles(theme => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'flex-start',
+      borderRadius: '24px',
     },
     iconContainer: {
-      marginLeft: theme.spacing(0.25),
-      marginRight: theme.spacing(0.25),
-      padding: theme.spacing(0.2),
-      borderRadius: '16px',
       backgroundColor: '#fff',
+      padding: theme.spacing(0.4),
+      borderRadius: '24px',
     },
     icon: {
-      fontSize: '0.85em',
+      fontSize: '1.2em',
     },
     button: {
       color: theme.palette.grey[500],
       textTransform: 'lowercase',
-      padding: theme.spacing(0.5),
+      padding: theme.spacing(0.3),
       '&:hover': {
         color: theme.palette.secondary.main,
       }
     },
     buttonIcon: {
-      fontSize: '1em',
+      fontSize: '1.1em',
+      padding: theme.spacing(0.3),
     },
   }
 })
@@ -219,6 +224,7 @@ const EditableCellMenu = ({
   return (
     <Popper
       open
+      placement="right"
       id="options-popover"
       anchorEl={ anchorEl }
     >

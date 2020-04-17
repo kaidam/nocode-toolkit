@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => {
       cursor: 'pointer',
       backgroundColor: open ? colorUtils.getAlpha(theme.palette.primary.main, 0.2) : null,
       border: open ? `1px solid ${theme.palette.grey[400]}` : null,
-      boxShadow: open ? `5px 5px 5px 0px rgba(0,0,0,0.3)` : null,
+      boxShadow: open ? `0px 5px 12px 0px rgba(0, 0, 0, 0.2)` : null,
       '&:hover': {
         backgroundColor: colorUtils.getAlpha(theme.palette.primary.main, 0.2),
       }
