@@ -26,6 +26,12 @@ const styles = {
   youtube: {
     color: '#FF0202',
   },
+  pinterest: {
+    color: '#e60023',
+  },
+  instagram: {
+    color: '#000000',
+  },
 }
 
 const LINKS = [
@@ -33,6 +39,8 @@ const LINKS = [
   'twitter',
   'linkedin',
   'youtube',
+  'pinterest',
+  'instagram',
 ]
 
 let hasInjectedCSS = false
@@ -83,6 +91,8 @@ const form = {
     twitter: '',
     linkedin: '',
     youtube: '',
+    pinterest: '',
+    instagram: '',
   },
   schema: [{
     id: 'facebook',
@@ -100,6 +110,14 @@ const form = {
     id: 'youtube',
     title: 'Youtube URL',
     helperText: 'The url of your Youtube profile',
+  },{
+    id: 'pinterest',
+    title: 'Pinterest URL',
+    helperText: 'The url of your Pinterest profile',
+  },{
+    id: 'instagram',
+    title: 'Instagram URL',
+    helperText: 'The url of your Instagram profile',
   }],
 }
 
