@@ -34,6 +34,7 @@ const Layout = ({
         <meta name="description" content={ settings.description } />
         <meta name="keywords" content={ settings.keywords } />
         <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+        <meta name="format-detection" content="telephone=no"></meta>
         <meta name="viewport" content="user-scalable=0, initial-scale=1, minimum-scale=1, width=device-width, height=device-height" />
         <link rel="shortcut icon" href="images/favicon.png" />
         {
