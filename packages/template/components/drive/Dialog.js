@@ -77,7 +77,7 @@ const DriveDialog = ({
   const {
     addFilter,
     listFilter,
-    size = 'lg',
+    size = 'md',
   } = useSelector(driveSelectors.window)
   const loading = useSelector(driveSelectors.loading.getList)
   const ancestorsLoading = useSelector(driveSelectors.loading.getAncestors)
