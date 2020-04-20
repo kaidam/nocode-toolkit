@@ -95,7 +95,7 @@ const EditableCell = ({
     >
       {
         open ? null : (
-          <Tooltip title="click to edit..." placement="top" arrow>
+          <Tooltip title="Click to Edit" placement="top" arrow>
             <div className={ classes.tooltipContent }></div>
           </Tooltip>
         )
