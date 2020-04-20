@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => createStyles({
     flexDirection: 'column',
   },
   header: {
-    paddingTop: '10px',
+    paddingTop: '16px',
     flexGrow: 0,
   },
   toolbar: {
@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => createStyles({
     overflowY: 'hidden', 
   },
   button: {
-    marginLeft: theme.spacing(2),
+    margin: theme.spacing(1),
   },
 }))
 
@@ -58,7 +58,7 @@ const UnsplashDialog = ({
 
   const items = useSelector(unsplashSelectors.list)
   const {
-    size = 'md',
+    size = 'lg',
   } = useSelector(unsplashSelectors.window)
   const loading = useSelector(unsplashSelectors.loading.getList)
 

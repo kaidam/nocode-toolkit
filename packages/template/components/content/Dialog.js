@@ -54,7 +54,7 @@ const ContentDialog = ({
               noScroll
               noActions
               title={ formWindow.title }
-              size={ formWindow.size || "xl" }
+              size={ formWindow.size || "lg" }
               onCancel={ onCloseWindow }
             >
               <Form

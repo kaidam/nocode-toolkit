@@ -35,7 +35,7 @@ const HelpDialog = ({
     <Window
       open
       title="Help"
-      size="md"
+      size="lg"
       cancelTitle="Close"
       withCancel
       onCancel={ actions.onClose }

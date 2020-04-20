@@ -73,7 +73,7 @@ const JobDialog = ({
     <Window
       open
       fullHeight
-      size="md"
+      size="lg"
       noScroll
       cancelTitle="Close"
       withCancel={ canCloseWindow }

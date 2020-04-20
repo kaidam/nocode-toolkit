@@ -48,7 +48,7 @@ const SettingsDialog = ({
               compact
               noScroll
               noActions
-              size="xl"
+              size="lg"
               onCancel={ onCloseWindow }
             >
               <Panels
