@@ -15,7 +15,7 @@ import layoutActions from '../../store/modules/layout'
 import icons from '../../icons'
 
 const AddIcon = icons.add
-const EditIcon = icons.edit
+const SettingsIcon = icons.settings
 const DeleteIcon = icons.delete
 const MoveIcon = icons.move
 const RowIcon = icons.row
@@ -231,12 +231,12 @@ const EditableCellMenu = ({
       <div className={ classes.root }>
         <div className={ classes.iconSection }>
           <div className={ classes.iconContainer }>
-            <Tooltip title="Edit" placement="top">
+            <Tooltip title="Settings" placement="top">
               <IconButton
                 size="small"
                 onClick={ onEdit }
               >
-                <EditIcon
+                <SettingsIcon
                   fontSize="inherit"
                   className={ classes.icon }
                 />
