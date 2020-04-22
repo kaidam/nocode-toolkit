@@ -16,23 +16,6 @@ import icons from '../../icons'
 
 const SettingsIcon = icons.settings
 
-/*
-
-  Site Settings (Logo/Title, Colour, Site SEO, Copyright, Snippets)
-  Layout (Site Options, Page Options)
-  Plugins
-  Security
-  Help (Could this just fire up the Crisp window rather than a dialog you then click to initiate?)
-  -----
-  Domains
-  Reload
-  Build
-  -----
-  History
-  Website List
-  Logout (edited) 
-
-*/
 const useStyles = makeStyles(theme => ({
   button: {
     position: 'absolute',

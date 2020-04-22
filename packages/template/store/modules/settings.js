@@ -24,8 +24,8 @@ const loaders = {
 
 const sideEffects = {
 
-  openDialog: () => (dispatch, getState) => {
-    dispatch(dialogActions.open('settings'))
+  openDialog: (params = {}) => (dispatch, getState) => {
+    dispatch(dialogActions.open('settings', params))
   },
 
   closeDialog: () => (dispatch, getState) => {

@@ -1,31 +1,13 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useSelector, useDispatch } from 'react-redux'
-import Typography from '@material-ui/core/Typography'
+import { useSelector } from 'react-redux'
 
-import Actions from '../../utils/actions'
 import settingsSelectors from '../../store/selectors/settings'
-import routerSelectors from '../../store/selectors/router'
-import routerActions from '../../store/modules/router'
 
 import FormRender from '../form/Render'
 
-import Tabs from '../widgets/Tabs'
 import Panels from '../widgets/Panels'
 import DialogButtons from '../widgets/DialogButtons'
-
-import Domains from './Domains'
-import Security from './Security'
-import PluginInstall from './PluginInstall'
-import Snippets from './Snippets'
-
-import library from '../../library'
-import icons from '../../icons'
-
-const QUERY_NAMES = {
-  tab: `dialog_settings_tab`,
-  panel: `dialog_settings_panel`,
-}
 
 const useStyles = makeStyles(theme => ({
   formContainer: {
@@ -41,122 +23,6 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1),
   }
 }))
-
-const PANELS = [{
-  id: 'general',
-  title: 'General',
-  icon: icons.settings,
-  render: ({
-    currentTabId,
-    librarySettings,
-    renderForm,
-    onChangeTab,
-  }) => {
-    const currentTab = librarySettings.tabs.find(tab => tab.id == currentTabId) || librarySettings.tabs[0]
-    return {
-      header: (
-        <Tabs
-          tabs={ librarySettings.tabs }
-          current={ currentTab.id }
-          onChange={ onChangeTab }
-        />
-      ),
-      body: renderForm({
-        schema: currentTab.schema,
-      }),
-    }
-  }
-}, {
-  id: 'plugins',
-  title: 'Plugins',
-  icon: icons.plugin,
-  render: ({
-    currentTabId,
-    activePluginMap,
-    renderForm,
-    onChangeTab,
-    onTogglePlugin,
-  }) => {
-    const pluginFormTabs = [{
-      id: 'install',
-      title: 'Activate Plugins',
-    }].concat(
-      library.plugins
-        .filter(plugin => plugin.settings ? true : false)
-        .filter(plugin => activePluginMap[plugin.id] ? true : false)
-        .reduce((all, plugin) => {
-          return all.concat(plugin.settings.tabs)
-        }, [])
-    )
-    const currentTab = pluginFormTabs.find(tab => tab.id == currentTabId) || pluginFormTabs[0]
-    return {
-      header: (
-        <Tabs
-          tabs={ pluginFormTabs }
-          current={ currentTab.id }
-          onChange={ onChangeTab }
-        />
-      ),
-      body: currentTab.id == 'install' ?
-        (
-          <PluginInstall
-            active={ activePluginMap }
-            onToggle={ onTogglePlugin }
-          />
-        ) :
-        renderForm({
-          schema: currentTab.schema,
-        })
-    }
-  }
-}, {
-  id: 'domain',
-  title: 'Domains',
-  icon: icons.domain,
-  submitButton: false,
-  render: ({
-    classes,
-  }) => ({
-    header: (
-      <Typography variant="h6" className={ classes.headingTitle }>Nocode Subdomain</Typography>
-    ),
-    body: (
-      <Domains />
-    )
-  })
-}, {
-  id: 'snippets',
-  title: 'Snippets',
-  icon: icons.code,
-  render: ({
-    snippets,
-    onUpdateSnippets,
-  }) => {
-    return {
-      body: (
-        <Snippets
-          snippets={ snippets }
-          onUpdate={ onUpdateSnippets }
-        />
-      )
-    }
-  }
-}, {
-  id: 'security',
-  title: 'Security',
-  icon: icons.lock,
-  submitButton: false,
-  render: ({
-    classes,
-  }) => ({
-    header: (
-      <Typography variant="h6" className={ classes.headingTitle }>Website Security</Typography>
-    ),
-    body: (
-      <Security />
-    )
-  })
-}]
 
 const renderPanel = ({
   panel,
@@ -176,6 +42,9 @@ const renderPanel = ({
 }
 
 const SettingsPanels = ({
+  panelSettings,
+  tab,
+  panel,
   isValid,
   values,
   errors,
@@ -183,25 +52,13 @@ const SettingsPanels = ({
   touched,
   onSubmit,
   onCancel,
+  onChangeTab,
+  onChangePanel,
   onSetFieldValue,
 }) => {
 
   const classes = useStyles()
-  const queryParams = useSelector(routerSelectors.queryParams)
-
-  const tab = queryParams[QUERY_NAMES.tab]
-  const panel = queryParams[QUERY_NAMES.panel]
   
-  const actions = Actions(useDispatch(), {
-    onChangeTab: (newTab) => routerActions.addQueryParams({
-      [QUERY_NAMES.tab]: newTab,
-    }),
-    onChangePanel: (newPanel) => routerActions.addQueryParams({
-      [QUERY_NAMES.panel]: newPanel,
-      [QUERY_NAMES.tab]: '',
-    }),
-  })
-
   const {
     activePluginMap = {},
     snippets = [],
@@ -237,7 +94,7 @@ const SettingsPanels = ({
     )
   }
 
-  const currentPanel = PANELS.find(panelItem => panelItem.id == panel) || PANELS[0]
+  const currentPanel = panelSettings.find(panelItem => panelItem.id == panel) || panelSettings[0]
 
   const renderResults = renderPanel({
     classes,
@@ -247,7 +104,7 @@ const SettingsPanels = ({
     snippets,
     librarySettings,
     renderForm,
-    onChangeTab: actions.onChangeTab,
+    onChangeTab,
     onTogglePlugin,
     onUpdateSnippets,
     onSubmit,
@@ -256,13 +113,14 @@ const SettingsPanels = ({
 
   const panels = (
     <Panels
-      panels={ PANELS }
+      panels={ panelSettings }
       current={ currentPanel.id }
       theme={{
         header: classes.header,
         footer: classes.footer,
       }}
-      onChange={ actions.onChangePanel }
+      showTitles={ false }
+      onChange={ onChangePanel }
       {...renderResults}
     />
   )

@@ -52,6 +52,9 @@ const useStyles = makeStyles(theme => ({
   },
   addButton: {
     marginBottom: theme.spacing(1),
+  },
+  snippetTitle: {
+    height: '50px',
   }
 }))
 
@@ -90,7 +93,7 @@ const SettingsSnippetGroup = ({
       </Grid>
       <Grid container className={ classes.titleContainer }>
         <Grid item xs={ 12 }>
-          <Typography>
+          <Typography className={ classes.snippetTitle }>
             {
               global ?
                 `Appear on all pages and are useful for adding script tags or custom CSS` :
@@ -100,7 +103,7 @@ const SettingsSnippetGroup = ({
         </Grid>
       </Grid>
       <Grid container>
-        <Grid item xs={ 4 }>
+        <Grid item xs={ 12 }>
           <Button
             className={ classes.addButton }
             size="small"

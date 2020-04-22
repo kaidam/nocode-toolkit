@@ -10,6 +10,27 @@ import jobActions from '../../store/modules/job'
 import uiSelectors from '../../store/selectors/ui'
 import icons from '../../icons'
 
+/*
+
+  Build
+  Reload
+  Preview
+  -----
+  Site Settings (Colour, Site SEO)
+  Layout (Site Options, Page Options)
+  -----
+  Plugins
+  Snippets
+  Security
+  Domains
+  -----
+  History
+  Website List
+  Help (Could this just fire up the Crisp window rather than a dialog you then click to initiate?)
+  Logout (edited) 
+
+*/
+
 const useGetGlobalOptions = ({
   includeExtra = false,
 }) => {
@@ -27,10 +48,32 @@ const useGetGlobalOptions = ({
   const onDisablePreview = () => actions.onSetPreviewMode(false)
   const onListWebsites = () => document.location = '/'
 
+  const onOpenSettingsPanel = (panel) => {
+    actions.onOpenSettings({
+      panel,
+    })
+  }
+
   const previewMode = useSelector(uiSelectors.previewMode)
 
   const getMenuItems = useCallback(() => {
     return [{
+      title: 'Plugins',
+      icon: icons.plugin,
+      handler: () => onOpenSettingsPanel('plugins'),
+    }, {
+      title: 'Snippets',
+      icon: icons.code,
+      handler: () => onOpenSettingsPanel('snippets'),
+    },{
+      title: 'Security',
+      icon: icons.lock,
+      handler: () => onOpenSettingsPanel('security'),
+    },{
+      title: 'Domains',
+      icon: icons.domain,
+      handler: () => onOpenSettingsPanel('domain'),
+    }, '-', {
       title: 'Build Website',
       icon: icons.send,
       handler: actions.onPublish,

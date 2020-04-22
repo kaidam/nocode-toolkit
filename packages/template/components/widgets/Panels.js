@@ -2,6 +2,7 @@ import React, { useState, useCallback, useMemo } from 'react'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/core/styles'
 
+import Tooltip from '@material-ui/core/Tooltip'
 import Typography from '@material-ui/core/Typography'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -21,21 +22,22 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     height: '100%',
   },
-  sidebar: {
-    width: '300px',
-    minWidth: '300px',
+  sidebar: ({showTitles}) => ({
+    width: showTitles ? '300px' : '58px',
+    minWidth: showTitles ? '300px' : '58px',
     flexGrow: 0,
     height: '100%',
     borderRight: '1px solid rgba(0, 0, 0, 0.12)',
     backgroundColor: theme.palette.background.paper,
     display: 'flex',
     flexDirection: 'column',
-  },
+  }),
   sidebarTitle: {
     flexGrow: 0,
   },
   sidebarContent: {
     flexGrow: 1,
+    overflowX: 'hidden',
     overflowY: 'auto',
   },
   content: {
@@ -65,10 +67,14 @@ const PanelsWrapper = ({
   footer,
   current,
   autoScroll = true,
+  showMenu = true,
+  showTitles = true,
   theme = {},
   onChange,
 }) => {
-  const classes = useStyles()
+  const classes = useStyles({
+    showTitles,
+  })
 
   if(!panels || panels.length <= 0) return null
 
@@ -81,39 +87,54 @@ const PanelsWrapper = ({
 
   return (
     <div className={ classes.container }>
-      <div className={ classes.sidebar }>
-        {
-          title && (
-            <div className={ classes.sidebarHeader }>
-              <AppBar position="static" color="default" className={ classes.appBar }>
-                <Toolbar>
-                  <Typography><b>{ title }</b></Typography>
-                  <div className={classes.grow} />
-                </Toolbar>
-              </AppBar>
-            </div>
-          )
-        }
-        <div className={ classes.sidebarContent }>
-          <List>
+      {
+        showMenu && (
+          <div className={ classes.sidebar }>
             {
-              panels.map((panel, i) => {
-                return (
-                  <ListItem
-                    key={ i }
-                    button
-                    selected={ panel.id == current }
-                    onClick={ () => onChange(panel.id) }
-                  >
-                    <ListItemIcon><panel.icon /></ListItemIcon>
-                    <ListItemText primary={ panel.title } />
-                  </ListItem>
-                )
-              })
+              title && (
+                <div className={ classes.sidebarHeader }>
+                  <AppBar position="static" color="default" className={ classes.appBar }>
+                    <Toolbar>
+                      <Typography><b>{ title }</b></Typography>
+                      <div className={classes.grow} />
+                    </Toolbar>
+                  </AppBar>
+                </div>
+              )
             }
-          </List>
-        </div>  
-      </div>
+            <div className={ classes.sidebarContent }>
+              <List>
+                {
+                  panels.map((panel, i) => {
+
+                    const content = (
+                      <ListItem
+                        key={ i }
+                        button
+                        selected={ panel.id == current }
+                        onClick={ () => onChange(panel.id) }
+                      >
+                        <ListItemIcon><panel.icon /></ListItemIcon>
+                        {
+                          showTitles && (
+                            <ListItemText primary={ panel.title } />
+                          )
+                        }
+                      </ListItem>
+                    )
+
+                    return showTitles ? content : (
+                      <Tooltip title={ panel.title } key={ i }>
+                        { content }
+                      </Tooltip>
+                    )
+                  })
+                }
+              </List>
+            </div>  
+          </div>
+        )
+      }
       <div className={ classes.content }>
         <PanelBody
           autoScroll={ currentPanelAutoScroll }
@@ -130,26 +151,3 @@ const PanelsWrapper = ({
 }
 
 export default PanelsWrapper
-
-
-/*
-
-        {
-          currentPanel.header && (
-            <div className={ classes.contentHeader }>
-              { currentPanel.header }
-            </div>
-          )
-        }
-        <div className={ contentBodyClassname }>
-          { currentPanel.body }
-        </div>
-        {
-          currentPanel.footer && (
-            <div className={ classes.contentFooter }>
-              { currentPanel.footer }
-            </div>
-          )
-        }
-
-*/
