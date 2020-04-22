@@ -9,16 +9,7 @@ import settingsSelectors from '../../store/selectors/settings'
 import Snippet from './Snippet'
 import Suspense from './Suspense'
 
-const GlobalCss = withStyles({
-  // @global is handled by jss-plugin-global.
-  '@global': {
-    // You should target [class*="MuiButton-root"] instead if you nest themes.
-    '.MuiBackdrop-root': {
-        backdropFilter: 'blur(10px)',
-    },
-  },
-})(() => null);
-
+const GlobalCss = lazy(() => import(/* webpackChunkName: "ui" */ './GlobalCss'))
 const GlobalSettings = lazy(() => import(/* webpackChunkName: "ui" */ './GlobalSettings'))
 const DialogLoader = lazy(() => import(/* webpackChunkName: "ui" */ '../dialog/Loader'))
 
@@ -76,7 +67,10 @@ const Layout = ({
         coreEnabled
         Component={ GlobalSettings }
       />
-      <GlobalCss />
+      <Suspense
+        coreEnabled
+        Component={ GlobalCss }
+      />
     </React.Fragment>
   )
 }
