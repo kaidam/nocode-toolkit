@@ -8,7 +8,7 @@ import settingsSelectors from '../../store/selectors/settings'
 import Snippet from './Snippet'
 import Suspense from './Suspense'
 
-const EditorTopbar = lazy(() => import(/* webpackChunkName: "ui" */ './EditorTopbar'))
+const GlobalSettings = lazy(() => import(/* webpackChunkName: "ui" */ './GlobalSettings'))
 const DialogLoader = lazy(() => import(/* webpackChunkName: "ui" */ '../dialog/Loader'))
 
 const Layout = ({
@@ -51,10 +51,6 @@ const Layout = ({
         head
         html={ snippets.head }
       />
-      <Suspense
-        coreEnabled
-        Component={ EditorTopbar }
-      />
       <Snippet
         html={ snippets.before }
       />
@@ -64,6 +60,10 @@ const Layout = ({
       />
       <Suspense
         Component={ DialogLoader }
+      />
+      <Suspense
+        coreEnabled
+        Component={ GlobalSettings }
       />
     </React.Fragment>
   )
