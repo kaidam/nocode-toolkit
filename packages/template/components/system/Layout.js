@@ -1,12 +1,23 @@
 import React, { lazy } from 'react'
 import { useSelector } from 'react-redux'
 import { Helmet } from 'react-helmet-async'
+import { withStyles } from '@material-ui/core/styles'
 
 import systemSelectors from '../../store/selectors/system'
 import settingsSelectors from '../../store/selectors/settings'
 
 import Snippet from './Snippet'
 import Suspense from './Suspense'
+
+const GlobalCss = withStyles({
+  // @global is handled by jss-plugin-global.
+  '@global': {
+    // You should target [class*="MuiButton-root"] instead if you nest themes.
+    '.MuiBackdrop-root': {
+        backdropFilter: 'blur(10px)',
+    },
+  },
+})(() => null);
 
 const GlobalSettings = lazy(() => import(/* webpackChunkName: "ui" */ './GlobalSettings'))
 const DialogLoader = lazy(() => import(/* webpackChunkName: "ui" */ '../dialog/Loader'))
@@ -65,6 +76,7 @@ const Layout = ({
         coreEnabled
         Component={ GlobalSettings }
       />
+      <GlobalCss />
     </React.Fragment>
   )
 }
