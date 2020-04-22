@@ -46,7 +46,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const GlobalSettings = ({
-
+  onClick,
 }) => {
   const classes = useStyles()
   const [ open, setOpen ] = useState(false)
@@ -90,6 +90,10 @@ const GlobalSettings = ({
                 <ListItem
                   key={ i }
                   button
+                  onClick={ () => {
+                    if(item.handler) item.handler()
+                    setOpen(false)
+                  }}
                 >
                   {
                     item.icon && (
