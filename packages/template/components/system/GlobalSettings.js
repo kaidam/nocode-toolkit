@@ -60,6 +60,7 @@ const GlobalSettings = ({
       >
         <List
           className={ classes.list }
+          dense
         >
           {
             globalOptions.map((item, i) => {

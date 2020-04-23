@@ -32,7 +32,7 @@ import icons from '../../icons'
 */
 
 const useGetGlobalOptions = ({
-  includeExtra = false,
+  
 }) => {
   const actions = Actions(useDispatch(), {
     onOpenSettings: settingsActions.openDialog,
@@ -58,6 +58,20 @@ const useGetGlobalOptions = ({
 
   const getMenuItems = useCallback(() => {
     return [{
+      title: 'Build Website',
+      icon: icons.send,
+      handler: actions.onPublish,
+    },{
+      title: 'Reload',
+      icon: icons.refresh,
+      handler: actions.onRebuild,
+    },{
+      title: `${previewMode ? 'Disable' : 'Enable'} Preview`,
+      icon: previewMode ? icons.hide : icons.look,
+      handler: previewMode ? onDisablePreview : onEnablePreview,
+    },
+    '-',
+    {
       title: 'Settings',
       icon: icons.settings,
       handler: () => onOpenSettingsPanel('general'),
@@ -65,7 +79,9 @@ const useGetGlobalOptions = ({
       title: 'Layout',
       icon: icons.layout,
       handler: () => onOpenSettingsPanel('layout'),
-    }, {
+    }, 
+    '-',
+    {
       title: 'Plugins',
       icon: icons.plugin,
       handler: () => onOpenSettingsPanel('plugins'),
@@ -81,50 +97,27 @@ const useGetGlobalOptions = ({
       title: 'Domains',
       icon: icons.domain,
       handler: () => onOpenSettingsPanel('domain'),
-    }, '-', {
-      title: 'Build Website',
-      icon: icons.send,
-      handler: actions.onPublish,
-    }, {
+    },
+    '-',
+    {
       title: 'History',
       icon: icons.history,
       handler: actions.onViewHistory,
     }, {
-      title: 'Settings',
-      icon: icons.settings,
-      handler: actions.onOpenSettings,
-    },
-    {
-      title: 'Reload',
-      icon: icons.refresh,
-      handler: actions.onRebuild,
-    },
-    includeExtra && !previewMode ? {
-      title: 'Enable Preview',
-      icon: icons.look,
-      handler: onEnablePreview,
-    } : null,
-    includeExtra && previewMode ? {
-      title: 'Disable Preview',
-      icon: icons.hide,
-      handler: onDisablePreview,
-    } : null,
-    '-', {
-      title: 'List Websites',
+      title: 'Website List',
       icon: icons.content,
       handler: onListWebsites,
     }, {
       title: 'Help',
       icon: icons.help,
       handler: actions.onViewHelp,
-    }, '-', {
+    }, {
       title: 'Logout',
       icon: icons.logout,
       handler: actions.onLogout,
     }].filter(i => i)
   }, [
     previewMode,
-    includeExtra,
   ])
 
   return getMenuItems
