@@ -50,8 +50,8 @@ const EditableCell = ({
   setCurrentCellId,
   getAddMenu,
 }) => {
-  const [anchorEl, setAnchorEl] = useState(null)
-  const open = Boolean(anchorEl)
+  const [menuAnchor, setMenuAnchor] = useState(null)
+  const open = Boolean(menuAnchor)
 
   const classes = useStyles({
     faded: currentCellId && currentCellId != id,
@@ -62,22 +62,26 @@ const EditableCell = ({
     e.preventDefault()
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
-    if(!anchorEl) {
-      setAnchorEl(e.currentTarget)
+    if(!menuAnchor) {
+      setMenuAnchor({
+        el: e.currentTarget,
+        x: e.nativeEvent.offsetX,
+        y: e.nativeEvent.offsetY,
+      })
       setCurrentCellId(id)
     }
     else {
-      setAnchorEl(null)
+      setMenuAnchor(null)
       setCurrentCellId(null)
     }
   }
 
   const handleClose = () => {
-    setAnchorEl(null)
+    setMenuAnchor(null)
   }
 
   const handleReset = () => {
-    setAnchorEl(null)
+    setMenuAnchor(null)
     setCurrentCellId(null)
   }
 
@@ -113,7 +117,7 @@ const EditableCell = ({
         {
           open && (
             <EditableCellMenu
-              anchorEl={ anchorEl }
+              menuAnchor={ menuAnchor }
               layout={ layout }
               cell={ cell }
               content_id={ content_id }

@@ -15,6 +15,7 @@ import layoutActions from '../../store/modules/layout'
 import icons from '../../icons'
 
 const AddIcon = icons.add
+const EditIcon = icons.edit
 const SettingsIcon = icons.settings
 const DeleteIcon = icons.delete
 const MoveIcon = icons.move
@@ -34,8 +35,8 @@ const useStyles = makeStyles(theme => {
       paddingLeft: theme.spacing(0.5),
       paddingRight: theme.spacing(0.5),
       paddingBottom: theme.spacing(0.1),
-      marginLeft: '-85%',
-      marginRight: '85%',
+      // marginLeft: '-85%',
+      // marginRight: '85%',
       backgroundColor: '#fff',
       boxShadow: `0px 5px 12px 0px rgba(0, 0, 0, 0.2)`,
       borderRadius: '40px',
@@ -85,7 +86,7 @@ const EditableCellMenu = ({
   layout_id,
   rowIndex,
   cellIndex,
-  anchorEl,
+  menuAnchor,
   getAddMenu,
   onClose,
   onReset,
@@ -207,6 +208,30 @@ const EditableCellMenu = ({
     cellIndex,
   ])
 
+  const getMenuItems = useCallback(() => {
+    const moveItems = getMoveMenuItems()
+    return [{
+      title: 'Edit',
+      icon: EditIcon,
+      handler: onEdit,
+    }, moveItems.length > 0 ? {
+      title: 'Move',
+      icon: MoveIcon,
+      items: moveItems,
+    } : null, {
+      title: 'Add',
+      icon: AddIcon,
+      items: getAddMenuItems(),
+    }, {
+      title: 'Delete',
+      icon: DeleteIcon,
+      handler: onDelete,
+    }].filter(i => i)
+  }, [
+    getAddMenuItems,
+    getMoveMenuItems,
+  ])
+
   const addMenu = withMenuButton({
     getItems: getAddMenuItems,
     noHeader: true,
@@ -221,78 +246,88 @@ const EditableCellMenu = ({
     onClose,
   })
 
-  return (
-    <Popper
-      open
-      placement="right"
-      id="options-popover"
-      anchorEl={ anchorEl }
-    >
-      <div className={ classes.root }>
-        <div className={ classes.iconSection }>
-          <div className={ classes.iconContainer }>
-            <Tooltip title="Settings" placement="top">
-              <IconButton
-                size="small"
-                onClick={ onEdit }
-              >
-                <SettingsIcon
-                  fontSize="inherit"
-                  className={ classes.icon }
-                />
-              </IconButton>
-            </Tooltip>
-          </div>
-          <div className={ classes.iconContainer }>
-            <Tooltip title="Move" placement="top">
-              <IconButton
-                size="small"
-                onClick={ moveMenu.onClick }
-              >
-                <MoveIcon
-                  fontSize="inherit"
-                  className={ classes.icon }
-                />
-              </IconButton>
-            </Tooltip>
-          </div>
-          <div className={ classes.iconContainer }>
-            <Tooltip title="Delete" placement="top">
-              <IconButton
-                size="small"
-                onClick={ onDelete }
-              >
-                <DeleteIcon
-                  fontSize="inherit"
-                  className={ classes.icon }
-                />
-              </IconButton>
-            </Tooltip>
-          </div>
-          <div className={ classes.iconContainer }>
-            <Tooltip title="Add" placement="top">
-              <IconButton
-                size="small"
-                onClick={ addMenu.onClick }
-              >
-                <AddIcon
-                  fontSize="inherit"
-                  color="secondary"
-                  className={ classes.icon }
-                />
-              </IconButton>
-            </Tooltip>
-          </div>
-        </div>
-        {
-          addMenu.menus
-        }
-        {
-          moveMenu.menus
-        }
-      </div>
-    </Popper>
-  )
+  const mainMenu = withMenuButton({
+    parentAnchorEl: menuAnchor.el,
+    getItems: getMenuItems,
+    noHeader: true,
+    onClick: onReset,
+    onClose,
+  })
+
+  return mainMenu.menus
+
+  // return (
+  //   <Popper
+  //     open
+  //     placement="right"
+  //     id="options-popover"
+  //     anchorEl={ menuAnchor.el }
+  //   >
+  //     <div className={ classes.root }>
+  //       <div className={ classes.iconSection }>
+  //         <div className={ classes.iconContainer }>
+  //           <Tooltip title="Settings" placement="top">
+  //             <IconButton
+  //               size="small"
+  //               onClick={ onEdit }
+  //             >
+  //               <SettingsIcon
+  //                 fontSize="inherit"
+  //                 className={ classes.icon }
+  //               />
+  //             </IconButton>
+  //           </Tooltip>
+  //         </div>
+  //         <div className={ classes.iconContainer }>
+  //           <Tooltip title="Move" placement="top">
+  //             <IconButton
+  //               size="small"
+  //               onClick={ moveMenu.onClick }
+  //             >
+  //               <MoveIcon
+  //                 fontSize="inherit"
+  //                 className={ classes.icon }
+  //               />
+  //             </IconButton>
+  //           </Tooltip>
+  //         </div>
+  //         <div className={ classes.iconContainer }>
+  //           <Tooltip title="Delete" placement="top">
+  //             <IconButton
+  //               size="small"
+  //               onClick={ onDelete }
+  //             >
+  //               <DeleteIcon
+  //                 fontSize="inherit"
+  //                 className={ classes.icon }
+  //               />
+  //             </IconButton>
+  //           </Tooltip>
+  //         </div>
+  //         <div className={ classes.iconContainer }>
+  //           <Tooltip title="Add" placement="top">
+  //             <IconButton
+  //               size="small"
+  //               onClick={ addMenu.onClick }
+  //             >
+  //               <AddIcon
+  //                 fontSize="inherit"
+  //                 color="secondary"
+  //                 className={ classes.icon }
+  //               />
+  //             </IconButton>
+  //           </Tooltip>
+  //         </div>
+  //       </div>
+  //       {
+  //         addMenu.menus
+  //       }
+  //       {
+  //         moveMenu.menus
+  //       }
+  //     </div>
+  //   </Popper>
+  // )
 }
 
 export default EditableCellMenu
