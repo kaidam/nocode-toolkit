@@ -58,6 +58,14 @@ const useGetGlobalOptions = ({
 
   const getMenuItems = useCallback(() => {
     return [{
+      title: 'Settings',
+      icon: icons.settings,
+      handler: () => onOpenSettingsPanel('general'),
+    }, {
+      title: 'Layout',
+      icon: icons.layout,
+      handler: () => onOpenSettingsPanel('layout'),
+    }, {
       title: 'Plugins',
       icon: icons.plugin,
       handler: () => onOpenSettingsPanel('plugins'),

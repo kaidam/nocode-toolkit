@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
+import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 
 import Actions from '../../utils/actions'
@@ -28,35 +29,36 @@ const QUERY_NAMES = {
   panel: `dialog_settings_panel`,
 }
 
+const settingsTabRender = (tabName, title) => ({
+  classes,
+  librarySettings,
+  renderForm,
+}) => {
+  const currentTab = librarySettings.tabs.find(tab => tab.id == tabName) || librarySettings.tabs[0]
+  return {
+    header: (
+      <Typography variant="h6" className={ classes.headingTitle }>{ title }</Typography>
+    ),
+    body: renderForm({
+      schema: currentTab.schema,
+    }),
+  }
+}
+
 const PANELS = [{
   id: 'general',
   title: 'General',
   icon: icons.settings,
-  render: ({
-    currentTabId,
-    librarySettings,
-    renderForm,
-    onChangeTab,
-  }) => {
-    const currentTab = librarySettings.tabs.find(tab => tab.id == currentTabId) || librarySettings.tabs[0]
-    return {
-      header: (
-        <Tabs
-          tabs={ librarySettings.tabs }
-          current={ currentTab.id }
-          onChange={ onChangeTab }
-        />
-      ),
-      body: renderForm({
-        schema: currentTab.schema,
-      }),
-    }
-  }
+  render: settingsTabRender('main', 'General Settings'),
+}, {
+  id: 'layout',
+  title: 'Layout',
+  icon: icons.layout,
+  render: settingsTabRender('layout', 'Layout Settings'),
 }, {
   id: 'plugins',
   title: 'Plugins',
   icon: icons.plugin,
-  size: 'md',
   render: ({
     currentTabId,
     activePluginMap,
@@ -99,12 +101,21 @@ const PANELS = [{
 }, {
   id: 'domain',
   title: 'Domains',
-  size: 'md',
   icon: icons.domain,
   submitButton: false,
   render: ({
     classes,
   }) => ({
+    header: (
+      <Grid container>
+        <Grid item xs={ 6 }>
+          <Typography variant="h6" className={ classes.headingTitle }>Nocode Subdomain</Typography>
+        </Grid>
+        <Grid item xs={ 6 }>
+          <Typography variant="h6" className={ classes.headingTitle }>Custom Domains</Typography>
+        </Grid>
+      </Grid>
+    ),
     body: (
       <Domains />
     )
@@ -115,10 +126,21 @@ const PANELS = [{
   size: 'md',
   icon: icons.code,
   render: ({
+    classes,
     snippets,
     onUpdateSnippets,
   }) => {
     return {
+      header: (
+        <Grid container>
+          <Grid item xs={ 6 }>
+            <Typography variant="h6" className={ classes.headingTitle }>Snippets</Typography>
+          </Grid>
+          <Grid item xs={ 6 }>
+            <Typography variant="h6" className={ classes.headingTitle }>Global Snippets</Typography>
+          </Grid>
+        </Grid>
+      ),
       body: (
         <Snippets
           snippets={ snippets }
@@ -130,7 +152,6 @@ const PANELS = [{
 }, {
   id: 'security',
   title: 'Security',
-  size: 'md',
   icon: icons.lock,
   submitButton: false,
   render: ({
@@ -197,7 +218,7 @@ const SettingsDialog = ({
               compact
               noScroll
               noActions
-              size={ currentPanel.size || 'lg' }
+              size={ currentPanel.size || 'md' }
               fullHeight
               onCancel={ onCloseWindow }
             >

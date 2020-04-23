@@ -88,12 +88,7 @@ const SettingsSnippetGroup = ({
     <div className={ classes.content }>
       <Grid container className={ classes.titleContainer }>
         <Grid item xs={ 12 }>
-          <Typography variant="h6">{ global ? 'Global ' : ''} Snippets</Typography>
-        </Grid>
-      </Grid>
-      <Grid container className={ classes.titleContainer }>
-        <Grid item xs={ 12 }>
-          <Typography className={ classes.snippetTitle }>
+          <Typography variant="caption" className={ classes.snippetTitle }>
             {
               global ?
                 `Appear on all pages and are useful for adding script tags or custom CSS` :

@@ -138,9 +138,6 @@ const SettingsDomains = ({
         <div className={ classes.listContainer }>
           <div className={ classes.listCell }>
             <Grid container>
-              <Grid item xs={ 12 }>
-                <Typography variant="h6">Nocode Subdomain</Typography>
-              </Grid>
               <Grid item xs={ 6 }>
                 <TextField
                   label="Subdomain"
@@ -176,9 +173,6 @@ const SettingsDomains = ({
           </div>
           <div className={ classes.listCell }>
             <Grid container>
-              <Grid item xs={ 12 }>
-                <Typography variant="h6">Custom Domains</Typography>
-              </Grid>
               <Grid item xs={ 12 }>
                 <SimpleTable
                   hideHeader

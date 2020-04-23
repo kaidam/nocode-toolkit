@@ -85,6 +85,7 @@ import SyncIcon from '@material-ui/icons/Sync'
 import SendIcon from '@material-ui/icons/Send'
 import MenuIcon from '@material-ui/icons/Menu'
 import LockIcon from '@material-ui/icons/Lock'
+import WidgetIcon from '@material-ui/icons/Widgets'
 
 import UnsplashLogo from './components/icons/UnsplashLogo'
 import GoogleDriveLogo from './components/icons/GoogleDriveLogo'
@@ -160,7 +161,8 @@ const icons = {
   help: HelpIcon,
   save: SaveIcon,
   template: TemplateIcon,
-  widget: TemplateIcon,
+  widget: WidgetIcon,
+  layout: TemplateIcon,
   info: InfoIcon,
   backnext: BackNextIcon,
   search: SearchIcon,
