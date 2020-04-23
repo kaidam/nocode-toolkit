@@ -105,9 +105,6 @@ const PANELS = [{
   render: ({
     classes,
   }) => ({
-    header: (
-      <Typography variant="h6" className={ classes.headingTitle }>Nocode Subdomain</Typography>
-    ),
     body: (
       <Domains />
     )
