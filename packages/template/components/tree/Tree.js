@@ -20,10 +20,6 @@ const Tree = ({
   // the name of the section this tree is for
   section,
 
-  // the suspended component we use to render the item
-  // options - this gives control to the template
-  // as to what the tree item menu does
-  ItemEditorComponent,
   // folder pages means we treat folders as routes
   // if this is false, then clicking
   // on a folder just toggles it
@@ -58,7 +54,6 @@ const Tree = ({
               showUI={ showUI }
               item={ item }
               folderPages={ folderPages }
-              ItemEditorComponent={ ItemEditorComponent }
               containerRef={ containerRef }
               scrollToCurrentPage={ scrollToCurrentPage }
               onDisableScrollToCurrentPage={ onDisableScrollToCurrentPage }

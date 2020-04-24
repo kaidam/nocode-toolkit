@@ -86,13 +86,14 @@ const useItemEditor = ({
             form: `drive.${node.type}`,
             id: node.id,
           })
-        }, {
+        },
+        removeItem,
+        {
           title: 'View in Drive',
-          icon: icons.open,
+          icon: icons.look,
           secondaryIcon: icons.drive,
           url: openUrl,
-        }, 
-        removeItem,
+        },
         ]
       }
       else {
