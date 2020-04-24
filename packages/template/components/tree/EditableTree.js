@@ -10,6 +10,7 @@ import MenuButton from '../widgets/MenuButton'
 import icons from '../../icons'
 
 import useSectionEditor from '../hooks/useSectionEditor'
+import useIconButton from '../hooks/useIconButton'
 
 const EditIcon = icons.edit
 const AddIcon = icons.add
@@ -45,14 +46,6 @@ const useStyles = makeStyles(theme => ({
   itemTextTypography: {
     fontWeight: 'bold',
   },
-  settingsIcon: {
-    color: theme.palette.text.main,
-  },
-  iconContainer: {
-    borderRadius: '16px',
-    backgroundColor: '#fff',
-    boxShadow: '0px 3px 3px 0px rgba(0,0,0,0.2)',
-  },
 }))
 
 const EditableTree = ({
@@ -86,43 +79,16 @@ const EditableTree = ({
     ghostFolderTitle,
   ])
 
-  const getAddButton = useCallback((onClick) => {
-    return (
-      <div className={ classes.iconContainer }>
-        <IconButton
-          size="small"
-          onClick={ onClick }
-        >
-          <AddIcon
-            fontSize="inherit"
-            color="secondary"
-          />
-        </IconButton>
-      </div>
-      
-    )
-  }, [
-    classes,
-  ])
+  const getSettingsButton = useIconButton({
+    icon: 'edit',
+    title: 'Edit',
+  })
 
-
-  const getSettingsButton = useCallback((onClick) => {
-    return (
-      <div className={ classes.iconContainer }>
-        <IconButton
-          size="small"
-          onClick={ onClick }
-        >
-          <EditIcon
-            fontSize="inherit"
-          />
-        </IconButton>
-      </div>
-      
-    )
-  }, [
-    classes,
-  ])
+  const getAddButton = useIconButton({
+    icon: 'add',
+    title: 'Add Content',
+    color: 'secondary',
+  })
 
   return (
     <div className={ classes.root }>

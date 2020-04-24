@@ -1,18 +1,13 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import classnames from 'classnames'
-
-import Tooltip from '@material-ui/core/Tooltip'
-import IconButton from '@material-ui/core/IconButton'
 
 import MenuButton from '../widgets/MenuButton'
 import icons from '../../icons'
 
 import useDocumentEditor from '../hooks/useDocumentEditor'
 import useItemEditor from '../hooks/useItemEditor'
-
-const AddIcon = icons.add
-const EditIcon = icons.edit
+import useIconButton from '../hooks/useIconButton'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -33,17 +28,6 @@ const useStyles = makeStyles(theme => ({
   },
   rightIcons: {
     justifyContent: 'flex-end',
-  },
-  iconContainer: {
-    marginLeft: theme.spacing(0.25),
-    marginRight: theme.spacing(0.25),
-    //padding: theme.spacing(0.2),
-    borderRadius: '16px',
-    backgroundColor: '#fff',
-    boxShadow: '0px 3px 3px 0px rgba(0,0,0,0.2)',
-  },
-  icon: {
-    //fontSize: '0.85em',
   },
 }))
 
@@ -67,61 +51,34 @@ const EditableDocument = ({
     node,
   })
 
-  const getEditButton = useCallback((onClick) => {
-    return (
-      <Tooltip title="Edit" placement="top">
-        <IconButton
-          size="small"
-          onClick={ onClick }
-        >
-          <EditIcon
-            fontSize="inherit"
-            className={ classes.icon }
-          />
-        </IconButton>
-      </Tooltip> 
-    )
-  }, [])
+  const getEditButton = useIconButton({
+    icon: 'edit',
+    title: 'Edit',
+  })
 
-
-  const getAddButton = useCallback((onClick) => {
-    return (
-      <Tooltip title="Add" placement="top">
-        <IconButton
-          size="small"
-          onClick={ onClick }
-        >
-          <AddIcon
-            fontSize="inherit"
-            color="secondary"
-            className={ classes.icon }
-          />
-        </IconButton>
-      </Tooltip> 
-    )
-  }, [])
+  const getAddButton = useIconButton({
+    icon: 'add',
+    title: 'Add Widgets',
+    color: 'secondary',
+  })
 
   const rootClassname = classnames(classes.root, className)
 
   return (
     <div className={ rootClassname }>
       <div className={ classnames(classes.iconSection, classes.leftIcons) }>
-        <div className={ classes.iconContainer }>
-          <MenuButton
-            header={ node.name }
-            getButton={ getEditButton }
-            getItems={ getEditorItems }
-          />
-        </div>
+        <MenuButton
+          header={ node.name }
+          getButton={ getEditButton }
+          getItems={ getEditorItems }
+        />
       </div>
       <div className={ classnames(classes.iconSection, classes.rightIcons) }>
-        <div className={ classes.iconContainer }>
-          <MenuButton
-            header="Widgets"
-            getButton={ getAddButton }
-            getItems={ getAddItems }
-          />
-        </div>
+        <MenuButton
+          header="Widgets"
+          getButton={ getAddButton }
+          getItems={ getAddItems }
+        />
       </div>
     </div>
   )
