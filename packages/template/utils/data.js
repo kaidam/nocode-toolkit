@@ -79,17 +79,6 @@ const Data = (globals) => {
         return all.concat(candidates)
       }, [])
     
-    const baseHits = baseRoutes.filter(r => r.name == 'working-with-content-overview')
-    const redirectHits = redirectRoutes.filter(r => r.name == 'working-with-content-overview')
-
-    console.log('--------------------------------------------')
-    console.dir({
-      baseRoutes,
-      redirectRoutes,
-      baseHits,
-      redirectHits,
-    })
-
     return baseRoutes.concat(redirectRoutes)
   }
 
