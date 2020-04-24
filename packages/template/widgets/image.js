@@ -124,6 +124,7 @@ const form = {
 
 const widget = () => ({
   id: 'image',
+  title: 'Image',
   Render,
   form,
 })

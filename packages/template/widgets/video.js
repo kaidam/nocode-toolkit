@@ -53,6 +53,7 @@ const form = {
 
 const widget = () => ({
   id: 'video',
+  title: 'Video',
   Render,
   form,
 })

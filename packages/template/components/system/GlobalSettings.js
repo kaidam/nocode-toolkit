@@ -25,6 +25,10 @@ const useStyles = makeStyles(theme => ({
   },
   list: {
     width: '300px',
+  },
+  divider: {
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
   }
 }))
 
@@ -66,7 +70,7 @@ const GlobalSettings = ({
             globalOptions.map((item, i) => {
               if(item === '-') {
                 return (
-                  <Divider key={ i } />
+                  <Divider className={ classes.divider } key={ i } />
                 )
               }
 

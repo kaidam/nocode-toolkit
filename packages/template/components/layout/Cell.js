@@ -48,6 +48,7 @@ const Cell = ({
   cell,
   layout,
   widgetRenderers,
+  widgetTitles,
   showUI,
   content_id,
   layout_id,
@@ -83,7 +84,9 @@ const Cell = ({
     <Suspense>
       <EditableCell
         id={ id }
+        cell={ cell }
         layout={ layout }
+        widgetTitles={ widgetTitles }
         content_id={ content_id }
         layout_id={ layout_id }
         rowIndex={ rowIndex }

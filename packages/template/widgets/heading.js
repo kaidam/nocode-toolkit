@@ -42,6 +42,7 @@ const form = {
 
 const widget = () => ({
   id: 'heading',
+  title: 'Heading',
   Render,
   form,
 })

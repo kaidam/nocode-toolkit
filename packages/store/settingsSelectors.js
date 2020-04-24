@@ -102,6 +102,17 @@ const widgetRenderers = createSelector(
   }
 )
 
+// return a map of the widgets from id -> renderer
+const widgetTitles = createSelector(
+  widgets,
+  (widgets) => {
+    return widgets.reduce((all, widget) => {
+      all[widget.id] = widget.title
+      return all
+    }, {})
+  }
+)
+
 const activePluginMap = createSelector(
   settings,
   data => data.activePluginMap || DEFAULT_OBJECT
@@ -162,6 +173,7 @@ const selectors = {
   widgets,
   forms,
   widgetRenderers,
+  widgetTitles,
   snippets,
   pageSnippets,
   globalSnippets,

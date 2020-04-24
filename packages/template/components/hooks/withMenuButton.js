@@ -42,6 +42,7 @@ const useStyles = makeStyles(theme => ({
 
 const ItemMenu = ({
   anchorEl,
+  anchorPosition,
   header,
   menuItems,
   open,
@@ -49,15 +50,27 @@ const ItemMenu = ({
   onItemClick,
 }) => {
   const classes = useStyles()
+
+  const menuProps = {
+    classes: {
+      list: classes.list,
+    },
+    open,
+    onClose,
+  }
+
+  if(anchorPosition) {
+    menuProps.anchorReference = 'anchorPosition'
+    // top & left
+    menuProps.anchorPosition = anchorPosition
+  }
+  else {
+    menuProps.anchorEl = anchorEl
+  }
+
+  
   return (
-    <Menu
-      classes={{
-        list: classes.list,
-      }}
-      anchorEl={ anchorEl }
-      open={ open }
-      onClose={ onClose }
-    >
+    <Menu {...menuProps}>
       <MenuItem key="placeholder" style={{display: "none"}} />
       {
         header && (
@@ -181,6 +194,9 @@ const withMenuButton = ({
   // anchor the menu to the given element
   parentAnchorEl,
 
+  // screen co-ordinates for the menu
+  anchorPosition,
+
   // a function that when called with return
   // an array of items to render
   // each item is an object with
@@ -270,6 +286,7 @@ const withMenuButton = ({
       return (
         <ItemMenu
           anchorEl={ useParentEl }
+          anchorPosition={ anchorPosition }
           header={ noHeader ? null : headers.join(' : ') }
           menuItems={ getItems(getItemsParams, handleClose) }
           open={ mainMenuOpen }
@@ -296,6 +313,7 @@ const withMenuButton = ({
       return (
         <ItemMenu
           anchorEl={ useParentEl }
+          anchorPosition={ anchorPosition }
           header={ noHeader ? null : headers.join(' : ') }
           menuItems={ subItems }
           open={ subMenuOpen }

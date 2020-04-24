@@ -223,6 +223,7 @@ const Search = ({
 
 const widget = () => ({
   id: 'search',
+  title: 'Search',
   Render: Search,
 })
 

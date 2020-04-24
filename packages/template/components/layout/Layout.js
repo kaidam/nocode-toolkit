@@ -31,14 +31,19 @@ const Layout = ({
   const annotation = annotations[content_id] || {}
   const data = annotation[layout_id]
   const widgetRenderers = useSelector(settingsSelectors.widgetRenderers)
+  const widgetTitles = useSelector(settingsSelectors.widgetTitles)
   const showUI = useSelector(systemSelectors.showUI)
   const [currentCellId, setCurrentCellId] = useState(null)
 
-  useEffect(() => {
-    const clickHandler = () => setCurrentCellId(null)
-    document.addEventListener('click', clickHandler)
-    return () => document.removeEventListener('click', clickHandler)
-  }, [])
+  // useEffect(() => {
+  //   const clickHandler = () => {
+  //     console.log('--------------------------------------------')
+  //     console.log('click handler')
+  //     setCurrentCellId(null)
+  //   }
+  //   document.addEventListener('click', clickHandler)
+  //   return () => document.removeEventListener('click', clickHandler)
+  // }, [])
 
   if(!data || data.length <= 0) return null
 
@@ -59,6 +64,7 @@ const Layout = ({
                       cell={ cell }
                       layout={ data }
                       widgetRenderers={ widgetRenderers }
+                      widgetTitles={ widgetTitles }
                       showUI={ showUI }
                       content_id={ content_id }
                       layout_id={ layout_id }

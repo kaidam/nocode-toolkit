@@ -21,6 +21,7 @@ const Render = ({
 
 const widget = () => ({
   id: 'snippet',
+  title: 'Snippet',
   Render,
 })
 

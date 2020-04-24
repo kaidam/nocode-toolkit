@@ -43,6 +43,7 @@ const EditableCell = ({
   cell,
   content_id,
   layout_id,
+  widgetTitles,
   rowIndex,
   cellIndex,
   children,
@@ -64,9 +65,10 @@ const EditableCell = ({
     e.nativeEvent.stopImmediatePropagation()
     if(!menuAnchor) {
       setMenuAnchor({
+        title: widgetTitles[cell.type],
         el: e.currentTarget,
-        x: e.nativeEvent.offsetX,
-        y: e.nativeEvent.offsetY,
+        x: e.nativeEvent.clientX + 5,
+        y: e.nativeEvent.clientY + 5,
       })
       setCurrentCellId(id)
     }
@@ -76,17 +78,13 @@ const EditableCell = ({
     }
   }
 
-  const handleClose = () => {
-    setMenuAnchor(null)
-  }
-
   const handleReset = () => {
     setMenuAnchor(null)
     setCurrentCellId(null)
   }
 
   useEffect(() => {
-    if(currentCellId != id) handleClose()
+    if(currentCellId != id) setMenuAnchor(null)
   }, [
     id,
     currentCellId,
@@ -125,7 +123,7 @@ const EditableCell = ({
               rowIndex={ rowIndex }
               cellIndex={ cellIndex }
               getAddMenu={ getAddMenu }
-              onClose={ handleClose }
+              onClose={ handleReset }
               onReset={ handleReset }
             />
           )

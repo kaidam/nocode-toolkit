@@ -91,6 +91,7 @@ const EditableCellMenu = ({
   onClose,
   onReset,
 }) => {
+
   const classes = useStyles()
 
   const actions = Actions(useDispatch(), {
@@ -232,102 +233,19 @@ const EditableCellMenu = ({
     getMoveMenuItems,
   ])
 
-  const addMenu = withMenuButton({
-    getItems: getAddMenuItems,
-    noHeader: true,
-    onClick: onReset,
-    onClose,
-  })
-
-  const moveMenu = withMenuButton({
-    getItems: getMoveMenuItems,
-    noHeader: true,
-    onClick: onReset,
-    onClose,
-  })
-
   const mainMenu = withMenuButton({
     parentAnchorEl: menuAnchor.el,
+    anchorPosition: menuAnchor ? {
+      left: menuAnchor.x,
+      top: menuAnchor.y,
+    } : null,
     getItems: getMenuItems,
-    noHeader: true,
+    header: `Widget: ${menuAnchor.title}`,
     onClick: onReset,
     onClose,
   })
 
   return mainMenu.menus
-
-  // return (
-  //   <Popper
-  //     open
-  //     placement="right"
-  //     id="options-popover"
-  //     anchorEl={ menuAnchor.el }
-  //   >
-  //     <div className={ classes.root }>
-  //       <div className={ classes.iconSection }>
-  //         <div className={ classes.iconContainer }>
-  //           <Tooltip title="Settings" placement="top">
-  //             <IconButton
-  //               size="small"
-  //               onClick={ onEdit }
-  //             >
-  //               <SettingsIcon
-  //                 fontSize="inherit"
-  //                 className={ classes.icon }
-  //               />
-  //             </IconButton>
-  //           </Tooltip>
-  //         </div>
-  //         <div className={ classes.iconContainer }>
-  //           <Tooltip title="Move" placement="top">
-  //             <IconButton
-  //               size="small"
-  //               onClick={ moveMenu.onClick }
-  //             >
-  //               <MoveIcon
-  //                 fontSize="inherit"
-  //                 className={ classes.icon }
-  //               />
-  //             </IconButton>
-  //           </Tooltip>
-  //         </div>
-  //         <div className={ classes.iconContainer }>
-  //           <Tooltip title="Delete" placement="top">
-  //             <IconButton
-  //               size="small"
-  //               onClick={ onDelete }
-  //             >
-  //               <DeleteIcon
-  //                 fontSize="inherit"
-  //                 className={ classes.icon }
-  //               />
-  //             </IconButton>
-  //           </Tooltip>
-  //         </div>
-  //         <div className={ classes.iconContainer }>
-  //           <Tooltip title="Add" placement="top">
-  //             <IconButton
-  //               size="small"
-  //               onClick={ addMenu.onClick }
-  //             >
-  //               <AddIcon
-  //                 fontSize="inherit"
-  //                 color="secondary"
-  //                 className={ classes.icon }
-  //               />
-  //             </IconButton>
-  //           </Tooltip>
-  //         </div>
-  //       </div>
-  //       {
-  //         addMenu.menus
-  //       }
-  //       {
-  //         moveMenu.menus
-  //       }
-  //     </div>
-  //   </Popper>
-  // )
 }
 
 export default EditableCellMenu

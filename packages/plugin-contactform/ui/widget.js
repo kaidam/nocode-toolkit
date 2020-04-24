@@ -15,6 +15,7 @@ const form = {
 
 const widget = {
   id: 'contactform',
+  title: 'Contact Form',
   Render,
   form,
 }

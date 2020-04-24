@@ -59,6 +59,7 @@ const form = {
 
 const widget = () => ({
   id: 'richtext',
+  title: 'Rich Text',
   Render,
   form,
 })

@@ -123,6 +123,7 @@ const form = {
 
 const widget = () => ({
   id: 'social_links',
+  title: 'Social Links',
   Render,
   form,
 })

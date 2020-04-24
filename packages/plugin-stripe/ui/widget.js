@@ -70,6 +70,7 @@ const form = {
 
 const widget = {
   id: 'stripe_payment_button',
+  title: 'Stripe Button',
   Render,
   form,
   // we should not show the payment button if

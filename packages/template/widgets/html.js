@@ -27,6 +27,7 @@ const form = {
 
 const widget = () => ({
   id: 'html',
+  title: 'HTML',
   Render,
   form,
 })
