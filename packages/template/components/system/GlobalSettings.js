@@ -58,7 +58,7 @@ const GlobalSettings = ({
         </Fab>
       </div>
       <Drawer
-        anchor="left"
+        anchor="right"
         open={ open }
         onClose={ () => setOpen(false) }
       >
