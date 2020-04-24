@@ -1,8 +1,5 @@
-import React, { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import { useCallback } from 'react'
 import useMenuButton from '../hooks/useMenuButton'
-import Actions from '../../utils/actions'
-import layoutActions from '../../store/modules/layout'
 
 import icons from '../../icons'
 import driveUtils from '../../utils/drive'
@@ -17,6 +14,9 @@ const OpenIcon = icons.open
 const EditableBodyMenu = ({
   node,
   layout_id,
+  menuAnchor,
+  onClose,
+  onReset,
 }) => {
 
   const {

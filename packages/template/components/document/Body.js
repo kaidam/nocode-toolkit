@@ -31,10 +31,12 @@ const useStyles = makeStyles(theme => ({
 
 const DefaultBody = lazy(() => import(/* webpackChunkName: "ui" */ './DefaultBody'))
 const ReloadTrigger = lazy(() => import(/* webpackChunkName: "ui" */ './ReloadTrigger'))
+const EditableBody = lazy(() => import(/* webpackChunkName: "ui" */ './EditableBody'))
 
 const DocumentBody = ({
   node,
   html,
+  defaultLayoutId,
 }) => {
 
   const actions = Actions(useDispatch(), {
@@ -75,6 +77,7 @@ const DocumentBody = ({
   // this will not trigger a router reload
   useEffect(() => {
     if(systemUtils.isNode) return
+    if(!contentRef.current) return
     const internalLinks = Array.prototype.slice.call(
       contentRef.current.querySelectorAll('a[data-nocode-internal-route]')
     )
@@ -123,6 +126,7 @@ const DocumentBody = ({
     }
   }, [
     html,
+    contentRef.current,
   ])
 
   const content = showUI && !hasContent ? (
@@ -147,10 +151,21 @@ const DocumentBody = ({
     </div>
   )
 
+  const renderContent = showUI ? (
+    <Suspense>
+      <EditableBody
+        node={ node }
+        layout_id={ defaultLayoutId }
+      >
+        { content }
+      </EditableBody>
+    </Suspense>
+  ) : content
+
   return (
     <React.Fragment>
       {
-        content
+        renderContent
       }
       <Suspense>
         <ReloadTrigger

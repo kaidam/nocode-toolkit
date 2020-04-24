@@ -1,18 +1,8 @@
-import React, { lazy, useEffect, useRef, useMemo } from 'react'
+import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useSelector, useDispatch } from 'react-redux'
 
-import routerActions from '../../store/modules/router'
-import nocodeSelectors from '../../store/selectors/nocode'
-import routerSelectors from '../../store/selectors/router'
-import systemSelectors from '../../store/selectors/system'
-
-import Actions from '../../utils/actions'
-import systemUtils from '../../utils/system'
-import eventUtils from '../../utils/events'
-import driveUtils from '../../utils/drive'
-
-import Suspense from '../system/Suspense'
+import Tooltip from '@material-ui/core/Tooltip'
+import colorUtils from '../../utils/color'
 
 import EditableBodyMenu from './EditableBodyMenu'
 
@@ -53,7 +43,7 @@ const EditableBody = ({
 }) => {
 
   const [menuAnchor, setMenuAnchor] = useState(null)
-  const open = false
+  const open = Boolean(menuAnchor)
 
   const classes = useStyles({
     open,
@@ -74,6 +64,10 @@ const EditableBody = ({
     else {
       setMenuAnchor(null)
     }
+  }
+
+  const handleReset = () => {
+    setMenuAnchor(null)
   }
 
   const clicker = (
@@ -103,6 +97,9 @@ const EditableBody = ({
           <EditableBodyMenu
             node={ node }
             layout_id={ layout_id }
+            menuAnchor={ menuAnchor }
+            onClose={ handleReset }
+            onReset={ handleReset }
           />
         )
       }
