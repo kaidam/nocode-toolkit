@@ -1,9 +1,12 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
 import List from '@material-ui/core/List'
 import TreeItem from './TreeItem'
 import useSectionTree from '../hooks/useSectionTree'
+
+import systemSelectors from '../../store/selectors/system'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,9 +34,6 @@ const Tree = ({
   // a ref for the container element for the tree
   // this is used so we can scroll to active elements
   containerRef,
-
-  // when an item is clicked - run this function
-  onClick,
 }) => {
   const {
     onToggleFolder,
@@ -44,6 +44,8 @@ const Tree = ({
     section,
   })
 
+  const showUI = useSelector(systemSelectors.showUI)
+
   const classes = useStyles()
 
   return (
@@ -53,6 +55,7 @@ const Tree = ({
           return (
             <TreeItem
               key={ i }
+              showUI={ showUI }
               item={ item }
               folderPages={ folderPages }
               ItemEditorComponent={ ItemEditorComponent }
@@ -60,7 +63,6 @@ const Tree = ({
               scrollToCurrentPage={ scrollToCurrentPage }
               onDisableScrollToCurrentPage={ onDisableScrollToCurrentPage }
               onToggleFolder={ onToggleFolder }
-              onClick={ onClick }
             />
           )
         })

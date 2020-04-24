@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect } from 'react'
+import React, { lazy, useRef, useCallback, useEffect } from 'react'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -8,6 +8,8 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Suspense from '../system/Suspense'
 import Link from '../widgets/Link'
 import icons from '../../icons'
+
+const EditableItem = lazy(() => import(/* webpackChunkName: "ui" */ '../content/EditableItem'))
 
 const ExpandMoreIcon = icons.expandMore
 const ExpandLessIcon = icons.expandLess
@@ -35,14 +37,13 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const TreeItem = ({
-  ItemEditorComponent,
   item,
+  showUI,
   folderPages,
   containerRef,
   scrollToCurrentPage,
   onDisableScrollToCurrentPage,
   onToggleFolder,
-  onClick,
 }) => {
 
   const {
@@ -74,14 +75,10 @@ const TreeItem = ({
     if(node.type == 'folder' && !folderPages) {
       onToggleFolder(node.id)  
     }
-    else if(onClick) {
-      onClick()
-    }
   }, [
     node,
     folderPages,
     onToggleFolder,
-    onClick,
   ])
 
   // scroll to the current element so when the page initially renders
@@ -96,40 +93,45 @@ const TreeItem = ({
     currentPage,
   ])
 
-  const renderedItem = (
-    <ListItem
-      dense
-      ref={ itemRef }
-      className={ listItemClassname }
-      selected={ item.currentPage }
-      onClick={ onClickItem }
-    >
-      {
-        ItemEditorComponent && (
-          <Suspense
-            Component={ ItemEditorComponent }
-            props={{
-              node: item.node,
-            }}
-          /> 
-        )
-      }
-      <ListItemText
-        className={ classes.itemText }
-        classes={{
-          primary: colorClassname
-        }}
-        primary={ item.node.name }
-      />
-      {
-        node.type == 'folder' ?
-          open ? 
-            <ExpandLessIcon className={ colorClassname } /> : 
-            <ExpandMoreIcon className={ colorClassname } />
-        : null
-      }
-    </ListItem>
-  )
+  const getRenderedItem = (onItemClick) => {
+    return (
+      <ListItem
+        dense
+        ref={ itemRef }
+        className={ listItemClassname }
+        selected={ item.currentPage }
+        onClick={ onItemClick }
+      >
+        <ListItemText
+          className={ classes.itemText }
+          classes={{
+            primary: colorClassname
+          }}
+          primary={ item.node.name }
+        />
+        {
+          node.type == 'folder' ?
+            open ? 
+              <ExpandLessIcon className={ colorClassname } /> : 
+              <ExpandMoreIcon className={ colorClassname } />
+          : null
+        }
+      </ListItem>
+    )
+  }
+
+  if(showUI) {
+    return (
+      <Suspense>
+        <EditableItem
+          node={ item.node }
+          getRenderedItem={ getRenderedItem }
+        />
+      </Suspense>
+    )
+  }
+
+  const renderedItem = getRenderedItem(onClickItem)
 
   let linkType = ''
   if(item.node.type == 'link') linkType = 'external'
