@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react'
+import React, { lazy, useMemo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/IconButton'
@@ -6,9 +6,12 @@ import IconButton from '@material-ui/core/IconButton'
 import contentSelectors from '../../store/selectors/content'
 import routerSelectors from '../../store/selectors/router'
 import systemSelectors from '../../store/selectors/system'
+import Suspense from '../system/Suspense'
 
 import NavBarItem from './NavBarItem'
 import NavBarMenu from './NavBarMenu'
+
+const EditableNavBarMenu = lazy(() => import(/* webpackChunkName: "ui" */ './EditableNavBarMenu'))
 
 import icons from '../../icons'
 
@@ -78,25 +81,37 @@ const NavBar = ({
       )
     }, [])
 
-    return (
-      <NavBarMenu
-        children={ navbarItems }
-        showUI={ showUI }
-        getButton={ getButton }
-      />
-    )
+    if(showUI) {
+      return (
+        <Suspense>
+          <EditableNavBarMenu
+            children={ navbarItems }
+            getButton={ getButton }
+          />
+        </Suspense>
+      )
+    }
+    else {
+      return (
+        <NavBarMenu
+          children={ navbarItems }
+          getButton={ getButton }
+        />
+      )
+    }
+    
   }
   else {
     return (
       <nav>
         <ul className={ classes.navbar }>
           {
-            navbarItems.map((item, i) => {
+            navbarItems.map((node, i) => {
               return (
                 <NavBarItem
                   key={ i }
                   showUI={ showUI }
-                  item={ item }
+                  node={ node }
                   contrast={ contrast }
                   vertical={ vertical }
                   align={ align }

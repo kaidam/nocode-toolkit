@@ -191,6 +191,9 @@ const useMenuButton = ({
   // turn off the auto-sub menu headers
   noHeader,
 
+  // a function to process the header we display
+  processHeaders = (parts) => parts,
+
   // anchor the menu to the given element
   parentAnchorEl,
 
@@ -287,7 +290,7 @@ const useMenuButton = ({
         <ItemMenu
           anchorEl={ useParentEl }
           anchorPosition={ anchorPosition }
-          header={ noHeader ? null : headers.join(' : ') }
+          header={ noHeader ? null : processHeaders(headers).join(' : ') }
           menuItems={ getItems(getItemsParams, handleClose) }
           open={ mainMenuOpen }
           onClose={ handleClose }
@@ -314,7 +317,7 @@ const useMenuButton = ({
         <ItemMenu
           anchorEl={ useParentEl }
           anchorPosition={ anchorPosition }
-          header={ noHeader ? null : headers.join(' : ') }
+          header={ noHeader ? null : processHeaders(headers).join(' : ') }
           menuItems={ subItems }
           open={ subMenuOpen }
           onClose={ handleClose }

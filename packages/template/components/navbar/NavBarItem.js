@@ -10,6 +10,7 @@ import Link from '../widgets/Link'
 import NavBarMenu from './NavBarMenu'
 
 const EditableItem = lazy(() => import(/* webpackChunkName: "ui" */ '../content/EditableItem'))
+const EditableNavBarMenu = lazy(() => import(/* webpackChunkName: "ui" */ './EditableNavBarMenu'))
 
 const NativeLinkComponent = ({
   children,
@@ -99,7 +100,7 @@ const useStyles = makeStyles(theme => {
 })
 
 const NavBarItem = ({
-  item,
+  node,
   showUI,
   contrast,
   align = 'left',
@@ -116,41 +117,59 @@ const NavBarItem = ({
 
   const itemClass = classnames({
     [classes.item]: true,
-    [classes.itemActive]: item.currentPage,
+    [classes.itemActive]: node.currentPage,
   })
 
-  if(item.type == 'folder') {
+  if(node.type == 'folder') {
     const getButton = (onClick) => {
       return (
         <div
           className={ itemClass }
           onClick={ onClick }
         >
-          { item.name }
+          { node.name }
         </div>
       )
     }
     
-    return (
-      <li
-        className={ classes.itemContainer }
-      >
-        <NavBarMenu
-          children={ item.children }
-          getButton={ getButton }
-        />
-      </li>
-    )
+    if(showUI) {
+      return (
+        <li
+          className={ classes.itemContainer }
+        >
+          <Suspense>
+            <EditableNavBarMenu
+              node={ node }
+              children={ node.children }
+              getButton={ getButton }
+            />
+          </Suspense>
+        </li>
+      )
+    }
+    else {
+      return (
+        <li
+          className={ classes.itemContainer }
+        >
+          <NavBarMenu
+            children={ node.children }
+            getButton={ getButton }
+          />
+        </li>
+      )
+    }
+    
   }
   else {
     if(showUI) {
 
       const onOpenItem = () => {
-        if(item.type == 'link') {
-          window.open(item.url)
+        if(node.type == 'link') {
+          window.open(node.url)
         }
         else {
-          dispatch(routerActions.navigateTo(item.route.name))
+          dispatch(routerActions.navigateTo(node.route.name))
         }
       }
 
@@ -163,7 +182,7 @@ const NavBarItem = ({
               className={ itemClass }
               onClick={ onItemClick }
             >
-              { item.name }
+              { node.name }
             </div>
           </li>
         )
@@ -171,7 +190,7 @@ const NavBarItem = ({
       return (
         <Suspense>
           <EditableItem
-            node={ item }
+            node={ node }
             getRenderedItem={ getRenderedItem }
             onOpen={ onOpenItem }
           />
@@ -179,17 +198,17 @@ const NavBarItem = ({
       )
     }
     else {
-      const LinkComponent = item.type == 'link' ?
+      const LinkComponent = node.type == 'link' ?
         NativeLinkComponent :
         Link
 
-      const linkProps = item.type == 'link' ?
+      const linkProps = node.type == 'link' ?
         {
-          href: item.url,
+          href: node.url,
           target: '_external'
         } :
         {
-          name: item.route.name,
+          name: node.route.name,
         }
 
       return (
@@ -200,7 +219,7 @@ const NavBarItem = ({
             className={ itemClass }
             {...linkProps}
           >
-            { item.name }
+            { node.name }
           </LinkComponent>
         </li>
       )
