@@ -5,40 +5,60 @@ import { makeStyles } from '@material-ui/core/styles'
 import library from '../../library'
 
 const useStyles = makeStyles(theme => {
+  const topbarHeight = theme.layout.topbarHeight
+  const processCoords = (coords) => {
+    if(coords.y < topbarHeight) {
+      coords.y = topbarHeight
+      coords.height -= (topbarHeight - coords.y)
+    }
+    return coords
+  }
+
   return {
     root: {
       
     },
     panel: {
-      backgroundColor: 'rgba(255,255,255, 0.4)',
-      backdropFilter: 'blur(10px)',
+      backgroundColor: 'rgba(0, 0, 0, 0.4)',
       position: 'absolute',
       zIndex: 1300,
     },
-    top: ({coords}) => ({
-      width: '100%',
-      height: coords.y,
-      left: '0px',
-      top: '0px',
-    }),
-    right: ({coords}) => ({
-      width: window.innerWidth - coords.x - coords.width,
-      height: coords.height,
-      left: coords.x + coords.width,
-      top: coords.y,
-    }),
-    bottom: ({coords}) => ({
-      width: '100%',
-      height: window.innerHeight - coords.y - coords.height,
-      left: '0px',
-      top: coords.y + coords.height,
-    }),
-    left: ({coords}) => ({
-      width: coords.x,
-      height: coords.height,
-      left: '0px',
-      top: coords.y,
-    }),
+    top: ({coords}) => {
+      const processedCoords = processCoords(coords)
+      return {
+        width: '100%',
+        height: processedCoords.y,
+        left: '0px',
+        top: '0px',
+      }
+    },
+    right: ({coords}) => {
+      const processedCoords = processCoords(coords)
+      return {
+        width: window.innerWidth - processedCoords.x - processedCoords.width,
+        height: processedCoords.height,
+        left: processedCoords.x + processedCoords.width,
+        top: processedCoords.y,
+      }
+    },
+    bottom: ({coords}) => {
+      const processedCoords = processCoords(coords)
+      return {
+        width: '100%',
+        height: window.innerHeight - processedCoords.y - processedCoords.height,
+        left: '0px',
+        top: processedCoords.y + processedCoords.height,
+      }
+    },
+    left: ({coords}) => {
+      const processedCoords = processCoords(coords)
+      return {
+        width: processedCoords.x,
+        height: processedCoords.height,
+        left: '0px',
+        top: processedCoords.y,
+      }
+    },
   }
 })
 
