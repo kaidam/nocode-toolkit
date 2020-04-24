@@ -48,6 +48,11 @@ const useStyles = makeStyles(theme => ({
   settingsIcon: {
     color: theme.palette.text.main,
   },
+  iconContainer: {
+    borderRadius: '16px',
+    backgroundColor: '#fff',
+    boxShadow: '0px 3px 3px 0px rgba(0,0,0,0.2)',
+  },
 }))
 
 const EditableTree = ({
@@ -83,30 +88,37 @@ const EditableTree = ({
 
   const getAddButton = useCallback((onClick) => {
     return (
-      <IconButton
-        size="small"
-        onClick={ onClick }
-      >
-        <AddIcon
-          fontSize="inherit"
-          color="secondary"
-        />
-      </IconButton>
+      <div className={ classes.iconContainer }>
+        <IconButton
+          size="small"
+          onClick={ onClick }
+        >
+          <AddIcon
+            fontSize="inherit"
+            color="secondary"
+          />
+        </IconButton>
+      </div>
+      
     )
-  }, [])
+  }, [
+    classes,
+  ])
 
 
   const getSettingsButton = useCallback((onClick) => {
     return (
-      <IconButton
-        size="small"
-        onClick={ onClick }
-      >
-        <SettingsIcon
-          fontSize="inherit"
-          className={ classes.settingsIcon }
-        />
-      </IconButton>
+      <div className={ classes.iconContainer }>
+        <IconButton
+          size="small"
+          onClick={ onClick }
+        >
+          <SettingsIcon
+            fontSize="inherit"
+          />
+        </IconButton>
+      </div>
+      
     )
   }, [
     classes,

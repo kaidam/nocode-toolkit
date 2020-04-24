@@ -23,7 +23,7 @@ const EditableNavBarMenu = ({
       if(node.type == 'folder') {
         openItem.route = node.route
         expandItem = {
-          title: 'Expand',
+          title: 'View Contents',
           icon: icons.expandMore,
           items: getItems(node.children || [])
         }
@@ -34,7 +34,7 @@ const EditableNavBarMenu = ({
       else {
         openItem.route = node.route
       }
-      return [expandItem, openItem].filter(i => i)
+      return [expandItem, openItem, '-'].filter(i => i)
     }
 
     const getItems = (children) => {
@@ -68,7 +68,7 @@ const EditableNavBarMenu = ({
       header={ node ? node.name : '' }
       getButton={ getButton }
       getItems={ getMenuItems }
-      processHeaders={ (headers) => headers.filter(header => header != 'Expand') }
+      processHeaders={ (headers) => headers.filter(header => header != 'View Contents') }
     />
   )
 }

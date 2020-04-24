@@ -4,6 +4,9 @@ import Button from '@material-ui/core/Button'
 
 import icons from '../../icons'
 
+import useMenuButton from '../hooks/useMenuButton'
+import useDocumentEditor from '../hooks/useDocumentEditor'
+
 const AddIcon = icons.add
 
 const useStyles = makeStyles(theme => ({
@@ -21,9 +24,22 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const DefaultFolder = ({
-  onClick,
+  node,
 }) => {
   const classes = useStyles()
+
+  const {
+    getAddContentItems,
+  } = useDocumentEditor({
+    node,
+  })
+
+  const {
+    menus,
+    onClick,
+  } = useMenuButton({
+    getItems: getAddContentItems,
+  })
 
   return (
     <div
@@ -47,6 +63,9 @@ const DefaultFolder = ({
           <AddIcon />&nbsp;&nbsp;Add Content
         </Button>
       </div>
+      {
+        menus
+      }
     </div>
   )
 }

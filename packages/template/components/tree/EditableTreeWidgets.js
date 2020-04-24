@@ -45,7 +45,12 @@ const useStyles = makeStyles(theme => ({
   },
   itemTextTypography: {
     
-  }
+  },
+  iconContainer: {
+    borderRadius: '16px',
+    backgroundColor: '#fff',
+    boxShadow: '0px 3px 3px 0px rgba(0,0,0,0.2)',
+  },
 }))
 
 const EditableTreeWidgets = ({
@@ -74,7 +79,9 @@ const EditableTreeWidgets = ({
         onClick={ onClick }
       />
     )
-  }, [])
+  }, [
+    classes,
+  ])
 
   const getWidgetButton = useCallback((onClick) => {
     return (
@@ -87,21 +94,27 @@ const EditableTreeWidgets = ({
         />
       </IconButton>
     )
-  }, [])
+  }, [
+    classes,
+  ])
 
   const getAddButton = useCallback((onClick) => {
     return (
-      <IconButton
-        size="small"
-        onClick={ onClick }
-      >
-        <AddIcon
-          fontSize="inherit"
-          color="secondary"
-        />
-      </IconButton>
+      <div className={ classes.iconContainer }>
+        <IconButton
+          size="small"
+          onClick={ onClick }
+        >
+          <AddIcon
+            fontSize="inherit"
+            color="secondary"
+          />
+        </IconButton>
+      </div>
     )
-  }, [])
+  }, [
+    classes,
+  ])
 
   return (
     <div className={ classes.root }>
