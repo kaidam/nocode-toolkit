@@ -1,10 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Tooltip from '@material-ui/core/Tooltip'
 import colorUtils from '../../utils/color'
 
 import EditableBodyMenu from './EditableBodyMenu'
+import FocusElementOverlay from '../widgets/FocusElementOverlay'
 
 const useStyles = makeStyles(theme => {
   return {
@@ -43,6 +44,8 @@ const EditableBody = ({
 }) => {
 
   const [menuAnchor, setMenuAnchor] = useState(null)
+  const contentRef = useRef(null)
+
   const open = Boolean(menuAnchor)
 
   const classes = useStyles({
@@ -55,7 +58,6 @@ const EditableBody = ({
     e.nativeEvent.stopImmediatePropagation()
     if(!menuAnchor) {
       setMenuAnchor({
-        title: 'Doc',
         el: e.currentTarget,
         x: e.nativeEvent.clientX + 5,
         y: e.nativeEvent.clientY + 5,
@@ -86,27 +88,33 @@ const EditableBody = ({
   )
 
   return (
-    
-    <div className={ classes.root }>
-      <div className="content">
-        { children }
+    <>
+      <div className={ classes.root }>
+        <div className="content" ref={ contentRef }>
+          { children }
+        </div>
+        { clicker }
+        {
+          open && (
+            <EditableBodyMenu
+              node={ node }
+              layout_id={ layout_id }
+              menuAnchor={ menuAnchor }
+              onClose={ handleReset }
+              onReset={ handleReset }
+            />
+          )
+        }
       </div>
-      { clicker }
       {
-        open && (
-          <EditableBodyMenu
-            node={ node }
-            layout_id={ layout_id }
-            menuAnchor={ menuAnchor }
-            onClose={ handleReset }
-            onReset={ handleReset }
+        open && contentRef.current && (
+          <FocusElementOverlay
+            contentRef={ contentRef }
           />
         )
       }
-    </div>
-  
-  
-)
+    </>
+  )
 }
 
 export default EditableBody

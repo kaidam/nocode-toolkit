@@ -2,6 +2,8 @@ import React from 'react'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/core/styles'
 
+import library from '../../library'
+
 const useStyles = makeStyles(theme => {
   return {
     root: {
@@ -45,6 +47,10 @@ const FocusElementOverlay = ({
 }) => {
   const el = contentRef.current
   const coords = el.getBoundingClientRect()
+  if(coords.y < library.topbarHeight) {
+    coords.y = library.topbarHeight
+    coords.height -= (library.topbarHeight - coords.y)
+  }
   const classes = useStyles({coords})
   return (
     <div className={ classes.root }>

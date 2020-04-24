@@ -75,7 +75,7 @@ const EditableBodyMenu = ({
       top: menuAnchor.y,
     } : null,
     getItems: getMenuItems,
-    header: `Widget: ${menuAnchor.title}`,
+    header: `Google Document`,
     onClick: onReset,
     onClose,
   })
