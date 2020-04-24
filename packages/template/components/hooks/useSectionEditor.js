@@ -70,6 +70,35 @@ const useSectionEditor = ({
   
   const getSettingsItems = useCallback(() => {
     return [
+
+      ghostFolder ? {
+        title: 'View in Drive',
+        icon: icons.open,
+        secondaryIcon: icons.drive,
+        url: driveUtils.getItemUrl(ghostFolder),
+      } : null,
+
+      ghostFolder ? {
+        title: 'Change Drive Folder',
+        icon: icons.search,
+        secondaryIcon: icons.drive,
+        handler: () => actions.onChangeSectionFolder({
+          id: section,
+        })
+      } : null,
+
+      ghostFolder && !isDefaultFolder ? {
+        title: 'Reset Drive Folder',
+        icon: icons.refresh,
+        secondaryIcon: icons.drive,
+        handler: () => actions.onResetSectionFolder({
+          id: section,
+        })
+      } : null,
+
+      ghostFolder ? '-' : null,
+      
+      
       {
         title: 'Add Content',
         icon: icons.add,
@@ -77,44 +106,26 @@ const useSectionEditor = ({
       },
 
       {
-        title: 'Edit Section',
-        icon: icons.edit,
+        title: 'Sorting',
+        icon: icons.sort,
         handler: () => actions.onEditSection({
           title: `Edit Section`,
           form: `section`,
           id: section,
+          initialTab: 'sorting'
         })
       },
 
-      ghostFolder ? {
-        title: 'Folder Settings',
-        icon: icons.settings,
-        secondaryIcon: icons.drive,
-        items: [
-          {
-            title: 'Open in Drive',
-            icon: icons.open,
-            secondaryIcon: icons.drive,
-            url: driveUtils.getItemUrl(ghostFolder),
-          },
-          {
-            title: 'Change Drive Folder',
-            icon: icons.search,
-            secondaryIcon: icons.drive,
-            handler: () => actions.onChangeSectionFolder({
-              id: section,
-            })
-          },
-          isDefaultFolder ? null : {
-            title: 'Reset Drive Folder',
-            icon: icons.refresh,
-            secondaryIcon: icons.drive,
-            handler: () => actions.onResetSectionFolder({
-              id: section,
-            })
-          }
-        ].filter(i => i)
-      } : null,
+      {
+        title: 'Hidden Items',
+        icon: icons.hide,
+        handler: () => actions.onEditSection({
+          title: `Edit Section`,
+          form: `section`,
+          id: section,
+          initialTab: 'hidden'
+        })
+      },
 
     ].filter(i => i)
   }, [

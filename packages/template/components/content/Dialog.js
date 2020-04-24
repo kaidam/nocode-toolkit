@@ -62,6 +62,7 @@ const ContentDialog = ({
                 values={ values }
                 errors={ errors }
                 showErrors={ showErrors }
+                initialTab={ formWindow.initialTab }
                 touched={ touched }
                 onSubmit={ onSubmit }
                 onCancel={ onCloseWindow }

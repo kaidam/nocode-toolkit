@@ -101,6 +101,17 @@ const useItemOptions = ({
           }],
         },
           settingsItem,
+          {
+            title: 'Sorting',
+            icon: icons.sort,
+            handler: () => actions.onEditRemoteContent({
+              title: `Edit ${node.type.replace(/^\w/, st => st.toUpperCase())}`,
+              driver: 'drive',
+              form: `drive.${node.type}`,
+              id: node.id,
+              initialTab: 'sorting',
+            })
+          },
           removeItem,
         ]
       }

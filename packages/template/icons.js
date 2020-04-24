@@ -22,6 +22,7 @@ import HistoryIcon from '@material-ui/icons/History'
 import RefreshIcon from '@material-ui/icons/Refresh'
 import ContentIcon from '@material-ui/icons/Inbox'
 import OpenIcon from '@material-ui/icons/OpenInBrowser'
+import SortIcon from '@material-ui/icons/Sort'
 import LogoutIcon from '@material-ui/icons/PowerSettingsNew'
 import FolderIcon from '@material-ui/icons/Folder'
 import FolderOpenIcon from '@material-ui/icons/FolderOpen'
@@ -173,6 +174,7 @@ const icons = {
   send: SendIcon,
   menu: MenuIcon,
   lock: LockIcon,
+  sort: SortIcon,
 }
 
 export default icons

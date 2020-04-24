@@ -22,6 +22,7 @@ const ContentForm = ({
   errors,
   showErrors,
   touched,
+  initialTab,
   onSubmit,
   onCancel,
   onSetFieldValue,
@@ -29,7 +30,7 @@ const ContentForm = ({
 
   const classes = useStyles()
 
-  const [ tab, setTab ] = useState(null)
+  const [ tab, setTab ] = useState(initialTab)
   const form = useSelector(contentSelectors.form)
 
   // this is so form handlers can be given a context
@@ -56,7 +57,7 @@ const ContentForm = ({
   if(form.tabs) {
     const currentTab = form.tabs.find(t => t.id == tab) || form.tabs[0]
     currentSchema = currentTab.schema
-    header = (
+    header = form.tabs.length > 1 && (
       <Tabs
         tabs={ form.tabs }
         current={ tab || currentTab.id }

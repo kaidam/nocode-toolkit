@@ -8,8 +8,8 @@ const forms = {
       },
     },
     tabs: [{
-      id: 'settings',
-      title: 'Settings',
+      id: 'sorting',
+      title: 'Sorting',
       schema: [{
         id: 'annotation.sorting',
         title: 'Sorting',
@@ -89,39 +89,51 @@ const forms = {
       },
     },
     processFormValues: valueInjector({mimeType: 'folder'}),
-    schema: [{
-      id: 'name',
-      title: 'Name',
-      helperText: 'Enter the name of the folder',
-      validate: {
-        type: 'string',
-        methods: [
-          ['required', 'The name is required'],
-        ],
-      }
-    }, {
-      id: 'annotation.sorting',
+    tabs: [{
+      id: 'settings',
+      title: 'Settings',
+      schema: [{
+        id: 'name',
+        title: 'Name',
+        helperText: 'Enter the name of the folder',
+        validate: {
+          type: 'string',
+          methods: [
+            ['required', 'The name is required'],
+          ],
+        }
+      }],
+    },{
+      id: 'sorting',
       title: 'Sorting',
-      helperText: 'How are children items sorted inside this folder?',
-      component: 'sorting',
-    }],
+      schema: [{
+        id: 'annotation.sorting',
+        title: 'Sorting',
+        helperText: 'How are children items sorted inside this folder?',
+        component: 'sorting',
+      }],
+    }]
   },
   'drive.document': {
     initialValues: {
       name: '',
     },
     processFormValues: valueInjector({mimeType: 'document'}),
-    schema: [{
-      id: 'name',
-      title: 'Name',
-      helperText: 'Enter the name of the document',
-      validate: {
-        type: 'string',
-        methods: [
-          ['required', 'The name is required'],
-        ],
-      }
-    }],
+    tabs: [{
+      id: 'settings',
+      title: 'Settings',
+      schema: [{
+        id: 'name',
+        title: 'Name',
+        helperText: 'Enter the name of the document',
+        validate: {
+          type: 'string',
+          methods: [
+            ['required', 'The name is required'],
+          ],
+        }
+      }],
+    }]
   },
   'link': {
     initialValues: {

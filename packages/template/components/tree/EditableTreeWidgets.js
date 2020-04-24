@@ -12,7 +12,6 @@ import icons from '../../icons'
 import useLayoutEditor from '../hooks/useLayoutEditor'
 import useIconButton from '../hooks/useIconButton'
 
-const AddIcon = icons.add
 const WidgetIcon = icons.widget
 
 const useStyles = makeStyles(theme => ({
@@ -30,8 +29,6 @@ const useStyles = makeStyles(theme => ({
   menuItem: {
     paddingLeft: theme.spacing(0), 
     paddingRight: theme.spacing(1),
-    //marginTop: theme.spacing(0.2),
-    //marginBottom: theme.spacing(0.2),
     cursor: 'pointer',
     color: theme.palette.grey[600],
     display: 'flex',

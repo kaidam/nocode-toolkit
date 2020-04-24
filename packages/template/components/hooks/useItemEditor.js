@@ -17,7 +17,7 @@ const useItemEditor = ({
       getInjectedItems: () => {
         return onOpen ?
           [{
-            title: 'Open Page',
+            title: node.type == 'folder' ? 'Open Folder' : 'Open Page',
             icon: icons.forward,
             handler: onOpen,
           }, '-'] :

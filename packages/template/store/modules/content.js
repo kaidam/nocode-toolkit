@@ -200,6 +200,7 @@ const sideEffects = {
   */
   editRemoteContent: ({
     title,
+    initialTab,
     driver,
     form,
     id,
@@ -210,6 +211,7 @@ const sideEffects = {
       processValues: processNodeFormValues,
       formWindowConfig: {
         title,
+        initialTab,
       },
       onSubmit: async ({
         data,
@@ -298,6 +300,7 @@ const sideEffects = {
 
   editLocalContent: ({
     title,
+    initialTab,
     form,
     id,
     location,
@@ -309,6 +312,7 @@ const sideEffects = {
       values,
       formWindowConfig: {
         title,
+        initialTab,
       },
       onSubmit: async (data) => {
         const result = await loaders.saveContent(getState, {
@@ -359,6 +363,7 @@ const sideEffects = {
   */
   editSection: ({
     title,
+    initialTab,
     form,
     id,
   }) => wrapper('editSection', async (dispatch, getState) => {
@@ -368,6 +373,7 @@ const sideEffects = {
       processValues: processSectionFormValues,
       formWindowConfig: {
         title,
+        initialTab,
       },
       onSubmit: async ({
         annotation,
