@@ -24,7 +24,7 @@ const IconCombo = (Left, Right) => () => (
   </div>
 )
 
-const EditableCellMenu = ({
+const EditableBodyMenu = ({
   layout,
   content_id,
   layout_id,
@@ -190,4 +190,4 @@ const EditableCellMenu = ({
   return mainMenu.menus
 }
 
-export default EditableCellMenu
+export default EditableBodyMenu

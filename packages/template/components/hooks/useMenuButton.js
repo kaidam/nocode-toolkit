@@ -183,7 +183,7 @@ const ItemMenu = ({
   )
 }
 
-const withMenuButton = ({
+const useMenuButton = ({
 
   // test that appears above the menu in bold with a divider
   header,
@@ -352,4 +352,4 @@ const withMenuButton = ({
   }
 }
 
-export default withMenuButton
+export default useMenuButton

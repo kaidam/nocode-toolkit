@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import withMenuButton from '../hooks/withMenuButton'
+import useMenuButton from '../hooks/useMenuButton'
 
 const MenuButton = ({
   // the classname for the root item
@@ -12,7 +12,7 @@ const MenuButton = ({
   const {
     menus,
     onClick,
-  } = withMenuButton(props)
+  } = useMenuButton(props)
   
   const button = useMemo(
     () => getButton(onClick),

@@ -35,16 +35,6 @@ const Layout = ({
   const showUI = useSelector(systemSelectors.showUI)
   const [currentCellId, setCurrentCellId] = useState(null)
 
-  // useEffect(() => {
-  //   const clickHandler = () => {
-  //     console.log('--------------------------------------------')
-  //     console.log('click handler')
-  //     setCurrentCellId(null)
-  //   }
-  //   document.addEventListener('click', clickHandler)
-  //   return () => document.removeEventListener('click', clickHandler)
-  // }, [])
-
   if(!data || data.length <= 0) return null
 
   return (

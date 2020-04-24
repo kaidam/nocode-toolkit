@@ -8,14 +8,13 @@ import EditableCellMenu from './EditableCellMenu'
 
 const useStyles = makeStyles(theme => {
   return {
-    root: ({faded}) => ({
+    root: {
       position: 'relative',
       height: '100%',
       '& .content': {
-        opacity: faded ? 0.5 : 1,
         height: '100%',
       },
-    }),
+    },
     clicker: ({open}) => ({
       position: 'absolute',
       left: 0,
@@ -55,7 +54,6 @@ const EditableCell = ({
   const open = Boolean(menuAnchor)
 
   const classes = useStyles({
-    faded: currentCellId && currentCellId != id,
     open,
   })
 
