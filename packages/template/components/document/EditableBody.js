@@ -1,4 +1,5 @@
 import React, { lazy, useEffect, useRef, useMemo } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 import { useSelector, useDispatch } from 'react-redux'
 
 import routerActions from '../../store/modules/router'
@@ -13,7 +14,7 @@ import driveUtils from '../../utils/drive'
 
 import Suspense from '../system/Suspense'
 
-import { makeStyles } from '@material-ui/core/styles'
+import EditableBodyMenu from './EditableBodyMenu'
 
 const useStyles = makeStyles(theme => {
   return {
@@ -46,8 +47,49 @@ const useStyles = makeStyles(theme => {
 })
 
 const EditableBody = ({
+  node,
+  layout_id,
   children,
 }) => {
+
+  const [menuAnchor, setMenuAnchor] = useState(null)
+  const open = false
+
+  const classes = useStyles({
+    open,
+  })
+
+  const handleClick = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    e.nativeEvent.stopImmediatePropagation()
+    if(!menuAnchor) {
+      setMenuAnchor({
+        title: 'Doc',
+        el: e.currentTarget,
+        x: e.nativeEvent.clientX + 5,
+        y: e.nativeEvent.clientY + 5,
+      })
+    }
+    else {
+      setMenuAnchor(null)
+    }
+  }
+
+  const clicker = (
+    <div
+      className={ classes.clicker }
+      onClick={ handleClick }
+    >
+      {
+        open ? null : (
+          <Tooltip title="Click to Edit" placement="top" arrow>
+            <div className={ classes.tooltipContent }></div>
+          </Tooltip>
+        )
+      }
+    </div>
+  )
 
   return (
     
@@ -58,17 +100,9 @@ const EditableBody = ({
       { clicker }
       {
         open && (
-          <EditableCellMenu
-            menuAnchor={ menuAnchor }
-            layout={ layout }
-            cell={ cell }
-            content_id={ content_id }
+          <EditableBodyMenu
+            node={ node }
             layout_id={ layout_id }
-            rowIndex={ rowIndex }
-            cellIndex={ cellIndex }
-            getAddMenu={ getAddMenu }
-            onClose={ handleReset }
-            onReset={ handleReset }
           />
         )
       }

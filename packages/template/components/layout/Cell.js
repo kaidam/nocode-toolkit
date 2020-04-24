@@ -54,8 +54,6 @@ const Cell = ({
   layout_id,
   rowIndex,
   cellIndex,
-  currentCellId,
-  setCurrentCellId,
   getAddMenu,
 }) => {
 
@@ -91,8 +89,6 @@ const Cell = ({
         layout_id={ layout_id }
         rowIndex={ rowIndex }
         cellIndex={ cellIndex }
-        currentCellId={ currentCellId }
-        setCurrentCellId={ setCurrentCellId }
         getAddMenu={ getAddMenu }
       >
         { content }

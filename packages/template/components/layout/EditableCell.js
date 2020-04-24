@@ -46,8 +46,6 @@ const EditableCell = ({
   rowIndex,
   cellIndex,
   children,
-  currentCellId,
-  setCurrentCellId,
   getAddMenu,
 }) => {
   const [menuAnchor, setMenuAnchor] = useState(null)
@@ -68,25 +66,15 @@ const EditableCell = ({
         x: e.nativeEvent.clientX + 5,
         y: e.nativeEvent.clientY + 5,
       })
-      setCurrentCellId(id)
     }
     else {
       setMenuAnchor(null)
-      setCurrentCellId(null)
     }
   }
 
   const handleReset = () => {
     setMenuAnchor(null)
-    setCurrentCellId(null)
   }
-
-  useEffect(() => {
-    if(currentCellId != id) setMenuAnchor(null)
-  }, [
-    id,
-    currentCellId,
-  ])
 
   const clicker = (
     <div

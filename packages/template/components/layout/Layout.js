@@ -33,7 +33,6 @@ const Layout = ({
   const widgetRenderers = useSelector(settingsSelectors.widgetRenderers)
   const widgetTitles = useSelector(settingsSelectors.widgetTitles)
   const showUI = useSelector(systemSelectors.showUI)
-  const [currentCellId, setCurrentCellId] = useState(null)
 
   if(!data || data.length <= 0) return null
 
@@ -60,8 +59,6 @@ const Layout = ({
                       layout_id={ layout_id }
                       rowIndex={ i }
                       cellIndex={ j }
-                      currentCellId={ currentCellId }
-                      setCurrentCellId={ setCurrentCellId }
                       getAddMenu={ getAddMenu }
                     />
                   )
