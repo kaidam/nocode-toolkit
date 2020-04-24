@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Tooltip from '@material-ui/core/Tooltip'
 
 import colorUtils from '../../utils/color'
 import EditableCellMenu from './EditableCellMenu'
+import FocusElementOverlay from '../widgets/FocusElementOverlay'
 
 const useStyles = makeStyles(theme => {
   return {
@@ -24,7 +25,6 @@ const useStyles = makeStyles(theme => {
       cursor: 'pointer',
       backgroundColor: open ? colorUtils.getAlpha(theme.palette.primary.main, 0.2) : null,
       border: open ? `1px solid ${theme.palette.grey[400]}` : null,
-      boxShadow: open ? `0px 5px 12px 0px rgba(0, 0, 0, 0.2)` : null,
       '&:hover': {
         backgroundColor: colorUtils.getAlpha(theme.palette.primary.main, 0.2),
       }
@@ -50,6 +50,7 @@ const EditableCell = ({
 }) => {
   const [menuAnchor, setMenuAnchor] = useState(null)
   const open = Boolean(menuAnchor)
+  const contentRef = useRef(null)
 
   const classes = useStyles({
     open,
@@ -92,9 +93,9 @@ const EditableCell = ({
   )
 
   return (
-    
+    <>
       <div className={ classes.root }>
-        <div className="content">
+        <div className="content" ref={ contentRef }>
           { children }
         </div>
         { clicker }
@@ -115,7 +116,14 @@ const EditableCell = ({
           )
         }
       </div>
-    
+      {
+        open && contentRef.current && (
+          <FocusElementOverlay
+            contentRef={ contentRef }
+          />
+        )
+      }
+    </>
     
   )
 }
