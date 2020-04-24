@@ -117,7 +117,7 @@ const EditableDocument = ({
       <div className={ classnames(classes.iconSection, classes.rightIcons) }>
         <div className={ classes.iconContainer }>
           <MenuButton
-            noHeader
+            header="Widgets"
             getButton={ getAddButton }
             getItems={ getAddItems }
           />

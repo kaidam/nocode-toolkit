@@ -17,8 +17,8 @@ const EditableNavBarMenu = ({
     const getInjectedItems = (node) => {
       let expandItem = null
       const openItem = {
-        title: 'Open',
-        icon: icons.open,
+        title: 'Open Page',
+        icon: icons.forward,
       }
       if(node.type == 'folder') {
         openItem.route = node.route
