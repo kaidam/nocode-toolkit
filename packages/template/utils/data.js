@@ -25,6 +25,11 @@ const Data = (globals) => {
   const getInjectedRoutes = () => {
     return data.routes || {}
   }
+
+  const getInjectedRedirects = () => {
+    const items = data.items || {}
+    return items.redirects || {}
+  }
   
   const getInjectedInitialState = () => ({
     nocode: {
@@ -40,14 +45,55 @@ const Data = (globals) => {
     const config = getConfig()
 
     const routes = getInjectedRoutes()
-    return Object.keys(routes).map(path => {
-      const name = routeUtils.routePathToName(path)
-      return Object.assign({}, routes[path], {
-        name,
-        path: routeUtils.sanitizeRoute(config.baseUrl + path),
+    const redirects = getInjectedRedirects()
+
+    const baseRoutes = Object
+      .keys(routes)
+      .map(path => {
+        const name = routeUtils.routePathToName(path)
+        return Object.assign({}, routes[path], {
+          name,
+          path: routeUtils.sanitizeRoute(config.baseUrl + path),
+        })
       })
+
+    const redirectRoutes = Object
+      .keys(routes)
+      .reduce((all, path) => {
+        const candidates = Object
+          .keys(redirects)
+          .filter(redirectFrom => {
+            const redirectTo = redirects[redirectFrom]
+            return path.indexOf(redirectTo) == 0
+          })
+          .map(redirectFrom => {
+            const redirectTo = redirects[redirectFrom]
+            const newPath = path.replace(redirectTo, redirectFrom)
+            const newName = routeUtils.routePathToName(newPath)
+            return {
+              name: newName,
+              path: newPath,
+              redirect: path,
+            }
+          })
+        return all.concat(candidates)
+      }, [])
+    
+    const baseHits = baseRoutes.filter(r => r.name == 'working-with-content-overview')
+    const redirectHits = redirectRoutes.filter(r => r.name == 'working-with-content-overview')
+
+    console.log('--------------------------------------------')
+    console.dir({
+      baseRoutes,
+      redirectRoutes,
+      baseHits,
+      redirectHits,
     })
+
+    return baseRoutes.concat(redirectRoutes)
   }
+
+  const getRedirects = () => getInjectedRedirects()
 
   const getInitialState = () => {
     const injectedState = getInjectedInitialState()
@@ -71,6 +117,7 @@ const Data = (globals) => {
   return {
     getItems,
     getRoutes,
+    getRedirects,
     getConfig,
     getInitialState,
   }

@@ -84,9 +84,7 @@ class Context extends EventEmitter {
 
   routes(routes) {
     if(!routes) return this.data.routes
-    Object.keys(routes).forEach(path => {
-      this.route(path, routes[path])
-    })
+    this.data.routes = routes
   }
 
   external(id, data) {

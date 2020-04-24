@@ -64,37 +64,18 @@ const externalsMiddleware = ({
 
 const redirectMiddleware = ({
   routes,
-  setRouteResult,
 }) => (router, dependencies) => (toState, fromState, done) => {
   const { toActivate } = transitionPath(toState, fromState)
   const { store } = dependencies
 
-  const redirects = toActivate
-    .map(routeName => routes.find(r => r.name == routeName))
-    .filter(route => {
-      if(!route) return false
-      return route.redirect ? true : false
-    })
-    .map(route => route.redirect)
+  if(!toActivate || toActivate.length <= 0) return done()
 
-  if(redirects.length <= 0) return done()
+  const route = routes.find(r => r.name == toActivate[0])
 
-  // we assume the redirect is to a path
-  const redirectTo = redirects[0]
-  const redirectToName = routerUtils.routePathToName(redirectTo)
+  if(!route || !route.redirect) return done()
 
-  // if we are in node - we issue a route instruction
-  // and finish - this will result in a <meta http
-  // with no content and let the browser take over the redirect
-  if(systemUtils.isNode) {
-    setRouteResult({
-      type: 'redirect',
-      url: redirectTo,
-    })
-    return done()
-  }
-
-  store.dispatch(routerActions.navigateTo(redirectToName)) 
+  const redirectName = routerUtils.routePathToName(route.redirect)
+  store.dispatch(routerActions.navigateTo(redirectName)) 
 }
 
 const trackingMiddleware = (trackFn) => (router, dependencies) => (toState, fromState, done) => {
@@ -117,6 +98,7 @@ const Router = ({
   const router = createRouter(routes, {
     defaultRoute: 'notfound',
     queryParamsMode: 'loose',
+    allowNotFound: true,
   })
   router.usePlugin(browserPlugin({
     useHash: false,

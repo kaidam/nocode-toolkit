@@ -18,6 +18,7 @@ const BreadCrumbs = ({
     }]
       .concat(
         useItems
+          .filter(item => item.node)
           .map(item => {
             return {
               title: item.node.name,

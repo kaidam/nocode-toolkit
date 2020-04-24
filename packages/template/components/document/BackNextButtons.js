@@ -33,7 +33,7 @@ const BackNextButtons = ({
   const classes = useStyles()
   const treeSelector = useMemo(contentSelectors.sectionTree, [])
   const baseLocation = useSelector(contentSelectors.routeBaseLocation)
-  const [ type, id ] = baseLocation.split(':')
+  const [ type, id ] = (baseLocation || '').split(':')
   const tree = useSelector(state => {
     return type == 'section' ?
       treeSelector(state, id) :

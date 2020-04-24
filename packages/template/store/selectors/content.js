@@ -296,6 +296,11 @@ const document = createSelector(
   nocodeSelectors.externals,
   (route, nodes, annotations, externalMap) => {
     const node = nodes[route.item]
+    if(!node) return {
+      node: {},
+      route,
+      html: '',
+    }
     const externals = (route.externals || []).map(id => externalMap[id])
     const annotation = annotations[node.id] || {}
     return {

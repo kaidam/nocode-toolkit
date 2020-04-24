@@ -10,7 +10,8 @@ const useStyles = makeStyles(theme => {
       
     },
     panel: {
-      backgroundColor: 'rgba(0, 0, 0, 0.4)',
+      backgroundColor: 'rgba(255, 255, 255, 0.4)',
+      backdropFilter: 'blur(10px)',
       position: 'absolute',
       zIndex: 1300,
     },

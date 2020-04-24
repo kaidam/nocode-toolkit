@@ -11,10 +11,12 @@ const DocumentReloadTrigger = ({
   })
   useEffect(() => {
     function handleWindowFocus() {
-      actions.reloadExternalContent({
-        driver: node.driver,
-        id: node.id,
-      })
+      if(node.driver && node.id) {
+        actions.reloadExternalContent({
+          driver: node.driver,
+          id: node.id,
+        })
+      }
     }
     window.addEventListener('focus', handleWindowFocus)
     return function cleanup() {
