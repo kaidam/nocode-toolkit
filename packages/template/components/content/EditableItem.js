@@ -21,8 +21,11 @@ const EditableItem = ({
     getRenderedItem,
   ])
 
+  if(!node) return null
+
   return (
     <MenuButton
+      asFragment
       header={ node.name }
       getButton={ getButton }
       getItems={ getEditorItems }

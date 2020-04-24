@@ -1,11 +1,15 @@
-import React, { useCallback } from 'react'
+import React, { lazy } from 'react'
+import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import classnames from 'classnames'
 
+import routerActions from '../../store/modules/router'
 import Suspense from '../system/Suspense'
 import Link from '../widgets/Link'
 
 import NavBarMenu from './NavBarMenu'
+
+const EditableItem = lazy(() => import(/* webpackChunkName: "ui" */ '../content/EditableItem'))
 
 const NativeLinkComponent = ({
   children,
@@ -96,11 +100,10 @@ const useStyles = makeStyles(theme => {
 
 const NavBarItem = ({
   item,
+  showUI,
   contrast,
   align = 'left',
   vertical,
-  ItemEditorComponent,
-  onClick,
 }) => {
 
   const classes = useStyles({
@@ -109,22 +112,12 @@ const NavBarItem = ({
     vertical,
   })
 
+  const dispatch = useDispatch()
+
   const itemClass = classnames({
     [classes.item]: true,
     [classes.itemActive]: item.currentPage,
   })
-
-  let content = null
-  const editorComponent = ItemEditorComponent ?
-   (
-      <Suspense
-        Component={ ItemEditorComponent }
-        props={{
-          node: item,
-          buttonClassname: classes.itemEditor,
-        }}
-      /> 
-   ) : null
 
   if(item.type == 'folder') {
     const getButton = (onClick) => {
@@ -133,54 +126,86 @@ const NavBarItem = ({
           className={ itemClass }
           onClick={ onClick }
         >
-          { align == 'right' ? item.name : null }
-          { editorComponent }
-          { align == 'left' ? item.name : null }
+          { item.name }
         </div>
       )
     }
     
-    content = (
-      <NavBarMenu
-        children={ item.children }
-        ItemEditorComponent={ ItemEditorComponent }
-        getButton={ getButton }
-      />
+    return (
+      <li
+        className={ classes.itemContainer }
+      >
+        <NavBarMenu
+          children={ item.children }
+          getButton={ getButton }
+        />
+      </li>
     )
   }
   else {
-    const LinkComponent = item.type == 'link' ?
-      NativeLinkComponent :
-      Link
+    if(showUI) {
 
-    const linkProps = item.type == 'link' ?
-      {
-        href: item.url,
-        target: '_external'
-      } :
-      {
-        name: item.route.name,
+      const onOpenItem = () => {
+        if(item.type == 'link') {
+          window.open(item.url)
+        }
+        else {
+          dispatch(routerActions.navigateTo(item.route.name))
+        }
       }
 
-    content = (
-      <LinkComponent
-        className={ itemClass }
-        {...linkProps}
-      >
-        { align == 'right' ? item.name : null }
-        { editorComponent }
-        { align == 'left' ? item.name : null }
-      </LinkComponent>
-    )
-  }
+      const getRenderedItem = (onItemClick) => {
+        return (
+          <li
+            className={ classes.itemContainer }
+          >
+            <div
+              className={ itemClass }
+              onClick={ onItemClick }
+            >
+              { item.name }
+            </div>
+          </li>
+        )
+      }
+      return (
+        <Suspense>
+          <EditableItem
+            node={ item }
+            getRenderedItem={ getRenderedItem }
+            onOpen={ onOpenItem }
+          />
+        </Suspense>
+      )
+    }
+    else {
+      const LinkComponent = item.type == 'link' ?
+        NativeLinkComponent :
+        Link
 
-  return (
-    <li
-      className={ classes.itemContainer }
-    >
-      { content }
-    </li>
-  )
+      const linkProps = item.type == 'link' ?
+        {
+          href: item.url,
+          target: '_external'
+        } :
+        {
+          name: item.route.name,
+        }
+
+      return (
+        <li
+          className={ classes.itemContainer }
+        >
+          <LinkComponent
+            className={ itemClass }
+            {...linkProps}
+          >
+            { item.name }
+          </LinkComponent>
+        </li>
+      )
+    }
+  }
 }
 
 export default NavBarItem

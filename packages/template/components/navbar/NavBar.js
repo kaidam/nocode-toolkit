@@ -5,6 +5,7 @@ import IconButton from '@material-ui/core/IconButton'
 
 import contentSelectors from '../../store/selectors/content'
 import routerSelectors from '../../store/selectors/router'
+import systemSelectors from '../../store/selectors/system'
 
 import NavBarItem from './NavBarItem'
 import NavBarMenu from './NavBarMenu'
@@ -44,14 +45,6 @@ const NavBar = ({
 
   // the name of the section this navbar is for
   section,
-
-  // the suspended component we use to render the item
-  // options - this gives control to the template
-  // as to what the tree item menu does
-  ItemEditorComponent,
-
-  // when an item is clicked - run this function
-  onClick,
 }) => {
 
   const classes = useStyles({
@@ -61,6 +54,7 @@ const NavBar = ({
   const treeSelector = useMemo(contentSelectors.sectionTree, [])
   const tree = useSelector(state => treeSelector(state, section))
   const homeItem = useSelector(contentSelectors.homeItem)
+  const showUI = useSelector(systemSelectors.showUI)
 
   const navbarItems = useMemo(() => {
     if(!withHome || !homeItem) return tree
@@ -87,7 +81,7 @@ const NavBar = ({
     return (
       <NavBarMenu
         children={ navbarItems }
-        ItemEditorComponent={ ItemEditorComponent }
+        showUI={ showUI }
         getButton={ getButton }
       />
     )
@@ -101,12 +95,11 @@ const NavBar = ({
               return (
                 <NavBarItem
                   key={ i }
+                  showUI={ showUI }
                   item={ item }
-                  ItemEditorComponent={ ItemEditorComponent }
                   contrast={ contrast }
                   vertical={ vertical }
                   align={ align }
-                  onClick={ onClick }
                 />
               )
             })

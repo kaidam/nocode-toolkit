@@ -6,6 +6,8 @@ const MenuButton = ({
   className,
   // a function that is called (onClick) to render the button
   getButton,
+  // should we return a fragment or a div
+  asFragment = false,
   ...props
 }) => {
 
@@ -22,12 +24,23 @@ const MenuButton = ({
     ]
   )
 
-  return (
-    <div className={ className }>
-      { button }
-      { menus }
-    </div>
-  )
+  if(asFragment) {
+    return (
+      <>
+        { button }
+        { menus }
+      </>
+    )
+  }
+  else {
+    return (
+      <div className={ className }>
+        { button }
+        { menus }
+      </div>
+    )
+  }
+  
 }
 
 export default MenuButton
