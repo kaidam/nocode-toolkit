@@ -94,6 +94,24 @@ const useDocumentEditor = ({
     node,
   ])
 
+  const getEditItems = useCallback(() => {
+    return [
+      {
+        title: 'Settings',
+        icon: icons.settings,
+        handler: driveUtils.isFolder(node) ?
+          onOpenSettings :
+          onEditItem,
+      }, {
+        title: driveUtils.isFolder(node) ?
+          'Open Google Folder' :
+          'Edit Google Document'
+      }
+    ]
+  }, [
+    onOpenSettings,
+  ])
+
   return {
     node,
     getAddItems,

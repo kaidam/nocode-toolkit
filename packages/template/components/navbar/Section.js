@@ -1,4 +1,5 @@
 import React, { lazy, useRef } from 'react'
+import classnames from 'classnames'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
 
@@ -48,16 +49,18 @@ const NavBarSection = ({
   vertical,
   align,
   withHome,
+  className,
 }) => {
   const classes = useStyles({
     vertical,
     align,
   })
   const showUI = useSelector(systemSelectors.showUI)
-  
+  const rootClassname = classnames(classes.root, className)
+
   return (
     <div
-      className={ classes.root }
+      className={ rootClassname }
     >
       <div
         className={ classes.content }

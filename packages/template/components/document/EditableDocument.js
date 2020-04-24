@@ -15,6 +15,7 @@ const SettingsIcon = icons.settings
 const AddIcon = icons.add
 const EditIcon = icons.edit
 const OpenIcon = icons.open
+const GoogleIcon = icons.drive
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -45,7 +46,7 @@ const useStyles = makeStyles(theme => ({
     boxShadow: '0px 3px 3px 0px rgba(0,0,0,0.2)',
   },
   icon: {
-    fontSize: '0.85em',
+    //fontSize: '0.85em',
   },
 }))
 
@@ -95,7 +96,7 @@ const EditableDocument = ({
               size="small"
               onClick={ onOpenSettings }
             >
-              <SettingsIcon
+              <EditIcon
                 fontSize="inherit"
                 className={ classes.icon }
               />
@@ -110,9 +111,9 @@ const EditableDocument = ({
                   size="small"
                   onClick={ onEditItem }
                 >
-                  <EditIcon
+                  <GoogleIcon
                     fontSize="inherit"
-                    className={ classes.icon }
+                    size={ 18 }
                   />
                 </IconButton>
               </Tooltip>
@@ -138,9 +139,9 @@ const EditableDocument = ({
                     className={ classes.icon }
                   />
                 ) : (
-                  <EditIcon
+                  <GoogleIcon
                     fontSize="inherit"
-                    className={ classes.icon }
+                    size={ 18 }
                   />
                 )
               }
