@@ -5,12 +5,14 @@ import useItemEditor from '../hooks/useItemEditor'
 const EditableItem = ({
   node,
   getRenderedItem,
+  onOpen,
 }) => {
 
   const {
     getEditorItems,
   } = useItemEditor({
     node,
+    onOpen,
   })
 
   const getButton = useCallback((onClick) => {

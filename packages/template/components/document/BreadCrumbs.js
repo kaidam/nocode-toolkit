@@ -16,13 +16,16 @@ const BreadCrumbs = ({
       path: '/',
       name: 'root',
     }]
-      .concat(useItems.map(item => {
-        return {
-          title: item.node.name,
-          path: item.route.path,
-          name: item.route.name,
-        }
-      }))
+      .concat(
+        useItems
+          .map(item => {
+            return {
+              title: item.node.name,
+              path: item.route.path,
+              name: item.route.name,
+            }
+          })
+      )
       .filter(i => i)
   }, [
     pathToItem,

@@ -8,6 +8,7 @@ import driveUtils from '../../utils/drive'
 
 const useItemEditor = ({
   node,
+  onOpen,
 }) => {
   const actions = Actions(useDispatch(), {
     onCreateRemoteContent: contentActions.createRemoteContent,
@@ -49,6 +50,10 @@ const useItemEditor = ({
       const openUrl = driveUtils.getItemUrl(node)
       if(node.type == 'folder') {
         return [{
+          title: 'Open',
+          icon: icons.open,
+          handler: onOpen,
+        }, {
           title: 'Add',
           icon: icons.add,
           items: [{
@@ -82,7 +87,7 @@ const useItemEditor = ({
             id: node.id,
           })
         }, {
-          title: 'Open in Drive',
+          title: 'View in Drive',
           icon: icons.open,
           secondaryIcon: icons.drive,
           url: openUrl,
@@ -92,6 +97,11 @@ const useItemEditor = ({
       }
       else {
         return [
+          {
+            title: 'Open',
+            icon: icons.open,
+            handler: onOpen,
+          }, 
           {
             title: 'Edit',
             icon: icons.edit,
@@ -117,6 +127,10 @@ const useItemEditor = ({
     }
     else {
       return [{
+        title: 'Open',
+        icon: icons.open,
+        handler: onOpen,
+      }, {
         title: 'Edit',
         icon: icons.edit,
         handler: () => actions.onEditLocalContent({
@@ -137,6 +151,7 @@ const useItemEditor = ({
     }
   }, [
     node,
+    onOpen,
   ])
 
   return {

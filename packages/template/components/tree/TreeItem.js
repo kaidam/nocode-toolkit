@@ -1,7 +1,9 @@
 import React, { lazy, useRef, useCallback, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/core/styles'
 
+import routerActions from '../../store/modules/router'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 
@@ -56,6 +58,8 @@ const TreeItem = ({
   const classes = useStyles({
     depth,
   })
+
+  const dispatch = useDispatch()
 
   const itemRef = useRef()
 
@@ -120,23 +124,36 @@ const TreeItem = ({
     )
   }
 
+  let linkType = ''
+  if(item.node.type == 'link') linkType = 'external'
+  else if(item.node.type == 'folder') linkType = folderPages ? 'internal' : ''
+  else linkType = 'internal'
+
+  const onOpenItem = useCallback(() => {
+    if(linkType == 'external') {
+      window.open(item.node.url)
+    }
+    else if(linkType == 'internal' && item.route) {
+      dispatch(routerActions.navigateTo(item.route.name))
+    }
+  }, [
+    linkType,
+    item,
+  ])
+
   if(showUI) {
     return (
       <Suspense>
         <EditableItem
           node={ item.node }
           getRenderedItem={ getRenderedItem }
+          onOpen={ onOpenItem }
         />
       </Suspense>
     )
   }
 
   const renderedItem = getRenderedItem(onClickItem)
-
-  let linkType = ''
-  if(item.node.type == 'link') linkType = 'external'
-  else if(item.node.type == 'folder') linkType = folderPages ? 'internal' : ''
-  else linkType = 'internal'
 
   if(linkType == 'external') {
     return (
