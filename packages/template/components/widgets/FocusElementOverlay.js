@@ -1,19 +1,10 @@
 import React from 'react'
 import classnames from 'classnames'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 
 import library from '../../library'
 
 const useStyles = makeStyles(theme => {
-  const topbarHeight = theme.layout.topbarHeight
-  const processCoords = (coords) => {
-    if(coords.y < topbarHeight) {
-      coords.y = topbarHeight
-      coords.height -= (topbarHeight - coords.y)
-    }
-    return coords
-  }
-
   return {
     root: {
       
@@ -23,42 +14,30 @@ const useStyles = makeStyles(theme => {
       position: 'absolute',
       zIndex: 1300,
     },
-    top: ({coords}) => {
-      const processedCoords = processCoords(coords)
-      return {
-        width: '100%',
-        height: processedCoords.y,
-        left: '0px',
-        top: '0px',
-      }
-    },
-    right: ({coords}) => {
-      const processedCoords = processCoords(coords)
-      return {
-        width: window.innerWidth - processedCoords.x - processedCoords.width,
-        height: processedCoords.height,
-        left: processedCoords.x + processedCoords.width,
-        top: processedCoords.y,
-      }
-    },
-    bottom: ({coords}) => {
-      const processedCoords = processCoords(coords)
-      return {
-        width: '100%',
-        height: window.innerHeight - processedCoords.y - processedCoords.height,
-        left: '0px',
-        top: processedCoords.y + processedCoords.height,
-      }
-    },
-    left: ({coords}) => {
-      const processedCoords = processCoords(coords)
-      return {
-        width: processedCoords.x,
-        height: processedCoords.height,
-        left: '0px',
-        top: processedCoords.y,
-      }
-    },
+    top: ({coords}) => ({
+      width: '100%',
+      height: coords.y,
+      left: '0px',
+      top: '0px',
+    }),
+    right: ({coords}) => ({
+      width: window.innerWidth - coords.x - coords.width,
+      height: coords.height,
+      left: coords.x + coords.width,
+      top: coords.y,
+    }),
+    bottom: ({coords}) => ({
+      width: '100%',
+      height: window.innerHeight - coords.y - coords.height,
+      left: '0px',
+      top: coords.y + coords.height,
+    }),
+    left: ({coords}) => ({
+      width: coords.x,
+      height: coords.height,
+      left: '0px',
+      top: coords.y,
+    }),
   }
 })
 
@@ -67,9 +46,12 @@ const FocusElementOverlay = ({
 }) => {
   const el = contentRef.current
   const coords = el.getBoundingClientRect()
-  if(coords.y < library.topbarHeight) {
-    coords.y = library.topbarHeight
-    coords.height -= (library.topbarHeight - coords.y)
+  const theme = useTheme()
+  const topbarHeight = theme.layout.topbarHeight
+  const y = coords.y
+  if(y < topbarHeight) {
+    coords.y = topbarHeight
+    coords.height -= (topbarHeight - y)
   }
   const classes = useStyles({coords})
   return (
