@@ -89,30 +89,22 @@ const forms = {
       },
     },
     processFormValues: valueInjector({mimeType: 'folder'}),
-    tabs: [{
-      id: 'main',
-      title: 'Details',
-      schema: [{
-        id: 'name',
-        title: 'Name',
-        helperText: 'Enter the name of the folder',
-        validate: {
-          type: 'string',
-          methods: [
-            ['required', 'The name is required'],
-          ],
-        }
-      }],
-    },{
-      id: 'settings',
-      title: 'Settings',
-      schema: [{
-        id: 'annotation.sorting',
-        title: 'Sorting',
-        helperText: 'How are children items sorted inside this folder?',
-        component: 'sorting',
-      }],
-    }]
+    schema: [{
+      id: 'name',
+      title: 'Name',
+      helperText: 'Enter the name of the folder',
+      validate: {
+        type: 'string',
+        methods: [
+          ['required', 'The name is required'],
+        ],
+      }
+    }, {
+      id: 'annotation.sorting',
+      title: 'Sorting',
+      helperText: 'How are children items sorted inside this folder?',
+      component: 'sorting',
+    }],
   },
   'drive.document': {
     initialValues: {

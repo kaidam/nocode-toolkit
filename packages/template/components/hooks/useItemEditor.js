@@ -14,11 +14,15 @@ const useItemEditor = ({
   const getEditorItems = useCallback(() => {
     return getItemOptions({
       node,
-      getInjectedItems: () => ([{
-        title: 'Open',
-        icon: icons.open,
-        handler: onOpen,
-      }])
+      getInjectedItems: () => {
+        return onOpen ?
+          [{
+            title: 'Open Page',
+            icon: icons.forward,
+            handler: onOpen,
+          }, '-'] :
+          []
+      }
     })
   }, [
     getItemOptions,

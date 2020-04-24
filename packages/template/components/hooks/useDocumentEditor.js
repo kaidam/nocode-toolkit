@@ -13,8 +13,6 @@ const useDocumentEditor = ({
 }) => {
 
   const actions = Actions(useDispatch(), {
-    onEditNode: contentActions.editNode,
-    onEditRemoteContent: contentActions.editRemoteContent,
     onCreateRemoteContent: contentActions.createRemoteContent,
   })
 
@@ -24,31 +22,6 @@ const useDocumentEditor = ({
     content_id: node.id,
     layout_id,
   })
-
-  const onOpenSettings = useCallback(() => {
-    actions.onEditNode({
-      title: `Edit Document Settings`,
-      form: `documentSettings`,
-      id: node.id,
-    })
-  }, [
-    node,
-  ])
-
-  const onOpenItem = useCallback(() => driveUtils.openItem(node), [
-    node,
-  ])
-
-  const onEditItem = useCallback(() => {
-    actions.onEditRemoteContent({
-      title: `Edit ${node.type.replace(/^\w/, st => st.toUpperCase())}`,
-      driver: 'drive',
-      form: `drive.${node.type}`,
-      id: node.id,
-    })
-  }, [
-    node,
-  ])
 
   const getAddContentItems = useCallback(() => {
     return [{
@@ -94,31 +67,8 @@ const useDocumentEditor = ({
     node,
   ])
 
-  const getEditItems = useCallback(() => {
-    return [
-      {
-        title: 'Settings',
-        icon: icons.settings,
-        handler: driveUtils.isFolder(node) ?
-          onOpenSettings :
-          onEditItem,
-      }, {
-        title: driveUtils.isFolder(node) ?
-          'Open Google Folder' :
-          'Edit Google Document'
-      }
-    ]
-  }, [
-    onOpenSettings,
-  ])
-
   return {
-    node,
     getAddItems,
-    getAddContentItems,
-    onOpenSettings,
-    onOpenItem,
-    onEditItem,
   }
 }
 

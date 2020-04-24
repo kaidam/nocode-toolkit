@@ -11,7 +11,7 @@ import icons from '../../icons'
 
 import useSectionEditor from '../hooks/useSectionEditor'
 
-const SettingsIcon = icons.settings
+const EditIcon = icons.edit
 const AddIcon = icons.add
 
 const useStyles = makeStyles(theme => ({
@@ -113,7 +113,7 @@ const EditableTree = ({
           size="small"
           onClick={ onClick }
         >
-          <SettingsIcon
+          <EditIcon
             fontSize="inherit"
           />
         </IconButton>

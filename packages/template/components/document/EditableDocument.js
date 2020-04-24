@@ -7,15 +7,12 @@ import IconButton from '@material-ui/core/IconButton'
 
 import MenuButton from '../widgets/MenuButton'
 import icons from '../../icons'
-import driveUtils from '../../utils/drive'
 
 import useDocumentEditor from '../hooks/useDocumentEditor'
+import useItemEditor from '../hooks/useItemEditor'
 
-const SettingsIcon = icons.settings
 const AddIcon = icons.add
 const EditIcon = icons.edit
-const OpenIcon = icons.open
-const GoogleIcon = icons.drive
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -40,7 +37,7 @@ const useStyles = makeStyles(theme => ({
   iconContainer: {
     marginLeft: theme.spacing(0.25),
     marginRight: theme.spacing(0.25),
-    padding: theme.spacing(0.2),
+    //padding: theme.spacing(0.2),
     borderRadius: '16px',
     backgroundColor: '#fff',
     boxShadow: '0px 3px 3px 0px rgba(0,0,0,0.2)',
@@ -52,7 +49,6 @@ const useStyles = makeStyles(theme => ({
 
 const EditableDocument = ({
   node,
-  annotation,
   layout_id,
   className,
 }) => {
@@ -60,13 +56,33 @@ const EditableDocument = ({
 
   const {
     getAddItems,
-    onOpenSettings,
-    onOpenItem,
-    onEditItem,
   } = useDocumentEditor({
     node,
     layout_id,
   })
+
+  const {
+    getEditorItems,
+  } = useItemEditor({
+    node,
+  })
+
+  const getEditButton = useCallback((onClick) => {
+    return (
+      <Tooltip title="Edit" placement="top">
+        <IconButton
+          size="small"
+          onClick={ onClick }
+        >
+          <EditIcon
+            fontSize="inherit"
+            className={ classes.icon }
+          />
+        </IconButton>
+      </Tooltip> 
+    )
+  }, [])
+
 
   const getAddButton = useCallback((onClick) => {
     return (
@@ -91,62 +107,11 @@ const EditableDocument = ({
     <div className={ rootClassname }>
       <div className={ classnames(classes.iconSection, classes.leftIcons) }>
         <div className={ classes.iconContainer }>
-          <Tooltip title="Page Settings" placement="top">
-            <IconButton
-              size="small"
-              onClick={ onOpenSettings }
-            >
-              <EditIcon
-                fontSize="inherit"
-                className={ classes.icon }
-              />
-            </IconButton>
-          </Tooltip>
-        </div>
-        {
-          driveUtils.isFolder(node) && (
-            <div className={ classes.iconContainer }>
-              <Tooltip title="Edit" placement="top">
-                <IconButton
-                  size="small"
-                  onClick={ onEditItem }
-                >
-                  <GoogleIcon
-                    fontSize="inherit"
-                    size={ 18 }
-                  />
-                </IconButton>
-              </Tooltip>
-            </div>
-          )
-        }
-        <div className={ classes.iconContainer }>
-          <Tooltip
-            title={
-              driveUtils.isFolder(node) ?
-                "Open Google Folder" :
-                "Edit Google Document"
-            }
-            placement="top">
-            <IconButton
-              size="small"
-              onClick={ onOpenItem }
-            >
-              {
-                driveUtils.isFolder(node) ? (
-                  <OpenIcon
-                    fontSize="inherit"
-                    className={ classes.icon }
-                  />
-                ) : (
-                  <GoogleIcon
-                    fontSize="inherit"
-                    size={ 18 }
-                  />
-                )
-              }
-            </IconButton>
-          </Tooltip>
+          <MenuButton
+            header={ node.name }
+            getButton={ getEditButton }
+            getItems={ getEditorItems }
+          />
         </div>
       </div>
       <div className={ classnames(classes.iconSection, classes.rightIcons) }>

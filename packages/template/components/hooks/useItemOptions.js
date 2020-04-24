@@ -55,10 +55,28 @@ const useItemOptions = ({
         }]
       }
 
+      const settingsItem = {
+        title: 'Settings',
+        icon: icons.settings,
+        handler: () => actions.onEditRemoteContent({
+          title: `Edit ${node.type.replace(/^\w/, st => st.toUpperCase())}`,
+          driver: 'drive',
+          form: `drive.${node.type}`,
+          id: node.id,
+        })
+      }
+
       const openUrl = driveUtils.getItemUrl(node)
       if(node.type == 'folder') {
         items = [{
-          title: 'Add',
+          title: 'View in Drive',
+          icon: icons.open,
+          secondaryIcon: icons.drive,
+          url: openUrl,
+        },
+        '-',
+        {
+          title: 'Add Content',
           icon: icons.add,
           items: [{
             title: 'Google Folder',
@@ -81,33 +99,21 @@ const useItemOptions = ({
               parentId: node.id,
             })
           }],
-        }, {
-          title: 'Edit',
-          icon: icons.edit,
-          handler: () => actions.onEditRemoteContent({
-            title: `Edit ${node.type.replace(/^\w/, st => st.toUpperCase())}`,
-            driver: 'drive',
-            form: `drive.${node.type}`,
-            id: node.id,
-          })
         },
-        removeItem,
-        {
-          title: 'View in Drive',
-          icon: icons.look,
-          secondaryIcon: icons.drive,
-          url: openUrl,
-        },
+          settingsItem,
+          removeItem,
         ]
       }
       else {
         items = [
           {
-            title: 'Edit',
-            icon: icons.edit,
+            title: 'View in Drive',
+            icon: icons.open,
             secondaryIcon: icons.drive,
             url: openUrl,
           }, 
+          '-',
+          settingsItem,
           node.isHome ? 
             {
               title: 'Change Homepage',
