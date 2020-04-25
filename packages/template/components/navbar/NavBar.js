@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/IconButton'
 
 import contentSelectors from '../../store/selectors/content'
-import routerSelectors from '../../store/selectors/router'
 import systemSelectors from '../../store/selectors/system'
 import Suspense from '../system/Suspense'
 

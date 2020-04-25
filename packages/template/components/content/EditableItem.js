@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react'
+import Tooltip from '@material-ui/core/Tooltip'
 import MenuButton from '../widgets/MenuButton'
 import useItemEditor from '../hooks/useItemEditor'
 
@@ -16,7 +17,12 @@ const EditableItem = ({
   })
 
   const getButton = useCallback((onClick) => {
-    return getRenderedItem(onClick)
+    const button = getRenderedItem(onClick)
+    return (
+      <Tooltip title="Click to Edit" placement="top" arrow>
+        { button }
+      </Tooltip>
+    )
   }, [
     getRenderedItem,
   ])

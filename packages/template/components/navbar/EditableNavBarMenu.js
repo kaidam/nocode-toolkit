@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react'
+import Tooltip from '@material-ui/core/Tooltip'
 import useItemOptions from '../hooks/useItemOptions'
 import MenuButton from '../widgets/MenuButton'
 import icons from '../../icons'
@@ -11,6 +12,17 @@ const EditableNavBarMenu = ({
   const {
     getItemOptions,
   } = useItemOptions()
+
+  const getTooltipButton = useCallback((onClick) => {
+    const button = getButton(onClick)
+    return (
+      <Tooltip title="Click to Edit" placement="top" arrow>
+        { button }
+      </Tooltip>
+    )
+  }, [
+    getButton,
+  ])
 
   const getMenuItems = useCallback(() => {
 
@@ -66,7 +78,7 @@ const EditableNavBarMenu = ({
   return (
     <MenuButton
       header={ node ? node.name : '' }
-      getButton={ getButton }
+      getButton={ getTooltipButton }
       getItems={ getMenuItems }
       processHeaders={ (headers) => headers.filter(header => header != 'View Contents') }
     />
