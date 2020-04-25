@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Tooltip from '@material-ui/core/Tooltip'
 
 import colorUtils from '../../utils/color'
-import FocusElementOverlay from '../widgets/FocusElementOverlay'
+import FocusElementOverlay from './FocusElementOverlay'
 
 const useStyles = makeStyles(theme => {
   return {
@@ -26,6 +26,7 @@ const useStyles = makeStyles(theme => {
       border: open ? `1px solid ${theme.palette.grey[400]}` : null,
       '&:hover': {
         backgroundColor: colorUtils.getAlpha(theme.palette.primary.main, 0.2),
+        border: `1px solid ${theme.palette.grey[400]}`,
       }
     }),
     tooltipContent: {

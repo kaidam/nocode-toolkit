@@ -1,43 +1,8 @@
-import React, { useState, useRef } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-
-import Tooltip from '@material-ui/core/Tooltip'
-
-import colorUtils from '../../utils/color'
+import React from 'react'
 import EditableCellMenu from './EditableCellMenu'
-import FocusElementOverlay from '../widgets/FocusElementOverlay'
-
-const useStyles = makeStyles(theme => {
-  return {
-    root: {
-      position: 'relative',
-      height: '100%',
-      '& .content': {
-        height: '100%',
-      },
-    },
-    clicker: ({open}) => ({
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      width: '100%',
-      height: '100%',
-      cursor: 'pointer',
-      backgroundColor: open ? colorUtils.getAlpha(theme.palette.primary.main, 0.2) : null,
-      border: open ? `1px solid ${theme.palette.grey[400]}` : null,
-      '&:hover': {
-        backgroundColor: colorUtils.getAlpha(theme.palette.primary.main, 0.2),
-      }
-    }),
-    tooltipContent: {
-      width: '100%',
-      height: '100%',
-    },
-  }
-})
+import FocusElement from '../widgets/FocusElement'
 
 const EditableCell = ({
-  id,
   layout,
   cell,
   content_id,
@@ -48,83 +13,36 @@ const EditableCell = ({
   children,
   getAddMenu,
 }) => {
-  const [menuAnchor, setMenuAnchor] = useState(null)
-  const open = Boolean(menuAnchor)
-  const contentRef = useRef(null)
 
-  const classes = useStyles({
-    open,
-  })
+  const title = widgetTitles[cell.type]
 
-  const handleClick = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    e.nativeEvent.stopImmediatePropagation()
-    if(!menuAnchor) {
-      setMenuAnchor({
-        title: widgetTitles[cell.type],
-        el: e.currentTarget,
-        x: e.nativeEvent.clientX + 5,
-        y: e.nativeEvent.clientY + 5,
-      })
-    }
-    else {
-      setMenuAnchor(null)
-    }
+  const getMenu = ({
+    menuAnchor,
+    onReset,
+  }) => {
+    return (
+      <EditableCellMenu
+        menuAnchor={ menuAnchor }
+        layout={ layout }
+        cell={ cell }
+        content_id={ content_id }
+        layout_id={ layout_id }
+        rowIndex={ rowIndex }
+        cellIndex={ cellIndex }
+        getAddMenu={ getAddMenu }
+        onClose={ onReset }
+        onReset={ onReset }
+      />
+    )
   }
-
-  const handleReset = () => {
-    setMenuAnchor(null)
-  }
-
-  const clicker = (
-    <div
-      className={ classes.clicker }
-      onClick={ handleClick }
-    >
-      {
-        open ? null : (
-          <Tooltip title="Click to Edit" placement="top" arrow>
-            <div className={ classes.tooltipContent }></div>
-          </Tooltip>
-        )
-      }
-    </div>
-  )
 
   return (
-    <>
-      <div className={ classes.root }>
-        <div className="content" ref={ contentRef }>
-          { children }
-        </div>
-        { clicker }
-        {
-          open && (
-            <EditableCellMenu
-              menuAnchor={ menuAnchor }
-              layout={ layout }
-              cell={ cell }
-              content_id={ content_id }
-              layout_id={ layout_id }
-              rowIndex={ rowIndex }
-              cellIndex={ cellIndex }
-              getAddMenu={ getAddMenu }
-              onClose={ handleReset }
-              onReset={ handleReset }
-            />
-          )
-        }
-      </div>
-      {
-        open && contentRef.current && (
-          <FocusElementOverlay
-            contentRef={ contentRef }
-          />
-        )
-      }
-    </>
-    
+    <FocusElement
+      getMenu={ getMenu }
+      title={ title }
+    >
+      { children }
+    </FocusElement>
   )
 }
 
