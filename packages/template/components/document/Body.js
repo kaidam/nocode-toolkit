@@ -151,7 +151,7 @@ const DocumentBody = ({
     </div>
   )
 
-  const renderContent = showUI ? (
+  const renderContent = showUI && hasContent ? (
     <Suspense>
       <EditableBody
         node={ node }
