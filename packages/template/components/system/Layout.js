@@ -31,7 +31,7 @@ const Layout = ({
   return (
     <React.Fragment>
       <Helmet
-        title={ settings.title || 'Nocode Website' } 
+        title={ settings.company_name || 'Nocode Website' } 
       > 
         <meta name="description" content={ settings.description } />
         <meta name="keywords" content={ settings.keywords } />
