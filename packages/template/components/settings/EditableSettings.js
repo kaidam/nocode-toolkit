@@ -5,36 +5,43 @@ import IconButton from '@material-ui/core/IconButton'
 import icons from '../../icons'
 import eventUtils from '../../utils/events'
 
+import FocusElement from '../widgets/FocusElement'
 import Actions from '../../utils/actions'
 import settingsActions from '../../store/modules/settings'
 
 const EditIcon = icons.edit
 
 const EditableSettings = ({
-  classNames = {},
+  children,
 }) => {
 
   const actions = Actions(useDispatch(), {
     onOpenSettings: settingsActions.openDialog,
   })
 
-  const iconClassname = classnames("navbar-ui-icon", classNames.icon)
-
   return (
-    <IconButton
-      size="small"
-      className={ classNames.button }
-      onClick={ (e) => {
-        eventUtils.cancelEvent(e)
-        actions.onOpenSettings() 
-      }}
+    <FocusElement
+      onClick={ actions.onOpenSettings }
     >
-      <EditIcon
-        fontSize="inherit"
-        className={ iconClassname }
-      />
-    </IconButton>
+      { children }
+    </FocusElement>
   )
+
+  // return (
+  //   <IconButton
+  //     size="small"
+  //     className={ classNames.button }
+  //     onClick={ (e) => {
+  //       eventUtils.cancelEvent(e)
+  //       actions.onOpenSettings() 
+  //     }}
+  //   >
+  //     <EditIcon
+  //       fontSize="inherit"
+  //       className={ iconClassname }
+  //     />
+  //   </IconButton>
+  // )
 }
 
 export default EditableSettings

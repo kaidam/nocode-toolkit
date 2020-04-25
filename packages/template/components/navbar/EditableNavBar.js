@@ -7,6 +7,7 @@ import MenuButton from '../widgets/MenuButton'
 import icons from '../../icons'
 
 import useSectionEditor from '../hooks/useSectionEditor'
+import useIconButton from '../hooks/useIconButton'
 
 const SettingsIcon = icons.settings
 
@@ -38,21 +39,10 @@ const NavbarSectionEditor = ({
     contrast,
   })
 
-  const getSettingsButton = useCallback((onClick) => {
-    return (
-      <IconButton
-        size="small"
-        onClick={ onClick }
-      >
-        <SettingsIcon
-          fontSize="inherit"
-          className={ classes.settingsIcon }
-        />
-      </IconButton>
-    )
-  }, [
-    classes,
-  ])
+  const getSettingsButton = useIconButton({
+    icon: 'edit',
+    title: 'Edit',
+  })
 
   return (
     <div className={ classes.root }>

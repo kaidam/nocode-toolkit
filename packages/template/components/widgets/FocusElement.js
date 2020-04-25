@@ -38,6 +38,7 @@ const useStyles = makeStyles(theme => {
 
 const FocusElement = ({
   getMenu,
+  onClick,
   title,
   children,
 }) => {
@@ -53,6 +54,8 @@ const FocusElement = ({
     e.preventDefault()
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
+    if(onClick) return onClick()
+    if(!getMenu) throw new Error(`neither onClick nor getMenu was passed to FocusElement`)
     if(!menuAnchor) {
       setMenuAnchor({
         title,
@@ -91,7 +94,7 @@ const FocusElement = ({
         </div>
         { clicker }
         {
-          open && getMenu({
+          open && getMenu && getMenu({
             menuAnchor,
             onReset: handleReset,
           })
