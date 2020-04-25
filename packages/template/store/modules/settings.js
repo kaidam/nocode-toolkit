@@ -6,6 +6,8 @@ import contentActions from './content'
 import jobActions from './job'
 import snackbarActions from './snackbar'
 
+import settingsSelectors from '../selectors/settings'
+
 import networkWrapper from '../utils/networkWrapper'
 
 import { settings as initialState } from '../initialState'
@@ -46,6 +48,34 @@ const sideEffects = {
       transparent: true,
       message: 'saving settings',
     },
+  }),
+
+  // use to edit things that live in the settings
+  // data but have their own forms
+  // (like logo + copyright)
+  editSettingsSection: ({
+    form,
+    title,
+  } = {}) => wrapper('editSettingsSection', async (dispatch, getState) => {
+    const values = settingsSelectors.settings(getState())
+    await dispatch(contentActions.waitForForm({
+      forms: [form],
+      values,
+      formWindowConfig: {
+        title,
+        size: 'md',
+      },
+      onSubmit: async (data) => {
+        await dispatch(contentActions.saveContent({
+          content_id: 'settings',
+          location: 'singleton:settings',
+          data,
+        }))
+        return data
+      }
+    }))
+    await dispatch(jobActions.reload())
+    dispatch(snackbarActions.setSuccess(`settings updated`))
   }),
 
   

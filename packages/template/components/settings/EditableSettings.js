@@ -12,11 +12,16 @@ import settingsActions from '../../store/modules/settings'
 const EditIcon = icons.edit
 
 const EditableSettings = ({
+  title,
+  form,
   children,
 }) => {
 
   const actions = Actions(useDispatch(), {
-    onOpenSettings: settingsActions.openDialog,
+    onOpenSettings: () => settingsActions.editSettingsSection({
+      form,
+      title,
+    }),
   })
 
   return (

@@ -135,6 +135,32 @@ const FormRender = ({
   handlerContext,
 }) => {
   const classes = useStyles()
+
+  const filteredSchema = handlers && handlers.filter ?
+    schema
+      .map(row => {
+        if(typeof(row) === 'string') return row
+        else if (row.constructor === Array) {
+          const filteredRow = row.filter(item => {
+            return handlers.filter({
+              name: item.id,
+              values,
+            })
+          })
+          return filteredRow.length > 0 ?
+            filteredRow :
+            null
+        }
+        else {
+          return handlers.filter({
+            name: row.id,
+            values,
+          }) ?
+            row :
+            null
+        }
+      }).filter(i => i) :
+    schema
  
   return (
     <React.Fragment>
@@ -146,7 +172,7 @@ const FormRender = ({
         })}
       >
         {
-          schema.map((row, i) => {
+          filteredSchema.map((row, i) => {
             return (
               <FormWrapperRow
                 key={ i }
