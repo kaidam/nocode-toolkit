@@ -71,20 +71,6 @@ const TreeItem = ({
     [classes.active]: currentPage,
   })
 
-  const onClickItem = useCallback(() => {
-    onDisableScrollToCurrentPage()
-
-    // if we do not have folder pages - we toggle the
-    // folder to show the contents
-    if(node.type == 'folder' && !folderPages) {
-      onToggleFolder(node.id)  
-    }
-  }, [
-    node,
-    folderPages,
-    onToggleFolder,
-  ])
-
   // scroll to the current element so when the page initially renders
   // we can see the selected item
   useEffect(() => {
@@ -129,7 +115,27 @@ const TreeItem = ({
   else if(item.node.type == 'folder') linkType = folderPages ? 'internal' : ''
   else linkType = 'internal'
 
+  const onClickItem = useCallback(() => {
+    onDisableScrollToCurrentPage()
+
+    // if we do not have folder pages - we toggle the
+    // folder to show the contents
+    if(node.type == 'folder' && !folderPages) {
+      onToggleFolder(node.id)  
+      return true
+    }
+    else {
+      return false
+    }
+  }, [
+    node,
+    folderPages,
+    onToggleFolder,
+  ])
+
   const onOpenItem = useCallback(() => {
+    const handled = onClickItem()
+    if(handled) return
     if(linkType == 'external') {
       window.open(item.node.url)
     }
