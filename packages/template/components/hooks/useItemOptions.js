@@ -118,7 +118,7 @@ const useItemOptions = ({
       else {
         items = [
           {
-            title: 'View in Drive',
+            title: 'Edit in Drive',
             icon: icons.open,
             secondaryIcon: icons.drive,
             url: openUrl,
