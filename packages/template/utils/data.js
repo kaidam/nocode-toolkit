@@ -66,6 +66,8 @@ const Data = (globals) => {
             const redirectTo = redirects[redirectFrom]
             return path.indexOf(redirectTo) == 0
           })
+          // make sure we don't overwrite an actual route with a redirect
+          .filter(redirectFrom => routes[redirectFrom] ? false : true)
           .map(redirectFrom => {
             const redirectTo = redirects[redirectFrom]
             const newPath = path.replace(redirectTo, redirectFrom)
@@ -79,7 +81,15 @@ const Data = (globals) => {
         return all.concat(candidates)
       }, [])
     
-    return baseRoutes.concat(redirectRoutes)
+    const allRoutes = baseRoutes.concat(redirectRoutes)
+
+    const foundNames = {}
+
+    return allRoutes.filter((route) => {
+      if(foundNames[route.name]) return false
+      foundNames[route.name] = true
+      return true
+    })
   }
 
   const getRedirects = () => getInjectedRedirects()

@@ -170,13 +170,13 @@ const sideEffects = {
         data,
         annotation,
       }) => {
-        const result = await loaders.createRemoteContent(getState, {
+        const apiResult = await loaders.createRemoteContent(getState, {
           driver,
           parentId,
           data,
           annotation,
         })
-        return result
+        return apiResult
       }
     }))
     if(!result) return
