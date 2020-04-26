@@ -5,6 +5,8 @@ import useItemEditor from '../hooks/useItemEditor'
 
 const EditableItem = ({
   node,
+  open,
+  folderPages,
   getRenderedItem,
   autoTooltip = true,
   onOpen,
@@ -14,6 +16,8 @@ const EditableItem = ({
     getEditorItems,
   } = useItemEditor({
     node,
+    open,
+    folderPages,
     onOpen,
   })
 

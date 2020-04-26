@@ -21,7 +21,7 @@ const ExpandMoreIcon = icons.expandMore
 const ExpandLessIcon = icons.expandLess
 
 const useStyles = makeStyles(theme => ({
-  menuItem: ({depth, showUI}) => ({
+  menuItem: ({depth}) => ({
     paddingLeft: theme.spacing(1) + theme.spacing(depth * 2), 
     paddingRight: theme.spacing(1),
     marginLeft: theme.spacing(0.2),
@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
     cursor: 'pointer',
     color: theme.palette.grey[600],
     '&:hover': {
-      backgroundColor: showUI ? colorUtils.getAlpha(theme.palette.primary.main, 0.2) : null,
+      backgroundColor: colorUtils.getAlpha(theme.palette.primary.main, 0.2),
     }
   }),
   itemText: {
@@ -64,7 +64,6 @@ const TreeItem = ({
 
   const classes = useStyles({
     depth,
-    showUI,
   })
 
   const dispatch = useDispatch()
@@ -173,6 +172,8 @@ const TreeItem = ({
       <Suspense>
         <EditableItem
           node={ item.node }
+          open={ open }
+          folderPages={ folderPages }
           getRenderedItem={ getRenderedItem }
           autoTooltip={ false }
           onOpen={ onOpenItem }
