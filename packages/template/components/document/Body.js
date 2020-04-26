@@ -8,7 +8,6 @@ import systemSelectors from '../../store/selectors/system'
 
 import Actions from '../../utils/actions'
 import systemUtils from '../../utils/system'
-import eventUtils from '../../utils/events'
 import driveUtils from '../../utils/drive'
 
 import Suspense from '../system/Suspense'
@@ -31,12 +30,10 @@ const useStyles = makeStyles(theme => ({
 
 const DefaultBody = lazy(() => import(/* webpackChunkName: "ui" */ './DefaultBody'))
 const ReloadTrigger = lazy(() => import(/* webpackChunkName: "ui" */ './ReloadTrigger'))
-const EditableBody = lazy(() => import(/* webpackChunkName: "ui" */ './EditableBody'))
 
 const DocumentBody = ({
   node,
   html,
-  defaultLayoutId,
 }) => {
 
   const actions = Actions(useDispatch(), {
@@ -151,21 +148,10 @@ const DocumentBody = ({
     </div>
   )
 
-  const renderContent = showUI && hasContent ? (
-    <Suspense>
-      <EditableBody
-        node={ node }
-        layout_id={ defaultLayoutId }
-      >
-        { content }
-      </EditableBody>
-    </Suspense>
-  ) : content
-
   return (
     <React.Fragment>
       {
-        renderContent
+        content
       }
       <Suspense>
         <ReloadTrigger
