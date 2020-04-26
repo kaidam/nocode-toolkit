@@ -2,6 +2,7 @@ import React, { lazy, useRef, useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/core/styles'
+import Tooltip from '@material-ui/core/Tooltip'
 
 import routerActions from '../../store/modules/router'
 import ListItem from '@material-ui/core/ListItem'
@@ -10,6 +11,8 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Suspense from '../system/Suspense'
 import Link from '../widgets/Link'
 import icons from '../../icons'
+
+import eventUtils from '../../utils/events'
 
 const EditableItem = lazy(() => import(/* webpackChunkName: "ui" */ '../content/EditableItem'))
 
@@ -83,7 +86,25 @@ const TreeItem = ({
     currentPage,
   ])
 
-  const getRenderedItem = (onItemClick) => {
+  const getRenderedItem = (onItemClick, uiMode) => {
+    const rawTitle = (
+      <ListItemText
+        className={ classes.itemText }
+        classes={{
+          primary: colorClassname
+        }}
+        primary={ item.node.name }
+      />
+    )
+    const title = uiMode ? (
+      <Tooltip
+        title="Click to Edit"
+        placement="top"
+        arrow
+      >
+        { rawTitle }
+      </Tooltip>
+    ) : rawTitle
     return (
       <ListItem
         dense
@@ -91,19 +112,14 @@ const TreeItem = ({
         className={ listItemClassname }
         selected={ item.currentPage }
         onClick={ onItemClick }
+        onContextMenu={ uiMode ? onItemClick : null }
       >
-        <ListItemText
-          className={ classes.itemText }
-          classes={{
-            primary: colorClassname
-          }}
-          primary={ item.node.name }
-        />
+        { title }
         {
           node.type == 'folder' ?
             open ? 
-              <ExpandLessIcon className={ colorClassname } /> : 
-              <ExpandMoreIcon className={ colorClassname } />
+              <ExpandLessIcon className={ colorClassname } onClick={ eventUtils.cancelEventHandler(onOpenItem) } /> : 
+              <ExpandMoreIcon className={ colorClassname } onClick={ eventUtils.cancelEventHandler(onOpenItem) } />
           : null
         }
       </ListItem>
@@ -153,6 +169,7 @@ const TreeItem = ({
         <EditableItem
           node={ item.node }
           getRenderedItem={ getRenderedItem }
+          autoTooltip={ false }
           onOpen={ onOpenItem }
         />
       </Suspense>

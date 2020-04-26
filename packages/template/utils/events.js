@@ -5,8 +5,14 @@ const cancelEvent = (e) => {
   e.preventDefault()
 }
 
+const cancelEventHandler = (handler) => (e) => {
+  cancelEvent(e)
+  handler()
+}
+
 const utils = {
   cancelEvent,
+  cancelEventHandler,
 }
 
 export default utils

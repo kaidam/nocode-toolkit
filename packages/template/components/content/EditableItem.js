@@ -6,6 +6,7 @@ import useItemEditor from '../hooks/useItemEditor'
 const EditableItem = ({
   node,
   getRenderedItem,
+  autoTooltip = true,
   onOpen,
 }) => {
 
@@ -17,14 +18,20 @@ const EditableItem = ({
   })
 
   const getButton = useCallback((onClick) => {
-    const button = getRenderedItem(onClick)
+    const button = getRenderedItem(onClick, true)
+    if(!autoTooltip) return button
     return (
-      <Tooltip title="Click to Edit" placement="top" arrow>
+      <Tooltip
+        title="Click to Edit"
+        placement="top"
+        arrow
+      >
         { button }
       </Tooltip>
     )
   }, [
     getRenderedItem,
+    onOpen,
   ])
 
   if(!node) return null
@@ -32,6 +39,7 @@ const EditableItem = ({
   return (
     <MenuButton
       asFragment
+      rightClick
       header={ node.name }
       getButton={ getButton }
       getItems={ getEditorItems }
