@@ -126,6 +126,7 @@ const NavBarItem = ({
         <div
           className={ itemClass }
           onClick={ onClick }
+          onContextMenu={ showUI ? onClick : null }
         >
           { node.name }
         </div>
@@ -140,7 +141,7 @@ const NavBarItem = ({
           <Suspense>
             <EditableNavBarMenu
               node={ node }
-              children={ node.children }
+              children={ node.children  }
               getButton={ getButton }
             />
           </Suspense>
@@ -173,7 +174,7 @@ const NavBarItem = ({
         }
       }
 
-      const getRenderedItem = (onItemClick) => {
+      const getRenderedItem = (onItemClick, uiMode) => {
         return (
           <li
             className={ classes.itemContainer }
@@ -181,6 +182,7 @@ const NavBarItem = ({
             <div
               className={ itemClass }
               onClick={ onItemClick }
+              onContextMenu={ uiMode ? onItemClick : null }
             >
               { node.name }
             </div>
