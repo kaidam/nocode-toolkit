@@ -68,38 +68,33 @@ const useItemOptions = ({
 
       const openUrl = driveUtils.getItemUrl(node)
       if(node.type == 'folder') {
-        items = [{
-          title: 'View in Drive',
-          icon: icons.open,
-          secondaryIcon: icons.drive,
-          url: openUrl,
-        },
-        '-',
-        {
-          title: 'Add Content',
-          icon: icons.add,
-          items: [{
-            title: 'Google Folder',
-            icon: icons.folder,
-            secondaryIcon: icons.drive,
-            handler: () => actions.onCreateRemoteContent({
-              title: 'Create Folder',
-              driver: 'drive',
-              form: 'drive.folder',
-              parentId: node.id,
-            })
-          },{
-            title: 'Google Document',
-            icon: icons.docs,
-            secondaryIcon: icons.drive,
-            handler: () => actions.onCreateRemoteContent({
-              title: 'Create Document',
-              driver: 'drive',
-              form: 'drive.document',
-              parentId: node.id,
-            })
-          }],
-        },
+        items = [
+          {
+            title: 'Add Content',
+            icon: icons.add,
+            items: [{
+              title: 'Google Folder',
+              icon: icons.folder,
+              secondaryIcon: icons.drive,
+              handler: () => actions.onCreateRemoteContent({
+                title: 'Create Folder',
+                driver: 'drive',
+                form: 'drive.folder',
+                parentId: node.id,
+              })
+            },{
+              title: 'Google Document',
+              icon: icons.docs,
+              secondaryIcon: icons.drive,
+              handler: () => actions.onCreateRemoteContent({
+                title: 'Create Document',
+                driver: 'drive',
+                form: 'drive.document',
+                parentId: node.id,
+              })
+            }],
+          },
+          '-',
           settingsItem,
           {
             title: 'Sorting',
@@ -113,17 +108,17 @@ const useItemOptions = ({
             })
           },
           removeItem,
+          '-',
+          {
+            title: 'View in Drive',
+            icon: icons.open,
+            secondaryIcon: icons.drive,
+            url: openUrl,
+          },
         ]
       }
       else {
         items = [
-          {
-            title: 'Edit in Drive',
-            icon: icons.open,
-            secondaryIcon: icons.drive,
-            url: openUrl,
-          }, 
-          '-',
           settingsItem,
           node.isHome ? 
             {
@@ -138,7 +133,14 @@ const useItemOptions = ({
               icon: icons.refresh,
               secondaryIcon: icons.drive,
               handler: actions.onResetHomepage,
-            } : null
+            } : null,
+          '-',
+          {
+            title: 'Edit in Drive',
+            icon: icons.open,
+            secondaryIcon: icons.drive,
+            url: openUrl,
+          }, 
         ]
       }
     }

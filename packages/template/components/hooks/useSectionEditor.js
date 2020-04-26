@@ -71,6 +71,15 @@ const useSectionEditor = ({
   const getSettingsItems = useCallback(() => {
     return [
 
+
+      {
+        title: 'Add Content',
+        icon: icons.add,
+        items: getAddItems(),
+      },
+
+      '-',
+
       ghostFolder ? {
         title: 'View in Drive',
         icon: icons.open,
@@ -99,12 +108,6 @@ const useSectionEditor = ({
       ghostFolder ? '-' : null,
       
       
-      {
-        title: 'Add Content',
-        icon: icons.add,
-        items: getAddItems(),
-      },
-
       {
         title: 'Sorting',
         icon: icons.sort,
