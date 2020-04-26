@@ -2,8 +2,6 @@ import React from 'react'
 import classnames from 'classnames'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 
-import library from '../../library'
-
 const useStyles = makeStyles(theme => {
   return {
     root: {

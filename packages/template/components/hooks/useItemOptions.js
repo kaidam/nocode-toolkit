@@ -70,6 +70,12 @@ const useItemOptions = ({
       if(node.type == 'folder') {
         items = [
           {
+            title: 'View in Drive',
+            icon: icons.open,
+            secondaryIcon: icons.drive,
+            url: openUrl,
+          }, '-',
+          {
             title: 'Add Content',
             icon: icons.add,
             items: [{
@@ -108,17 +114,16 @@ const useItemOptions = ({
             })
           },
           removeItem,
-          '-',
-          {
-            title: 'View in Drive',
-            icon: icons.open,
-            secondaryIcon: icons.drive,
-            url: openUrl,
-          },
         ]
       }
       else {
         items = [
+          {
+            title: 'Edit in Drive',
+            icon: icons.open,
+            secondaryIcon: icons.drive,
+            url: openUrl,
+          }, '-',
           settingsItem,
           node.isHome ? 
             {
@@ -134,13 +139,6 @@ const useItemOptions = ({
               secondaryIcon: icons.drive,
               handler: actions.onResetHomepage,
             } : null,
-          '-',
-          {
-            title: 'Edit in Drive',
-            icon: icons.open,
-            secondaryIcon: icons.drive,
-            url: openUrl,
-          }, 
         ]
       }
     }

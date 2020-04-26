@@ -8,6 +8,7 @@ import routerActions from '../../store/modules/router'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 
+import colorUtils from '../../utils/color'
 import Suspense from '../system/Suspense'
 import Link from '../widgets/Link'
 import icons from '../../icons'
@@ -20,7 +21,7 @@ const ExpandMoreIcon = icons.expandMore
 const ExpandLessIcon = icons.expandLess
 
 const useStyles = makeStyles(theme => ({
-  menuItem: ({depth}) => ({
+  menuItem: ({depth, showUI}) => ({
     paddingLeft: theme.spacing(1) + theme.spacing(depth * 2), 
     paddingRight: theme.spacing(1),
     marginLeft: theme.spacing(0.2),
@@ -28,6 +29,9 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(0.2),
     cursor: 'pointer',
     color: theme.palette.grey[600],
+    '&:hover': {
+      backgroundColor: showUI ? colorUtils.getAlpha(theme.palette.primary.main, 0.2) : null,
+    }
   }),
   itemText: {
     marginLeft: theme.spacing(1),
@@ -60,6 +64,7 @@ const TreeItem = ({
 
   const classes = useStyles({
     depth,
+    showUI,
   })
 
   const dispatch = useDispatch()
