@@ -58,7 +58,7 @@ const sideEffects = {
     title,
   } = {}) => wrapper('editSettingsSection', async (dispatch, getState) => {
     const values = settingsSelectors.settings(getState())
-    await dispatch(contentActions.waitForForm({
+    const result = await dispatch(contentActions.waitForForm({
       forms: [form],
       values,
       formWindowConfig: {
@@ -74,6 +74,7 @@ const sideEffects = {
         return data
       }
     }))
+    if(!result) return
     await dispatch(jobActions.reload())
     dispatch(snackbarActions.setSuccess(`settings updated`))
   }),
