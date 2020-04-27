@@ -34,6 +34,19 @@ const sideEffects = {
     dispatch(dialogActions.close('settings'))
   },
 
+  updateSettings: (data, reload = true) => async (dispatch, getState) => {
+    const values = settingsSelectors.settings(getState())
+    const newValues = Object.assign({}, values, data)
+    await dispatch(contentActions.saveContent({
+      content_id: 'settings',
+      location: 'singleton:settings',
+      data: newValues,
+    }))
+    if(reload) {
+      await dispatch(jobActions.reload())
+    }
+  },
+
   saveSettings: (data) => wrapper('saveSettings', async (dispatch, getState) => {
     await dispatch(contentActions.saveContent({
       content_id: 'settings',
