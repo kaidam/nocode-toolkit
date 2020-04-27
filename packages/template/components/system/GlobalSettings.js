@@ -1,6 +1,8 @@
 import React, { useState, useMemo } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
+import Tooltip from '@material-ui/core/Tooltip'
 import Fab from '@material-ui/core/Fab'
 import Drawer from '@material-ui/core/Drawer'
 import Divider from '@material-ui/core/Divider'
@@ -10,19 +12,18 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 
+import Actions from '../../utils/actions'
+import systemSelectors from '../../store/selectors/system'
+
+import uiActions from '../../store/modules/ui'
 import useGetGlobalOptions from '../hooks/useGetGlobalOptions'
 
 import icons from '../../icons'
 
 const SettingsIcon = icons.settings
+const CloseIcon = icons.close
 
 const useStyles = makeStyles(theme => ({
-  button: {
-    position: 'absolute',
-    bottom: theme.spacing(2),
-    right: theme.spacing(3),
-    zIndex: 100,
-  },
   list: {
     width: '300px',
   },
@@ -33,10 +34,16 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const GlobalSettings = ({
-  onClick,
+  className,
 }) => {
   const classes = useStyles()
   const [ open, setOpen ] = useState(false)
+  const actions = Actions(useDispatch(), {
+    onSetPreviewMode: uiActions.setPreviewMode,
+  })
+
+  const showUI = useSelector(systemSelectors.showUI)
+  const onDisablePreview = () => actions.onSetPreviewMode(false)
 
   const getGlobalOptions = useGetGlobalOptions({
     includeExtra: true,
@@ -48,14 +55,28 @@ const GlobalSettings = ({
 
   return (
     <>
-      <div className={ classes.button }>
-        <Fab
-          size="large"
-          color="secondary"
-          onClick={ () => setOpen(true) }
-        >
-          <SettingsIcon />
-        </Fab>
+      <div className={ className }>
+        <Tooltip title={ showUI ? "Settings" : "Disable Preview" }  placement="bottom" arrow>
+          {
+            showUI ? (
+              <Fab
+                size="medium"
+                color="secondary"
+                onClick={ () => setOpen(true) }
+              >
+                <SettingsIcon />
+              </Fab>
+            ) : (
+              <Fab
+                size="medium"
+                color="secondary"
+                onClick={ onDisablePreview }
+              >
+                <CloseIcon />
+              </Fab>
+            )
+          }
+        </Tooltip>
       </div>
       <Drawer
         anchor="right"

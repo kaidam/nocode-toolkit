@@ -10,7 +10,6 @@ import Snippet from './Snippet'
 import Suspense from './Suspense'
 
 const GlobalCss = lazy(() => import(/* webpackChunkName: "ui" */ './GlobalCss'))
-const GlobalSettings = lazy(() => import(/* webpackChunkName: "ui" */ './GlobalSettings'))
 const DialogLoader = lazy(() => import(/* webpackChunkName: "ui" */ '../dialog/Loader'))
 
 const Layout = ({
@@ -62,10 +61,6 @@ const Layout = ({
       />
       <Suspense
         Component={ DialogLoader }
-      />
-      <Suspense
-        coreEnabled
-        Component={ GlobalSettings }
       />
       <Suspense
         coreEnabled

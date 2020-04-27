@@ -35,6 +35,7 @@ const useStyles = makeStyles(theme => ({
   editor: ({
     vertical,
   }) => ({
+    marginRight: theme.spacing(2),
     flexGrow: 0,
     paddingTop: vertical ?
       theme.spacing(2) :
@@ -62,18 +63,6 @@ const NavBarSection = ({
     <div
       className={ rootClassname }
     >
-      <div
-        className={ classes.content }
-      >
-        <NavBar
-          section={ section }
-          small={ small }
-          contrast={ contrast }
-          vertical={ vertical }
-          align={ align }
-          withHome={ withHome }
-        />
-      </div>
       {
         showUI && (
           <div className={ classes.editor }>
@@ -87,6 +76,18 @@ const NavBarSection = ({
           </div>
         )
       }
+      <div
+        className={ classes.content }
+      >
+        <NavBar
+          section={ section }
+          small={ small }
+          contrast={ contrast }
+          vertical={ vertical }
+          align={ align }
+          withHome={ withHome }
+        />
+      </div>
     </div>
   )
 }
