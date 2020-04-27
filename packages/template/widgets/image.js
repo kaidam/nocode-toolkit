@@ -9,9 +9,9 @@ const SIZES = {
 
 const Render = ({
   data = {},
-  cell,
 }) => {
   if(!data) return null
+  if(!data.image) return null
 
   const {
     size,
