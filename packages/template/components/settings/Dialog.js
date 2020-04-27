@@ -127,22 +127,33 @@ const PANELS = [{
   icon: icons.code,
   render: ({
     classes,
+    currentTabId,
     snippets,
     onUpdateSnippets,
+    onChangeTab,
   }) => {
+    const snippetTabs = [{
+      id: 'normal',
+      title: 'Snippets',
+    },{
+      id: 'global',
+      title: 'Global Snippets',
+    },{
+      id: 'file',
+      title: 'File Snippets',
+    }]
+    const currentTab = snippetTabs.find(tab => tab.id == currentTabId) || snippetTabs[0]
     return {
       header: (
-        <Grid container>
-          <Grid item xs={ 6 }>
-            <Typography variant="h6" className={ classes.headingTitle }>Snippets</Typography>
-          </Grid>
-          <Grid item xs={ 6 }>
-            <Typography variant="h6" className={ classes.headingTitle }>Global Snippets</Typography>
-          </Grid>
-        </Grid>
+        <Tabs
+          tabs={ snippetTabs }
+          current={ currentTab.id }
+          onChange={ onChangeTab }
+        />
       ),
       body: (
         <Snippets
+          type={ currentTab.id }
           snippets={ snippets }
           onUpdate={ onUpdateSnippets }
         />

@@ -49,6 +49,7 @@ const SettingsSnippetEditDialog = ({
   const classes = useStyles()
 
   const global = snippet.global
+  const file = snippet.file
 
   const [name, setName] = useState(snippet.name)
   const [code, setCode] = useState(snippet.code)
@@ -80,6 +81,7 @@ const SettingsSnippetEditDialog = ({
   }, [
     name,
     global,
+    file,
     code,
     headCode,
     beforeBodyCode,
@@ -87,6 +89,77 @@ const SettingsSnippetEditDialog = ({
     nameError,
     codeError,
   ])
+
+  let message = `Snippets are chunks of HTML that you can add to pages`
+
+  if(global) message = `Global snippets appear on all pages and are useful for adding script tags or custom CSS`
+  else if(file) message = `Upload files that will be published alongside your website`
+
+  let ui = null
+
+  if(global) {
+    ui = (
+      <React.Fragment>
+        <Grid item xs={ 4 }>
+          <TextField
+            label="Head HTML"
+            helperText={ showErrors && codeError ? codeError : "Enter some HTML code for the HEAD tag" }
+            fullWidth
+            multiline
+            rows={ 5 }
+            error={ showErrors && codeError ? true : false }
+            value={ headCode }
+            onChange={(e) => setHeadCode(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={ 4 }>
+          <TextField
+            label="Before Body HTML"
+            helperText={ showErrors && codeError ? codeError : "Enter some HTML code for before the BODY tag" }
+            fullWidth
+            multiline
+            rows={ 5 }
+            error={ showErrors && codeError ? true : false }
+            value={ beforeBodyCode }
+            onChange={(e) => setBeforeBodyCode(e.target.value)}
+          />
+        </Grid>
+        <Grid item xs={ 4 }>
+          <TextField
+            label="After Body HTML"
+            helperText={ showErrors && codeError ? codeError : "Enter some HTML code for after the BODY tag" }
+            fullWidth
+            multiline
+            rows={ 5 }
+            error={ showErrors && codeError ? true : false }
+            value={ afterBodyCode }
+            onChange={(e) => setAfterBodyCode(e.target.value)}
+          />
+        </Grid>
+      </React.Fragment>
+    )
+  }
+  else if(file) {
+    ui = (
+      <div>UI HERE</div>
+    )
+  }
+  else {
+    ui = (
+      <Grid item xs={ 12 }>
+        <TextField
+          label="HTML"
+          helperText={ showErrors && codeError ? codeError : "Enter some HTML code for this snippet" }
+          fullWidth
+          multiline
+          rows={ 5 }
+          error={ showErrors && codeError ? true : false }
+          value={ code }
+          onChange={(e) => setCode(e.target.value)}
+        />
+      </Grid>
+    )
+  }
 
   return (
     <Dialog
@@ -106,12 +179,7 @@ const SettingsSnippetEditDialog = ({
 
           <Grid item xs={ 12 }>
             <FormHelperText>
-              {
-                global ?
-                  `Global snippets appear on all pages and are useful for adding script tags or custom CSS` :
-                  `Snippets are chunks of HTML that you can add to pages`
-              }
-              
+              { message }
             </FormHelperText>
           </Grid>
 
@@ -126,59 +194,7 @@ const SettingsSnippetEditDialog = ({
             />
           </Grid>
           {
-            global ? (
-              <React.Fragment>
-                <Grid item xs={ 4 }>
-                  <TextField
-                    label="Head HTML"
-                    helperText={ showErrors && codeError ? codeError : "Enter some HTML code for the HEAD tag" }
-                    fullWidth
-                    multiline
-                    rows={ 5 }
-                    error={ showErrors && codeError ? true : false }
-                    value={ headCode }
-                    onChange={(e) => setHeadCode(e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={ 4 }>
-                  <TextField
-                    label="Before Body HTML"
-                    helperText={ showErrors && codeError ? codeError : "Enter some HTML code for before the BODY tag" }
-                    fullWidth
-                    multiline
-                    rows={ 5 }
-                    error={ showErrors && codeError ? true : false }
-                    value={ beforeBodyCode }
-                    onChange={(e) => setBeforeBodyCode(e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={ 4 }>
-                  <TextField
-                    label="After Body HTML"
-                    helperText={ showErrors && codeError ? codeError : "Enter some HTML code for after the BODY tag" }
-                    fullWidth
-                    multiline
-                    rows={ 5 }
-                    error={ showErrors && codeError ? true : false }
-                    value={ afterBodyCode }
-                    onChange={(e) => setAfterBodyCode(e.target.value)}
-                  />
-                </Grid>
-              </React.Fragment>
-            ) : (
-              <Grid item xs={ 12 }>
-                <TextField
-                  label="HTML"
-                  helperText={ showErrors && codeError ? codeError : "Enter some HTML code for this snippet" }
-                  fullWidth
-                  multiline
-                  rows={ 5 }
-                  error={ showErrors && codeError ? true : false }
-                  value={ code }
-                  onChange={(e) => setCode(e.target.value)}
-                />
-              </Grid>
-            )
+            ui
           }
         </Grid>
       </DialogContent>

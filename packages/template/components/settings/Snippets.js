@@ -60,6 +60,7 @@ const useStyles = makeStyles(theme => ({
 
 const SettingsSnippetGroup = ({
   global = false,
+  file = false,
   snippets,
   setDeleteSnippet,
   setEditSnippet,
@@ -81,19 +82,28 @@ const SettingsSnippetGroup = ({
       beforeBodyCode: snippet.beforeBodyCode,
       afterBodyCode: snippet.afterBodyCode,
       global: snippet.global,
+      file: snippet.file,
     }
   })
+
+  let message = `Chunks of HTML that you can add to pages`
+  let typeTitle = ''
+
+  if(global) {
+    message = `Appear on all pages and are useful for adding script tags or custom CSS`
+    typeTitle = 'global '
+  }
+  else if(file) {
+    message = `Upload files that will be published alongside your website`
+    typeTitle = 'file '
+  }
 
   return (
     <div className={ classes.content }>
       <Grid container className={ classes.titleContainer }>
         <Grid item xs={ 12 }>
           <Typography variant="caption" className={ classes.snippetTitle }>
-            {
-              global ?
-                `Appear on all pages and are useful for adding script tags or custom CSS` :
-                `Chunks of HTML that you can add to pages`
-            }
+            { message }
           </Typography>
         </Grid>
       </Grid>
@@ -104,9 +114,9 @@ const SettingsSnippetGroup = ({
             size="small"
             color="secondary"
             variant="contained"
-            onClick={ () => onOpenAddDialog(global) }
+            onClick={ () => onOpenAddDialog(global, file) }
           >
-            Add { global ? 'global ' : ''} snippet
+            Add { typeTitle } snippet
           </Button>
         </Grid>
       </Grid>
@@ -139,13 +149,24 @@ const SettingsSnippetGroup = ({
 
 const SettingsSnippets = ({
   snippets,
+  type,
   onUpdate,
 }) => {
 
   const classes = useStyles()
 
-  const pageSnippets = snippets.filter(snippet => !snippet.global)
+  const pageSnippets = snippets.filter(snippet => !snippet.global && !snippet.file)
   const globalSnippets = snippets.filter(snippet => snippet.global)
+  const fileSnippets = snippets.filter(snippet => snippet.file)
+
+  let useSnippets = pageSnippets
+
+  if(type == 'global') {
+    useSnippets = globalSnippets
+  }
+  else if(type == 'file') {
+    useSnippets = fileSnippets
+  }
   
   const [ editSnippet, setEditSnippet ] = useState(null)
   const [ deleteSnippet, setDeleteSnippet ] = useState(null)
@@ -153,7 +174,7 @@ const SettingsSnippets = ({
   const onCloseEditDialog = useCallback(() => setEditSnippet(null))
   const onCloseDeleteDialog = useCallback(() => setDeleteSnippet(null))
 
-  const onOpenAddDialog = useCallback((global) => {
+  const onOpenAddDialog = useCallback((global, file) => {
     setEditSnippet({
       name: '',
       code: '',
@@ -161,6 +182,7 @@ const SettingsSnippets = ({
       beforeBodyCode: '',
       afterBodyCode: '',
       global,
+      file,
     })
   })
 
@@ -201,17 +223,9 @@ const SettingsSnippets = ({
       <div className={ classes.listContainer }>
         <div className={ classes.listCell }>
           <SettingsSnippetGroup
-            global={ false }
-            snippets={ pageSnippets }
-            setDeleteSnippet={ setDeleteSnippet }
-            setEditSnippet={ setEditSnippet }
-            onOpenAddDialog={ onOpenAddDialog }
-          />
-        </div>
-        <div className={ classes.listCell }>
-          <SettingsSnippetGroup
-            global={ true }
-            snippets={ globalSnippets }
+            global={ type == 'global' }
+            file={ type == 'file' }
+            snippets={ useSnippets }
             setDeleteSnippet={ setDeleteSnippet }
             setEditSnippet={ setEditSnippet }
             onOpenAddDialog={ onOpenAddDialog }
