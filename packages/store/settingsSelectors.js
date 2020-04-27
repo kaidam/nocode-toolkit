@@ -114,7 +114,7 @@ const widgetTitles = createSelector(
 )
 
 const activePluginMap = createSelector(
-  settings,
+  settingsValue,
   data => data.activePluginMap || DEFAULT_OBJECT
 )
 

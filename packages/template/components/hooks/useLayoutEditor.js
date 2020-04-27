@@ -18,6 +18,7 @@ const useLayoutEditor = ({
   })
 
   const forms = useSelector(settingsSelectors.forms)
+  const activePluginMap = useSelector(settingsSelectors.activePluginMap)
   const annotations = useSelector(nocodeSelectors.annotations)
   const snippets = useSelector(settingsSelectors.pageSnippets)
   const annotation = annotations[content_id] || {}
@@ -42,7 +43,7 @@ const useLayoutEditor = ({
 
   const getAddMenu = useCallback((rowIndex = -1) => {
     const plugins = [
-      forms.stripe_payment_button ? {
+      forms.stripe_payment_button && activePluginMap.stripe_payment_button ? {
         title: 'Payment Button',
         icon: icons.image,
         handler: () => onAddWidget({
@@ -50,7 +51,7 @@ const useLayoutEditor = ({
           rowIndex,
         }),
       } : null,
-      forms.contactform ? {
+      forms.contactform  && activePluginMap.contactform ? {
         title: 'Contact Form',
         icon: icons.contact,
         handler: () => onAddWidget({
@@ -161,6 +162,7 @@ const useLayoutEditor = ({
   }, [
     onAddWidget,
     forms,
+    activePluginMap,
     snippets,
   ])
 
