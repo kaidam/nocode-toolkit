@@ -7,6 +7,7 @@ const library = {
     layouts: {},
     pages: {},
   },
+  quickstarts: [],
   plugins: [],
   widgets: [],
   forms: {},
