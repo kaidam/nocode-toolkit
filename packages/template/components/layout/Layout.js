@@ -22,6 +22,7 @@ const useStyles = makeStyles(theme => ({
 const Layout = ({
   content_id,
   layout_id,
+  simpleMovement,
   getAddMenu,
 }) => {
 
@@ -57,6 +58,7 @@ const Layout = ({
                       showUI={ showUI }
                       content_id={ content_id }
                       layout_id={ layout_id }
+                      simpleMovement={ simpleMovement }
                       rowIndex={ i }
                       cellIndex={ j }
                       getAddMenu={ getAddMenu }

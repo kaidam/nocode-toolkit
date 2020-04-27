@@ -44,6 +44,7 @@ const TreeSection = ({
   const layoutProps = {
     content_id: `section:${section}`,
     layout_id: 'widgets',
+    simpleMovement: true,
   }
 
   return (

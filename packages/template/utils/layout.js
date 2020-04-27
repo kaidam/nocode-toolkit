@@ -90,8 +90,7 @@ const moveCell = ({
     }
   }
   else {
-    const direction = direction == 'left' ? -1 : 1
-    const targetCellIndex = cellIndex + direction
+    const targetCellIndex = cellIndex + (direction == 'left' ? -1 : 1)
 
     // remove the cell from the row
     row.splice(cellIndex, 1)

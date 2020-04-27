@@ -7,6 +7,7 @@ const EditableCell = ({
   cell,
   content_id,
   layout_id,
+  simpleMovement,
   widgetTitles,
   rowIndex,
   cellIndex,
@@ -27,6 +28,7 @@ const EditableCell = ({
         cell={ cell }
         content_id={ content_id }
         layout_id={ layout_id }
+        simpleMovement={ simpleMovement }
         rowIndex={ rowIndex }
         cellIndex={ cellIndex }
         getAddMenu={ getAddMenu }

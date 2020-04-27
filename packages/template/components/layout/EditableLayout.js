@@ -6,6 +6,7 @@ import useLayoutEditor from '../hooks/useLayoutEditor'
 const LayoutEditor = ({
   content_id,
   layout_id,
+  simpleMovement,
 }) => {
 
   const {
@@ -20,6 +21,7 @@ const LayoutEditor = ({
       content_id={ content_id }
       layout_id={ layout_id }
       getAddMenu={ getAddMenu }
+      simpleMovement={ simpleMovement }
     />
   )
 }

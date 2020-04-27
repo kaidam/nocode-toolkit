@@ -28,6 +28,7 @@ const EditableCellMenu = ({
   layout,
   content_id,
   layout_id,
+  simpleMovement = false,
   rowIndex,
   cellIndex,
   menuAnchor,
@@ -73,55 +74,83 @@ const EditableCellMenu = ({
 
     const row = layout[rowIndex]
 
-    const up = (rowIndex > 0 || row.length > 1) ? {
-      title: 'Up',
-      icon: IconCombo(UpIcon, RowIcon),
-      handler: rowIndex == 0 ? getOnMoveHandler({
-        direction: 'up',
-        merge: false,
-      }) : null,
-      items: rowIndex == 0 ? null : [{
-        title: 'Up: Own Row',
+    let up = null
+
+    if(simpleMovement) {
+      up = (rowIndex > 0) ? {
+        title: 'Up',
         icon: IconCombo(UpIcon, RowIcon),
         handler: getOnMoveHandler({
           direction: 'up',
           merge: false,
-        })
-      }, {
-        title: 'Up: Merge',
+        }),
+      } : null
+    }
+    else {
+      up = (rowIndex > 0 || row.length > 1) ? {
+        title: 'Up',
         icon: IconCombo(UpIcon, RowIcon),
-        handler: getOnMoveHandler({
+        handler: rowIndex == 0 ? getOnMoveHandler({
           direction: 'up',
-          merge: true,
-        })
-      }]
-    } : null
+          merge: false,
+        }) : null,
+        items: rowIndex == 0 ? null : [{
+          title: 'Up: Own Row',
+          icon: IconCombo(UpIcon, RowIcon),
+          handler: getOnMoveHandler({
+            direction: 'up',
+            merge: false,
+          })
+        }, {
+          title: 'Up: Merge',
+          icon: IconCombo(UpIcon, RowIcon),
+          handler: getOnMoveHandler({
+            direction: 'up',
+            merge: true,
+          })
+        }]
+      } : null
+    }
 
-    const down = (rowIndex < layout.length - 1 || row.length > 1) ? {
-      title: 'Down',
-      icon: IconCombo(DownIcon, RowIcon),
-      handler: rowIndex == layout.length - 1 ? getOnMoveHandler({
-        direction: 'down',
-        merge: false,
-      }) : null,
-      items: rowIndex == layout.length - 1 ? null : [{
-        title: 'Down: Own Row',
+    let down = null
+
+    if(simpleMovement) {
+      down = (rowIndex < layout.length - 1) ? {
+        title: 'Down',
         icon: IconCombo(DownIcon, RowIcon),
         handler: getOnMoveHandler({
           direction: 'down',
           merge: false,
-        })
-      }, {
-        title: 'Down: Merge',
+        }),
+      } : null
+    }
+    else {
+      down = (rowIndex < layout.length - 1 || row.length > 1) ? {
+        title: 'Down',
         icon: IconCombo(DownIcon, RowIcon),
-        handler: getOnMoveHandler({
+        handler: rowIndex == layout.length - 1 ? getOnMoveHandler({
           direction: 'down',
-          merge: true,
-        })
-      }]
-    } : null
+          merge: false,
+        }) : null,
+        items: rowIndex == layout.length - 1 ? null : [{
+          title: 'Down: Own Row',
+          icon: IconCombo(DownIcon, RowIcon),
+          handler: getOnMoveHandler({
+            direction: 'down',
+            merge: false,
+          })
+        }, {
+          title: 'Down: Merge',
+          icon: IconCombo(DownIcon, RowIcon),
+          handler: getOnMoveHandler({
+            direction: 'down',
+            merge: true,
+          })
+        }]
+      } : null
+    }
 
-    const left = cellIndex > 0 ? {
+    const left = !simpleMovement && (cellIndex > 0) ? {
       title: 'Left',
       icon: IconCombo(LeftIcon, CellIcon),
       handler: getOnMoveHandler({
@@ -129,7 +158,7 @@ const EditableCellMenu = ({
       })
     } : null
 
-    const right = cellIndex < row.length - 1 ? {
+    const right = !simpleMovement && (cellIndex < row.length - 1) ? {
       title: 'Right',
       icon: IconCombo(RightIcon, CellIcon),
       handler: getOnMoveHandler({

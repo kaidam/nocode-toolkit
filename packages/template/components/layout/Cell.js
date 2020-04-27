@@ -49,6 +49,7 @@ const Cell = ({
   layout,
   widgetRenderers,
   widgetTitles,
+  simpleMovement,
   showUI,
   content_id,
   layout_id,
@@ -86,6 +87,7 @@ const Cell = ({
         layout={ layout }
         widgetTitles={ widgetTitles }
         content_id={ content_id }
+        simpleMovement={ simpleMovement }
         layout_id={ layout_id }
         rowIndex={ rowIndex }
         cellIndex={ cellIndex }
