@@ -212,7 +212,7 @@ const sideEffects = {
     domains
   
   */
-  setSubdomain: (subdomain) => wrapper('setSubdomain', async (dispatch, getState) => {
+  setSubdomain: (subdomain) => snackbarWrapper('setSubdomain', async (dispatch, getState) => {
     const config = nocodeSelectors.config(getState())
     await loaders.setSubdomain(config.websiteId, subdomain)
     await dispatch(actions.loadWebsite())
@@ -222,22 +222,22 @@ const sideEffects = {
   addUrl: ({
     url,
     onComplete,
-  }) => wrapper('addUrl', async (dispatch, getState) => {
+  }) => snackbarWrapper('addUrl', async (dispatch, getState) => {
     const config = nocodeSelectors.config(getState())
     await loaders.addUrl(config.websiteId, url)
     await dispatch(actions.loadWebsite())
-    dispatch(snackbarActions.setSuccess(`subdomain updated`))
+    dispatch(snackbarActions.setSuccess(`custom domain added`))
     if(onComplete) onComplete()
   }),
 
   removeUrl: ({
     url,
     onComplete,
-  }) => wrapper('removeUrl', async (dispatch, getState) => {
+  }) => snackbarWrapper('removeUrl', async (dispatch, getState) => {
     const config = nocodeSelectors.config(getState())
     await loaders.removeUrl(config.websiteId, url)
     await dispatch(actions.loadWebsite())
-    dispatch(snackbarActions.setSuccess(`subdomain deleted`))
+    dispatch(snackbarActions.setSuccess(`custom domain deleted`))
     if(onComplete) onComplete()
   }),
 
