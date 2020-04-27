@@ -107,7 +107,7 @@ const GlobalSettings = ({
                   {
                     item.icon && (
                       <ListItemIcon>
-                        <item.icon />
+                        <item.icon color={ item.iconColor || "inherit" } />
                       </ListItemIcon>
                     )
                   }

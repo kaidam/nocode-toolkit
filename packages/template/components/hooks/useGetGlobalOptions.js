@@ -60,6 +60,7 @@ const useGetGlobalOptions = ({
     return [{
       title: 'Build Website',
       icon: icons.send,
+      iconColor: 'secondary',
       handler: actions.onPublish,
     },{
       title: 'Reload',
