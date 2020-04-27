@@ -48,6 +48,8 @@ const useStyles = makeStyles(theme => createStyles({
   }
 }))
 
+const isImage = (url) => url.match(/\.{jpg,png,jpeg,gif}$/i)
+
 const ImageField = ({
   field: {
     name,
@@ -79,10 +81,11 @@ const ImageField = ({
     inputRef,
   } = useDropzone({
     onDrop: async (files) => {
+      const file = files[0]
       const result = await actions.onUploadFiles({
         files,
       })
-      setFieldValue(name, result[0])
+      setFieldValue(name, result[0], file)
     },
     multiple: false,
   })
@@ -148,12 +151,12 @@ const ImageField = ({
       !item.providers || item.providers.indexOf('unsplash') >= 0 ?
         unsplash :
         null,
-      {
+      !item.noReset ? {
         title: 'Reset',
         help: 'Clear this image',
         icon: DeleteIcon,
         handler: onResetValue
-      }
+      } : null
     ]
       .filter(item => item)
       .map((item, i) => {
@@ -210,11 +213,11 @@ const ImageField = ({
           }
         </Grid>
         {
-          value && value.url ? (
+          value && value.url && isImage(value.url) ? (
             <Grid item xs={12} sm={3}>
               <img className={ classes.image } src={ value.url } />
               </Grid>
-          ) : null
+          ) : ''
         }
         <Grid item xs={12} sm={7}>
           { buttons }

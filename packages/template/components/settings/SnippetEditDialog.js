@@ -4,13 +4,12 @@ import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
 import FormHelperText from '@material-ui/core/FormHelperText'
-import Checkbox from '@material-ui/core/Checkbox'
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogActions from '@material-ui/core/DialogActions'
+import ImageField from '../form/fields/Image'
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -57,12 +56,16 @@ const SettingsSnippetEditDialog = ({
   const [beforeBodyCode, setBeforeBodyCode] = useState(snippet.beforeBodyCode)
   const [afterBodyCode, setAfterBodyCode] = useState(snippet.afterBodyCode)
   const [showErrors, setShowErrors] = useState(false)
+  const [currentFile, setCurrentFile] = useState(null)
 
   const nameError = name ? null : `Please enter a name`
   let codeError = code ? null : `Please enter some HTML`
 
   if(global) {
     codeError = !headCode && !beforeBodyCode && !afterBodyCode ? `Please enter some HTML` : null
+  }
+  else if(file) {
+    codeError = false 
   }
 
   const isValid = !nameError && !codeError
@@ -73,10 +76,12 @@ const SettingsSnippetEditDialog = ({
     onSubmit({
       name,
       global,
+      file,
       code,
       headCode,
       beforeBodyCode,
       afterBodyCode,
+      currentFile,
     })
   }, [
     name,
@@ -88,12 +93,13 @@ const SettingsSnippetEditDialog = ({
     afterBodyCode,
     nameError,
     codeError,
+    currentFile,
   ])
 
   let message = `Snippets are chunks of HTML that you can add to pages`
 
   if(global) message = `Global snippets appear on all pages and are useful for adding script tags or custom CSS`
-  else if(file) message = `Upload files that will be published alongside your website`
+  else if(file) message = `Upload files that will be published alongside your website - files must be less than 10Mb`
 
   let ui = null
 
@@ -141,7 +147,27 @@ const SettingsSnippetEditDialog = ({
   }
   else if(file) {
     ui = (
-      <div>UI HERE</div>
+      <Grid item xs={ 12 }>
+        <ImageField
+          field={{
+            name: 'file',
+            value: currentFile,
+          }}
+          form={{
+            setFieldValue: (name, result, file) => {
+              setName(file.name)
+              setCurrentFile(result)
+            },
+          }}
+          item={{
+            id: 'file',
+            title: 'Upload File',
+            providers: ['local'],
+            helperText: 'Upload a file from your computer',
+            noReset: true,
+          }}
+        />
+      </Grid>
     )
   }
   else {
