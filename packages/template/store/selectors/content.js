@@ -46,6 +46,7 @@ const sectionTree = () => createSelector(
           return Object.assign({}, node, {
             route,
             currentPage: currentRoute.item == node.id,
+            annotation: annotations[id],
             children: getChildren({
               parentId: id,
               location: `node:${id}`,

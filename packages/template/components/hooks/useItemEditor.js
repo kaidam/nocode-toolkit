@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import useItemOptions from './useItemOptions'
 import icons from '../../icons'
+import library from '../../library'
 
 const useItemEditor = ({
   node,
@@ -16,7 +17,13 @@ const useItemEditor = ({
   const getEditorItems = useCallback(() => {
     let title = 'Open Page'
     let icon = icons.forward
-    if(node.type == 'folder') {
+
+    const isFolder = library.handlers.isFolder ?
+      library.handlers.isFolder(node) :
+      node.type == 'folder'
+
+
+    if(isFolder) {
       // if we don't have folder pages
       // it means we are toggling the state of the menu
       if(!folderPages) {

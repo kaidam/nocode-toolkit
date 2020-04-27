@@ -9,6 +9,8 @@ import Link from '../widgets/Link'
 
 import NavBarMenu from './NavBarMenu'
 
+import library from '../../library'
+
 const EditableItem = lazy(() => import(/* webpackChunkName: "ui" */ '../content/EditableItem'))
 const EditableNavBarMenu = lazy(() => import(/* webpackChunkName: "ui" */ './EditableNavBarMenu'))
 
@@ -120,7 +122,13 @@ const NavBarItem = ({
     [classes.itemActive]: node.currentPage,
   })
 
-  if(node.type == 'folder') {
+  // folders can be treated as documents
+  // if we don't want a sub-menu
+  const isFolder = library.handlers.isFolder ?
+    library.handlers.isFolder(node) :
+    node.type == 'folder'
+
+  if(isFolder) {
     const getButton = (onClick) => {
       return (
         <div

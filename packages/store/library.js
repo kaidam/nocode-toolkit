@@ -13,5 +13,6 @@ const library = {
   forms: {},
   autoSnackbar: true,
   topbarHeight: 0,
+  handlers: {},
 }
 export default library

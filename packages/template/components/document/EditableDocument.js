@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import classnames from 'classnames'
 
 import MenuButton from '../widgets/MenuButton'
-import icons from '../../icons'
+import driveUtils from '../../utils/drive'
 
 import useDocumentEditor from '../hooks/useDocumentEditor'
 import useItemEditor from '../hooks/useItemEditor'
@@ -63,7 +63,7 @@ const EditableDocument = ({
   })
 
   const rootClassname = classnames(classes.root, className)
-
+  
   return (
     <div className={ rootClassname }>
       <div className={ classnames(classes.iconSection, classes.leftIcons) }>
@@ -75,7 +75,7 @@ const EditableDocument = ({
       </div>
       <div className={ classnames(classes.iconSection, classes.rightIcons) }>
         <MenuButton
-          header="Widgets"
+          header={ driveUtils.isFolder(node) ? "Add" : "Widgets" }
           getButton={ getAddButton }
           getItems={ getAddItems }
         />
