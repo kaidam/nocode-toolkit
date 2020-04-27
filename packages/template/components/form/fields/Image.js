@@ -22,7 +22,6 @@ import fileuploadSelectors from '../../../store/selectors/fileupload'
 
 import icons from '../../../icons'
 
-const UploadIcon = icons.upload
 const DeleteIcon = icons.delete
 
 const useStyles = makeStyles(theme => createStyles({
@@ -74,25 +73,6 @@ const ImageField = ({
     getUnsplashItem: unsplashActions.getUnsplashItem,
   })
 
-  // const onAddFinderContent = useCallback(({id, data}) => {
-  //   onCloseFinder()
-  //   actions.onSyncFiles({
-  //     driver: finderDriver,
-  //     fileid: id,
-  //     onComplete: (file) => {
-  //       const finalData = Object.assign({}, data, file, {
-  //         driver: finderDriver,
-  //       })
-  //       setFieldValue(name, finalData)
-  //     }
-  //   })
-  //   // }
-  // }, [setFieldValue, finderDriver, name])
-
-  // const onAddUploaderContent = useCallback((files) => {
-  //   setFieldValue(name, files[0])
-  // }, [setFieldValue, name])
-
   const {
     getRootProps,
     getInputProps,
@@ -107,8 +87,6 @@ const ImageField = ({
     multiple: false,
   })
 
-  // const onOpenFinder = useCallback((driver) => setFinderDriver(driver))
-  // const onCloseFinder = useCallback(() => setFinderDriver(null))
   const onOpenUploader = useCallback(() => {
     inputRef.current.click()
   }, [])
