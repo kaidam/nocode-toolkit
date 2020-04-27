@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import classnames from 'classnames'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 
@@ -8,10 +8,11 @@ const useStyles = makeStyles(theme => {
       
     },
     panel: {
-      backgroundColor: 'rgba(255, 255, 255, 0.4)',
-      backdropFilter: 'blur(10px)',
+      backgroundColor: 'rgba(0, 0, 0, 0)',
+      //backdropFilter: 'blur(10px)',
       position: 'absolute',
       zIndex: 1300,
+      transition: 'background-color 0.2s ease-in',
     },
     top: ({coords}) => ({
       width: '100%',
@@ -43,6 +44,7 @@ const useStyles = makeStyles(theme => {
 const FocusElementOverlay = ({
   contentRef,
 }) => {
+  const containerRef = useRef()
   const el = contentRef.current
   const coords = el.getBoundingClientRect()
   const theme = useTheme()
@@ -53,8 +55,20 @@ const FocusElementOverlay = ({
     coords.height -= (topbarHeight - y)
   }
   const classes = useStyles({coords})
+  useEffect(() => {
+    if(!containerRef.current) return
+    setTimeout(() => {
+      const divs = containerRef.current.querySelectorAll('div')
+      for(let i=0; i<divs.length; i++) {
+        divs[i].style.backgroundColor = 'rgba(0, 0, 0, 0.2)'
+      }
+    }, 1)
+    
+  }, [
+    containerRef.current,
+  ])
   return (
-    <div className={ classes.root }>
+    <div className={ classes.root } ref={ containerRef }>
       <div className={ classnames(classes.panel, classes.top) }></div>
       <div className={ classnames(classes.panel, classes.right) }></div>
       <div className={ classnames(classes.panel, classes.bottom) }></div>
