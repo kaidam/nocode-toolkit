@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import SelectField from './Select'
+import RadioField from './Radio'
 import DragDropList from '../../widgets/DragDropList'
 
 import childrenUtils from '../../../utils/children'
@@ -47,7 +47,7 @@ const SortingEditorTypeEditor = ({
   }), [])
 
   return (
-    <SelectField
+    <RadioField
       field={ fieldConfig }
       item={ item }
     />
@@ -80,7 +80,7 @@ const SortingEditorDirectionEditor = ({
   }), [])
   
   return (
-    <SelectField
+    <RadioField
       field={ fieldConfig }
       item={ item }
     />
