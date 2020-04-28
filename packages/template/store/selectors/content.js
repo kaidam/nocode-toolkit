@@ -17,6 +17,7 @@ const settings = createSelector(
 )
 
 const sectionTree = () => createSelector(
+  settingsSelectors.settings,
   nocodeSelectors.sections,
   nocodeSelectors.nodes,
   nocodeSelectors.annotations,
@@ -24,7 +25,7 @@ const sectionTree = () => createSelector(
   routerSelectors.routeMap,
   routerSelectors.route,
   (_, name) => name,
-  (sections, nodes, annotations, locations, routeMap, currentRoute, name) => {
+  (settings, sections, nodes, annotations, locations, routeMap, currentRoute, name) => {
     const getChildren = ({
       parentId,
       location,
@@ -41,8 +42,11 @@ const sectionTree = () => createSelector(
           return !annotation || !annotation.hidden
         })
         .map(id => {
-          const route = routeMap[`${location}:${id}`]
+          let route = routeMap[`${location}:${id}`]
           const node = nodes[id]
+          if(settings && settings.homepage == id) {
+            route = routeMap['singleton:home:defaultHome']
+          }
           return Object.assign({}, node, {
             route,
             currentPage: currentRoute.item == node.id,
