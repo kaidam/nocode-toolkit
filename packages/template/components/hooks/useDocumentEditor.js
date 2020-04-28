@@ -68,6 +68,7 @@ const useDocumentEditor = ({
   ])
 
   return {
+    getAddContentItems,
     getAddItems,
   }
 }
