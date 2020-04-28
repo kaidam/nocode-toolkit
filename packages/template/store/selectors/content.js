@@ -17,7 +17,6 @@ const settings = createSelector(
 )
 
 const sectionTree = () => createSelector(
-  settingsSelectors.settings,
   nocodeSelectors.sections,
   nocodeSelectors.nodes,
   nocodeSelectors.annotations,
@@ -25,7 +24,7 @@ const sectionTree = () => createSelector(
   routerSelectors.routeMap,
   routerSelectors.route,
   (_, name) => name,
-  (settings, sections, nodes, annotations, locations, routeMap, currentRoute, name) => {
+  (sections, nodes, annotations, locations, routeMap, currentRoute, name) => {
     const getChildren = ({
       parentId,
       location,
@@ -44,9 +43,6 @@ const sectionTree = () => createSelector(
         .map(id => {
           let route = routeMap[`${location}:${id}`]
           const node = nodes[id]
-          if(settings && settings.homepage == id) {
-            route = routeMap['singleton:home:defaultHome']
-          }
           return Object.assign({}, node, {
             route,
             currentPage: currentRoute.item == node.id,
@@ -102,7 +98,9 @@ const section = () => createSelector(
   },
 )
 
-const homeItem = createSelector(
+// this returns the singleton item
+// if there is one
+const homeSingletonItem = createSelector(
   nocodeSelectors.nodes,
   nocodeSelectors.singletons,
   systemSelectors.website,
@@ -114,16 +112,12 @@ const homeItem = createSelector(
     if(!route || !singleton) return null
     const node = nodes[singleton.item]
     if(!node) return null
-    const defaultDocumentId = website && website.meta ?
-      website.meta[`nocode_default_resource_id_home`] :
-      null
     return Object.assign({}, node, {
-      isHome: true,
+      isSingletonHome: true,
       name: 'Home',
       route,
       currentPage: currentRoute.item == node.id,
       children: [],
-      defaultDocumentId,
     })
   },
 )
@@ -375,7 +369,7 @@ const selectors = {
   formWindow,
   settings,
   sectionTree,
-  homeItem,
+  homeSingletonItem,
   sectionHiddenItems,
   section,
   itemRoute,

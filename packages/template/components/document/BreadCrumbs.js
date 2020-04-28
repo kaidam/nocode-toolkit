@@ -11,11 +11,15 @@ const BreadCrumbs = ({
   const pathToItem = useSelector(contentSelectors.routeAncestors)
   const breadcrumbs = useMemo(() => {
     const useItems = pathToItem.filter(item => item.route.location == 'singleton:home' ? false : true)
-    return [{
+    const hasHome = useItems.find(item => item.route.path == '/')
+
+    const base = hasHome ? [] : [{
       title: 'Home',
       path: '/',
       name: 'root',
     }]
+
+    return base
       .concat(
         useItems
           .filter(item => item.node)

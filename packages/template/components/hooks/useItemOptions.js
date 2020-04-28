@@ -79,16 +79,6 @@ const useItemOptions = ({
             title: 'Add Content',
             icon: icons.add,
             items: [{
-              title: 'Google Folder',
-              icon: icons.folder,
-              secondaryIcon: icons.drive,
-              handler: () => actions.onCreateRemoteContent({
-                title: 'Create Folder',
-                driver: 'drive',
-                form: 'drive.folder',
-                parentId: node.id,
-              })
-            },{
               title: 'Google Document',
               icon: icons.docs,
               secondaryIcon: icons.drive,
@@ -96,6 +86,16 @@ const useItemOptions = ({
                 title: 'Create Document',
                 driver: 'drive',
                 form: 'drive.document',
+                parentId: node.id,
+              })
+            },{
+              title: 'Google Folder',
+              icon: icons.folder,
+              secondaryIcon: icons.drive,
+              handler: () => actions.onCreateRemoteContent({
+                title: 'Create Folder',
+                driver: 'drive',
+                form: 'drive.folder',
                 parentId: node.id,
               })
             }],
@@ -125,20 +125,13 @@ const useItemOptions = ({
             url: openUrl,
           }, '-',
           settingsItem,
-          node.isHome ? 
+          node.isSingletonHome ? 
             {
               title: 'Change Homepage',
               icon: icons.search,
               secondaryIcon: icons.drive,
               handler: actions.onChangeHomepage,
             } : removeItem,
-          node.isHome && node.defaultDocumentId != node.id ? 
-            {
-              title: 'Reset Homepage',
-              icon: icons.refresh,
-              secondaryIcon: icons.drive,
-              handler: actions.onResetHomepage,
-            } : null,
         ]
       }
     }

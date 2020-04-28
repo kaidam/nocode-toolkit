@@ -44,16 +44,6 @@ const useSectionEditor = ({
     }
 
     return ghostFolder ? [{
-      title: 'Google Folder',
-      icon: icons.folder,
-      secondaryIcon: icons.drive,
-      handler: () => actions.onCreateRemoteContent({
-        title: 'Create Folder',
-        driver: 'drive',
-        form: 'drive.folder',
-        parentId: ghostFolder.id,
-      })
-    },{
       title: 'Google Document',
       icon: icons.docs,
       secondaryIcon: icons.drive,
@@ -61,6 +51,16 @@ const useSectionEditor = ({
         title: 'Create Document',
         driver: 'drive',
         form: 'drive.document',
+        parentId: ghostFolder.id,
+      })
+    }, {
+      title: 'Google Folder',
+      icon: icons.folder,
+      secondaryIcon: icons.drive,
+      handler: () => actions.onCreateRemoteContent({
+        title: 'Create Folder',
+        driver: 'drive',
+        form: 'drive.folder',
         parentId: ghostFolder.id,
       })
     }, linkItem] : [linkItem]
