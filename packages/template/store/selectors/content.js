@@ -260,9 +260,18 @@ const form = createSelector(
       }
     }, [])
 
+    const otherProps = formNames.reduce((all, name) => {
+      const formConfig = storeForms[name]
+      const ret = Object.assign({}, all, formConfig)
+      delete(ret.tabs)
+      delete(ret.initialValues)
+      return ret
+    }, {})
+
     return {
       tabs,
       initialValues,
+      ...otherProps
     }
   }
 )

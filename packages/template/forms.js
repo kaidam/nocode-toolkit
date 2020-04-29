@@ -89,6 +89,14 @@ const forms = {
       },
     },
     processFormValues: valueInjector({mimeType: 'folder'}),
+    tabFilter: ({
+      tabs,
+      values,
+    }) => {
+      return values.id ?
+        tabs :
+        tabs.filter(tab => tab.id != 'actions')
+    },
     tabs: [{
       id: 'settings',
       title: 'Settings',
@@ -112,6 +120,15 @@ const forms = {
         helperText: 'How are children items sorted inside this folder?',
         component: 'sorting',
       }],
+    },{
+      id: 'actions',
+      title: 'Actions',
+      schema: [{
+        id: 'annotation.makeHomepage',
+        title: 'Make Homepage',
+        helperText: 'Make this item the homepage of the website',
+        component: 'makeHomepage',
+      }],
     }]
   },
   'drive.document': {
@@ -119,6 +136,14 @@ const forms = {
       name: '',
     },
     processFormValues: valueInjector({mimeType: 'document'}),
+    tabFilter: ({
+      tabs,
+      values,
+    }) => {
+      return values.id ?
+        tabs :
+        tabs.filter(tab => tab.id != 'actions')
+    },
     tabs: [{
       id: 'settings',
       title: 'Settings',
@@ -132,6 +157,15 @@ const forms = {
             ['required', 'The name is required'],
           ],
         }
+      }],
+    },{
+      id: 'actions',
+      title: 'Actions',
+      schema: [{
+        id: 'annotation.makeHomepage',
+        title: 'Make Homepage',
+        helperText: 'Make this item the homepage of the website',
+        component: 'makeHomepage',
       }],
     }]
   },

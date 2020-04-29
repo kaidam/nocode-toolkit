@@ -40,6 +40,15 @@ const ContentForm = ({
       {}
   })
 
+  let formTabs = form.tabs
+
+  if(formTabs && form.tabFilter) {
+    formTabs = form.tabFilter({
+      tabs: formTabs,
+      values,
+    })
+  }
+
   let currentSchema = form.schema || []
 
   let header = null
@@ -53,12 +62,12 @@ const ContentForm = ({
     />
   )
 
-  if(form.tabs) {
-    const currentTab = form.tabs.find(t => t.id == tab) || form.tabs[0]
+  if(formTabs) {
+    const currentTab = formTabs.find(t => t.id == tab) || formTabs[0]
     currentSchema = currentTab.schema
-    header = form.tabs.length > 1 && (
+    header = formTabs.length > 1 && (
       <Tabs
-        tabs={ form.tabs }
+        tabs={ formTabs }
         current={ tab || currentTab.id }
         onChange={ setTab }
       />
