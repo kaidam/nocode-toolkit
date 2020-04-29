@@ -7,6 +7,7 @@ import SelectField from './Select'
 import ColorPickerField from './ColorPickerField'
 import Image from './Image'
 import Sorting from './Sorting'
+import MakeHomepage from './MakeHomepage'
 import HiddenItems from './HiddenItems'
 
 const fields = {
@@ -20,6 +21,7 @@ const fields = {
   image: Image,
   sorting: Sorting,
   hiddenItems: HiddenItems,
+  makeHomepage: MakeHomepage,
 }
 
 export const defaultValues = {

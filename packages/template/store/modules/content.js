@@ -77,10 +77,10 @@ const loaders = {
   resetSectionFolder: (getState, id) => axios.delete(apiUtils.websiteUrl(getState, `/section/${id}/folder`))
     .then(apiUtils.process),
 
-  editHomepage: (getState, payload) => axios.put(apiUtils.websiteUrl(getState, `/homepage`), payload)
+  editHomepageSingleton: (getState, payload) => axios.put(apiUtils.websiteUrl(getState, `/homepage/singleton`), payload)
     .then(apiUtils.process),
 
-  resetHomepage: (getState) => axios.delete(apiUtils.websiteUrl(getState, `/homepage`))
+  editHomepageSetting: (getState, payload) => axios.put(apiUtils.websiteUrl(getState, `/homepage/setting`), payload)
     .then(apiUtils.process),
 
   reloadExternalContent: (getState, driver, id) => axios.get(apiUtils.websiteUrl(getState, `/remotecontent/reload/${driver}/${id}`))
@@ -442,9 +442,11 @@ const sideEffects = {
     dispatch(snackbarActions.setSuccess(`section folder updated`))
   }),
 
-  changeHomepage: ({
+  // open a drive finder to replace the homepage singleton
+  // with what they select
+  changeHomepageSingleton: ({
     
-  } = {}) => wrapper('changeHomepage', async (dispatch, getState) => {
+  } = {}) => wrapper('changeHomepageSingleton', async (dispatch, getState) => {
     const newDocument = await dispatch(driveActions.getDriveItem({
       listFilter: 'folder,document',
       addFilter: 'document',
@@ -454,7 +456,7 @@ const sideEffects = {
       transparent: true,
       message: `updating homepage`,
     }))
-    await loaders.editHomepage(getState, {
+    await loaders.editHomepageSingleton(getState, {
       content_id: newDocument.id
     })
     await dispatch(jobActions.reload())
@@ -465,20 +467,22 @@ const sideEffects = {
     }
   }),
 
-  resetHomepage: ({
-    
-  } = {}) => wrapper('resetHomepage', async (dispatch, getState) => {
+  // update the website setting homepage
+  // this means they can assign homepage status to any of the items
+  // regardless of where they live
+  changeHomepageSetting: ({
+    content_id,
+  } = {}) => wrapper('changeHomepageSetting', async (dispatch, getState) => {
     dispatch(uiActions.setLoading({
       transparent: true,
       message: `updating homepage`,
     }))
-    await loaders.resetHomepage(getState)
+    await loaders.editHomepageSetting(getState, {
+      content_id,
+    })
+    await dispatch(routerActions.navigateTo('root'))
     await dispatch(jobActions.reload())
-    dispatch(snackbarActions.setSuccess(`homepage reset`))
-  }, {
-    after: async (dispatch, getState, error) => {
-      dispatch(uiActions.setLoading(false))
-    }
+    dispatch(snackbarActions.setSuccess(`homepage updated`))
   }),
 
   hideContent: ({

@@ -16,8 +16,7 @@ const useItemOptions = ({
     onDeleteRemoteContent: contentActions.deleteRemoteContent,
     onDeleteLocalContent: contentActions.deleteLocalContent,
     onHideContent: contentActions.hideContent,
-    onChangeHomepage: contentActions.changeHomepage,
-    onResetHomepage: contentActions.resetHomepage,
+    onChangeHomepageSingleton: contentActions.changeHomepageSingleton,
   })
 
   const getItemOptions = useCallback(({
@@ -130,7 +129,7 @@ const useItemOptions = ({
               title: 'Change Homepage',
               icon: icons.search,
               secondaryIcon: icons.drive,
-              handler: actions.onChangeHomepage,
+              handler: actions.onChangeHomepageSingleton,
             } : removeItem,
         ]
       }

@@ -12,6 +12,7 @@
 
 import React from 'react'
 
+import HomeIcon from '@material-ui/icons/Home'
 import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
 import DeleteIcon from '@material-ui/icons/Delete'
@@ -175,6 +176,7 @@ const icons = {
   menu: MenuIcon,
   lock: LockIcon,
   sort: SortIcon,
+  home: HomeIcon,
 }
 
 export default icons
