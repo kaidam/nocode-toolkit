@@ -29,6 +29,8 @@ const MakeHomepage = ({
     }))
   }
 
+  const isHomepage = settings && settings.homepage == values.id
+
   if(singletonHome) {
     return (
       <Grid container spacing={ 2 }>
@@ -45,17 +47,6 @@ const MakeHomepage = ({
       </Grid>
     )
   }
-  else if(settings && settings.homepage == values.id) {
-    return (
-      <Grid container spacing={ 2 }>
-        <Grid item xs={ 12 } sm={ 12 }>
-          <Typography>
-            This page is currently set as the homepage.
-          </Typography>
-        </Grid>
-      </Grid>
-    )
-  }
   else {
     return (
       <Grid container spacing={ 2 }>
@@ -63,6 +54,7 @@ const MakeHomepage = ({
           <Button
             variant="contained"
             color="default"
+            disabled={ isHomepage }
             onClick={ setHomepage }
           >
             Make this the homepage&nbsp;&nbsp;&nbsp;<HomeIcon />
@@ -70,7 +62,11 @@ const MakeHomepage = ({
         </Grid>
         <Grid item xs={ 12 } sm={ 12 }>
           <Typography>
-            { item.helperText }
+            {
+              isHomepage ?
+                `This page is currently set as the homepage.` :
+                item.helperText
+            }
           </Typography>
         </Grid>
       </Grid>
