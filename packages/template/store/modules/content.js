@@ -480,7 +480,9 @@ const sideEffects = {
     await loaders.editHomepageSetting(getState, {
       content_id,
     })
-    await dispatch(routerActions.navigateTo('root'))
+    await dispatch(actions.cancelFormWindow())
+    dispatch(uiActions.setLoading(false))
+    dispatch(routerActions.navigateTo('root'))
     await dispatch(jobActions.reload())
     dispatch(snackbarActions.setSuccess(`homepage updated`))
   }),
