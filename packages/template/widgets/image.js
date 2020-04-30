@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from '../components/widgets/Link'
 
 const SIZES = {
   small: '50%',
@@ -9,6 +10,8 @@ const SIZES = {
 
 const Render = ({
   data = {},
+  link,
+  copyrightBelow = false,
 }) => {
   if(!data) return null
   if(!data.image) return null
@@ -52,7 +55,7 @@ const Render = ({
     )
   }
 
-  const copyright = copyrightContent ? (
+  const copyright = copyrightContent && !copyrightBelow ? (
     <div
       style={{
         position: 'absolute',
@@ -67,6 +70,24 @@ const Render = ({
     </div>
   ) : null
 
+  const copyrightBelowContent = copyrightBelow ? copyrightContent : null
+
+  const img = (
+    <img
+      width="100%"
+      src={ url }
+    />
+  )
+
+  const imageContent = link ? (
+    <Link
+      path={ link.path }
+      name={ link.name }
+    >
+      { img }
+    </Link>
+  ) : img
+
   return (
     <div
       style={{
@@ -79,12 +100,10 @@ const Render = ({
           position: 'relative',
         }}
       >
-        <img
-          width="100%"
-          src={ url }
-        />
+        { imageContent }
         { copyright }
       </div>
+      { copyrightBelowContent }
     </div>
   )
 }
