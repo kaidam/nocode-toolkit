@@ -369,6 +369,7 @@ const routeChildren = createSelector(
       const route = routeMap[`node:${item.id}:${id}`]
       return Object.assign({}, node, {
         route,
+        annotation: annotations[id],
       })
     })
   },
