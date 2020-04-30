@@ -25,16 +25,6 @@ const useDocumentEditor = ({
 
   const getAddContentItems = useCallback(() => {
     return [{
-      title: 'Google Folder',
-      icon: icons.folder,
-      secondaryIcon: icons.drive,
-      handler: () => actions.onCreateRemoteContent({
-        title: 'Create Folder',
-        driver: 'drive',
-        form: 'drive.folder',
-        parentId: node.id,
-      })
-    },{
       title: 'Google Document',
       icon: icons.docs,
       secondaryIcon: icons.drive,
@@ -42,6 +32,16 @@ const useDocumentEditor = ({
         title: 'Create Document',
         driver: 'drive',
         form: 'drive.document',
+        parentId: node.id,
+      })
+    },{
+      title: 'Google Folder',
+      icon: icons.folder,
+      secondaryIcon: icons.drive,
+      handler: () => actions.onCreateRemoteContent({
+        title: 'Create Folder',
+        driver: 'drive',
+        form: 'drive.folder',
         parentId: node.id,
       })
     }]
