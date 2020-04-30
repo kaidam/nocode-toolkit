@@ -48,7 +48,11 @@ const useStyles = makeStyles(theme => createStyles({
   }
 }))
 
-const isImage = (url) => url.match(/\.{jpg,png,jpeg,gif}$/i)
+const isImage = (url) => {
+  if(url.match(/\.{jpg,png,jpeg,gif}$/i)) return true
+  if(url.indexOf('unsplash.com') >= 0) return true
+  return false
+}
 
 const ImageField = ({
   field: {
