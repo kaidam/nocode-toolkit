@@ -365,8 +365,8 @@ const fullRouteAncestors = createSelector(
     const first = ancestors[0]
     const homeRoute = routePathMap['/']
     const homeItem = nodes[homeRoute.item]
-
     if(!homeItem) return ancestors
+    if(!homeItem.children) return ancestors
 
     if(homeItem.children.find(id => id == first.node.id)) {
       return [{
