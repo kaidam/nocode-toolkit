@@ -40,6 +40,7 @@ const DialogLoader = ({
   const driveWindow = useSelector(driveSelectors.window)
   const unsplashWindow = useSelector(unsplashSelectors.window)
   const dialogParams = useSelector(dialogSelectors.dialogParams)
+
   return (
     <div>
       {

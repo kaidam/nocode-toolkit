@@ -15,6 +15,7 @@ import ThemeContainer from './theme/container'
 import library from './library'
 
 const GlobalLoading = lazy(() => import(/* webpackChunkName: "ui" */ './components/system/GlobalLoading'))
+const QuickstartDialog = lazy(() => import(/* webpackChunkName: "ui" */ './components/quickstart/Dialog'))
 
 const App = ({
   templates,
@@ -29,6 +30,7 @@ const App = ({
   const showUI = useSelector(systemSelectors.showUI)
   const initialised = useSelector(systemSelectors.initialised)
   const initialiseError = useSelector(systemSelectors.initialiseError)
+  const quickstartWindow = useSelector(uiSelectors.quickstartWindow)
 
   // this allows us to customize the loading message
   // as things are initialised
@@ -62,9 +64,15 @@ const App = ({
 
   return showUI && !initialised ? (
     <Suspense>
-      <GlobalLoading
-        loading={ loading || true }
-      />
+      {
+        quickstartWindow ? (
+          <QuickstartDialog />
+        ) : (
+          <GlobalLoading
+            loading={ loading || true }
+          />
+        )
+      }
     </Suspense>
   ) : (
     <ThemeContainer

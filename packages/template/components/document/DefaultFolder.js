@@ -10,6 +10,10 @@ import useDocumentEditor from '../hooks/useDocumentEditor'
 const AddIcon = icons.add
 
 const useStyles = makeStyles(theme => ({
+  root: {
+    fontFamily: 'Roboto',
+    padding: theme.spacing(1),
+  },
   title: {
     margin: '0px',
   },
@@ -42,11 +46,7 @@ const DefaultFolder = ({
   })
 
   return (
-    <div
-      style={{
-        fontFamily: 'Roboto'
-      }}
-    >
+    <div className={ classes.root }>
       <h3 className={ classes.title }>Your Google folder is ready!</h3>
       <p>Any folders or documents you add to this folder will appear on this page.</p>
       <div>

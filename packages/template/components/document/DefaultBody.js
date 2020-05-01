@@ -7,6 +7,10 @@ import icons from '../../icons'
 const EditIcon = icons.edit
 
 const useStyles = makeStyles(theme => ({
+  root: {
+    fontFamily: 'Roboto',
+    padding: theme.spacing(1),
+  },
   title: {
     margin: '0px',
   },
@@ -26,11 +30,7 @@ const DefaultBody = ({
   const classes = useStyles()
 
   return (
-    <div
-      style={{
-        fontFamily: 'Roboto'
-      }}
-    >
+    <div className={ classes.root }>
       <h3 className={ classes.title }>Your Google document is ready!</h3>
       <p>Any content you add to this document will appear on this page.</p>
       <div>

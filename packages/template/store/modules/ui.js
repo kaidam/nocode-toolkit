@@ -34,7 +34,20 @@ const reducers = {
   },
   setScrollToCurrentPage: (state, action) => {
     state.scrollToCurrentPage = action.payload
-  }
+  },
+  setQuickstartWindow: (state, action) => {
+    state.quickstartWindow = action.payload
+  },
+  acceptQuickstartWindow: (state, action) => {
+    if(state.quickstartWindow) {
+      state.quickstartWindow.accepted = true
+    }
+  },
+  cancelQuickstartWindow: (state, action) => {
+    if(state.quickstartWindow) {
+      state.quickstartWindow.accepted = false
+    }
+  },
 }
 
 const sideEffects = {
@@ -83,6 +96,11 @@ const sideEffects = {
     crisp.open()
   },
 
+  getQuickstartConfig: (windowConfig = {}) => async (dispatch, getState) => {
+    dispatch(actions.setQuickstartWindow(windowConfig))
+    const results = await dispatch(actions.waitForWindow(uiSelectors.quickstartWindow))
+    return results
+  },
 }
 
 const reducer = CreateReducer({
