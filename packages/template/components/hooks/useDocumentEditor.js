@@ -10,6 +10,7 @@ import useLayoutEditor from './useLayoutEditor'
 const useDocumentEditor = ({
   node,
   layout_id = 'none',
+  addContentParams = {},
 }) => {
 
   const actions = Actions(useDispatch(), {
@@ -33,6 +34,7 @@ const useDocumentEditor = ({
         driver: 'drive',
         form: 'drive.document',
         parentId: node.id,
+        params: addContentParams,
       })
     },{
       title: 'Google Folder',
@@ -43,6 +45,7 @@ const useDocumentEditor = ({
         driver: 'drive',
         form: 'drive.folder',
         parentId: node.id,
+        params: addContentParams,
       })
     }]
   }, [

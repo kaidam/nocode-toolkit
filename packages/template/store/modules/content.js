@@ -159,6 +159,7 @@ const sideEffects = {
     driver,
     form,
     parentId,
+    params = {},
   }) => wrapper('createRemoteContent', async (dispatch, getState) => {
     const result = await dispatch(actions.waitForForm({
       forms: [form],
@@ -180,6 +181,11 @@ const sideEffects = {
       }
     }))
     if(!result) return
+    if(params.homepage) {
+      await loaders.editHomepageSetting(getState, {
+        content_id: result.id,
+      })
+    }
     await dispatch(jobActions.reload())
     dispatch(snackbarActions.setSuccess(`item added`))
 

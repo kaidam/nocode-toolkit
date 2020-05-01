@@ -90,21 +90,37 @@ const FormWrapperRow = ({
   }
   else if (row.constructor === Array) {
     const colSize = Math.floor(12 / row.length)
-    return row.map((item, i) => (
-      <Grid item xs={ 12 } sm={ colSize } key={ rowKey + '-' + i }>
-        <FormWrapperItem
-          item={ item }
-          values={ values }
-          errors={ errors }
-          touched={ touched }
-          onSetFieldValue={ onSetFieldValue }
-          handlers={ handlers }
-          handlerContext={ handlerContext }
-        />
-      </Grid>
-    ))
+    return row
+      .filter(item => {
+        return handlers.isVisible ?
+          handlers.isVisible({
+            name: item.id,
+            values,
+          }) :
+          true
+      })
+      .map((item, i) => (
+        <Grid item xs={ 12 } sm={ colSize } key={ rowKey + '-' + i }>
+          <FormWrapperItem
+            item={ item }
+            values={ values }
+            errors={ errors }
+            touched={ touched }
+            onSetFieldValue={ onSetFieldValue }
+            handlers={ handlers }
+            handlerContext={ handlerContext }
+          />
+        </Grid>
+      ))
   }
   else {
+    if(handlers.isVisible) {
+      const visible = handlers.isVisible({
+        name: row.id,
+        values,
+      })
+      if(!visible) return null
+    }
     return (
       <Grid item xs={12} key={ rowKey }>
         <FormWrapperItem
