@@ -39,14 +39,9 @@ const reducers = {
     state.quickstartWindow = action.payload
   },
   acceptQuickstartWindow: (state, action) => {
-    if(state.quickstartWindow) {
-      state.quickstartWindow.accepted = true
-    }
-  },
-  cancelQuickstartWindow: (state, action) => {
-    if(state.quickstartWindow) {
-      state.quickstartWindow.accepted = false
-    }
+    state.quickstartWindow = Object.assign({}, action.payload, {
+      accepted: true,
+    })
   },
 }
 
@@ -98,7 +93,9 @@ const sideEffects = {
 
   getQuickstartConfig: (windowConfig = {}) => async (dispatch, getState) => {
     dispatch(actions.setQuickstartWindow(windowConfig))
-    const results = await dispatch(actions.waitForWindow(uiSelectors.quickstartWindow))
+    await dispatch(actions.waitForWindow(uiSelectors.quickstartWindow))
+    const results = uiSelectors.quickstartWindow(getState())
+    dispatch(actions.setQuickstartWindow(null))
     return results
   },
 }

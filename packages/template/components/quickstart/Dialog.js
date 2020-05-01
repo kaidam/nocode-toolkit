@@ -47,21 +47,14 @@ const QuickStartDialog = ({
 
   const classes = useStyles()
 
-  const quickstartWindow = useSelector(uiSelectors.quickstartWindow)
-
   const actions = Actions(useDispatch(), {
-    onCancel: uiActions.cancelQuickstartWindow,
     onSubmit: uiActions.acceptQuickstartWindow,
   })
 
-  const onCloseWindow = useCallback(() => {
-    actions.onCancel()
-  }, [])
-
   const onChooseQuickstart = useCallback((quickstart) => {
-    console.log('--------------------------------------------')
-    console.log('--------------------------------------------')
-    console.dir(quickstart)
+    actions.onSubmit({
+      quickstart,
+    })
   }, [])
 
   return (
