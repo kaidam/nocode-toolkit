@@ -320,24 +320,63 @@ const document = createSelector(
   },
 )
 
+const getAncestors = ({
+  route,
+  nodes,
+  routePathMap,
+}) => {
+  let currentRoute = route
+  const pathToItem = []
+  while(currentRoute) {
+    pathToItem.unshift({
+      route: currentRoute,
+      node: nodes[currentRoute.item],
+    })
+    const parts = currentRoute.path.split('/')
+    parts.pop()
+    const parentRoutePath = parts.join('/')
+    currentRoute = routePathMap[parentRoutePath]
+  }
+  return pathToItem
+}
+
 const routeAncestors = createSelector(
   routerSelectors.route,
   nocodeSelectors.nodes,
   routerSelectors.routePathMap,
+  (route, nodes, routePathMap) => getAncestors({
+    route,
+    nodes,
+    routePathMap,
+  })
+)
+
+// include the home item in the ancestors
+const fullRouteAncestors = createSelector(
+  routerSelectors.route,
+  nocodeSelectors.nodes,
+  routerSelectors.routePathMap,
   (route, nodes, routePathMap) => {
-    let currentRoute = route
-    const pathToItem = []
-    while(currentRoute) {
-      pathToItem.unshift({
-        route: currentRoute,
-        node: nodes[currentRoute.item],
-      })
-      const parts = currentRoute.path.split('/')
-      parts.pop()
-      const parentRoutePath = parts.join('/')
-      currentRoute = routePathMap[parentRoutePath]
+    const ancestors = getAncestors({
+      route,
+      nodes,
+      routePathMap,
+    })
+    const first = ancestors[0]
+    const homeRoute = routePathMap['/']
+    const homeItem = nodes[homeRoute.item]
+
+    if(!homeItem) return ancestors
+
+    if(homeItem.children.find(id => id == first.node.id)) {
+      return [{
+        node: homeItem,
+        route: homeRoute,
+      }].concat(ancestors)
     }
-    return pathToItem
+    else {
+      return ancestors
+    }
   },
 )
 
@@ -389,6 +428,7 @@ const selectors = {
   flatFormSchema,
   document,
   routeAncestors,
+  fullRouteAncestors,
   routeBaseLocation,
   routeChildren,
 }

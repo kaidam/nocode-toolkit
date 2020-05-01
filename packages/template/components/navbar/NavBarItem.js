@@ -1,9 +1,10 @@
 import React, { lazy } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import classnames from 'classnames'
 
 import routerActions from '../../store/modules/router'
+import contentSelectors from '../../store/selectors/content'
 import Suspense from '../system/Suspense'
 import Link from '../widgets/Link'
 
@@ -117,9 +118,13 @@ const NavBarItem = ({
 
   const dispatch = useDispatch()
 
+  const ancestors = useSelector(contentSelectors.fullRouteAncestors)
+
+  const isNodeActive = ancestors.find(ancestor => ancestor.node.id == node.id)
+
   const itemClass = classnames({
     [classes.item]: true,
-    [classes.itemActive]: node.currentPage,
+    [classes.itemActive]: isNodeActive,
   })
 
   // folders can be treated as documents
