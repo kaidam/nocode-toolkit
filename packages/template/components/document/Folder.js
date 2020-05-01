@@ -17,6 +17,7 @@ const useStyles = makeStyles(theme => ({
 const Folder = ({
   node,
   DefaultFolder,
+  addContentFilter,
 }) => {
   const classes = useStyles()
   const children = useSelector(contentSelectors.routeChildren)
@@ -26,6 +27,7 @@ const Folder = ({
       <Suspense>
         <DefaultFolder
           node={ node }
+          addContentFilter={ addContentFilter }
         />
       </Suspense>
     )

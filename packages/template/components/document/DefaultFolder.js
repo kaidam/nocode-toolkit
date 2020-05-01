@@ -29,6 +29,7 @@ const useStyles = makeStyles(theme => ({
 
 const DefaultFolder = ({
   node,
+  addContentFilter,
 }) => {
   const classes = useStyles()
 
@@ -36,19 +37,34 @@ const DefaultFolder = ({
     getAddContentItems,
   } = useDocumentEditor({
     node,
+    addContentFilter,
   })
 
-  const {
-    menus,
-    onClick,
-  } = useMenuButton({
-    getItems: getAddContentItems,
-  })
+  let title = ''
+  let menus = null
+  let onClick = null
+
+  const items = getAddContentItems()
+
+  if(items && items.length == 1) {
+    const item = items[0]
+    title = `Add ${item.title}`
+    onClick = item.handler
+  }
+  else {
+    const menuButton = useMenuButton({
+      getItems: getAddContentItems,
+    })
+
+    title = 'Add Content'
+    menus = menuButton.menus
+    onClick = menuButton.onClick
+  }
 
   return (
     <div className={ classes.root }>
       <h3 className={ classes.title }>Your Google folder is ready!</h3>
-      <p>Any folders or documents you add to this folder will appear on this page.</p>
+      <p>Any content you add to this folder will appear on this page.</p>
       <div>
         <Button
           color="secondary"
@@ -60,7 +76,7 @@ const DefaultFolder = ({
             onClick(e)
           }}
         >
-          <AddIcon />&nbsp;&nbsp;Add Content
+          <AddIcon />&nbsp;&nbsp;{ title }
         </Button>
       </div>
       {

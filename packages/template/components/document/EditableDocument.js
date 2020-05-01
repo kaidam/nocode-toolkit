@@ -35,6 +35,7 @@ const EditableDocument = ({
   node,
   layout_id,
   className,
+  addContentFilter,
 }) => {
   const classes = useStyles()
 
@@ -43,6 +44,7 @@ const EditableDocument = ({
   } = useDocumentEditor({
     node,
     layout_id,
+    addContentFilter,
   })
 
   const {

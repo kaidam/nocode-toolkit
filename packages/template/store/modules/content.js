@@ -234,7 +234,7 @@ const sideEffects = {
     }))
     if(!result) return
     await dispatch(jobActions.reload())
-    dispatch(snackbarActions.setSuccess(`item added`))
+    dispatch(snackbarActions.setSuccess(`item updated`))
   }),
 
   deleteRemoteContent: ({

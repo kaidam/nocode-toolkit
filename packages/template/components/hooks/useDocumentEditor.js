@@ -11,6 +11,7 @@ const useDocumentEditor = ({
   node,
   layout_id = 'none',
   addContentParams = {},
+  addContentFilter,
 }) => {
 
   const actions = Actions(useDispatch(), {
@@ -26,6 +27,7 @@ const useDocumentEditor = ({
 
   const getAddContentItems = useCallback(() => {
     return [{
+      id: 'document',
       title: 'Google Document',
       icon: icons.docs,
       secondaryIcon: icons.drive,
@@ -37,6 +39,7 @@ const useDocumentEditor = ({
         params: addContentParams,
       })
     },{
+      id: 'folder',
       title: 'Google Folder',
       icon: icons.folder,
       secondaryIcon: icons.drive,
@@ -47,7 +50,10 @@ const useDocumentEditor = ({
         parentId: node.id,
         params: addContentParams,
       })
-    }]
+    }].filter(item => {
+      if(!addContentFilter) return true
+      return addContentFilter.indexOf(item.id) >= 0
+    })
   }, [
     node,
   ])
