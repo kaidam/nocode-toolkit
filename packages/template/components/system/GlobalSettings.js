@@ -1,22 +1,20 @@
-import React, { useState, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Tooltip from '@material-ui/core/Tooltip'
 import Fab from '@material-ui/core/Fab'
 import Drawer from '@material-ui/core/Drawer'
-import Divider from '@material-ui/core/Divider'
 import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 
 import Actions from '../../utils/actions'
 import systemSelectors from '../../store/selectors/system'
 import uiSelectors from '../../store/selectors/ui'
 import uiActions from '../../store/modules/ui'
 import useGetGlobalOptions from '../hooks/useGetGlobalOptions'
+
+import GlobalSettingsItem from './GlobalSettingsItem'
+import GlobalSettingsBuildItem from './GlobalSettingsBuildItem'
 
 import icons from '../../icons'
 
@@ -92,49 +90,15 @@ const GlobalSettings = ({
         >
           {
             globalOptions.map((item, i) => {
-              if(item === '-') {
-                return (
-                  <Divider className={ classes.divider } key={ i } />
-                )
-              }
-
+              const ItemComponent = item.id == 'build' ?
+                GlobalSettingsBuildItem :
+                GlobalSettingsItem
               return (
-                <ListItem
+                <ItemComponent
                   key={ i }
-                  button
-                  onClick={ () => {
-                    if(item.handler) item.handler()
-                    setOpen(false)
-                  }}
-                >
-                  {
-                    item.icon && (
-                      <ListItemIcon>
-                        <item.icon color={ item.iconColor || "inherit" } />
-                      </ListItemIcon>
-                    )
-                  }
-                  {
-                    item.iconElement && (
-                      <ListItemIcon>
-                        { item.iconElement }
-                      </ListItemIcon>
-                    )
-                  }
-                  <ListItemText 
-                    primary={ item.title }
-                    secondary={ item.help }
-                  />
-                  {
-                    item.secondaryIcon && (
-                      <ListItemSecondaryAction>
-                        <div className={ classes.smallIcon }>
-                          <item.secondaryIcon />
-                        </div>
-                      </ListItemSecondaryAction>
-                    )
-                  }
-                </ListItem>
+                  item={ item }
+                  setOpen={ actions.onSetSettingsOpen }
+                />
               )
             })
           }

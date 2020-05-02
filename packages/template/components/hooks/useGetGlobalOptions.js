@@ -58,6 +58,7 @@ const useGetGlobalOptions = ({
 
   const getMenuItems = useCallback(() => {
     return [{
+      id: 'build',
       title: 'Build Website',
       icon: icons.send,
       iconColor: 'secondary',

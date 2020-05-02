@@ -14,5 +14,6 @@ const library = {
   autoSnackbar: true,
   topbarHeight: 0,
   handlers: {},
+  onboardingElements: {},
 }
 export default library

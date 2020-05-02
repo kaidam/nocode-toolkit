@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { useRef } from 'react'
 
 const OnboardingContext = React.createContext({
-  active: false,
-  focusElements: {},
+  currentStep: null,
   setFocusElement: () => {},
   progressOnboarding: () => {},
 })

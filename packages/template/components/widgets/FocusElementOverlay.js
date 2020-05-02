@@ -7,13 +7,13 @@ const useStyles = makeStyles(theme => {
     root: {
       
     },
-    panel: {
+    panel: ({coords, padding, zIndex}) => ({
       backgroundColor: 'rgba(0, 0, 0, 0)',
       //backdropFilter: 'blur(10px)',
       position: 'absolute',
-      zIndex: 1300,
+      zIndex,
       transition: 'background-color 0.2s ease-in',
-    },
+    }),
     top: ({coords, padding}) => ({
       width: '100%',
       height: coords.y - (padding.top ? padding.top : 0),
@@ -44,6 +44,7 @@ const useStyles = makeStyles(theme => {
 const FocusElementOverlay = ({
   contentRef,
   padding = {},
+  zIndex = 1300,
 }) => {
   const [ windowSize, setWindowSize ] = useState(null)
   const containerRef = useRef()
@@ -59,16 +60,16 @@ const FocusElementOverlay = ({
   const classes = useStyles({
     coords,
     padding,
+    zIndex,
   })
   useEffect(() => {
-    if(!containerRef.current) return
     setTimeout(() => {
+      if(!containerRef.current) return
       const divs = containerRef.current.querySelectorAll('div')
       for(let i=0; i<divs.length; i++) {
         divs[i].style.backgroundColor = 'rgba(0, 0, 0, 0.2)'
       }
     }, 1)
-    
   }, [
     containerRef.current,
   ])

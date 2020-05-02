@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import React, { useRef, useState, useEffect, useCallback } from 'react'
 import { useSelector, useStore, useDispatch } from 'react-redux'
 import Promise from 'bluebird'
 import { makeStyles } from '@material-ui/core/styles'
@@ -102,7 +102,9 @@ const OnboardingWizard = ({
   const dispatch = useDispatch()
   const website = useSelector(systemSelectors.website)
 
-  const [ focusElements, setFocusElements ] = useState({})
+  const processedSteps = useRef({})
+
+  const [ focusElement, setFocusElement ] = useState({})
   const [ active, setActive ] = useState(false)
   const [ onboardingConfig, setOnboardingConfig ] = useState(null)
   const [ currentStep, setCurrentStep ] = useState(null)
@@ -135,8 +137,7 @@ const OnboardingWizard = ({
   // and not the UI element itself
   // if the current focus element has a handler - run it
   const handleCurrentStep = useCallback(() => {
-    if(currentStep && currentStep.type == 'focus' && focusElements[currentStep.element]) {
-      const focusElement = focusElements[currentStep.element]
+    if(currentStep && currentStep.type == 'focus' && focusElement) {
       if(focusElement.handler) {
         focusElement.handler()
       }
@@ -144,7 +145,7 @@ const OnboardingWizard = ({
     progressOnboarding()
   }, [
     store,
-    focusElements,
+    focusElement,
     currentStep,
     progressOnboarding,
   ])
@@ -154,15 +155,6 @@ const OnboardingWizard = ({
       onboardingActive: false,
     }))
   })
-
-  const setFocusElement = useCallback((name, element) => {
-    const newElements = Object.assign({}, focusElements, {
-      [name]: element,
-    })
-    setFocusElements(newElements)
-  }, [
-    focusElements,
-  ])
 
   useEffect(() => {
     if(!website || !website.meta) return
@@ -175,8 +167,10 @@ const OnboardingWizard = ({
   ])
 
   useEffect(() => {
+    if(!currentStep) return
+    if(processedSteps.current[currentStep.id]) return
+    processedSteps.current[currentStep.id] = true
     const handler = async () => {
-      if(!currentStep) return
       if(currentStep.type == 'wait') { 
         let passed = false
         while(!passed) {
@@ -199,8 +193,7 @@ const OnboardingWizard = ({
   let overlay = null
   let info = null
 
-  if(currentStep && focusElements[currentStep.element]) {
-    const focusElement = focusElements[currentStep.element]
+  if(currentStep && focusElement) {
     if(focusElement.ref && focusElement.ref.current) {
       const padding = typeof(focusElement.padding) === 'number' ?
         {
@@ -215,6 +208,7 @@ const OnboardingWizard = ({
         <FocusElementOverlay
           contentRef={ focusElement.ref }
           padding={ padding }
+          zIndex={ 1301 }
         />
       )
 
@@ -282,8 +276,7 @@ const OnboardingWizard = ({
   return (
     <OnboardingContext.Provider
       value={{
-        active,
-        focusElements,
+        currentStep,
         setFocusElement,
         progressOnboarding,
       }}
