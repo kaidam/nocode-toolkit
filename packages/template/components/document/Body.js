@@ -9,6 +9,7 @@ import systemSelectors from '../../store/selectors/system'
 import Actions from '../../utils/actions'
 import systemUtils from '../../utils/system'
 import driveUtils from '../../utils/drive'
+import documentUtils from '../../utils/document'
 
 import Suspense from '../system/Suspense'
 
@@ -54,14 +55,7 @@ const DocumentBody = ({
   const hasContent = useMemo(() => {
     if(!html) return true
     if(systemUtils.isNode) return true
-
-    const checkDiv = document.createElement('div')
-    checkDiv.innerHTML = html
-
-    const hasText = checkDiv.innerText.match(/\w/) ? true : false
-    const hasImage = checkDiv.querySelector('img') ? true : false
-
-    return hasText || hasImage
+    return documentUtils.hasContent(html)
   }, [
     html,
   ])
