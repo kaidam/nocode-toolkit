@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useSelector, useStore } from 'react-redux'
+import { useSelector, useStore, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Button from '@material-ui/core/Button'
@@ -15,6 +15,8 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import FocusElementOverlay from '../widgets/FocusElementOverlay'
 
 import systemSelectors from '../../store/selectors/system'
+import systemActions from '../../store/modules/system'
+
 import OnboardingContext from '../contexts/onboarding'
 
 import library from '../../library'
@@ -94,6 +96,7 @@ const OnboardingWizard = ({
 
   const classes = useStyles()
   const store = useStore()
+  const dispatch = useDispatch()
   const website = useSelector(systemSelectors.website)
 
   const [ focusElements, setFocusElements ] = useState({})
@@ -101,6 +104,45 @@ const OnboardingWizard = ({
   const [ onboardingConfig, setOnboardingConfig ] = useState(null)
   const [ currentStep, setCurrentStep ] = useState(null)
   const [ arrowRef, setArrowRef ] = React.useState(null)
+
+  const progressOnboarding = useCallback(async () => {
+    if(currentStep.noProgress) return
+    const currentIndex = onboardingConfig.steps.findIndex(step => step.id == currentStep.id)
+    if(currentIndex >= onboardingConfig.steps.length) {
+      await dispatch(systemActions.updateWebsiteMeta({
+        onboardingActive: false,
+      }))
+      return
+    }
+    setCurrentStep(onboardingConfig.steps[currentIndex + 1])
+  }, [
+    onboardingConfig,
+    currentStep,
+  ])
+
+  // this triggers the next step from the onboarding overlay
+  // and not the UI element itself
+  // if the current focus element has a handler - run it
+  const handleCurrentStep = useCallback(() => {
+    if(currentStep && currentStep.type == 'focus' && focusElements[currentStep.element]) {
+      const focusElement = focusElements[currentStep.element]
+      if(focusElement.handler) {
+        focusElement.handler()
+      }
+    }
+    progressOnboarding()
+  }, [
+    store,
+    focusElements,
+    currentStep,
+    progressOnboarding,
+  ])
+
+  const skipOnboarding = useCallback(async () => {
+    await dispatch(systemActions.updateWebsiteMeta({
+      onboardingActive: false,
+    }))
+  })
 
   const setFocusElement = useCallback((name, element) => {
     const newElements = Object.assign({}, focusElements, {
@@ -121,10 +163,12 @@ const OnboardingWizard = ({
     website,
   ])
 
+  //if(!active) return children
+
   let overlay = null
   let info = null
 
-  if(currentStep && currentStep.type == 'focus' && focusElements[currentStep.element]) {
+  if(currentStep && focusElements[currentStep.element]) {
     const focusElement = focusElements[currentStep.element]
 
     const padding = typeof(focusElement.padding) === 'number' ?
@@ -156,12 +200,16 @@ const OnboardingWizard = ({
           }
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => {}}>
+          <Button onClick={ skipOnboarding }>
             Skip
           </Button>
-          <Button onClick={() => {}} color="secondary">
-            { currentStep.submitTitle }
-          </Button>
+          {
+            !currentStep.noSubmit && (
+              <Button onClick={ handleCurrentStep } color="secondary">
+                { currentStep.submitTitle }
+              </Button>
+            )
+          }
         </DialogActions>
       </>
     )
@@ -190,7 +238,7 @@ const OnboardingWizard = ({
         <Hidden mdUp>
           <Dialog
             open
-            onClose={ () => {} }
+            onClose={ skipOnboarding }
           >
             { infoContent }
           </Dialog>
@@ -206,6 +254,7 @@ const OnboardingWizard = ({
         active,
         focusElements,
         setFocusElement,
+        progressOnboarding,
       }}
     >
       { children }

@@ -36,6 +36,7 @@ const DefaultBody = ({
     setTimeout(() => {
       context.setFocusElement('defaultBody', {
         ref: buttonRef,
+        handler: onClick,
         padding: 10,
       })
     }, 1000)
@@ -56,6 +57,7 @@ const DefaultBody = ({
           onClick={ (e) => {
             e.preventDefault()
             e.stopPropagation()
+            context.progressOnboarding()
             onClick()
           }}
         >
