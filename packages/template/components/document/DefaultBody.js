@@ -34,7 +34,8 @@ const DefaultBody = ({
 
   useEffect(() => {
     setTimeout(() => {
-      context.setFocusElement('defaultBody', {
+      context.setFocusElement({
+        id: 'defaultBody',
         ref: buttonRef,
         handler: onClick,
         padding: 10,

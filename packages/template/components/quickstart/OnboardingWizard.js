@@ -111,8 +111,8 @@ const OnboardingWizard = ({
   const [ currentStep, setCurrentStep ] = useState(null)
   const [ arrowRef, setArrowRef ] = React.useState(null)
 
-  const onSetFocusElement = useCallback((id, element) => {
-    if(!currentStep || currentStep.element != id) return
+  const onSetFocusElement = useCallback((element) => {
+    if(!currentStep || currentStep.element != element.id) return
     setFocusElement(element)
   }, [
     currentStep,
@@ -122,7 +122,8 @@ const OnboardingWizard = ({
     const currentIndex = onboardingConfig.steps.findIndex(step => step.id == currentStep.id)
     if(currentIndex >= onboardingConfig.steps.length - 1) {
       await dispatch(systemActions.updateWebsiteMeta({
-        onboardingActive: false,
+        //onboardingActive: false,
+        onboardingActive: true,
       }))
       return
     }
@@ -207,10 +208,9 @@ const OnboardingWizard = ({
 
   if(!active) return children
 
-  let overlay = null
   let info = null
 
-  if(currentStep && focusElement) {
+  if(currentStep && focusElement && currentStep.element == focusElement.id) {
     if(focusElement.ref && focusElement.ref.current) {
       const padding = typeof(focusElement.padding) === 'number' ?
         {
@@ -221,20 +221,12 @@ const OnboardingWizard = ({
         } :
         focusElement.padding
 
-      overlay = (
-        <FocusElementOverlay
-          contentRef={ focusElement.ref }
-          padding={ padding }
-          zIndex={ 1301 }
-        />
-      )
-
       const infoContent = (
         <>
           <DialogTitle>{ currentStep.title }</DialogTitle>
           <DialogContent>
             {
-              currentStep.description.map((text, i) => {
+              (currentStep.description || []).map((text, i) => {
                 return (
                   <DialogContentText key={ i }>{ text }</DialogContentText>
                 )
@@ -276,6 +268,11 @@ const OnboardingWizard = ({
                 { infoContent }
               </Paper>
             </Popper>
+            <FocusElementOverlay
+              contentRef={ focusElement.ref }
+              padding={ padding }
+              zIndex={ 1301 }
+            />
           </Hidden>
           <Hidden mdUp>
             <Dialog
@@ -299,7 +296,6 @@ const OnboardingWizard = ({
       }}
     >
       { children }
-      { overlay }
       { info }
     </OnboardingContext.Provider>
   )

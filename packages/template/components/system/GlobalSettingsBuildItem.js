@@ -34,7 +34,8 @@ const GlobalSettingsBuildItem = ({
 
   useEffect(() => {
     setTimeout(() => {
-      context.setFocusElement('buildButton', {
+      context.setFocusElement({
+        id: 'buildButton',
         ref: buttonRef,
         handler: onClick,
       })
