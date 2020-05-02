@@ -33,14 +33,12 @@ const DefaultBody = ({
   const context = useContext(OnboardingContext)
 
   useEffect(() => {
-    context.setFocusElement('defaultBody', {
-      ref: buttonRef,
-      padding: {
-        left: 10,
-        top: 10,
-        bottom: 10,
-      }
-    })
+    setTimeout(() => {
+      context.setFocusElement('defaultBody', {
+        ref: buttonRef,
+        padding: 10,
+      })
+    }, 500)
   }, [
     buttonRef.current,
   ])

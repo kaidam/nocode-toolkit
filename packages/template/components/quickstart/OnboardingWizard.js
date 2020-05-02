@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { makeStyles } from '@material-ui/core/styles'
+
+import Popper from '@material-ui/core/Popper'
+import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
 
 import FocusElementOverlay from '../widgets/FocusElementOverlay'
 
@@ -8,10 +13,21 @@ import OnboardingContext from '../contexts/onboarding'
 
 import library from '../../library'
 
+
+const useStyles = makeStyles(theme => {
+  return {
+    popper: {
+      marginLeft: '20px',
+      zIndex: 5000,
+    },
+  }
+})
+
 const OnboardingWizard = ({
   children,
 }) => {
 
+  const classes = useStyles()
   const website = useSelector(systemSelectors.website)
   const [ focusElements, setFocusElements ] = useState({})
   const [ active, setActive ] = useState(false)
@@ -38,15 +54,38 @@ const OnboardingWizard = ({
   ])
 
   let overlay = null
+  let info = null
 
   if(currentStep && currentStep.type == 'focus' && focusElements[currentStep.element]) {
     const focusElement = focusElements[currentStep.element]
 
+    const padding = typeof(focusElement.padding) === 'number' ?
+      {
+        left: focusElement.padding,
+        right: focusElement.padding,
+        top: focusElement.padding,
+        bottom: focusElement.padding,
+      } :
+      focusElement.padding
+
     overlay = (
       <FocusElementOverlay
         contentRef={ focusElement.ref }
-        padding={ focusElement.padding }
+        padding={ padding }
       />
+    )
+
+    info = (
+      <Popper 
+        open
+        anchorEl={ focusElement.ref.current }
+        placement="right"
+        className={ classes.popper }
+      >
+        <Paper>
+          <Typography>The content of the Popper.</Typography>
+        </Paper>
+      </Popper>
     )
   }
 
@@ -60,6 +99,7 @@ const OnboardingWizard = ({
     >
       { children }
       { overlay }
+      { info }
     </OnboardingContext.Provider>
   )
 }
