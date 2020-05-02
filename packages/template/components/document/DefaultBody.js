@@ -30,19 +30,19 @@ const DefaultBody = ({
 }) => {
   const buttonRef = useRef(null)
   const classes = useStyles()
-  // const context = useContext(OnboardingContext)
+  const context = useContext(OnboardingContext)
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     context.setFocusElement('defaultBody', {
-  //       ref: buttonRef,
-  //       handler: onClick,
-  //       padding: 10,
-  //     })
-  //   }, 1000)
-  // }, [
-  //   buttonRef.current,
-  // ])
+  useEffect(() => {
+    setTimeout(() => {
+      context.setFocusElement('defaultBody', {
+        ref: buttonRef,
+        handler: onClick,
+        padding: 10,
+      })
+    }, 1000)
+  }, [
+    context.currentStep,
+  ])
 
   return (
     <div className={ classes.root }>

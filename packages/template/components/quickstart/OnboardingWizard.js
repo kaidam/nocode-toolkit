@@ -107,8 +107,16 @@ const OnboardingWizard = ({
   const [ focusElement, setFocusElement ] = useState({})
   const [ active, setActive ] = useState(false)
   const [ onboardingConfig, setOnboardingConfig ] = useState(null)
+  const [ triggerStep, setTriggerStep ] = useState(null)
   const [ currentStep, setCurrentStep ] = useState(null)
   const [ arrowRef, setArrowRef ] = React.useState(null)
+
+  const onSetFocusElement = useCallback((id, element) => {
+    if(!currentStep || currentStep.element != id) return
+    setFocusElement(element)
+  }, [
+    currentStep,
+  ])
 
   const incrementStep = useCallback(async () => {
     const currentIndex = onboardingConfig.steps.findIndex(step => step.id == currentStep.id)
@@ -119,7 +127,7 @@ const OnboardingWizard = ({
       dispatch(snackbarActions.setSuccess('You have completed the tutorial...'))
       return
     }
-    setCurrentStep(onboardingConfig.steps[currentIndex + 1])
+    setTriggerStep(onboardingConfig.steps[currentIndex + 1])
   }, [
     onboardingConfig,
     currentStep,
@@ -161,15 +169,28 @@ const OnboardingWizard = ({
     setActive(website.meta.onboardingActive || false)
     const config = library.onboarding[website.meta.quickstart] || library.onboarding.default
     setOnboardingConfig(config)
-    setCurrentStep(config.steps[0])
+    setTriggerStep(config.steps[0])
   }, [
     website,
   ])
 
   useEffect(() => {
+    if(!triggerStep) return
+    if(processedSteps.current[triggerStep.id]) return
+    processedSteps.current[triggerStep.id] = true
+    const handler = async () => {
+      if(triggerStep.initialise) {
+        await triggerStep.initialise(store.dispatch, store.getState)
+      }
+      setCurrentStep(triggerStep)
+    }
+    handler()
+  }, [
+    triggerStep,
+  ])
+
+  useEffect(() => {
     if(!currentStep) return
-    if(processedSteps.current[currentStep.id]) return
-    processedSteps.current[currentStep.id] = true
     const handler = async () => {
       if(currentStep.type == 'wait') { 
         let passed = false
@@ -178,9 +199,6 @@ const OnboardingWizard = ({
           if(!passed) await Promise.delay(1000)
         }
         incrementStep()
-      }
-      else if(currentStep.initialise) {
-        await currentStep.initialise(store.dispatch, store.getState)
       }
     }
     handler()
@@ -277,7 +295,7 @@ const OnboardingWizard = ({
     <OnboardingContext.Provider
       value={{
         currentStep,
-        setFocusElement,
+        setFocusElement: onSetFocusElement,
         progressOnboarding,
       }}
     >

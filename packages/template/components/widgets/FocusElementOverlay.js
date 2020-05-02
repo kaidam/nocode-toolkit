@@ -49,10 +49,10 @@ const FocusElementOverlay = ({
   const [ windowSize, setWindowSize ] = useState(null)
   const containerRef = useRef()
   const el = contentRef.current
-  const coords = el.getBoundingClientRect()
+  const coords = el ? el.getBoundingClientRect() : {}
   const theme = useTheme()
   const topbarHeight = theme && theme.layout ? theme.layout.topbarHeight : 0
-  const y = coords.y
+  const y = coords.y || 0
   if(y < topbarHeight) {
     coords.y = topbarHeight
     coords.height -= (topbarHeight - y)
@@ -83,6 +83,8 @@ const FocusElementOverlay = ({
     window.addEventListener("resize", handleResize)
     return () => window.removeEventListener("resize", handleResize)
   }, [])
+
+  if(!el) return null
   
   return (
     <div className={ classes.root } ref={ containerRef }>

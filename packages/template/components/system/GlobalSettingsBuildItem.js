@@ -32,17 +32,16 @@ const GlobalSettingsBuildItem = ({
     setOpen(false)
   }
 
-  // useEffect(() => {
-  //   setTimeout(() => {
-  //     context.setFocusElement('buildButton', {
-  //       ref: buttonRef,
-  //       handler: onClick,
-  //       padding: 10,
-  //     })
-  //   }, 1000)
-  // }, [
-  //   buttonRef.current,
-  // ])
+  useEffect(() => {
+    setTimeout(() => {
+      context.setFocusElement('buildButton', {
+        ref: buttonRef,
+        handler: onClick,
+      })
+    }, 500)
+  }, [
+    context.currentStep,
+  ])
 
   return (
     <ListItem
