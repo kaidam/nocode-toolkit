@@ -124,7 +124,6 @@ const OnboardingWizard = ({
       await dispatch(systemActions.updateWebsiteMeta({
         onboardingActive: false,
       }))
-      dispatch(snackbarActions.setSuccess('You have completed the tutorial...'))
       return
     }
     setTriggerStep(onboardingConfig.steps[currentIndex + 1])

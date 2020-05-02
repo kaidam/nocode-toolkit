@@ -47,7 +47,10 @@ const GlobalSettingsBuildItem = ({
     <ListItem
       button
       ref={ buttonRef }
-      onClick={ onClick }
+      onClick={ () => {
+        context.progressOnboarding()
+        onClick()
+      }}
     >
       {
         item.icon && (
