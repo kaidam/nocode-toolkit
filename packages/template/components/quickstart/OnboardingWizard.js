@@ -5,6 +5,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import Popper from '@material-ui/core/Popper'
 import Paper from '@material-ui/core/Paper'
+import Hidden from '@material-ui/core/Hidden'
+import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
@@ -141,41 +143,60 @@ const OnboardingWizard = ({
       />
     )
 
+    const infoContent = (
+      <>
+        <DialogTitle>{ currentStep.title }</DialogTitle>
+        <DialogContent>
+          {
+            currentStep.description.map((text, i) => {
+              return (
+                <DialogContentText key={ i }>{ text }</DialogContentText>
+              )
+            })
+          }
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => {}} color="primary">
+            Skip
+          </Button>
+          <Button onClick={() => {}} color="primary">
+            Open
+          </Button>
+        </DialogActions>
+      </>
+    )
+
     info = (
-      <Popper 
-        open
-        anchorEl={ focusElement.ref.current }
-        placement="right"
-        className={ classes.popper }
-        modifiers={{
-          arrow: {
-            enabled: true,
-            element: arrowRef,
-          },
-        }}
-      >
-        <span className={classes.arrow} ref={setArrowRef} />
-        <Paper className={classes.paper}>
-          <DialogTitle>{ currentStep.title }</DialogTitle>
-          <DialogContent>
-            {
-              currentStep.description.map((text, i) => {
-                return (
-                  <DialogContentText key={ i }>{ text }</DialogContentText>
-                )
-              })
-            }
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => {}} color="primary">
-              Skip
-            </Button>
-            <Button onClick={() => {}} color="primary">
-              Open
-            </Button>
-          </DialogActions>
-        </Paper>
-      </Popper>
+      <>
+        <Hidden smDown>
+          <Popper 
+            open
+            anchorEl={ focusElement.ref.current }
+            placement="right"
+            className={ classes.popper }
+            modifiers={{
+              arrow: {
+                enabled: true,
+                element: arrowRef,
+              },
+            }}
+          >
+            <span className={classes.arrow} ref={setArrowRef} />
+            <Paper className={classes.paper}>
+              { infoContent }
+            </Paper>
+          </Popper>
+        </Hidden>
+        <Hidden mdUp>
+          <Dialog
+            open
+            onClose={ () => {} }
+          >
+            { infoContent }
+          </Dialog>
+        </Hidden>
+      </>
+      
     )
   }
 
