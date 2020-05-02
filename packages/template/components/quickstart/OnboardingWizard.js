@@ -17,6 +17,7 @@ import FocusElementOverlay from '../widgets/FocusElementOverlay'
 
 import systemSelectors from '../../store/selectors/system'
 import systemActions from '../../store/modules/system'
+import snackbarActions from '../../store/modules/snackbar'
 
 import OnboardingContext from '../contexts/onboarding'
 
@@ -72,6 +73,7 @@ const useStyles = makeStyles(theme => {
       },
     },
     paper: {
+      maxWidth: '400px',
       overflow: 'auto',
     },
     arrow: {
@@ -106,19 +108,27 @@ const OnboardingWizard = ({
   const [ currentStep, setCurrentStep ] = useState(null)
   const [ arrowRef, setArrowRef ] = React.useState(null)
 
-  const progressOnboarding = useCallback(async () => {
-    if(currentStep.noProgress) return
+  const incrementStep = useCallback(async () => {
     const currentIndex = onboardingConfig.steps.findIndex(step => step.id == currentStep.id)
-    if(currentIndex >= onboardingConfig.steps.length) {
+    if(currentIndex >= onboardingConfig.steps.length - 1) {
       await dispatch(systemActions.updateWebsiteMeta({
         onboardingActive: false,
       }))
+      dispatch(snackbarActions.setSuccess('You have completed the tutorial...'))
       return
     }
     setCurrentStep(onboardingConfig.steps[currentIndex + 1])
   }, [
     onboardingConfig,
     currentStep,
+  ])
+
+  const progressOnboarding = useCallback(() => {
+    if(currentStep.noProgress) return
+    incrementStep()
+  }, [
+    currentStep,
+    incrementStep,
   ])
 
   // this triggers the next step from the onboarding overlay
@@ -172,6 +182,7 @@ const OnboardingWizard = ({
         passed = await currentStep.handler(store.dispatch, store.getState)
         if(!passed) await Promise.delay(1000)
       }
+      incrementStep()
       return
     }
     handler()
@@ -179,89 +190,89 @@ const OnboardingWizard = ({
     currentStep,
   ])
 
-  //if(!active) return children
+  if(!active) return children
 
   let overlay = null
   let info = null
 
   if(currentStep && focusElements[currentStep.element]) {
     const focusElement = focusElements[currentStep.element]
+    if(focusElement.ref && focusElement.ref.current) {
+      const padding = typeof(focusElement.padding) === 'number' ?
+        {
+          left: focusElement.padding,
+          right: focusElement.padding,
+          top: focusElement.padding,
+          bottom: focusElement.padding,
+        } :
+        focusElement.padding
 
-    const padding = typeof(focusElement.padding) === 'number' ?
-      {
-        left: focusElement.padding,
-        right: focusElement.padding,
-        top: focusElement.padding,
-        bottom: focusElement.padding,
-      } :
-      focusElement.padding
+      overlay = (
+        <FocusElementOverlay
+          contentRef={ focusElement.ref }
+          padding={ padding }
+        />
+      )
 
-    overlay = (
-      <FocusElementOverlay
-        contentRef={ focusElement.ref }
-        padding={ padding }
-      />
-    )
-
-    const infoContent = (
-      <>
-        <DialogTitle>{ currentStep.title }</DialogTitle>
-        <DialogContent>
-          {
-            currentStep.description.map((text, i) => {
-              return (
-                <DialogContentText key={ i }>{ text }</DialogContentText>
+      const infoContent = (
+        <>
+          <DialogTitle>{ currentStep.title }</DialogTitle>
+          <DialogContent>
+            {
+              currentStep.description.map((text, i) => {
+                return (
+                  <DialogContentText key={ i }>{ text }</DialogContentText>
+                )
+              })
+            }
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={ skipOnboarding }>
+              Skip
+            </Button>
+            {
+              !currentStep.noSubmit && (
+                <Button onClick={ handleCurrentStep } color="secondary">
+                  { currentStep.submitTitle }
+                </Button>
               )
-            })
-          }
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={ skipOnboarding }>
-            Skip
-          </Button>
-          {
-            !currentStep.noSubmit && (
-              <Button onClick={ handleCurrentStep } color="secondary">
-                { currentStep.submitTitle }
-              </Button>
-            )
-          }
-        </DialogActions>
-      </>
-    )
+            }
+          </DialogActions>
+        </>
+      )
 
-    info = (
-      <>
-        <Hidden smDown>
-          <Popper 
-            open
-            anchorEl={ focusElement.ref.current }
-            placement="right"
-            className={ classes.popper }
-            modifiers={{
-              arrow: {
-                enabled: true,
-                element: arrowRef,
-              },
-            }}
-          >
-            <span className={classes.arrow} ref={setArrowRef} />
-            <Paper className={classes.paper}>
+      info = (
+        <>
+          <Hidden smDown>
+            <Popper 
+              open
+              anchorEl={ focusElement.ref.current }
+              placement="right"
+              className={ classes.popper }
+              modifiers={{
+                arrow: {
+                  enabled: true,
+                  element: arrowRef,
+                },
+              }}
+            >
+              <span className={classes.arrow} ref={setArrowRef} />
+              <Paper className={classes.paper}>
+                { infoContent }
+              </Paper>
+            </Popper>
+          </Hidden>
+          <Hidden mdUp>
+            <Dialog
+              open
+              onClose={ skipOnboarding }
+            >
               { infoContent }
-            </Paper>
-          </Popper>
-        </Hidden>
-        <Hidden mdUp>
-          <Dialog
-            open
-            onClose={ skipOnboarding }
-          >
-            { infoContent }
-          </Dialog>
-        </Hidden>
-      </>
-      
-    )
+            </Dialog>
+          </Hidden>
+        </>
+      )
+    }
   }
 
   return (
