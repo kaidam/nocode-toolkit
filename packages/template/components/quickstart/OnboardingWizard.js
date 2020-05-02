@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useStore } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
+import Button from '@material-ui/core/Button'
 import Popper from '@material-ui/core/Popper'
 import Paper from '@material-ui/core/Paper'
-import Typography from '@material-ui/core/Typography'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
 
 import FocusElementOverlay from '../widgets/FocusElementOverlay'
 
@@ -63,7 +67,7 @@ const useStyles = makeStyles(theme => {
       },
     },
     paper: {
-      padding: theme.spacing(2),
+      overflow: 'auto',
     },
     arrow: {
       position: 'absolute',
@@ -87,7 +91,9 @@ const OnboardingWizard = ({
 }) => {
 
   const classes = useStyles()
+  const store = useStore()
   const website = useSelector(systemSelectors.website)
+
   const [ focusElements, setFocusElements ] = useState({})
   const [ active, setActive ] = useState(false)
   const [ onboardingConfig, setOnboardingConfig ] = useState(null)
@@ -150,7 +156,24 @@ const OnboardingWizard = ({
       >
         <span className={classes.arrow} ref={setArrowRef} />
         <Paper className={classes.paper}>
-          <Typography>The content of the Popper.</Typography>
+          <DialogTitle>{ currentStep.title }</DialogTitle>
+          <DialogContent>
+            {
+              currentStep.description.map((text, i) => {
+                return (
+                  <DialogContentText key={ i }>{ text }</DialogContentText>
+                )
+              })
+            }
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => {}} color="primary">
+              Skip
+            </Button>
+            <Button onClick={() => {}} color="primary">
+              Open
+            </Button>
+          </DialogActions>
         </Paper>
       </Popper>
     )

@@ -38,7 +38,7 @@ const DefaultBody = ({
         ref: buttonRef,
         padding: 10,
       })
-    }, 500)
+    }, 1000)
   }, [
     buttonRef.current,
   ])
