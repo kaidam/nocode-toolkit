@@ -16,6 +16,7 @@ import library from './library'
 
 const GlobalLoading = lazy(() => import(/* webpackChunkName: "ui" */ './components/system/GlobalLoading'))
 const QuickstartDialog = lazy(() => import(/* webpackChunkName: "ui" */ './components/quickstart/Dialog'))
+const OnboardingWizard = lazy(() => import(/* webpackChunkName: "ui" */ './components/quickstart/OnboardingWizard'))
 
 const App = ({
   templates,
@@ -62,19 +63,23 @@ const App = ({
     </div>
   )
 
-  return showUI && !initialised ? (
-    <Suspense>
-      {
-        quickstartWindow ? (
-          <QuickstartDialog />
-        ) : (
-          <GlobalLoading
-            loading={ loading || true }
-          />
-        )
-      }
-    </Suspense>
-  ) : (
+  if(showUI && !initialised) {
+    return (
+      <Suspense>
+        {
+          quickstartWindow ? (
+            <QuickstartDialog />
+          ) : (
+            <GlobalLoading
+              loading={ loading || true }
+            />
+          )
+        }
+      </Suspense>
+    )
+  }
+  
+  const content = (
     <ThemeContainer
       ThemeModule={ ThemeModule }
       processor={ themeProcessor }
@@ -84,6 +89,19 @@ const App = ({
       />
     </ThemeContainer>
   )
+
+  if(showUI) {
+    return (
+      <Suspense>
+        <OnboardingWizard>
+          { content }
+        </OnboardingWizard>
+      </Suspense>
+    )
+  }
+  else {
+    return content
+  }
 }
 
 export default App

@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useContext, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
+import OnboardingContext from '../contexts/onboarding'
 
 import icons from '../../icons'
 
@@ -27,7 +28,22 @@ const useStyles = makeStyles(theme => ({
 const DefaultBody = ({
   onClick,
 }) => {
+  const buttonRef = useRef(null)
   const classes = useStyles()
+  const context = useContext(OnboardingContext)
+
+  useEffect(() => {
+    context.setFocusElement('defaultBody', {
+      ref: buttonRef,
+      padding: {
+        left: 10,
+        top: 10,
+        bottom: 10,
+      }
+    })
+  }, [
+    buttonRef.current,
+  ])
 
   return (
     <div className={ classes.root }>
@@ -35,6 +51,7 @@ const DefaultBody = ({
       <p>Any content you add to this document will appear on this page.</p>
       <div>
         <Button
+          ref={ buttonRef }
           color="secondary"
           variant="contained"
           size="small"

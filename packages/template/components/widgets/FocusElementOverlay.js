@@ -14,47 +14,51 @@ const useStyles = makeStyles(theme => {
       zIndex: 1300,
       transition: 'background-color 0.2s ease-in',
     },
-    top: ({coords}) => ({
+    top: ({coords, padding}) => ({
       width: '100%',
-      height: coords.y,
+      height: coords.y - (padding.top ? padding.top : 0),
       left: '0px',
       top: '0px',
     }),
-    right: ({coords}) => ({
-      width: window.innerWidth - coords.x - coords.width,
-      height: coords.height,
-      left: coords.x + coords.width,
-      top: coords.y,
+    right: ({coords, padding}) => ({
+      width: window.innerWidth - coords.x - coords.width - (padding.right ? padding.right : 0),
+      height: coords.height + (padding.top ? padding.top : 0) + (padding.bottom ? padding.bottom : 0),
+      left: coords.x + coords.width + (padding.right ? padding.right : 0),
+      top: coords.y - (padding.top ? padding.top : 0),
     }),
-    bottom: ({coords}) => ({
+    bottom: ({coords, padding}) => ({
       width: '100%',
-      height: window.innerHeight - coords.y - coords.height,
+      height: window.innerHeight - coords.y - coords.height - (padding.bottom ? padding.bottom : 0),
       left: '0px',
-      top: coords.y + coords.height,
+      top: coords.y + coords.height + (padding.bottom ? padding.bottom : 0),
     }),
-    left: ({coords}) => ({
-      width: coords.x,
-      height: coords.height,
+    left: ({coords, padding}) => ({
+      width: coords.x - (padding.left ? padding.left : 0),
+      height: coords.height + (padding.top ? padding.top : 0) + (padding.bottom ? padding.bottom : 0),
       left: '0px',
-      top: coords.y,
+      top: coords.y - (padding.top ? padding.top : 0),
     }),
   }
 })
 
 const FocusElementOverlay = ({
   contentRef,
+  padding = {},
 }) => {
   const containerRef = useRef()
   const el = contentRef.current
   const coords = el.getBoundingClientRect()
   const theme = useTheme()
-  const topbarHeight = theme.layout.topbarHeight
+  const topbarHeight = theme && theme.layout ? theme.layout.topbarHeight : 0
   const y = coords.y
   if(y < topbarHeight) {
     coords.y = topbarHeight
     coords.height -= (topbarHeight - y)
   }
-  const classes = useStyles({coords})
+  const classes = useStyles({
+    coords,
+    padding,
+  })
   useEffect(() => {
     if(!containerRef.current) return
     setTimeout(() => {
