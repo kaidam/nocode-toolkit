@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
 import classnames from 'classnames'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 
@@ -45,6 +45,7 @@ const FocusElementOverlay = ({
   contentRef,
   padding = {},
 }) => {
+  const [ windowSize, setWindowSize ] = useState(null)
   const containerRef = useRef()
   const el = contentRef.current
   const coords = el.getBoundingClientRect()
@@ -71,6 +72,17 @@ const FocusElementOverlay = ({
   }, [
     containerRef.current,
   ])
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: document.documentElement.clientWidth,
+        height: document.documentElement.clientHeight,
+      })
+    }
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+  
   return (
     <div className={ classes.root } ref={ containerRef }>
       <div className={ classnames(classes.panel, classes.top) }></div>
