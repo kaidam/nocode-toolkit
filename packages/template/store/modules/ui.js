@@ -43,6 +43,9 @@ const reducers = {
       accepted: true,
     })
   },
+  setSettingsOpen: (state, action) => {
+    state.settingsOpen = action.payload
+  },
 }
 
 const sideEffects = {

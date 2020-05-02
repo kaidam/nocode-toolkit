@@ -14,7 +14,7 @@ import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 
 import Actions from '../../utils/actions'
 import systemSelectors from '../../store/selectors/system'
-
+import uiSelectors from '../../store/selectors/ui'
 import uiActions from '../../store/modules/ui'
 import useGetGlobalOptions from '../hooks/useGetGlobalOptions'
 
@@ -37,10 +37,13 @@ const GlobalSettings = ({
   className,
 }) => {
   const classes = useStyles()
-  const [ open, setOpen ] = useState(false)
+
   const actions = Actions(useDispatch(), {
     onSetPreviewMode: uiActions.setPreviewMode,
+    onSetSettingsOpen: uiActions.setSettingsOpen,
   })
+
+  const open = useSelector(uiSelectors.settingsOpen)
 
   const showUI = useSelector(systemSelectors.showUI)
   const onDisablePreview = () => actions.onSetPreviewMode(false)
@@ -62,7 +65,7 @@ const GlobalSettings = ({
               <Fab
                 size="medium"
                 color="secondary"
-                onClick={ () => setOpen(true) }
+                onClick={ () => actions.onSetSettingsOpen(true) }
               >
                 <SettingsIcon />
               </Fab>
@@ -81,7 +84,7 @@ const GlobalSettings = ({
       <Drawer
         anchor="right"
         open={ open }
-        onClose={ () => setOpen(false) }
+        onClose={ () => actions.onSetSettingsOpen(false) }
       >
         <List
           className={ classes.list }

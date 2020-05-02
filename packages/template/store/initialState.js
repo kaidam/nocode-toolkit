@@ -17,6 +17,7 @@ export const ui = {
   previewMode: false,
   scrollToCurrentPage: true,
   quickstartWindow: null,
+  settingsOpen: false,
 }
 
 export const settings = {
