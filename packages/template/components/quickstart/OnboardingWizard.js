@@ -19,6 +19,65 @@ const useStyles = makeStyles(theme => {
     popper: {
       marginLeft: '20px',
       zIndex: 5000,
+      '&[x-placement*="bottom"] $arrow': {
+        top: 0,
+        left: 0,
+        marginTop: '-0.9em',
+        width: '3em',
+        height: '1em',
+        '&::before': {
+          borderWidth: '0 1em 1em 1em',
+          borderColor: `transparent transparent ${theme.palette.background.paper} transparent`,
+        },
+      },
+      '&[x-placement*="top"] $arrow': {
+        bottom: 0,
+        left: 0,
+        marginBottom: '-0.9em',
+        width: '3em',
+        height: '1em',
+        '&::before': {
+          borderWidth: '1em 1em 0 1em',
+          borderColor: `${theme.palette.background.paper} transparent transparent transparent`,
+        },
+      },
+      '&[x-placement*="right"] $arrow': {
+        left: 0,
+        marginLeft: '-0.9em',
+        height: '3em',
+        width: '1em',
+        '&::before': {
+          borderWidth: '1em 1em 1em 0',
+          borderColor: `transparent ${theme.palette.background.paper} transparent transparent`,
+        },
+      },
+      '&[x-placement*="left"] $arrow': {
+        right: 0,
+        marginRight: '-0.9em',
+        height: '3em',
+        width: '1em',
+        '&::before': {
+          borderWidth: '1em 0 1em 1em',
+          borderColor: `transparent transparent transparent ${theme.palette.background.paper}`,
+        },
+      },
+    },
+    paper: {
+      padding: theme.spacing(2),
+    },
+    arrow: {
+      position: 'absolute',
+      fontSize: 7,
+      width: '3em',
+      height: '3em',
+      '&::before': {
+        content: '""',
+        margin: 'auto',
+        display: 'block',
+        width: 0,
+        height: 0,
+        borderStyle: 'solid',
+      },
     },
   }
 })
@@ -33,6 +92,7 @@ const OnboardingWizard = ({
   const [ active, setActive ] = useState(false)
   const [ onboardingConfig, setOnboardingConfig ] = useState(null)
   const [ currentStep, setCurrentStep ] = useState(null)
+  const [ arrowRef, setArrowRef ] = React.useState(null)
 
   const setFocusElement = useCallback((name, element) => {
     const newElements = Object.assign({}, focusElements, {
@@ -81,8 +141,15 @@ const OnboardingWizard = ({
         anchorEl={ focusElement.ref.current }
         placement="right"
         className={ classes.popper }
+        modifiers={{
+          arrow: {
+            enabled: true,
+            element: arrowRef,
+          },
+        }}
       >
-        <Paper>
+        <span className={classes.arrow} ref={setArrowRef} />
+        <Paper className={classes.paper}>
           <Typography>The content of the Popper.</Typography>
         </Paper>
       </Popper>
