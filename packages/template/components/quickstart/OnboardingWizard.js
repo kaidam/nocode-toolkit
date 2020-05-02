@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { useSelector, useStore, useDispatch } from 'react-redux'
+import Promise from 'bluebird'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Button from '@material-ui/core/Button'
@@ -161,6 +162,21 @@ const OnboardingWizard = ({
     setCurrentStep(config.steps[0])
   }, [
     website,
+  ])
+
+  useEffect(() => {
+    const handler = async () => {
+      if(!currentStep || currentStep.type != 'wait') return 
+      let passed = false
+      while(!passed) {
+        passed = await currentStep.handler(store.dispatch, store.getState)
+        if(!passed) await Promise.delay(1000)
+      }
+      return
+    }
+    handler()
+  }, [
+    currentStep,
   ])
 
   //if(!active) return children
