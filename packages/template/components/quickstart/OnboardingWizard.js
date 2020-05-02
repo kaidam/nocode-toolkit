@@ -176,14 +176,18 @@ const OnboardingWizard = ({
 
   useEffect(() => {
     const handler = async () => {
-      if(!currentStep || currentStep.type != 'wait') return 
-      let passed = false
-      while(!passed) {
-        passed = await currentStep.handler(store.dispatch, store.getState)
-        if(!passed) await Promise.delay(1000)
+      if(!currentStep) return
+      if(currentStep.type == 'wait') { 
+        let passed = false
+        while(!passed) {
+          passed = await currentStep.handler(store.dispatch, store.getState)
+          if(!passed) await Promise.delay(1000)
+        }
+        incrementStep()
       }
-      incrementStep()
-      return
+      else if(currentStep.initialise) {
+        await currentStep.initialise(store.dispatch, store.getState)
+      }
     }
     handler()
   }, [
