@@ -156,11 +156,11 @@ const OnboardingWizard = ({
           }
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => {}} color="primary">
+          <Button onClick={() => {}}>
             Skip
           </Button>
-          <Button onClick={() => {}} color="primary">
-            Open
+          <Button onClick={() => {}} color="secondary">
+            { currentStep.submitTitle }
           </Button>
         </DialogActions>
       </>
