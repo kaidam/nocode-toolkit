@@ -119,6 +119,7 @@ const OnboardingWizard = ({
   ])
 
   const incrementStep = useCallback(async () => {
+    setFocusElement({})
     const currentIndex = onboardingConfig.steps.findIndex(step => step.id == currentStep.id)
     if(currentIndex >= onboardingConfig.steps.length - 1) {
       await dispatch(systemActions.updateWebsiteMeta({
@@ -196,7 +197,7 @@ const OnboardingWizard = ({
         let passed = false
         while(!passed) {
           passed = await currentStep.handler(store.dispatch, store.getState)
-          if(!passed) await Promise.delay(1000)
+          if(!passed) await Promise.delay(10)
         }
         incrementStep()
       }
