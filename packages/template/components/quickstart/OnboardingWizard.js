@@ -23,6 +23,8 @@ import OnboardingContext from '../contexts/onboarding'
 
 import library from '../../library'
 
+const ONBOARDING_WAIT_DELAY = 10
+
 
 const useStyles = makeStyles(theme => {
   return {
@@ -118,20 +120,28 @@ const OnboardingWizard = ({
     currentStep,
   ])
 
+  const cancelOnboarding = useCallback(async () => {
+    setCurrentStep(null)
+    setFocusElement({})
+    await dispatch(systemActions.updateWebsiteMeta({
+      onboardingActive: false,
+    }))
+  }, [
+
+  ])
+
   const incrementStep = useCallback(async () => {
     setFocusElement({})
     const currentIndex = onboardingConfig.steps.findIndex(step => step.id == currentStep.id)
     if(currentIndex >= onboardingConfig.steps.length - 1) {
-      await dispatch(systemActions.updateWebsiteMeta({
-        //onboardingActive: false,
-        onboardingActive: true,
-      }))
+      cancelOnboarding()
       return
     }
     setTriggerStep(onboardingConfig.steps[currentIndex + 1])
   }, [
     onboardingConfig,
     currentStep,
+    cancelOnboarding,
   ])
 
   const progressOnboarding = useCallback(() => {
@@ -158,12 +168,6 @@ const OnboardingWizard = ({
     currentStep,
     progressOnboarding,
   ])
-
-  const skipOnboarding = useCallback(async () => {
-    await dispatch(systemActions.updateWebsiteMeta({
-      onboardingActive: false,
-    }))
-  })
 
   useEffect(() => {
     if(!website || !website.meta) return
@@ -197,9 +201,15 @@ const OnboardingWizard = ({
         let passed = false
         while(!passed) {
           passed = await currentStep.handler(store.dispatch, store.getState)
-          if(!passed) await Promise.delay(10)
+          if(!passed) await Promise.delay(ONBOARDING_WAIT_DELAY)
         }
-        incrementStep()
+        if(passed.cancel) {
+          cancelOnboarding()
+        }
+        else {
+          incrementStep()
+        }
+        
       }
     }
     handler()
@@ -235,7 +245,7 @@ const OnboardingWizard = ({
             }
           </DialogContent>
           <DialogActions>
-            <Button onClick={ skipOnboarding }>
+            <Button onClick={ cancelOnboarding }>
               Skip
             </Button>
             {
@@ -278,7 +288,7 @@ const OnboardingWizard = ({
           <Hidden mdUp>
             <Dialog
               open
-              onClose={ skipOnboarding }
+              onClose={ cancelOnboarding }
             >
               { infoContent }
             </Dialog>
