@@ -1,6 +1,6 @@
 {
   "name": "@nocode-works/template",
-  "version": "1.0.22",
+  "version": "1.0.23",
   "description": "Build templates for nocode",
   "scripts": {},
   "bin": {
