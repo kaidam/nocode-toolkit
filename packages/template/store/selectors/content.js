@@ -324,6 +324,7 @@ const getAncestors = ({
   route,
   nodes,
   routePathMap,
+  baseUrl,
 }) => {
   let currentRoute = route
   const pathToItem = []
@@ -332,7 +333,8 @@ const getAncestors = ({
       route: currentRoute,
       node: nodes[currentRoute.item],
     })
-    const parts = currentRoute.path.split('/')
+    const routePath = currentRoute.path.replace(baseUrl, '/')
+    const parts = routePath.split('/')
     parts.pop()
     const parentRoutePath = parts.join('/')
     currentRoute = routePathMap[parentRoutePath]
@@ -344,10 +346,12 @@ const routeAncestors = createSelector(
   routerSelectors.route,
   nocodeSelectors.nodes,
   routerSelectors.routePathMap,
-  (route, nodes, routePathMap) => getAncestors({
+  nocodeSelectors.config,
+  (route, nodes, routePathMap, config) => getAncestors({
     route,
     nodes,
     routePathMap,
+    baseUrl: config.baseUrl,
   })
 )
 
@@ -356,15 +360,17 @@ const fullRouteAncestors = createSelector(
   routerSelectors.route,
   nocodeSelectors.nodes,
   routerSelectors.routePathMap,
-  (route, nodes, routePathMap) => {
+  nocodeSelectors.config,
+  (route, nodes, routePathMap, config) => {
     const ancestors = getAncestors({
       route,
       nodes,
       routePathMap,
+      baseUrl: config.baseUrl,
     })
     const first = ancestors[0]
-    const homeRoute = routePathMap['/']
-    const homeItem = nodes[homeRoute.item]
+    const homeRoute = routePathMap[config.baseUrl]
+    const homeItem = homeRoute ? nodes[homeRoute.item] : null
     if(!homeItem) return ancestors
     if(!homeItem.children) return ancestors
 
