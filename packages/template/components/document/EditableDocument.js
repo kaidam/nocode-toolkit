@@ -36,6 +36,7 @@ const EditableDocument = ({
   layout_id,
   className,
   addContentFilter,
+  widgetTitleAppend = '',
 }) => {
   const classes = useStyles()
 
@@ -60,7 +61,7 @@ const EditableDocument = ({
 
   const getAddButton = useIconButton({
     icon: 'add',
-    title: 'Add Widgets',
+    title: 'Add Widgets' + widgetTitleAppend,
     color: 'secondary',
   })
 

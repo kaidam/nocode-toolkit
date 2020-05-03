@@ -92,7 +92,7 @@ const FormWrapperRow = ({
     const colSize = Math.floor(12 / row.length)
     return row
       .filter(item => {
-        return handlers.isVisible ?
+        return handlers && handlers.isVisible ?
           handlers.isVisible({
             name: item.id,
             values,
@@ -114,7 +114,7 @@ const FormWrapperRow = ({
       ))
   }
   else {
-    if(handlers.isVisible) {
+    if(handlers && handlers.isVisible) {
       const visible = handlers.isVisible({
         name: row.id,
         values,
