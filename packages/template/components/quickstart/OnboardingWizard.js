@@ -17,7 +17,6 @@ import FocusElementOverlay from '../widgets/FocusElementOverlay'
 
 import systemSelectors from '../../store/selectors/system'
 import systemActions from '../../store/modules/system'
-import snackbarActions from '../../store/modules/snackbar'
 
 import OnboardingContext from '../contexts/onboarding'
 
