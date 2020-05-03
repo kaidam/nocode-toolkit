@@ -25,7 +25,7 @@ const BreadCrumbs = ({
           .filter(item => item.node)
           .map(item => {
             return {
-              title: item.node.name,
+              title: item.node.name.replace(/^\w/, st => st.toUpperCase()),
               path: item.route.path,
               name: item.route.name,
             }
