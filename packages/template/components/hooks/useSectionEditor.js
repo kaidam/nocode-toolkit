@@ -46,7 +46,6 @@ const useSectionEditor = ({
     return ghostFolder ? [{
       title: 'Google Document',
       icon: icons.docs,
-      secondaryIcon: icons.drive,
       handler: () => actions.onCreateRemoteContent({
         title: 'Create Document',
         driver: 'drive',
@@ -56,7 +55,6 @@ const useSectionEditor = ({
     }, {
       title: 'Google Folder',
       icon: icons.folder,
-      secondaryIcon: icons.drive,
       handler: () => actions.onCreateRemoteContent({
         title: 'Create Folder',
         driver: 'drive',
@@ -83,14 +81,12 @@ const useSectionEditor = ({
       ghostFolder ? {
         title: 'View in Drive',
         icon: icons.open,
-        secondaryIcon: icons.drive,
         url: driveUtils.getItemUrl(ghostFolder),
       } : null,
 
       ghostFolder ? {
         title: 'Change Drive Folder',
         icon: icons.search,
-        secondaryIcon: icons.drive,
         handler: () => actions.onChangeSectionFolder({
           id: section,
         })
@@ -99,7 +95,6 @@ const useSectionEditor = ({
       ghostFolder && !isDefaultFolder ? {
         title: 'Reset Drive Folder',
         icon: icons.refresh,
-        secondaryIcon: icons.drive,
         handler: () => actions.onResetSectionFolder({
           id: section,
         })

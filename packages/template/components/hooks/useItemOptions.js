@@ -71,7 +71,6 @@ const useItemOptions = ({
           {
             title: 'View in Drive',
             icon: icons.open,
-            secondaryIcon: icons.drive,
             url: openUrl,
           }, '-',
           {
@@ -80,7 +79,6 @@ const useItemOptions = ({
             items: [{
               title: 'Google Document',
               icon: icons.docs,
-              secondaryIcon: icons.drive,
               handler: () => actions.onCreateRemoteContent({
                 title: 'Create Document',
                 driver: 'drive',
@@ -90,7 +88,6 @@ const useItemOptions = ({
             },{
               title: 'Google Folder',
               icon: icons.folder,
-              secondaryIcon: icons.drive,
               handler: () => actions.onCreateRemoteContent({
                 title: 'Create Folder',
                 driver: 'drive',
@@ -120,7 +117,6 @@ const useItemOptions = ({
           {
             title: 'Edit in Drive',
             icon: icons.open,
-            secondaryIcon: icons.drive,
             url: openUrl,
           }, '-',
           settingsItem,
@@ -128,7 +124,6 @@ const useItemOptions = ({
             {
               title: 'Change Homepage',
               icon: icons.search,
-              secondaryIcon: icons.drive,
               handler: actions.onChangeHomepageSingleton,
             } : removeItem,
         ]
