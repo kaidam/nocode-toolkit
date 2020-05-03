@@ -6,6 +6,7 @@ import OnboardingContext from '../contexts/onboarding'
 import icons from '../../icons'
 
 const EditIcon = icons.edit
+const OpenIcon = icons.open
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -62,7 +63,7 @@ const DefaultBody = ({
             onClick()
           }}
         >
-          <EditIcon />&nbsp;&nbsp;Edit Document
+          <OpenIcon />&nbsp;&nbsp;Edit Google Document
         </Button>
       </div>
     </div>

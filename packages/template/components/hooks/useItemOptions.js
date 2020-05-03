@@ -115,7 +115,7 @@ const useItemOptions = ({
       else {
         items = [
           {
-            title: 'Edit in Drive',
+            title: 'Edit Google Document',
             icon: icons.open,
             url: openUrl,
           }, '-',
