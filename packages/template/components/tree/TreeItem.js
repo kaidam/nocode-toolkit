@@ -19,6 +19,7 @@ const EditableItem = lazy(() => import(/* webpackChunkName: "ui" */ '../content/
 
 const ExpandMoreIcon = icons.expandMore
 const ExpandLessIcon = icons.expandLess
+const RightIcon = icons.right
 
 const useStyles = makeStyles(theme => ({
   menuItem: ({depth}) => ({
@@ -90,6 +91,17 @@ const TreeItem = ({
     currentPage,
   ])
 
+  let FolderIcon = null
+
+  if(node.type == 'folder') {
+    if(folderPages) FolderIcon = RightIcon
+    else {
+      FolderIcon = open ?
+        ExpandLessIcon :
+        ExpandMoreIcon
+    }
+  }
+
   const getRenderedItem = (onItemClick, uiMode) => {
     const rawTitle = (
       <ListItemText
@@ -120,11 +132,9 @@ const TreeItem = ({
       >
         { title }
         {
-          node.type == 'folder' ?
-            open ? 
-              <ExpandLessIcon className={ colorClassname } onClick={ eventUtils.cancelEventHandler(onOpenItem) } /> : 
-              <ExpandMoreIcon className={ colorClassname } onClick={ eventUtils.cancelEventHandler(onOpenItem) } />
-          : null
+          FolderIcon && (
+            <FolderIcon className={ colorClassname } onClick={ eventUtils.cancelEventHandler(onOpenItem) } />
+          )
         }
       </ListItem>
     )
