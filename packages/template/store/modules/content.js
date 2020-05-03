@@ -258,6 +258,7 @@ const sideEffects = {
     }))
 
     await loaders.deleteRemoteContent(getState, driver, id)
+    await dispatch(routerActions.navigateTo('root'))
     await dispatch(jobActions.reload())
     dispatch(snackbarActions.setSuccess(`${name} deleted`))
   }, {
