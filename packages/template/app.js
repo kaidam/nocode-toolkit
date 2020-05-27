@@ -15,6 +15,7 @@ import ThemeContainer from './theme/container'
 import library from './library'
 
 const GlobalLoading = lazy(() => import(/* webpackChunkName: "ui" */ './components/system/GlobalLoading'))
+const DriveAccessRequestModal = lazy(() => import(/* webpackChunkName: "ui" */ './components/system/DriveAccessRequestModal'))
 const QuickstartDialog = lazy(() => import(/* webpackChunkName: "ui" */ './components/quickstart/Dialog'))
 const OnboardingWizard = lazy(() => import(/* webpackChunkName: "ui" */ './components/quickstart/OnboardingWizard'))
 
@@ -32,6 +33,7 @@ const App = ({
   const initialised = useSelector(systemSelectors.initialised)
   const initialiseError = useSelector(systemSelectors.initialiseError)
   const quickstartWindow = useSelector(uiSelectors.quickstartWindow)
+  const accessStatus = useSelector(systemSelectors.driveAccessStatus)
 
   // this allows us to customize the loading message
   // as things are initialised
@@ -62,6 +64,14 @@ const App = ({
       </div>
     </div>
   )
+
+  if(showUI && accessStatus && !accessStatus.hasScope) {
+    return (
+      <Suspense>
+        <DriveAccessRequestModal />
+      </Suspense>
+    )
+  }
 
   if(showUI && !initialised) {
     return (

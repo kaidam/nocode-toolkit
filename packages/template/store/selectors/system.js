@@ -7,6 +7,7 @@ import networkSelectors from './network'
 
 const previewMode = state => state.ui.previewMode
 const user = state => state.system.user
+const driveAccessStatus = state => state.system.driveAccessStatus
 const config = state => state.system.config
 const website = state => state.system.website
 const dnsInfo = state => state.system.dnsInfo
@@ -50,6 +51,7 @@ const initialiseError = createSelector(
 
 const selectors = {
   user,
+  driveAccessStatus,
   config,
   website,
   dnsInfo,

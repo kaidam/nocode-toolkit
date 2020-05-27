@@ -40,6 +40,9 @@ const reducers = {
   setUser: (state, action) => {
     state.user = action.payload
   },
+  setDriveAccessStatus: (state, action) => {
+    state.driveAccessStatus = action.payload
+  },
   setWebsite: (state, action) => {
     state.website = action.payload
   },
@@ -67,6 +70,9 @@ const loaders = {
     .then(apiUtils.process),
 
   user: () => axios.get(apiUtils.apiUrl(`/auth/status`))
+    .then(apiUtils.process),
+
+  driveAccessStatus: () => axios.get(apiUtils.apiUrl(`/auth/driveAccessStatus`))
     .then(apiUtils.process),
 
   website: (id) => axios.get(apiUtils.apiUrl(`/websites/${id}`))
@@ -126,10 +132,19 @@ const sideEffects = {
     await Promise.all([
       dispatch(actions.loadConfig()),
       dispatch(actions.loadUser()),
+      dispatch(actions.loadDriveAccessStatus()),
       dispatch(actions.loadWebsite()),
       dispatch(actions.loadDnsInfo()),
       dispatch(jobActions.getPublishStatus()),
     ])
+
+    const accessStatus = systemSelectors.driveAccessStatus(getState())
+
+    // if no access then stop and display modal
+    // the modal is displayed in app.js
+    if(accessStatus && !accessStatus.hasScope) {
+      return
+    }
 
     // if we have a preview job, let's wait for it
     await dispatch(jobActions.waitForPreviewJob())
@@ -148,7 +163,7 @@ const sideEffects = {
 
     // now activate the UI
     dispatch(uiActions.setLoading(false))
-    dispatch(actions.setInitialiseCalled())    
+    dispatch(actions.setInitialiseCalled())
   }, {
     errorHandler: async (dispatch, getState, error) => {
       dispatch(uiActions.setLoading({
@@ -186,6 +201,11 @@ const sideEffects = {
     const user = await loaders.user(getState)
     globals.identifyUser(user)
     dispatch(actions.setUser(user))
+  },
+
+  loadDriveAccessStatus: () => async (dispatch, getState) => {
+    const data = await loaders.driveAccessStatus(getState)
+    dispatch(actions.setDriveAccessStatus(data))
   },
 
   loadConfig: () => async (dispatch, getState) => {

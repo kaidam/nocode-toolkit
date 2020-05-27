@@ -4,6 +4,7 @@ export const system = {
   initialiseCalled: false,
   initialised: false,
   user: null,
+  driveAccessStatus: null,
   config: systemUtils.isNode ? {} : window._uiConfigData || {},
   website: {
     meta: {},

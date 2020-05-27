@@ -1,3 +1,5 @@
+export const GOOGLE_LOGIN = '/api/v1/auth/google'
+
 export const RELOAD_APP_JOBS = [
   'createPreview',
   'addContent',
