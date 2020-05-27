@@ -18,6 +18,10 @@ import nocodeSelectors from '../selectors/nocode'
 
 import { system as initialState } from '../initialState'
 
+import {
+  LOGOUT_URL,
+} from '../../config'
+
 const prefix = 'system'
 
 const wrapper = networkWrapper.factory(prefix, {
@@ -271,7 +275,7 @@ const sideEffects = {
 
   } = {}) => wrapper('logout', async (dispatch, getState) => {
     await loaders.logout()
-      document.location = '/'
+      document.location = LOGOUT_URL
   }),
 
 }

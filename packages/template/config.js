@@ -1,4 +1,5 @@
 export const GOOGLE_LOGIN = '/api/v1/auth/google'
+export const LOGOUT_URL = 'https://nocode.works'
 
 export const RELOAD_APP_JOBS = [
   'createPreview',
