@@ -195,7 +195,12 @@ const useMenuButton = ({
   processHeaders = (parts) => parts,
 
   // anchor the menu to the given element
+  // THIS WILL ALWAYS SHOW THE MENU
   parentAnchorEl,
+
+  // anchor the menu to the given element
+  // ONLY WHEN ACTUALLY OPEN
+  attachAnchorEl,
 
   // screen co-ordinates for the menu
   anchorPosition,
@@ -279,7 +284,11 @@ const useMenuButton = ({
     ]
   )
 
-  const useParentEl = subAnchorEl || parentAnchorEl
+  let useParentEl = subAnchorEl
+
+  if(parentAnchorEl) useParentEl = useParentEl
+  if(useParentEl && attachAnchorEl) useParentEl = attachAnchorEl
+  
   const mainMenuOpen = useParentEl && !subItems ? true : false
   const subMenuOpen = useParentEl && subItems ? true : false
 

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import classnames from 'classnames'
 
@@ -8,6 +8,9 @@ import driveUtils from '../../utils/drive'
 import useDocumentEditor from '../hooks/useDocumentEditor'
 import useItemEditor from '../hooks/useItemEditor'
 import useIconButton from '../hooks/useIconButton'
+import useMenuButton from '../hooks/useMenuButton'
+
+import eventUtils from '../../utils/events'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -16,18 +19,31 @@ const useStyles = makeStyles(theme => ({
     borderRadius: '24px',
     padding: theme.spacing(0.75),
     backgroundColor: theme.palette.grey[200],
+    alignItems: 'center',
   },
   iconSection: {
-    flexGrow: 1,
+    flexGrow: 0,
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
   },
   leftIcons: {
     justifyContent: 'flex-start',
   },
   rightIcons: {
     justifyContent: 'flex-end',
+  },
+  center: {
+    flexGrow: 1,
+    textAlign: 'center',
+  },
+  editLink: {
+    textDecoration: 'none',
+    fontWeight: 'bold',
+    color: theme.palette.primary.main,
+    '& > div': {
+      width: '100%',
+      height: '100%',
+    },
   },
 }))
 
@@ -38,10 +54,16 @@ const EditableDocument = ({
   addContentFilter,
   widgetTitleAppend = '',
 }) => {
+
+  const addContentRef = useRef()
   const classes = useStyles()
+
+  const isFolder = driveUtils.isFolder(node)
+  const openUrl = driveUtils.getItemUrl(node)
 
   const {
     getAddItems,
+    getAddContentItems,
   } = useDocumentEditor({
     node,
     layout_id,
@@ -52,6 +74,11 @@ const EditableDocument = ({
     getEditorItems,
   } = useItemEditor({
     node,
+  })
+
+  const menuButton = useMenuButton({
+    getItems: getAddContentItems,
+    attachAnchorEl: addContentRef.current,
   })
 
   const getEditButton = useIconButton({
@@ -75,6 +102,38 @@ const EditableDocument = ({
           getButton={ getEditButton }
           getItems={ getEditorItems }
         />
+      </div>
+      <div className={ classes.center }>
+        {
+          isFolder ? (
+            <a
+              href="#"
+              target="_blank"
+              className={ classes.editLink }
+              onClick={ (e) => {
+                eventUtils.cancelEvent(e)
+                menuButton.onClick(e)
+              }}
+            >
+              <div>
+                <span ref={ addContentRef }>
+                  add content
+                </span>
+              </div>
+            </a>
+          ) : (
+            <a
+              href={ openUrl }
+              target="_blank"
+              className={ classes.editLink }
+            >
+              <div>edit document</div>
+            </a>
+          )
+        }
+        {
+          menuButton.menus
+        }
       </div>
       <div className={ classnames(classes.iconSection, classes.rightIcons) }>
         <MenuButton
