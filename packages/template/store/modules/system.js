@@ -13,6 +13,7 @@ import apiUtils from '../utils/api'
 import jobActions from './job'
 import uiActions from './ui'
 import snackbarActions from './snackbar'
+import routerActions from './router'
 import systemSelectors from '../selectors/system'
 import nocodeSelectors from '../selectors/nocode'
 
@@ -99,9 +100,13 @@ const loaders = {
   ensureSectionResources: (getState, {
     driver,
     resources,
+    quickstart,
+    settings,
   }) => axios.post(apiUtils.websiteUrl(getState, `/remote/resources`), {
     driver,
     resources,
+    quickstart,
+    settings,
   })
     .then(apiUtils.process),
 
@@ -158,8 +163,10 @@ const sideEffects = {
     // and used to perform initial setup of linked resources
     // the initialise function has the option of calling
     // setInitialiseCalled
+
+    let initialiseResult = null
     if(library.initialise) {
-      const initialiseResult = await dispatch(library.initialise())
+      initialiseResult = await dispatch(library.initialise())
       if(initialiseResult.reload) {
         await dispatch(jobActions.reload())
       }
@@ -168,6 +175,10 @@ const sideEffects = {
     // now activate the UI
     dispatch(uiActions.setLoading(false))
     dispatch(actions.setInitialiseCalled())
+
+    if(initialiseResult && initialiseResult.redirect) {
+      dispatch(routerActions.navigateTo(initialiseResult.redirect))
+    }
   }, {
     errorHandler: async (dispatch, getState, error) => {
       dispatch(uiActions.setLoading({
@@ -181,10 +192,14 @@ const sideEffects = {
   ensureSectionResources: ({
     driver,
     resources,
+    quickstart,
+    settings,
   }) => async (dispatch, getState) => {
     const result = await loaders.ensureSectionResources(getState, {
       driver,
       resources,
+      quickstart,
+      settings,
     })
     return result
   },
