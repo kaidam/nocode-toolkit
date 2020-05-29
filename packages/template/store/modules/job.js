@@ -23,9 +23,9 @@ const reducers = {
     const existingData = state.data
     const newData = action.payload
     if(newData && existingData && existingData.id == newData.id) {
-      newData.logs = existingData.logs.concat(newData.logs)
-      if(!newData.lastLogId && existingData.lastLogId) {
-        newData.lastLogId = existingData.lastLogId
+      newData.logs = existingData.logs.concat(newData.logs || [])
+      if(!newData.fromLogId && existingData.fromLogId) {
+        newData.fromLogId = existingData.fromLogId
       }
     }
     state.data = newData
@@ -77,11 +77,7 @@ const sideEffects = {
   loadJob: (id) => async (dispatch, getState) => {
     // get the starting point for logs and pass it to the job loader
     const existingJobData = jobSelectors.data(getState())
-    let fromLogId = null
-    if(existingJobData && existingJobData.id == id && existingJobData.fromLogId) {
-      fromLogId = existingJobData.fromLogId
-    }
-    const job = await loaders.getJobData(getState, id, fromLogId)
+    const job = await loaders.getJobData(getState, id, existingJobData ? existingJobData.fromLogId : null)
     dispatch(actions.setData(job))
     return job
   },
@@ -133,6 +129,27 @@ const sideEffects = {
     await dispatch(actions.reload())
   },
 
+  waitForJobWithLoading: ({
+    jobId,
+    message = 'Loading your data...',
+  } = {}) => async (dispatch, getState) => {
+    dispatch(uiActions.setLoading({
+      message,
+      transparent: true,
+    }))
+    await dispatch(actions.waitForJob({
+      id: jobId,
+      onLoop: async () => {
+        const logs = jobSelectors.logArray(getState())
+        dispatch(uiActions.setLoading({
+          message,
+          logs: logs.slice(Math.max(logs.length - 3, 0)),
+          transparent: true,
+        }))
+      },
+    }))
+  },
+
   // reload the preview data from the server
   // and get the frontend redux store into line
   reload: () => async (dispatch, getState) => {
@@ -150,20 +167,8 @@ const sideEffects = {
     const previewData = await loaders.getPreviewData(getState, true)
     const jobId = previewData.config.previewJobId
     if(jobId) {
-      dispatch(uiActions.setLoading({
-        message: 'Loading your data...',
-        transparent: true,
-      }))
-      await dispatch(actions.waitForJob({
-        id: jobId,
-        onLoop: async () => {
-          const logs = jobSelectors.logArray(getState())
-          dispatch(uiActions.setLoading({
-            message: 'Loading your data...',
-            logs: logs.slice(Math.max(logs.length - 3, 0)),
-            transparent: true,
-          }))
-        },
+      await dispatch(actions.waitForJobWithLoading({
+        jobId,
       }))
       if(beforeReload) {
         await beforeReload()
