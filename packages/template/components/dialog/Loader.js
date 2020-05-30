@@ -13,6 +13,7 @@ import unsplashSelectors from '../../store/selectors/unsplash'
 import ConfirmDialog from './Confirm'
 import ContentDialog from '../content/Dialog'
 import DriveDialog from '../drive/Dialog'
+import DrivePicker from '../drive/Picker'
 import UnsplashDialog from '../unsplash/Dialog'
 import SettingsDialog from '../settings/Dialog'
 import PublishDialog from '../publish/PublishDialog'
@@ -38,6 +39,7 @@ const DialogLoader = ({
   const confirmWindow = useSelector(uiSelectors.confirmWindow)
   const formWindow = useSelector(contentSelectors.formWindow)
   const driveWindow = useSelector(driveSelectors.window)
+  const drivePicker = useSelector(driveSelectors.picker)
   const unsplashWindow = useSelector(unsplashSelectors.window)
   const dialogParams = useSelector(dialogSelectors.dialogParams)
 
@@ -71,6 +73,11 @@ const DialogLoader = ({
       {
         driveWindow && (
           <DriveDialog />
+        )
+      }
+      {
+        drivePicker && (
+          <DrivePicker />
         )
       }
       {

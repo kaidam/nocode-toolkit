@@ -421,9 +421,8 @@ const sideEffects = {
   editSectionFolder: ({
     id,
   }) => wrapper('editSectionFolder', async (dispatch, getState) => {
-    const newFolder = await dispatch(driveActions.getDriveItem({
-      listFilter: 'folder',
-      addFilter: 'folder',
+    const newFolder = await dispatch(driveActions.getPickerItem({
+      filter: 'folder',
     }))
     if(!newFolder) return
     await loaders.editSectionFolder(getState, id, {

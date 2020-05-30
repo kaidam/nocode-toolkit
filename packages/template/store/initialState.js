@@ -5,6 +5,7 @@ export const system = {
   initialised: false,
   user: null,
   driveAccessStatus: null,
+  drivePickerCredentials: null,
   config: systemUtils.isNode ? {} : window._uiConfigData || {},
   website: {
     meta: {},

@@ -55,6 +55,12 @@ const reducers = {
   clearWindow: (state, action) => {
     state.window = null
   },
+  openPicker: (state, action) => {
+    state.picker = action.payload
+  },
+  closePicker: (state, action) => {
+    state.picker = null
+  },
 }
 
 const loaders = {
@@ -130,6 +136,12 @@ const sideEffects = {
     dispatch(uiActions.setLoading(false))
     dispatch(actions.clearWindow())
     return result
+  },
+
+  getPickerItem: (pickerProps = {}) => async (dispatch, getState) => {
+    dispatch(actions.openPicker({
+      ...pickerProps
+    }))
   },
 
 }

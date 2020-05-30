@@ -48,6 +48,9 @@ const reducers = {
   setDriveAccessStatus: (state, action) => {
     state.driveAccessStatus = action.payload
   },
+  setDrivePickerCredentials: (state, action) => {
+    state.drivePickerCredentials = action.payload
+  },
   setWebsite: (state, action) => {
     state.website = action.payload
   },
@@ -78,6 +81,9 @@ const loaders = {
     .then(apiUtils.process),
 
   driveAccessStatus: () => axios.get(apiUtils.apiUrl(`/auth/driveAccessStatus`))
+    .then(apiUtils.process),
+
+  drivePickerCredentials: () => axios.get(apiUtils.apiUrl(`/auth/drivePickerCredentials`))
     .then(apiUtils.process),
 
   website: (id) => axios.get(apiUtils.apiUrl(`/websites/${id}`))
@@ -225,6 +231,11 @@ const sideEffects = {
   loadDriveAccessStatus: () => async (dispatch, getState) => {
     const data = await loaders.driveAccessStatus(getState)
     dispatch(actions.setDriveAccessStatus(data))
+  },
+
+  loadDrivePickerCredentials: () => async (dispatch, getState) => {
+    const data = await loaders.drivePickerCredentials(getState)
+    dispatch(actions.setDrivePickerCredentials(data))
   },
 
   loadConfig: () => async (dispatch, getState) => {
