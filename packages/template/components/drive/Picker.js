@@ -89,6 +89,8 @@ const DrivePicker = ({
           .setAppId(app_id)
           .setOAuthToken(token)
           .addView(view)
+          .setOrigin(`http://localhost:8000`)
+          .setTitle(`Pick Folder`)
           .setDeveloperKey(file_picker_key)
           .setCallback((data) => {
             if(data.action == 'loaded') return

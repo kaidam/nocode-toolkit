@@ -49,7 +49,7 @@ const useStyles = makeStyles(theme => createStyles({
 }))
 
 const isImage = (url) => {
-  if(url.match(/\.{jpg,png,jpeg,gif}$/i)) return true
+  if(url.match(/\.(jpg|png|jpeg|gif)$/i)) return true
   if(url.indexOf('unsplash.com') >= 0) return true
   return false
 }
@@ -75,7 +75,7 @@ const ImageField = ({
     onSyncFiles: fileuploadActions.syncFiles,
     onUploadFiles: fileuploadActions.uploadFiles,
     reset: fileuploadActions.reset,
-    getDriveItem: driveActions.getDriveItem,
+    getDriveItem: driveActions.getPickerItem,
     getUnsplashItem: unsplashActions.getUnsplashItem,
   })
 
@@ -104,8 +104,7 @@ const ImageField = ({
 
   const onChooseDriveImage = useCallback(async () => {
     const image = await actions.getDriveItem({
-      listFilter: 'folder,image',
-      addFilter: 'image',
+      filter: 'image',
     })
     if(!image) return
     const result = await actions.onSyncFiles({
@@ -184,6 +183,8 @@ const ImageField = ({
 
   const helperText = item.helperText
 
+  console.log('--------------------------------------------')
+  console.dir(value)
   return uploadInProgress || syncLoading ? (
     <div className={ classes.container }>
       <Grid container spacing={4}>

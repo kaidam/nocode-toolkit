@@ -426,7 +426,7 @@ const sideEffects = {
     }))
     if(!newFolder) return
     await loaders.editSectionFolder(getState, id, {
-      content_id: newFolder.id
+      content_id: newFolder.id,
     })
     await dispatch(jobActions.rebuild({
       beforeReload: async () => {
