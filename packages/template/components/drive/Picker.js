@@ -65,17 +65,21 @@ const DrivePicker = ({
         } = drivePickerCredentials
         const pickerApi = window.google.picker
         let view = null
+        let title = ''
 
         if(pickerConfig.filter == 'folder') {
+          title = 'Folder'
           view = new pickerApi.DocsView()
             .setIncludeFolders(true) 
             .setMimeTypes('application/vnd.google-apps.folder')
             .setSelectFolderEnabled(true)
         }
         else if(pickerConfig.filter == 'document') {
+          title = 'Document'
           view = new pickerApi.View(pickerApi.ViewId.DOCUMENTS)
         }
         else if(pickerConfig.filter == 'image') {
+          title = 'Image'
           view = new pickerApi.View(pickerApi.ViewId.DOCS_IMAGES)
         }
 
@@ -89,8 +93,7 @@ const DrivePicker = ({
           .setAppId(app_id)
           .setOAuthToken(token)
           .addView(view)
-          .setOrigin(`http://localhost:8000`)
-          .setTitle(`Pick Folder`)
+          .setTitle(`Pick ${title}`)
           .setDeveloperKey(file_picker_key)
           .setCallback((data) => {
             if(data.action == 'loaded') return
