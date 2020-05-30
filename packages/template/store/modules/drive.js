@@ -58,7 +58,21 @@ const reducers = {
   openPicker: (state, action) => {
     state.picker = action.payload
   },
-  closePicker: (state, action) => {
+  acceptPicker: (state, action) => {
+    if(state.picker) {
+      state.picker.accepted = true
+      state.picker.result = action.payload
+    }
+  },
+  cancelPicker: (state, action) => {
+    if(state.picker) {
+      state.picker.accepted = false
+    }
+  },
+  resetPicker: (state, action) => {
+    state.picker.accepted = null
+  },
+  clearPicker: (state, action) => {
     state.picker = null
   },
 }
@@ -142,6 +156,24 @@ const sideEffects = {
     dispatch(actions.openPicker({
       ...pickerProps
     }))
+    let success = false
+    let result = null
+    while(!success) {
+      try {
+        const confirmed = await dispatch(uiActions.waitForWindow(driveSelectors.picker))
+        if(confirmed) {
+          const currentSettings = driveSelectors.picker(getState())
+          result = currentSettings.result
+        }
+        success = true
+      } catch(e) {
+        dispatch(actions.resetWindow())
+        console.error(e)
+        dispatch(snackbarActions.setError(e.toString()))
+      }
+    }
+    dispatch(actions.clearPicker())
+    return result
   },
 
 }

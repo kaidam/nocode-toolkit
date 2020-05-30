@@ -25,7 +25,12 @@ const DrivePicker = ({
 
   const onClose = useCallback(() => {
     setPickerLoaded(false)
-    dispatch(driveActions.closePicker())
+    dispatch(driveActions.cancelPicker())
+  })
+
+  const onChoose = useCallback((data) => {
+    setPickerLoaded(false)
+    dispatch(driveActions.acceptPicker(data))
   })
 
   useEffect(() => {
@@ -59,16 +64,27 @@ const DrivePicker = ({
           file_picker_key,
         } = drivePickerCredentials
         const pickerApi = window.google.picker
-        let viewName = null
+        let view = null
 
-        if(pickerConfig.filter == 'folder') viewName = 'FOLDERS'
-        else if(pickerConfig.filter == 'document') viewName = 'DOCUMENTS'
-        else if(pickerConfig.filter == 'image') viewName = 'DOCS_IMAGES'
+        if(pickerConfig.filter == 'folder') {
+          view = new pickerApi.DocsView()
+            .setIncludeFolders(true) 
+            .setMimeTypes('application/vnd.google-apps.folder')
+            .setSelectFolderEnabled(true)
+        }
+        else if(pickerConfig.filter == 'document') {
+          view = new pickerApi.View(pickerApi.ViewId.DOCUMENTS)
+        }
+        else if(pickerConfig.filter == 'image') {
+          view = new pickerApi.View(pickerApi.ViewId.DOCS_IMAGES)
+        }
 
-        const viewType = pickerApi.ViewId[viewName]
-        const view = new pickerApi.View(viewType)
+        if(window.globalPicker) {
+          window.globalPicker.dispose()
+          window.globalPicker = null
+        }
 
-        const picker = new pickerApi.PickerBuilder()
+        window.globalPicker = new pickerApi.PickerBuilder()
           .enableFeature(pickerApi.Feature.SUPPORT_DRIVES)
           .setAppId(app_id)
           .setOAuthToken(token)
@@ -77,24 +93,19 @@ const DrivePicker = ({
           .setCallback((data) => {
             if(data.action == 'loaded') return
             if(data.action == 'cancel') {
-              picker.dispose()
+              window.globalPicker.dispose()
+              window.globalPicker = null
               onClose()
               return
             }
-            console.log('--------------------------------------------')
-            console.log('--------------------------------------------')
-            console.log('picked!!')
-            console.dir(data)
-            picker.dispose()
+            window.globalPicker.dispose()
+            window.globalPicker = null
+            onChoose(data.docs[0])
           })
           .build()
-        picker.setVisible(true)
-
-        console.log('--------------------------------------------')
-        console.log('running zindex')
+        window.globalPicker.setVisible(true)
         document.querySelector('div.picker-dialog-bg').style.zIndex = 10000
-        document.querySelector('div.picker-dialog').style.zIndex = 10001
-        
+        document.querySelector('div.picker-dialog').style.zIndex = 10001        
       },
     })
 
