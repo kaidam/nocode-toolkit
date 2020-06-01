@@ -165,6 +165,7 @@ const afterBodySnippetCode = createSelector(
 
 const selectors = {
   settings,
+  settingsValue,
   schema,
   activePluginMap,
   activePlugins,

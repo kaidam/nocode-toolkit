@@ -79,21 +79,24 @@ const section = () => createSelector(
     const section = sections[name]
     if(!section) return null
     const annotation = annotations[`section:${name}`] || {}
-    const ghostId = (section.children || []).find(childId => {
-      const childLocation = locations[`section:${name}:${childId}`]
-      return childLocation && childLocation.data && childLocation.data.ghost ? true : false
-    })
-    const ghostFolder = ghostId ?
-      nodes[ghostId] :
-      null
+
+    // TODO: we should refer to "default folder" and "source folders"
     const defaultFolderId = website && website.meta ?
       website.meta[`nocode_default_resource_id_${name}`] :
       null
+      
+    const sourceFolders = (section.children || [])
+      .filter(childId => {
+        const childLocation = locations[`section:${name}:${childId}`]
+        return childLocation && childLocation.data && childLocation.data.ghost ? true : false
+      })
+      .map(sourceFolderId => nodes[sourceFolderId])
+
     return {
       node: section,
       annotation,
-      ghostFolder,
       defaultFolderId,
+      sourceFolders,
     }
   },
 )

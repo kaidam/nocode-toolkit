@@ -27,12 +27,14 @@ const NavbarSectionEditor = ({
   })
 
   const {
-    ghostFolder,
     getSettingsItems,
   } = useSectionEditor({
     section,
     contrast,
   })
+
+  const sectionTitle = (section || '')
+    .replace(/^(\w)/, (st) => st.toUpperCase())
 
   const getSettingsButton = useIconButton({
     icon: 'edit',
@@ -42,7 +44,7 @@ const NavbarSectionEditor = ({
   return (
     <div className={ classes.root }>
       <MenuButton
-        header={ ghostFolder ? ghostFolder.name : '' }
+        header={ sectionTitle }
         getButton={ getSettingsButton }
         getItems={ getSettingsItems }
       />

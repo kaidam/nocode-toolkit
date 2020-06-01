@@ -5,6 +5,10 @@ import systemUtils from '../../utils/system'
 import nocodeSelectors from './nocode'
 import networkSelectors from './network'
 
+import {
+  GOOGLE_FULL_DRIVE_SCOPE,
+} from '../../config'
+
 const previewMode = state => state.ui.previewMode
 const user = state => state.system.user
 const driveAccessStatus = state => state.system.driveAccessStatus
@@ -50,6 +54,16 @@ const initialiseError = createSelector(
     `we have had trouble loading the nocode data source`
 )
 
+const googleScopes = createSelector(
+  driveAccessStatus,
+  status => status ? status.scopes || [] : [],
+)
+
+const hasFullDriveAccess = createSelector(
+  googleScopes,
+  scopes => scopes.find(scope => scope == GOOGLE_FULL_DRIVE_SCOPE) ? true : false
+)
+
 const selectors = {
   user,
   driveAccessStatus,
@@ -63,6 +77,8 @@ const selectors = {
   initialised,
   initialiseCalled,
   initialiseError,
+  googleScopes,
+  hasFullDriveAccess,
 }
 
 export default selectors

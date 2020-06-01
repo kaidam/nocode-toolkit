@@ -38,6 +38,7 @@ const TreeSection = ({
   const classes = useStyles()
   const showUI = useSelector(systemSelectors.showUI)
   const settings = useSelector(settingsSelectors.settings)
+  
   const folderPages = settings.folderPages === 'yes'
   const containerRef = useRef()
 

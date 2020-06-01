@@ -41,7 +41,7 @@ const DefaultHome = ({
     getAddContentItems,
   } = useDocumentEditor({
     node: {
-      id: sectionData && sectionData.ghostFolder ? sectionData.ghostFolder.id : '',
+      id: sectionData ? sectionData.defaultFolderId : '',
     },
     addContentParams: {
       homepage: true,
@@ -55,7 +55,7 @@ const DefaultHome = ({
     getItems: getAddContentItems,
   })
 
-  if(!sectionData || !sectionData.ghostFolder) {
+  if(!sectionData || !sectionData.defaultFolderId) {
     return (
       <div className={ classes.root }>
         <h3 className={ classes.title }>Homepage</h3>

@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Actions from '../../utils/actions'
 import contentActions from '../../store/modules/content'
@@ -8,6 +8,7 @@ import icons from '../../icons'
 import driveUtils from '../../utils/drive'
 
 import useSection from './useSection'
+import settingsSelectors from '../../store/selectors/settings'
 
 const useSectionEditor = ({
   section,
@@ -15,13 +16,14 @@ const useSectionEditor = ({
   const {
     node,
     annotation,
-    ghostFolder,
     defaultFolderId,
   } = useSection({
     section,
   })
 
-  const isDefaultFolder = ghostFolder && ghostFolder.id == defaultFolderId
+  const {
+    driveMode,
+  } = useSelector(settingsSelectors.settings)
 
   const actions = Actions(useDispatch(), {
     onCreateRemoteContent: contentActions.createRemoteContent,
@@ -43,14 +45,14 @@ const useSectionEditor = ({
       })
     }
 
-    return ghostFolder ? [{
+    return [{
       title: 'Google Document',
       icon: icons.docs,
       handler: () => actions.onCreateRemoteContent({
         title: 'Create Document',
         driver: 'drive',
         form: 'drive.document',
-        parentId: ghostFolder.id,
+        parentId: defaultFolderId//ghostFolder.id,
       })
     }, {
       title: 'Google Folder',
@@ -59,11 +61,11 @@ const useSectionEditor = ({
         title: 'Create Folder',
         driver: 'drive',
         form: 'drive.folder',
-        parentId: ghostFolder.id,
+        parentId: defaultFolderId//ghostFolder.id,
       })
-    }, linkItem] : [linkItem]
+    }, linkItem]
   }, [
-    ghostFolder,
+    defaultFolderId,
   ])
   
   const getSettingsItems = useCallback(() => {
@@ -78,29 +80,29 @@ const useSectionEditor = ({
 
       '-',
 
-      ghostFolder ? {
-        title: 'View in Drive',
-        icon: icons.open,
-        url: driveUtils.getItemUrl(ghostFolder),
-      } : null,
+      // ghostFolder ? {
+      //   title: 'View in Drive',
+      //   icon: icons.open,
+      //   url: driveUtils.getItemUrl(ghostFolder),
+      // } : null,
 
-      ghostFolder ? {
-        title: 'Change Drive Folder',
-        icon: icons.search,
-        handler: () => actions.onChangeSectionFolder({
-          id: section,
-        })
-      } : null,
+      // ghostFolder ? {
+      //   title: 'Change Drive Folder',
+      //   icon: icons.search,
+      //   handler: () => actions.onChangeSectionFolder({
+      //     id: section,
+      //   })
+      // } : null,
 
-      ghostFolder && !isDefaultFolder ? {
-        title: 'Reset Drive Folder',
-        icon: icons.refresh,
-        handler: () => actions.onResetSectionFolder({
-          id: section,
-        })
-      } : null,
+      // ghostFolder && !isDefaultFolder ? {
+      //   title: 'Reset Drive Folder',
+      //   icon: icons.refresh,
+      //   handler: () => actions.onResetSectionFolder({
+      //     id: section,
+      //   })
+      // } : null,
 
-      ghostFolder ? '-' : null,
+      //ghostFolder ? '-' : null,
       
       
       {
@@ -127,15 +129,12 @@ const useSectionEditor = ({
 
     ].filter(i => i)
   }, [
-    ghostFolder,
-    isDefaultFolder,
     getAddItems,
   ])
   
   return {
     node,
     annotation,
-    ghostFolder,
     getAddItems,
     getSettingsItems,
   }

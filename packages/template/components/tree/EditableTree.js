@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react'
+import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
 import IconButton from '@material-ui/core/IconButton'
@@ -11,6 +12,7 @@ import icons from '../../icons'
 
 import useSectionEditor from '../hooks/useSectionEditor'
 import useIconButton from '../hooks/useIconButton'
+import settingsSelectors from '../../store/selectors/settings'
 
 const EditIcon = icons.edit
 const AddIcon = icons.add
@@ -53,15 +55,14 @@ const EditableTree = ({
 }) => {
   const classes = useStyles()
 
-  const {
-    ghostFolder,
+  const {    
     getAddItems,
     getSettingsItems,
   } = useSectionEditor({
     section,
   })
 
-  const ghostFolderTitle = (ghostFolder ? ghostFolder.name : '')
+  const sectionTitle = (section || '')
     .replace(/^(\w)/, (st) => st.toUpperCase())
 
   const getTitleSettingsButton = useCallback((onClick) => {
@@ -70,13 +71,13 @@ const EditableTree = ({
         classes={{
           primary: classes.itemTextTypography,
         }}
-        primary={ ghostFolderTitle }
+        primary={ sectionTitle }
         onClick={ onClick }
       />
     )
   }, [
     classes,
-    ghostFolderTitle,
+    sectionTitle,
   ])
 
   const getSettingsButton = useIconButton({
@@ -98,18 +99,18 @@ const EditableTree = ({
           className={ classes.menuItem }
         >
           <MenuButton
-            header={ ghostFolderTitle }
+            header={ sectionTitle }
             getButton={ getSettingsButton }
             getItems={ getSettingsItems }
           />
           <MenuButton
             className={ classes.itemText }
-            header={ ghostFolderTitle }
+            header={ sectionTitle }
             getButton={ getTitleSettingsButton }
             getItems={ getSettingsItems }
           />
           <MenuButton
-            header={ ghostFolder ? `${ghostFolderTitle} : Add` : '' }
+            header={ `${sectionTitle} : Add` }
             getButton={ getAddButton }
             getItems={ getAddItems }
           />
