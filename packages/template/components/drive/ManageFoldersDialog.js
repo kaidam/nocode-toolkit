@@ -3,6 +3,10 @@ import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import Typography from '@material-ui/core/Typography'
+import InputLabel from '@material-ui/core/InputLabel'
+import Select from '@material-ui/core/Select'
+import FormControl from '@material-ui/core/FormControl'
+import MenuItem from '@material-ui/core/MenuItem'
 
 import Actions from '../../utils/actions'
 
@@ -21,18 +25,21 @@ const useStyles = makeStyles(theme => ({
   margin: {
     marginBottom: theme.spacing(1),
   },
+  bigMargin: {
+    marginBottom: theme.spacing(3),
+  },
   button: {
     marginLeft: theme.spacing(1),
-  }
+  },
+  select: {
+    display: 'flex',
+  },
   
 }))
 
 const FIELDS = [{
   title: 'Name',
   name: 'name',
-}, {
-  title: 'Add new content',
-  name: 'status',
 }]
 
 const ManageFoldersDialog = ({
@@ -44,6 +51,7 @@ const ManageFoldersDialog = ({
   const actions = Actions(useDispatch(), {
     onAddFolder: contentActions.addManagedFolder,
     onRemoveFolder: contentActions.removeManagedFolder,
+    onUpdateAnnotation: contentActions.updateAnnotation,
     onCancel: contentActions.closeManageFoldersDialog,
   })
 
@@ -53,30 +61,46 @@ const ManageFoldersDialog = ({
     }
   } = useSelector(dialogSelectors.dialogParams)
 
-  const sectionData = useSection({
+  const {
+    sourceFolders,
+    defaultFolderId,
+    addTargetFolderId,
+  } = useSection({
     section,
   })
 
+  const onUpdateTargetFolder = useCallback((e) => {
+    const id = e.target.value
+    actions.onUpdateAnnotation({
+      id: `section:${section}`,
+      data: {
+        addTargetFolderId: id,
+      },
+    })
+  }, [
+    section,
+  ])
+
   const tableData = useMemo(() => {
-    return sectionData.sourceFolders.map(folder => {
-      const isDefault = folder.id == sectionData.defaultFolderId
-      const isAddTarget = folder.id == sectionData.addTargetFolderId
-      const name = isDefault ? `Default Nocode Folder` : folder.name
+    return sourceFolders.map(folder => {
+      const isDefault = folder.id == defaultFolderId
+      const name = isDefault ? `Nocode Default Folder` : folder.name
       return {
         id: folder.id,
         name: (
           <a href={ driveUtils.getItemUrl(folder) } target="_blank">{ name }</a>
         ),
-        status: isAddTarget ? `Activated` : '',
         _data: folder,
       }
     })
   }, [
-    sectionData,
+    sourceFolders,
+    defaultFolderId,
+    addTargetFolderId,
   ])
   
   const getActions = useCallback((folder) => {
-    const isDefault = folder.id == sectionData.defaultFolderId
+    const isDefault = folder.id == defaultFolderId
 
     return (
       <div>
@@ -111,7 +135,7 @@ const ManageFoldersDialog = ({
       </div>
     )
   }, [
-    sectionData,
+    defaultFolderId,
   ])
 
   const sectionTitle = (section || '')
@@ -128,32 +152,59 @@ const ManageFoldersDialog = ({
       onCancel={ actions.onCancel }
     >
       <div className={ classes.root }>
-        <div>
-          <div className={ classes.margin }>
-            <Typography variant="caption">
-              The content in the following folders will be merged into the {sectionTitle} section.
-            </Typography>
-          </div>
-          <div className={ classes.margin }>
-            <Button
-              size="small"
-              variant="contained"
-              color="secondary"
-              onClick={ () => {
-                actions.onAddFolder({
-                  section,
-                })
+        <div className={ classes.margin }>
+          <Typography variant="caption">
+            The content in the following folders will be merged into the {sectionTitle} section.
+          </Typography>
+        </div>
+        <div className={ classes.margin }>
+          <Button
+            size="small"
+            variant="contained"
+            color="secondary"
+            onClick={ () => {
+              actions.onAddFolder({
+                section,
+              })
+            }}
+          >
+            Add Folder
+          </Button>
+        </div>
+        <div className={ classes.bigMargin }>
+          <SimpleTable
+            data={ tableData }
+            fields={ FIELDS }
+            getActions={ getActions }
+          />
+        </div>
+        <div className={ classes.margin }>
+          <FormControl component="fieldset" className={ classes.select }>
+            <InputLabel htmlFor="choose-folder">Add newly created content to:</InputLabel>
+            <Select
+              value={ addTargetFolderId }
+              onChange={ onUpdateTargetFolder }
+              inputProps={{
+                name: 'choose-folder',
+                id: 'choose-folder',
               }}
             >
-              Add Folder
-            </Button>
-          </div>
+              {
+                sourceFolders.map((folder, i) => {
+                  const isDefault = folder.id == defaultFolderId
+                  return (
+                    <MenuItem
+                      key={ i }
+                      value={ folder.id }
+                    >
+                      { isDefault ? `Nocode Default Folder` : folder.name }
+                    </MenuItem>
+                  )
+                })
+              }
+            </Select>
+          </FormControl>
         </div>
-        <SimpleTable
-          data={ tableData }
-          fields={ FIELDS }
-          getActions={ getActions }
-        />
       </div>
     </Window>
   )

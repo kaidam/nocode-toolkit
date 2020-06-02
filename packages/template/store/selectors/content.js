@@ -84,14 +84,15 @@ const section = () => createSelector(
       website.meta[`nocode_default_resource_id_${name}`] :
       null
 
-    const addTargetFolderId = annotation.addTargetFolderId || defaultFolderId
-      
     const sourceFolders = (section.children || [])
       .filter(childId => {
         const childLocation = locations[`section:${name}:${childId}`]
         return childLocation && childLocation.data && childLocation.data.ghost ? true : false
       })
       .map(sourceFolderId => nodes[sourceFolderId])
+
+    let addTargetFolderId = defaultFolderId
+    if(annotation.addTargetFolderId && sourceFolders.find(f => f.id == annotation.addTargetFolderId)) addTargetFolderId = annotation.addTargetFolderId
 
     return {
       node: section,

@@ -395,6 +395,17 @@ const sideEffects = {
     dispatch(snackbarActions.setSuccess(`section updated`))
   }),
 
+  updateAnnotation: ({
+    id,
+    data,
+  }) => wrapper('updateAnnotation', async (dispatch, getState) => {
+    const annotations = nocodeSelectors.annotations(getState())
+    const annotationUpdate = deepmerge(annotations[id] || {}, data)
+    const result = await loaders.updateAnnotation(getState, id, annotationUpdate)
+    if(!result) return
+    await dispatch(jobActions.reload())
+  }),
+
   editNode: ({
     title,
     form,
@@ -452,7 +463,7 @@ const sideEffects = {
   }) => wrapper('deleteManagedFolder', async (dispatch, getState) => {
     const result = await dispatch(uiActions.waitForConfirmation({
       title: `Remove ${name}`,
-      message: `Are you sure you want to remove the ${name} folder from this section?`,
+      message: `Are you sure you want to remove the ${name} folder from this section? This will NOT delete any content from Google Drive.`,
     }))
     if(!result) return
     await loaders.deleteSectionFolder(getState, section, id)
