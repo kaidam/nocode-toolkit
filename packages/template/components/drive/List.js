@@ -110,6 +110,7 @@ const FinderList = ({
                               icon && (
                                 <img 
                                   className={ classes.icon }
+                                  referrerPolicy="no-referrer" 
                                   src={ icon } 
                                 />
                               )
@@ -120,6 +121,7 @@ const FinderList = ({
                               thumbnail && (
                                 <img 
                                   className={ classes.thumbnail }
+                                  referrerPolicy="no-referrer" 
                                   src={ thumbnail } 
                                 />
                               )
