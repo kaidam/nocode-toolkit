@@ -16,7 +16,7 @@ const useSectionEditor = ({
   const {
     node,
     annotation,
-    defaultFolderId,
+    addTargetFolderId,
   } = useSection({
     section,
   })
@@ -31,14 +31,12 @@ const useSectionEditor = ({
     onCreateRemoteContent: contentActions.createRemoteContent,
     onCreateLocalContent: contentActions.createLocalContent,
     onEditSection: contentActions.editSection,
-    // onChangeSectionFolder: contentActions.editSectionFolder,
-    // onResetSectionFolder: contentActions.resetSectionFolder,
     openManageFoldersDialog: contentActions.openManageFoldersDialog,
   })
 
   const getAddItems = useCallback(() => {
 
-    const linkItem = {
+    const link = {
       title: 'Link',
       icon: icons.link,
       handler: () => actions.onCreateLocalContent({
@@ -48,27 +46,72 @@ const useSectionEditor = ({
       })
     }
 
-    return [{
+    const newDocumentHandler = () => actions.onCreateRemoteContent({
+      title: 'Create Document',
+      driver: 'drive',
+      form: 'drive.document',
+      parentId: addTargetFolderId,
+    })
+
+    const existingDocumentHandler = () => {}
+
+    const newFolderHandler = () => actions.onCreateRemoteContent({
+      title: 'Create Folder',
+      driver: 'drive',
+      form: 'drive.folder',
+      parentId: addTargetFolderId,
+    })
+
+    const existingFolderHandler = () => {}
+
+    const document = {
       title: 'Google Document',
       icon: icons.docs,
-      handler: () => actions.onCreateRemoteContent({
-        title: 'Create Document',
-        driver: 'drive',
-        form: 'drive.document',
-        parentId: defaultFolderId//ghostFolder.id,
-      })
-    }, {
+    }
+
+    const folder = {
       title: 'Google Folder',
       icon: icons.folder,
-      handler: () => actions.onCreateRemoteContent({
-        title: 'Create Folder',
-        driver: 'drive',
-        form: 'drive.folder',
-        parentId: defaultFolderId//ghostFolder.id,
-      })
-    }, linkItem]
+    }
+
+    if(isAdvancedDrive) {
+      document.items = [{
+        title: 'New Google Document',
+        icon: icons.docs,
+        secondaryIcon: icons.add,
+        handler: newDocumentHandler,
+      }, {
+        title: 'Existing Google Document',
+        icon: icons.docs,
+        secondaryIcon: icons.search,
+        handler: existingDocumentHandler,
+      }]
+
+      folder.items = [{
+        title: 'New Google Folder',
+        icon: icons.folder,
+        secondaryIcon: icons.add,
+        handler: newFolderHandler,
+      }, {
+        title: 'Existing Google Folder',
+        icon: icons.folder,
+        secondaryIcon: icons.search,
+        handler: existingFolderHandler,
+      }]
+    }
+    else {
+      document.handler = newDocumentHandler
+      folder.handler = newFolderHandler
+    }
+
+    return [
+      document,
+      folder,
+      link,
+    ]
   }, [
-    defaultFolderId,
+    isAdvancedDrive,
+    addTargetFolderId,
   ])
   
   const getSettingsItems = useCallback(() => {
@@ -92,30 +135,7 @@ const useSectionEditor = ({
         })
       } : null,
 
-      // ghostFolder ? {
-      //   title: 'View in Drive',
-      //   icon: icons.open,
-      //   url: driveUtils.getItemUrl(ghostFolder),
-      // } : null,
-
-      // ghostFolder ? {
-      //   title: 'Change Drive Folder',
-      //   icon: icons.search,
-      //   handler: () => actions.onChangeSectionFolder({
-      //     id: section,
-      //   })
-      // } : null,
-
-      // ghostFolder && !isDefaultFolder ? {
-      //   title: 'Reset Drive Folder',
-      //   icon: icons.refresh,
-      //   handler: () => actions.onResetSectionFolder({
-      //     id: section,
-      //   })
-      // } : null,
-
       isAdvancedDrive ? '-' : null,
-      
       
       {
         title: 'Sorting',
