@@ -75,7 +75,7 @@ const ImageField = ({
     onSyncFiles: fileuploadActions.syncFiles,
     onUploadFiles: fileuploadActions.uploadFiles,
     reset: fileuploadActions.reset,
-    getDriveItem: driveActions.getPickerItem,
+    getDriveItem: driveActions.getDriveItem,
     getUnsplashItem: unsplashActions.getUnsplashItem,
   })
 
@@ -183,8 +183,6 @@ const ImageField = ({
 
   const helperText = item.helperText
 
-  console.log('--------------------------------------------')
-  console.dir(value)
   return uploadInProgress || syncLoading ? (
     <div className={ classes.container }>
       <Grid container spacing={4}>
