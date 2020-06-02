@@ -1,8 +1,9 @@
 import { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import Actions from '../../utils/actions'
 import contentActions from '../../store/modules/content'
+import nocodeSelectors from '../../store/selectors/nocode'
 import icons from '../../icons'
 import driveUtils from '../../utils/drive'
 
@@ -13,16 +14,22 @@ const useItemOptions = ({
     onCreateRemoteContent: contentActions.createRemoteContent,
     onEditRemoteContent: contentActions.editRemoteContent,
     onEditLocalContent: contentActions.editLocalContent,
+    onRemoveRemoteContent: contentActions.removeRemoteContent,
     onDeleteRemoteContent: contentActions.deleteRemoteContent,
     onDeleteLocalContent: contentActions.deleteLocalContent,
     onHideContent: contentActions.hideContent,
     onChangeHomepageSingleton: contentActions.changeHomepageSingleton,
   })
 
+  const locations = useSelector(nocodeSelectors.locations)
+
   const getItemOptions = useCallback(({
     node,
     getInjectedItems,
   }) => {
+
+    const locationId = `${node.route.location}:${node.id}`
+    const isSectionContent = locations[locationId] ? true : false
 
     const injected = getInjectedItems ?
       getInjectedItems() : []
@@ -30,8 +37,16 @@ const useItemOptions = ({
     let items = []
 
     if(node.driver == 'drive') {
-
-      const removeItem = {
+      const removeItem = isSectionContent ? {
+        title: 'Remove',
+        icon: icons.clear,
+        handler: () => actions.onRemoveRemoteContent({
+          id: node.id,
+          name: node.name,
+          driver: 'drive',
+          location: node.route.location,
+        })
+      } : {
         title: 'Remove',
         icon: icons.clear,
         items: [{
@@ -150,7 +165,9 @@ const useItemOptions = ({
       }]
     }
     return injected.concat(items).filter(i => i)
-  }, [])
+  }, [
+    locations,
+  ])
 
   return {
     getItemOptions,

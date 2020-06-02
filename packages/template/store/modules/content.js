@@ -54,6 +54,9 @@ const loaders = {
   saveContent: (getState, payload) => axios.post(apiUtils.websiteUrl(getState, `/content`), payload)
     .then(apiUtils.process),
 
+  deleteContent: (getState, driver, content_id, location) => axios.delete(apiUtils.websiteUrl(getState, `/content/${driver}/${content_id}/${location}`))
+    .then(apiUtils.process),
+
   createRemoteContent: (getState, payload) => axios.post(apiUtils.websiteUrl(getState, `/remotecontent`), payload)
     .then(apiUtils.process),
 
@@ -254,6 +257,27 @@ const sideEffects = {
     if(!result) return
     await dispatch(jobActions.reload())
     dispatch(snackbarActions.setSuccess(`item updated`))
+  }),
+
+  removeRemoteContent: ({
+    id,
+    name,
+    driver,
+    location,
+  }) => wrapper('removeRemoteContent', async (dispatch, getState) => {
+    const result = await dispatch(uiActions.waitForConfirmation({
+      title: `Remove ${name}?`,
+      message: `
+        <p>Removing this from the website will <strong>NOT</strong> delete it from Google drive.</p>
+        <p>You can always add this item again in the future</p>
+      `,
+      confirmTitle: `Confirm - Remove ${name}`,
+    }))
+    if(!result) return
+    await loaders.deleteContent(getState, driver, id, location)
+    await dispatch(routerActions.navigateTo('root'))
+    await dispatch(jobActions.rebuild())
+    dispatch(snackbarActions.setSuccess(`content removed`))
   }),
 
   deleteRemoteContent: ({
