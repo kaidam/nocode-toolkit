@@ -464,7 +464,12 @@ const sideEffects = {
   addManagedFolder: ({
     section,
   }) => wrapper('addManagedFolder', async (dispatch, getState) => {
-
+    const result = await dispatch(driveActions.getItem({
+      type: 'folder',
+    }))
+    console.log('--------------------------------------------')
+    console.log(section)
+    console.log(result)
   }),
 
   deleteManagedFolder: ({

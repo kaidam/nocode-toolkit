@@ -10,6 +10,7 @@ import itemUtils from '../../utils/item'
 import { drive as initialState } from '../initialState'
 
 import driveSelectors from '../selectors/drive'
+import systemSelectors from '../selectors/system'
 import uiActions from './ui'
 
 const prefix = 'drive'
@@ -174,6 +175,32 @@ const sideEffects = {
     }
     dispatch(actions.clearPicker())
     return result
+  },
+
+  // wrapper that will decide if we need full drive access for the
+  // given mime type
+  // we can do documents with normal scope but the rest will need
+  // full scope:
+  //  * images = because we want to show thumbnails
+  //  * folders = because we will need to read their contents
+  getItem: ({
+    type = 'folder',
+  } = {}) => async (dispatch, getState) => {
+    const hasFullDriveAccess = systemSelectors.hasFullDriveAccess(getState())
+    
+    if(type == 'document') {
+      const result = await dispatch(actions.getPickerItem({
+        filter: type,
+      }))
+      return result
+    }
+    else {
+      const result = await dispatch(actions.getDriveItem({
+        listFilter: type == 'folder' ? `folder` : `folder,${type}`,
+        addFilter: type,
+      }))
+      return result
+    }
   },
 
 }

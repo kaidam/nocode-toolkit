@@ -1,7 +1,8 @@
 import React, { useMemo, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
 
 import Actions from '../../utils/actions'
 
@@ -13,9 +14,12 @@ import driveUtils from '../../utils/drive'
 
 import Window from '../dialog/Window'
 
-const useStyles = makeStyles(theme => createStyles({
+const useStyles = makeStyles(theme => ({
   root: {
     
+  },
+  margin: {
+    marginBottom: theme.spacing(1),
   },
   
 }))
@@ -35,6 +39,7 @@ const ManageFoldersDialog = ({
   const classes = useStyles()
 
   const actions = Actions(useDispatch(), {
+    onAddFolder: contentActions.addManagedFolder,
     onCancel: contentActions.closeManageFoldersDialog,
   })
 
@@ -66,20 +71,39 @@ const ManageFoldersDialog = ({
     sectionData,
   ])
   
-  const getActions = useCallback((item) => {
+  const getActions = useCallback((folder) => {
+    const isDefault = folder.id == sectionData.defaultFolderId
+
     return (
       <div>
         <Button
           size="small"
+          variant="outlined"
           onClick={ () => {
-            window.open(driveUtils.getItemUrl(item._data))
+            window.open(driveUtils.getItemUrl(folder._data))
           }}
         >
           View in drive
         </Button>
+        {
+          !isDefault && (
+            <Button
+              size="small"
+              variant="outlined"
+              onClick={ () => {
+                console.log('--------------------------------------------')
+                console.log('remove')
+              }}
+            >
+              Remove
+            </Button>
+          )
+        }
       </div>
     )
-  })
+  }, [
+    sectionData,
+  ])
 
   const sectionTitle = (section || '')
     .replace(/^(\w)/, (st) => st.toUpperCase())
@@ -91,13 +115,31 @@ const ManageFoldersDialog = ({
       fullHeight
       withCancel
       size="md"
-      submitTitle="Add Drive Folder"
       cancelTitle="Close"
-      submitButtonColor="secondary"
       onCancel={ actions.onCancel }
-      onSubmit={ () => console.log('add') }
     >
       <div className={ classes.root }>
+        <div>
+          <div className={ classes.margin }>
+            <Typography variant="caption">
+              The content in the following folders will be merged into the {sectionTitle} section.
+            </Typography>
+          </div>
+          <div className={ classes.margin }>
+            <Button
+              size="small"
+              variant="contained"
+              color="secondary"
+              onClick={ () => {
+                actions.onAddFolder({
+                  section,
+                })
+              }}
+            >
+              Add Folder
+            </Button>
+          </div>
+        </div>
         <SimpleTable
           data={ tableData }
           fields={ FIELDS }
