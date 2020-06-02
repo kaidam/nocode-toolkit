@@ -104,7 +104,8 @@ const ImageField = ({
 
   const onChooseDriveImage = useCallback(async () => {
     const image = await actions.getDriveItem({
-      filter: 'image',
+      listFilter: 'folder,image',
+      addFilter: 'image',
     })
     if(!image) return
     const result = await actions.onSyncFiles({
