@@ -80,10 +80,11 @@ const section = () => createSelector(
     if(!section) return null
     const annotation = annotations[`section:${name}`] || {}
 
-    // TODO: we should refer to "default folder" and "source folders"
     const defaultFolderId = website && website.meta ?
       website.meta[`nocode_default_resource_id_${name}`] :
       null
+
+    const addTargetFolderId = annotation.addTargetFolderId || defaultFolderId
       
     const sourceFolders = (section.children || [])
       .filter(childId => {
@@ -96,6 +97,7 @@ const section = () => createSelector(
       node: section,
       annotation,
       defaultFolderId,
+      addTargetFolderId,
       sourceFolders,
     }
   },

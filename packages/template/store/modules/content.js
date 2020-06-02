@@ -16,6 +16,7 @@ import uiActions from './ui'
 import driveActions from './drive'
 import jobActions from './job'
 import nocodeActions from './nocode'
+import dialogActions from './dialog'
 import snackbarActions from './snackbar'
 import routerActions from './router'
 
@@ -446,6 +447,38 @@ const sideEffects = {
       }
     }))
     dispatch(snackbarActions.setSuccess(`section folder updated`))
+  }),
+
+  openManageFoldersDialog: ({
+    section,
+  } = {}) => (dispatch, getState) => {
+    dispatch(dialogActions.open('manageSectionFolders', {
+      section,
+    }))
+  },
+
+  closeManageFoldersDialog: () => (dispatch, getState) => {
+    dispatch(dialogActions.close('manageSectionFolders'))
+  },
+
+  addManagedFolder: ({
+    section,
+  }) => wrapper('addManagedFolder', async (dispatch, getState) => {
+
+  }),
+
+  deleteManagedFolder: ({
+    section,
+    id,
+  }) => wrapper('deleteManagedFolder', async (dispatch, getState) => {
+
+  }),
+
+  setDefaultAddFolder: ({
+    section,
+    id,
+  }) => wrapper('setDefaultAddFolder', async (dispatch, getState) => {
+
   }),
 
   // open a drive finder to replace the homepage singleton

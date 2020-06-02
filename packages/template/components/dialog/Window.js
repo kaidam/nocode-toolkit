@@ -58,6 +58,8 @@ const Window = ({
   noScroll = false,
   fullHeight = false,
   noActions = false,
+  submitButtonColor = 'primary',
+  cancelButtonColor = 'default',
   onCancel,
   onSubmit,
   theme = {},
@@ -117,9 +119,10 @@ const Window = ({
                 {
                   withCancel && (
                     <Button
-                      className={ classes.button }
+                      className={ classnames(classes.button, theme.cancelButton) }
                       type="button"
                       variant="contained"
+                      color={ cancelButtonColor }
                       onClick={ closeWindow }
                     >
                       { cancelTitle }
@@ -129,10 +132,10 @@ const Window = ({
                 {
                   onSubmit && (
                     <Button
-                      className={ classes.button }
+                      className={ classnames(classes.button, theme.submitButton) }
                       type="button"
                       variant="contained"
-                      color="primary"
+                      color={ submitButtonColor }
                       disabled={ loading ? true : false }
                       onClick={ onSubmit }
                     >

@@ -25,12 +25,15 @@ const useSectionEditor = ({
     driveMode,
   } = useSelector(settingsSelectors.settings)
 
+  const isAdvancedDrive = driveMode == 'advanced'
+
   const actions = Actions(useDispatch(), {
     onCreateRemoteContent: contentActions.createRemoteContent,
     onCreateLocalContent: contentActions.createLocalContent,
     onEditSection: contentActions.editSection,
     onChangeSectionFolder: contentActions.editSectionFolder,
     onResetSectionFolder: contentActions.resetSectionFolder,
+    openManageFoldersDialog: contentActions.openManageFoldersDialog,
   })
 
   const getAddItems = useCallback(() => {
@@ -80,6 +83,15 @@ const useSectionEditor = ({
 
       '-',
 
+      isAdvancedDrive ? {
+        title: 'Manage Drive Folders',
+        icon: icons.folder,
+        secondaryIcon: icons.drive,
+        handler: () => actions.openManageFoldersDialog({
+          section,
+        })
+      } : null,
+
       // ghostFolder ? {
       //   title: 'View in Drive',
       //   icon: icons.open,
@@ -102,7 +114,7 @@ const useSectionEditor = ({
       //   })
       // } : null,
 
-      //ghostFolder ? '-' : null,
+      isAdvancedDrive ? '-' : null,
       
       
       {
@@ -130,6 +142,7 @@ const useSectionEditor = ({
     ].filter(i => i)
   }, [
     getAddItems,
+    isAdvancedDrive,
   ])
   
   return {

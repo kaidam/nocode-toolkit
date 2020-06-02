@@ -14,6 +14,7 @@ import ConfirmDialog from './Confirm'
 import ContentDialog from '../content/Dialog'
 import DriveDialog from '../drive/Dialog'
 import DrivePicker from '../drive/Picker'
+import ManageFoldersDialog from '../drive/ManageFoldersDialog'
 import UnsplashDialog from '../unsplash/Dialog'
 import SettingsDialog from '../settings/Dialog'
 import PublishDialog from '../publish/PublishDialog'
@@ -24,6 +25,7 @@ import library from '../../library'
 
 const dialogs = {
   settings: SettingsDialog,
+  manageSectionFolders: ManageFoldersDialog,
   publish: PublishDialog,
   publishSummary: PublishSummaryDialog,
   publishHistory: PublishHistoryDialog,
