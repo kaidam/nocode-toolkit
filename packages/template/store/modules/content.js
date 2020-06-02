@@ -200,6 +200,24 @@ const sideEffects = {
     }
   }),
 
+  addRemoteContent: ({
+    section,
+    type,
+  }) => wrapper('addRemoteContent', async (dispatch, getState) => {
+    const result = await dispatch(driveActions.getItem({
+      type,
+    }))
+    if(!result) return
+    await dispatch(actions.saveContent({
+      content_id: result.id,
+      location: `section:${section}`,
+      driver: 'drive',
+      data: {},
+    }))
+    await dispatch(jobActions.rebuild())
+    dispatch(snackbarActions.setSuccess(`content added`))
+  }),
+
   /*
   
     edit a drive item - things like name / settings
@@ -471,13 +489,6 @@ const sideEffects = {
     dispatch(snackbarActions.setSuccess(`section folder removed`))
   }),
 
-  setDefaultAddFolder: ({
-    section,
-    id,
-  }) => wrapper('setDefaultAddFolder', async (dispatch, getState) => {
-
-  }),
-
   // open a drive finder to replace the homepage singleton
   // with what they select
   changeHomepageSingleton: ({
@@ -543,7 +554,7 @@ const sideEffects = {
     }))
 
     const annotations = nocodeSelectors.annotations(getState())
-    await loaders.updateAnnotation(getState, id, Object.assign(annotations[id] || {}, {
+    await loaders.updateAnnotation(getState, id, Object.assign({}, annotations[id] || {}, {
       hidden: true,
     }))
     await dispatch(jobActions.reload())

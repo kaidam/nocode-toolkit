@@ -30,6 +30,7 @@ const useSectionEditor = ({
   const actions = Actions(useDispatch(), {
     onCreateRemoteContent: contentActions.createRemoteContent,
     onCreateLocalContent: contentActions.createLocalContent,
+    onAddRemoteContent: contentActions.addRemoteContent,
     onEditSection: contentActions.editSection,
     openManageFoldersDialog: contentActions.openManageFoldersDialog,
   })
@@ -53,7 +54,10 @@ const useSectionEditor = ({
       parentId: addTargetFolderId,
     })
 
-    const existingDocumentHandler = () => {}
+    const existingDocumentHandler = () => actions.onAddRemoteContent({
+      section,
+      type: 'document',
+    })
 
     const newFolderHandler = () => actions.onCreateRemoteContent({
       title: 'Create Folder',
@@ -62,7 +66,10 @@ const useSectionEditor = ({
       parentId: addTargetFolderId,
     })
 
-    const existingFolderHandler = () => {}
+    const existingFolderHandler = () => actions.onAddRemoteContent({
+      section,
+      type: 'folder',
+    })
 
     const document = {
       title: 'Google Document',
