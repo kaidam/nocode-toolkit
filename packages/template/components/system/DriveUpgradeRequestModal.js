@@ -29,7 +29,10 @@ const DriveUpgradeRequestModal = ({
 
   const classes = useStyles()
   const onSubmit = useCallback(() => {
-    document.location = GOOGLE_UPGRADE_LOGIN
+    const currentUrl = window.location.href
+    const seperator = currentUrl.indexOf('?') > 0 ? '&' : '?'
+    const redirectUrl = currentUrl + seperator + `initialSnackbarMessage=${encodeURIComponent("Full drive access is now active")}`
+    document.location = GOOGLE_UPGRADE_LOGIN + `?redirectUrl=${encodeURIComponent(redirectUrl)}`
   }, [])
 
   const actions = Actions(useDispatch(), {

@@ -14,6 +14,7 @@ import jobActions from './job'
 import uiActions from './ui'
 import snackbarActions from './snackbar'
 import routerActions from './router'
+import routerSelectors from '../selectors/router'
 import systemSelectors from '../selectors/system'
 import nocodeSelectors from '../selectors/nocode'
 
@@ -184,6 +185,16 @@ const sideEffects = {
 
     if(initialiseResult && initialiseResult.redirect) {
       dispatch(routerActions.navigateTo(initialiseResult.redirect))
+    }
+
+    // check for initial snackbar message
+    const routerParams = routerSelectors.queryParams(getState())
+
+    if(routerParams.initialSnackbarMessage) {
+      dispatch(snackbarActions.setSuccess(routerParams.initialSnackbarMessage))
+      dispatch(routerActions.removeQueryParams({
+        initialSnackbarMessage: true,
+      }))
     }
   }, {
     errorHandler: async (dispatch, getState, error) => {
