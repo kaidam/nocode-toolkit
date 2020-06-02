@@ -1,6 +1,6 @@
 {
   "name": "@nocode-works/store",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Core redux store utils for template and plugins",
   "publishConfig": {
     "access": "public"
