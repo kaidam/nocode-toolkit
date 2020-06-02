@@ -72,10 +72,10 @@ const loaders = {
   updateSection: (getState, id, payload) => axios.put(apiUtils.websiteUrl(getState, `/section/${id}`), payload)
     .then(apiUtils.process),
 
-  editSectionFolder: (getState, id, payload) => axios.put(apiUtils.websiteUrl(getState, `/section/${id}/folder`), payload)
+  addSectionFolder: (getState, section, payload) => axios.post(apiUtils.websiteUrl(getState, `/section/${section}/folder`), payload)
     .then(apiUtils.process),
 
-  resetSectionFolder: (getState, id) => axios.delete(apiUtils.websiteUrl(getState, `/section/${id}/folder`))
+  deleteSectionFolder: (getState, section, id) => axios.delete(apiUtils.websiteUrl(getState, `/section/${section}/folder/${id}`))
     .then(apiUtils.process),
 
   editHomepageSingleton: (getState, payload) => axios.put(apiUtils.websiteUrl(getState, `/homepage/singleton`), payload)
@@ -419,36 +419,6 @@ const sideEffects = {
     dispatch(snackbarActions.setSuccess(`item updated`))
   }),
 
-  editSectionFolder: ({
-    id,
-  }) => wrapper('editSectionFolder', async (dispatch, getState) => {
-    const newFolder = await dispatch(driveActions.getPickerItem({
-      filter: 'folder',
-    }))
-    if(!newFolder) return
-    await loaders.editSectionFolder(getState, id, {
-      content_id: newFolder.id,
-    })
-    await dispatch(jobActions.rebuild({
-      beforeReload: async () => {
-        dispatch(routerActions.navigateTo('root'))
-      }
-    }))
-    dispatch(snackbarActions.setSuccess(`section folder updated`))
-  }),
-
-  resetSectionFolder: ({
-    id,
-  }) => wrapper('resetSectionFolder', async (dispatch, getState) => {
-    await loaders.resetSectionFolder(getState, id)
-    await dispatch(jobActions.rebuild({
-      beforeReload: async () => {
-        dispatch(routerActions.navigateTo('root'))
-      }
-    }))
-    dispatch(snackbarActions.setSuccess(`section folder updated`))
-  }),
-
   openManageFoldersDialog: ({
     section,
   } = {}) => (dispatch, getState) => {
@@ -468,16 +438,26 @@ const sideEffects = {
       type: 'folder',
     }))
     if(!result) return
-    console.log('--------------------------------------------')
-    console.log(section)
-    console.log(result)
+    await loaders.addSectionFolder(getState, section, {
+      id: result.id,
+    })
+    await dispatch(jobActions.rebuild())
+    dispatch(snackbarActions.setSuccess(`section folder added`))
   }),
 
-  deleteManagedFolder: ({
+  removeManagedFolder: ({
     section,
     id,
+    name,
   }) => wrapper('deleteManagedFolder', async (dispatch, getState) => {
-
+    const result = await dispatch(uiActions.waitForConfirmation({
+      title: `Remove ${name}`,
+      message: `Are you sure you want to remove the ${name} folder from this section?`,
+    }))
+    if(!result) return
+    await loaders.deleteSectionFolder(getState, section, id)
+    await dispatch(jobActions.rebuild())
+    dispatch(snackbarActions.setSuccess(`section folder removed`))
   }),
 
   setDefaultAddFolder: ({

@@ -31,8 +31,8 @@ const useSectionEditor = ({
     onCreateRemoteContent: contentActions.createRemoteContent,
     onCreateLocalContent: contentActions.createLocalContent,
     onEditSection: contentActions.editSection,
-    onChangeSectionFolder: contentActions.editSectionFolder,
-    onResetSectionFolder: contentActions.resetSectionFolder,
+    // onChangeSectionFolder: contentActions.editSectionFolder,
+    // onResetSectionFolder: contentActions.resetSectionFolder,
     openManageFoldersDialog: contentActions.openManageFoldersDialog,
   })
 

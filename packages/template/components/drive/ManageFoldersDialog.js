@@ -21,6 +21,9 @@ const useStyles = makeStyles(theme => ({
   margin: {
     marginBottom: theme.spacing(1),
   },
+  button: {
+    marginLeft: theme.spacing(1),
+  }
   
 }))
 
@@ -40,6 +43,7 @@ const ManageFoldersDialog = ({
 
   const actions = Actions(useDispatch(), {
     onAddFolder: contentActions.addManagedFolder,
+    onRemoveFolder: contentActions.removeManagedFolder,
     onCancel: contentActions.closeManageFoldersDialog,
   })
 
@@ -76,7 +80,26 @@ const ManageFoldersDialog = ({
 
     return (
       <div>
+        {
+          !isDefault && (
+            <Button
+              className={ classes.button }
+              size="small"
+              variant="outlined"
+              onClick={ () => {
+                actions.onRemoveFolder({
+                  section,
+                  id: folder.id,
+                  name: folder._data.name,
+                })
+              }}
+            >
+              Remove
+            </Button>
+          )
+        }
         <Button
+          className={ classes.button }
           size="small"
           variant="outlined"
           onClick={ () => {
@@ -85,20 +108,6 @@ const ManageFoldersDialog = ({
         >
           View in drive
         </Button>
-        {
-          !isDefault && (
-            <Button
-              size="small"
-              variant="outlined"
-              onClick={ () => {
-                console.log('--------------------------------------------')
-                console.log('remove')
-              }}
-            >
-              Remove
-            </Button>
-          )
-        }
       </div>
     )
   }, [
