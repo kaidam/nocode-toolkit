@@ -14,6 +14,7 @@ import ConfirmDialog from './Confirm'
 import ContentDialog from '../content/Dialog'
 import DriveDialog from '../drive/Dialog'
 import DrivePicker from '../drive/Picker'
+import DriveUpgradeScopeDialog from '../system/DriveUpgradeRequestModal'
 import ManageFoldersDialog from '../drive/ManageFoldersDialog'
 import UnsplashDialog from '../unsplash/Dialog'
 import SettingsDialog from '../settings/Dialog'
@@ -42,6 +43,7 @@ const DialogLoader = ({
   const formWindow = useSelector(contentSelectors.formWindow)
   const driveWindow = useSelector(driveSelectors.window)
   const drivePicker = useSelector(driveSelectors.picker)
+  const driveUpgradeWindow = useSelector(driveSelectors.upgradeWindow)
   const unsplashWindow = useSelector(unsplashSelectors.window)
   const dialogParams = useSelector(dialogSelectors.dialogParams)
 
@@ -80,6 +82,11 @@ const DialogLoader = ({
       {
         drivePicker && (
           <DrivePicker />
+        )
+      }
+      {
+        driveUpgradeWindow && (
+          <DriveUpgradeScopeDialog />
         )
       }
       {

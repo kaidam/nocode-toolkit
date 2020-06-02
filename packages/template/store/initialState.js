@@ -43,6 +43,7 @@ export const drive = {
   ancestors: [],
   searchActive: false,
   window: null,
+  upgradeWindow: null,
 }
 
 export const unsplash = {

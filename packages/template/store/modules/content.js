@@ -467,6 +467,7 @@ const sideEffects = {
     const result = await dispatch(driveActions.getItem({
       type: 'folder',
     }))
+    if(!result) return
     console.log('--------------------------------------------')
     console.log(section)
     console.log(result)

@@ -76,6 +76,26 @@ const reducers = {
   clearPicker: (state, action) => {
     state.picker = null
   },
+  openUpgradeWindow: (state, action) => {
+    state.upgradeWindow = action.payload
+  },
+  acceptUpgradeWindow: (state, action) => {
+    if(state.upgradeWindow) {
+      state.upgradeWindow.accepted = true
+      state.upgradeWindow.result = action.payload
+    }
+  },
+  cancelUpgradeWindow: (state, action) => {
+    if(state.upgradeWindow) {
+      state.upgradeWindow.accepted = false
+    }
+  },
+  resetUpgradeWindow: (state, action) => {
+    state.upgradeWindow.accepted = null
+  },
+  clearUpgradeWindow: (state, action) => {
+    state.upgradeWindow = null
+  },
 }
 
 const loaders = {
@@ -126,8 +146,39 @@ const sideEffects = {
     dispatch(actions.setAncestors(ancestors))
   }),
 
+  upgradeScope: () => async (dispatch, getState) => {
+    dispatch(actions.openUpgradeWindow({
+      open: true,
+    }))
+    let success = false
+    let result = null
+    while(!success) {
+      try {
+        const confirmed = await dispatch(uiActions.waitForWindow(driveSelectors.upgradeWindow))
+        if(confirmed) {
+          const currentSettings = driveSelectors.upgradeWindow(getState())
+          result = currentSettings.result
+        }
+        success = true
+      } catch(e) {
+        dispatch(actions.resetUpgradeWindow())
+        console.error(e)
+        dispatch(snackbarActions.setError(e.toString()))
+      }
+    }
+    dispatch(actions.clearUpgradeWindow())
+    return result
+  },
+
   // open the finder dialog and return an id (or not if the window was cancelled)
   getDriveItem: (windowProps = {}) => async (dispatch, getState) => {
+    const hasFullDriveAccess = systemSelectors.hasFullDriveAccess(getState())
+
+    if(!hasFullDriveAccess) {
+      await dispatch(actions.upgradeScope())
+      return null
+    }
+
     dispatch(actions.openWindow({
       ...windowProps
     }))
@@ -187,8 +238,7 @@ const sideEffects = {
     type = 'folder',
   } = {}) => async (dispatch, getState) => {
     const hasFullDriveAccess = systemSelectors.hasFullDriveAccess(getState())
-    
-    if(type == 'document') {
+    if(!hasFullDriveAccess && type == 'document') {
       const result = await dispatch(actions.getPickerItem({
         filter: type,
       }))
