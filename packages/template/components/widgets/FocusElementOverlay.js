@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from 'react'
 import classnames from 'classnames'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 
+const HIGHLIGHT_BORDER = `0.5px solid #666`
+
 const useStyles = makeStyles(theme => {
   return {
     root: {
@@ -13,6 +15,10 @@ const useStyles = makeStyles(theme => {
       position: 'absolute',
       zIndex,
       transition: 'background-color 0.2s ease-in',
+    }),
+    border: ({coords, padding, zIndex}) => ({
+      position: 'absolute',
+      zIndex,
     }),
     top: ({coords, padding}) => ({
       width: '100%',
@@ -37,6 +43,34 @@ const useStyles = makeStyles(theme => {
       height: coords.height + (padding.top ? padding.top : 0) + (padding.bottom ? padding.bottom : 0),
       left: '0px',
       top: coords.y - (padding.top ? padding.top : 0),
+    }),
+    borderTop: ({coords, padding}) => ({
+      width: coords.width + (padding.left ? padding.left : 0) + (padding.right ? padding.right : 0),
+      height: 1,
+      left: coords.x - (padding.left ? padding.left : 0),
+      top: coords.y - (padding.top ? padding.top : 0),
+      borderBottom: HIGHLIGHT_BORDER,
+    }),
+    borderBottom: ({coords, padding}) => ({
+      width: coords.width + (padding.left ? padding.left : 0) + (padding.right ? padding.right : 0),
+      height: 1,
+      left: coords.x - (padding.left ? padding.left : 0),
+      top: coords.y + (padding.bottom ? padding.bottom : 0) + coords.height,
+      borderTop: HIGHLIGHT_BORDER,
+    }),
+    borderLeft: ({coords, padding}) => ({
+      width: 1,
+      height: coords.height + 1 + (padding.top ? padding.top : 0) + (padding.bottom ? padding.bottom : 0),
+      left: coords.x - (padding.left ? padding.left : 0),
+      top: coords.y - (padding.top ? padding.top : 0),
+      borderRight: HIGHLIGHT_BORDER,
+    }),
+    borderRight: ({coords, padding}) => ({
+      width: 1,
+      height: coords.height + 1 + (padding.top ? padding.top : 0) + (padding.bottom ? padding.bottom : 0),
+      left: coords.x + (padding.left ? padding.left : 0) + coords.width,
+      top: coords.y - (padding.top ? padding.top : 0),
+      borderLeft: HIGHLIGHT_BORDER,
     }),
   }
 })
@@ -93,6 +127,10 @@ const FocusElementOverlay = ({
       <div className={ classnames(classes.panel, classes.right) }></div>
       <div className={ classnames(classes.panel, classes.bottom) }></div>
       <div className={ classnames(classes.panel, classes.left) }></div>
+      <div className={ classnames(classes.border, classes.borderTop) }></div>
+      <div className={ classnames(classes.border, classes.borderRight) }></div>
+      <div className={ classnames(classes.border, classes.borderBottom) }></div>
+      <div className={ classnames(classes.border, classes.borderLeft) }></div>
     </div>
   )
 }
