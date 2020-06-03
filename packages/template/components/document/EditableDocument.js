@@ -58,7 +58,7 @@ const EditableDocument = ({
 }) => {
 
   const editButtonRef = useRef(null)
-  const addContentRef = useRef()
+  const addContentRef = useRef(null)
   const classes = useStyles()
   const context = useContext(OnboardingContext)
 
@@ -106,8 +106,15 @@ const EditableDocument = ({
         ref: editButtonRef,
         padding: 10,
       },
+      addContent: {
+        id: 'addContent',
+        ref: addContentRef,
+        padding: 10,
+      },
     })
-  }, [])
+  }, [
+    context.currentStep,
+  ])
   
   return (
     <div className={ rootClassname }>
