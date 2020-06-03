@@ -17,12 +17,13 @@ const useIconButton = ({
   icon,
   title,
   color = 'inherit',
+  useRef,
 }) => {
   const classes = useStyles()
   const getAddButton = useCallback((onClick) => {
     const Icon = icons[icon]
     return (
-      <div className={ classes.iconContainer }>
+      <div className={ classes.iconContainer } ref={ useRef }>
         <Tooltip title={ title } placement="top">
           <IconButton
             size="small"

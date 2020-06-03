@@ -1,7 +1,8 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react'
 import { useSelector, useStore, useDispatch } from 'react-redux'
 import Promise from 'bluebird'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
 
 import Button from '@material-ui/core/Button'
 import Popper from '@material-ui/core/Popper'
@@ -102,6 +103,9 @@ const OnboardingWizard = ({
   const store = useStore()
   const dispatch = useDispatch()
   const website = useSelector(systemSelectors.website)
+
+  const theme = useTheme()
+  const isBigScreen = useMediaQuery(theme.breakpoints.up('md'))
 
   const processedSteps = useRef({})
 
@@ -244,12 +248,16 @@ const OnboardingWizard = ({
         } :
         focusElement.padding
 
+      const description = isBigScreen ?
+        currentStep.description :
+        currentStep.smallDescription
+
       const infoContent = (
         <>
           <DialogTitle>{ currentStep.title } ({ stepTitle })</DialogTitle>
           <DialogContent>
             {
-              (currentStep.description || []).map((text, i) => {
+              (description || []).map((text, i) => {
                 return (
                   <DialogContentText key={ i }>{ text }</DialogContentText>
                 )
@@ -298,7 +306,7 @@ const OnboardingWizard = ({
               contentRef={ focusElement.ref }
               padding={ padding }
               zIndex={ 1301 }
-              onClick={ cancelOnboarding }
+              disableClick={ currentStep.disableClick ? true : false }
             />
           </Hidden>
           <Hidden mdUp>

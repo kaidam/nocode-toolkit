@@ -57,7 +57,8 @@ const EditableDocument = ({
   quickstart = false,
 }) => {
 
-  const buttonRef = useRef(null)
+  const editButtonRef = useRef(null)
+  const addWidgetsRef = useRef(null)
   const addContentRef = useRef()
   const classes = useStyles()
   const context = useContext(OnboardingContext)
@@ -94,6 +95,7 @@ const EditableDocument = ({
     icon: 'add',
     title: 'Add Widgets' + widgetTitleAppend,
     color: 'secondary',
+    useRef: addWidgetsRef,
   })
 
   const rootClassname = classnames(classes.root, className)
@@ -103,7 +105,12 @@ const EditableDocument = ({
     setTimeout(() => {
       context.setFocusElement({
         id: 'editDocument',
-        ref: buttonRef,
+        ref: editButtonRef,
+        padding: 10,
+      })
+      context.setFocusElement({
+        id: 'addWidgets',
+        ref: addWidgetsRef,
         padding: 10,
       })
     }, 1000)
@@ -148,7 +155,7 @@ const EditableDocument = ({
               }}
             >
               <div>
-                <span ref={ buttonRef }>
+                <span ref={ editButtonRef }>
                   edit document
                 </span>
               </div>

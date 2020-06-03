@@ -7,7 +7,10 @@ const HIGHLIGHT_BORDER = `0.5px solid #666`
 const useStyles = makeStyles(theme => {
   return {
     root: {
-      cursor: 'pointer',
+      
+    },
+    clicker: {
+      
     },
     panel: ({coords, padding, zIndex}) => ({
       backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -72,6 +75,14 @@ const useStyles = makeStyles(theme => {
       top: coords.y - (padding.top ? padding.top : 0),
       borderLeft: HIGHLIGHT_BORDER,
     }),
+    disabled: ({coords, padding, zIndex}) => ({
+      position: 'absolute',
+      zIndex,
+      left: coords.x - (padding.left ? padding.left : 0),
+      top: coords.y - (padding.top ? padding.top : 0),
+      width: coords.width + (padding.left ? padding.left : 0) + (padding.right ? padding.right : 0),
+      height: coords.height + 1 + (padding.top ? padding.top : 0) + (padding.bottom ? padding.bottom : 0),
+    }),
   }
 })
 
@@ -80,6 +91,7 @@ const FocusElementOverlay = ({
   padding = {},
   zIndex = 1300,
   onClick,
+  disableClick,
 }) => {
   const [ windowSize, setWindowSize ] = useState(null)
   const containerRef = useRef()
@@ -122,15 +134,22 @@ const FocusElementOverlay = ({
   if(!el) return null
   
   return (
-    <div className={ classes.root } ref={ containerRef } onClick={ onClick }>
-      <div className={ classnames(classes.panel, classes.top) }></div>
-      <div className={ classnames(classes.panel, classes.right) }></div>
-      <div className={ classnames(classes.panel, classes.bottom) }></div>
-      <div className={ classnames(classes.panel, classes.left) }></div>
-      <div className={ classnames(classes.border, classes.borderTop) }></div>
-      <div className={ classnames(classes.border, classes.borderRight) }></div>
-      <div className={ classnames(classes.border, classes.borderBottom) }></div>
-      <div className={ classnames(classes.border, classes.borderLeft) }></div>
+    <div className={ classes.root }>
+      <div className={ classes.clicker } onClick={ onClick } ref={ containerRef }>
+        <div className={ classnames(classes.panel, classes.top) }></div>
+        <div className={ classnames(classes.panel, classes.right) }></div>
+        <div className={ classnames(classes.panel, classes.bottom) }></div>
+        <div className={ classnames(classes.panel, classes.left) }></div>
+        <div className={ classnames(classes.border, classes.borderTop) }></div>
+        <div className={ classnames(classes.border, classes.borderRight) }></div>
+        <div className={ classnames(classes.border, classes.borderBottom) }></div>
+        <div className={ classnames(classes.border, classes.borderLeft) }></div>
+      </div>
+      {
+        disableClick && (
+          <div className={ classes.disabled }></div>
+        )
+      }
     </div>
   )
 }
