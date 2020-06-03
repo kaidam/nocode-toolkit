@@ -34,6 +34,7 @@ const App = ({
   const initialiseError = useSelector(systemSelectors.initialiseError)
   const quickstartWindow = useSelector(uiSelectors.quickstartWindow)
   const accessStatus = useSelector(systemSelectors.driveAccessStatus)
+  const website = useSelector(systemSelectors.website)
 
   // this allows us to customize the loading message
   // as things are initialised
@@ -100,7 +101,7 @@ const App = ({
     </ThemeContainer>
   )
 
-  if(showUI) {
+  if(showUI && website && website.meta && website.meta.onboardingActive) {
     return (
       <Suspense>
         <OnboardingWizard>

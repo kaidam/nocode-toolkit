@@ -112,6 +112,13 @@ const OnboardingWizard = ({
   const [ currentStep, setCurrentStep ] = useState(null)
   const [ arrowRef, setArrowRef ] = React.useState(null)
 
+  const totalSteps = onboardingConfig ? onboardingConfig.steps.filter(s => s.type == 'focus').length : 0
+  const currentIndex = currentStep && onboardingConfig ? onboardingConfig.steps.findIndex(step => step.id == currentStep.id) : 0
+
+  const adjustedCurrentIndex = onboardingConfig ? onboardingConfig.steps.filter((s, i) => s.type == 'focus' && i < currentIndex).length : 0
+
+  const stepTitle = `${adjustedCurrentIndex + 1} of ${totalSteps}`
+
   const onSetFocusElement = useCallback((element) => {
     if(!currentStep || currentStep.element != element.id) return
     setFocusElement(element)
@@ -137,7 +144,6 @@ const OnboardingWizard = ({
       await currentStep.cleanup(store.dispatch, store.getState)
     }
     setFocusElement({})
-    const currentIndex = onboardingConfig.steps.findIndex(step => step.id == currentStep.id)
     if(currentIndex >= onboardingConfig.steps.length - 1) {
       cancelOnboarding()
       return
@@ -146,6 +152,7 @@ const OnboardingWizard = ({
   }, [
     onboardingConfig,
     currentStep,
+    currentIndex,
     cancelOnboarding,
   ])
 
@@ -239,7 +246,7 @@ const OnboardingWizard = ({
 
       const infoContent = (
         <>
-          <DialogTitle>{ currentStep.title }</DialogTitle>
+          <DialogTitle>{ currentStep.title } ({ stepTitle })</DialogTitle>
           <DialogContent>
             {
               (currentStep.description || []).map((text, i) => {
@@ -277,6 +284,9 @@ const OnboardingWizard = ({
                   enabled: true,
                   element: arrowRef,
                 },
+                offset: {
+                  offset: currentStep.offset || '0',
+                }
               }}
             >
               <span className={classes.arrow} ref={setArrowRef} />
