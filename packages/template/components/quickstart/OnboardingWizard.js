@@ -120,16 +120,22 @@ const OnboardingWizard = ({
   ])
 
   const cancelOnboarding = useCallback(async () => {
+    if(currentStep && currentStep.cleanup) {
+      await currentStep.cleanup(store.dispatch, store.getState)
+    }
     setCurrentStep(null)
     setFocusElement({})
     await dispatch(systemActions.updateWebsiteMeta({
       onboardingActive: false,
     }))
   }, [
-
+    currentStep,
   ])
 
   const incrementStep = useCallback(async () => {
+    if(currentStep && currentStep.cleanup) {
+      await currentStep.cleanup(store.dispatch, store.getState)
+    }
     setFocusElement({})
     const currentIndex = onboardingConfig.steps.findIndex(step => step.id == currentStep.id)
     if(currentIndex >= onboardingConfig.steps.length - 1) {
@@ -250,7 +256,7 @@ const OnboardingWizard = ({
             {
               !currentStep.noSubmit && (
                 <Button onClick={ handleCurrentStep } color="secondary">
-                  { currentStep.submitTitle }
+                  Next
                 </Button>
               )
             }
@@ -282,6 +288,7 @@ const OnboardingWizard = ({
               contentRef={ focusElement.ref }
               padding={ padding }
               zIndex={ 1301 }
+              onClick={ cancelOnboarding }
             />
           </Hidden>
           <Hidden mdUp>

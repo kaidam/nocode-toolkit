@@ -1,7 +1,8 @@
-import React, { useRef } from 'react'
+import React, { useContext, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import classnames from 'classnames'
 
+import OnboardingContext from '../contexts/onboarding'
 import MenuButton from '../widgets/MenuButton'
 import driveUtils from '../../utils/drive'
 
@@ -53,10 +54,13 @@ const EditableDocument = ({
   className,
   addContentFilter,
   widgetTitleAppend = '',
+  quickstart = false,
 }) => {
 
+  const buttonRef = useRef(null)
   const addContentRef = useRef()
   const classes = useStyles()
+  const context = useContext(OnboardingContext)
 
   const isFolder = driveUtils.isFolder(node)
   const openUrl = driveUtils.getItemUrl(node)
@@ -93,6 +97,19 @@ const EditableDocument = ({
   })
 
   const rootClassname = classnames(classes.root, className)
+
+  useEffect(() => {
+    if(!quickstart) return
+    setTimeout(() => {
+      context.setFocusElement({
+        id: 'editDocument',
+        ref: buttonRef,
+        padding: 10,
+      })
+    }, 1000)
+  }, [
+    context.currentStep,
+  ])
   
   return (
     <div className={ rootClassname }>
@@ -126,8 +143,15 @@ const EditableDocument = ({
               href={ openUrl }
               target="_blank"
               className={ classes.editLink }
+              onClick={ (e) => {
+                context.progressOnboarding()
+              }}
             >
-              <div>edit document</div>
+              <div>
+                <span ref={ buttonRef }>
+                  edit document
+                </span>
+              </div>
             </a>
           )
         }

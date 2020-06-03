@@ -286,7 +286,7 @@ const useMenuButton = ({
 
   let useParentEl = subAnchorEl
 
-  if(parentAnchorEl) useParentEl = useParentEl
+  if(parentAnchorEl) useParentEl = parentAnchorEl
   if(useParentEl && attachAnchorEl) useParentEl = attachAnchorEl
   
   const mainMenuOpen = useParentEl && !subItems ? true : false

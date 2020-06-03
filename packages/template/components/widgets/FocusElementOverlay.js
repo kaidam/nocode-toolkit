@@ -5,7 +5,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles'
 const useStyles = makeStyles(theme => {
   return {
     root: {
-      
+      cursor: 'pointer',
     },
     panel: ({coords, padding, zIndex}) => ({
       backgroundColor: 'rgba(0, 0, 0, 0)',
@@ -45,6 +45,7 @@ const FocusElementOverlay = ({
   contentRef,
   padding = {},
   zIndex = 1300,
+  onClick,
 }) => {
   const [ windowSize, setWindowSize ] = useState(null)
   const containerRef = useRef()
@@ -87,7 +88,7 @@ const FocusElementOverlay = ({
   if(!el) return null
   
   return (
-    <div className={ classes.root } ref={ containerRef }>
+    <div className={ classes.root } ref={ containerRef } onClick={ onClick }>
       <div className={ classnames(classes.panel, classes.top) }></div>
       <div className={ classnames(classes.panel, classes.right) }></div>
       <div className={ classnames(classes.panel, classes.bottom) }></div>
