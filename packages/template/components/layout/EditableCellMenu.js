@@ -211,7 +211,7 @@ const EditableCellMenu = ({
       top: menuAnchor.y,
     } : null,
     getItems: getMenuItems,
-    header: `Widget: ${menuAnchor.title}`,
+    header: `Widget : ${menuAnchor.title}`,
     onClick: onReset,
     onClose,
   })

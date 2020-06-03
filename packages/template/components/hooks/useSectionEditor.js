@@ -124,15 +124,6 @@ const useSectionEditor = ({
   const getSettingsItems = useCallback(() => {
     return [
 
-
-      {
-        title: 'Add Content',
-        icon: icons.add,
-        items: getAddItems(),
-      },
-
-      '-',
-
       isAdvancedDrive ? {
         title: 'Manage Drive Folders',
         icon: icons.folder,

@@ -318,7 +318,7 @@ const document = createSelector(
     const externals = (route.externals || []).map(id => externalMap[id])
     const annotation = annotations[node.id] || {}
     return {
-      node,
+      node: Object.assign({}, node, {route}),
       route,
       annotation,
       html: externals[0],

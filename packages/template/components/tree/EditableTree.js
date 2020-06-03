@@ -82,12 +82,12 @@ const EditableTree = ({
 
   const getSettingsButton = useIconButton({
     icon: 'edit',
-    title: 'Edit',
+    title: `${sectionTitle} : Settings`,
   })
 
   const getAddButton = useIconButton({
     icon: 'add',
-    title: 'Add Content',
+    title: `${sectionTitle} : Add`,
     color: 'secondary',
   })
 
@@ -99,13 +99,13 @@ const EditableTree = ({
           className={ classes.menuItem }
         >
           <MenuButton
-            header={ sectionTitle }
+            header={ `${sectionTitle} : Settings` }
             getButton={ getSettingsButton }
             getItems={ getSettingsItems }
           />
           <MenuButton
             className={ classes.itemText }
-            header={ sectionTitle }
+            header={ `${sectionTitle} : Settings` }
             getButton={ getTitleSettingsButton }
             getItems={ getSettingsItems }
           />

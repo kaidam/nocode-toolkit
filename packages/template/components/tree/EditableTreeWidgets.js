@@ -93,7 +93,7 @@ const EditableTreeWidgets = ({
 
   const getAddButton = useIconButton({
     icon: 'add',
-    title: 'Add Widgets',
+    title: 'Widgets : Add',
     color: 'secondary',
   })
 

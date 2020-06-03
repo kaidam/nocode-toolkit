@@ -88,12 +88,12 @@ const EditableDocument = ({
 
   const getEditButton = useIconButton({
     icon: 'edit',
-    title: 'Edit',
+    title: `${node.name} : Settings`,
   })
 
   const getAddButton = useIconButton({
     icon: 'add',
-    title: 'Add Widgets' + widgetTitleAppend,
+    title: `${node.name} : ${driveUtils.isFolder(node) ? "Add" : "Widgets" + widgetTitleAppend}`,
     color: 'secondary',
     useRef: addWidgetsRef,
   })
@@ -120,7 +120,7 @@ const EditableDocument = ({
     <div className={ rootClassname }>
       <div className={ classnames(classes.iconSection, classes.leftIcons) }>
         <MenuButton
-          header={ node.name }
+          header={ `${node.name} : Settings` }
           getButton={ getEditButton }
           getItems={ getEditorItems }
         />
@@ -166,7 +166,7 @@ const EditableDocument = ({
       </div>
       <div className={ classnames(classes.iconSection, classes.rightIcons) }>
         <MenuButton
-          header={ driveUtils.isFolder(node) ? "Add" : "Widgets" }
+          header={ `${node.name} : ${driveUtils.isFolder(node) ? "Add" : "Widgets"}` }
           getButton={ getAddButton }
           getItems={ getAddItems }
         />
