@@ -1,11 +1,9 @@
-import React, { useContext, useRef, useEffect } from 'react'
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import OnboardingContext from '../contexts/onboarding'
 
 import icons from '../../icons'
 
-const EditIcon = icons.edit
 const OpenIcon = icons.open
 
 const useStyles = makeStyles(theme => ({
@@ -29,22 +27,7 @@ const useStyles = makeStyles(theme => ({
 const DefaultBody = ({
   onClick,
 }) => {
-  const buttonRef = useRef(null)
   const classes = useStyles()
-  const context = useContext(OnboardingContext)
-
-  useEffect(() => {
-    setTimeout(() => {
-      context.setFocusElement({
-        id: 'defaultBody',
-        ref: buttonRef,
-        handler: onClick,
-        padding: 10,
-      })
-    }, 1000)
-  }, [
-    context.currentStep,
-  ])
 
   return (
     <div className={ classes.root }>
@@ -52,14 +35,12 @@ const DefaultBody = ({
       <p>Any content you add to this document will appear on this page.</p>
       <div>
         <Button
-          ref={ buttonRef }
           color="secondary"
           variant="contained"
           size="small"
           onClick={ (e) => {
             e.preventDefault()
             e.stopPropagation()
-            context.progressOnboarding()
             onClick()
           }}
         >

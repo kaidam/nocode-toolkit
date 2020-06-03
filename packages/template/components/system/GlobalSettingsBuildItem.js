@@ -33,13 +33,13 @@ const GlobalSettingsBuildItem = ({
   }
 
   useEffect(() => {
-    setTimeout(() => {
-      context.setFocusElement({
+    context.setFocusElements({
+      buildButton: {
         id: 'buildButton',
         ref: buttonRef,
         handler: onClick,
-      })
-    }, 500)
+      }
+    })
   }, [
     context.currentStep,
   ])

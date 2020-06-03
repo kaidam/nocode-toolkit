@@ -102,21 +102,19 @@ const EditableDocument = ({
 
   useEffect(() => {
     if(!quickstart) return
-    setTimeout(() => {
-      context.setFocusElement({
+    context.setFocusElements({
+      editDocument: {
         id: 'editDocument',
         ref: editButtonRef,
         padding: 10,
-      })
-      context.setFocusElement({
+      },
+      addWidgets: {
         id: 'addWidgets',
         ref: addWidgetsRef,
         padding: 10,
-      })
-    }, 1000)
-  }, [
-    context.currentStep,
-  ])
+      },
+    })
+  }, [])
   
   return (
     <div className={ rootClassname }>

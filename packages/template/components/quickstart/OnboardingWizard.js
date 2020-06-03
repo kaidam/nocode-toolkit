@@ -1,6 +1,5 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { useSelector, useStore, useDispatch } from 'react-redux'
-import Promise from 'bluebird'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 
@@ -22,9 +21,6 @@ import systemActions from '../../store/modules/system'
 import OnboardingContext from '../contexts/onboarding'
 
 import library from '../../library'
-
-const ONBOARDING_WAIT_DELAY = 10
-
 
 const useStyles = makeStyles(theme => {
   return {
@@ -107,138 +103,92 @@ const OnboardingWizard = ({
   const theme = useTheme()
   const isBigScreen = useMediaQuery(theme.breakpoints.up('md'))
 
-  const processedSteps = useRef({})
-
-  const [ focusElement, setFocusElement ] = useState({})
-  const [ active, setActive ] = useState(false)
+  const focusElements = useRef({})
+  const [ _, setFocusElementCount ] = useState(0)
   const [ onboardingConfig, setOnboardingConfig ] = useState(null)
-  const [ triggerStep, setTriggerStep ] = useState(null)
-  const [ currentStep, setCurrentStep ] = useState(null)
+
+  const [ currentStepIndex, setCurrentStepIndex ] = useState(null)
+  const [ targetStepIndex, setTargetStepIndex ] = useState(null)
   const [ arrowRef, setArrowRef ] = React.useState(null)
 
+  /*
+  
+    work out progress index
+  
+  */
+  const currentStep = onboardingConfig ? onboardingConfig.steps[currentStepIndex] : null
   const totalSteps = onboardingConfig ? onboardingConfig.steps.filter(s => s.type == 'focus').length : 0
-  const currentIndex = currentStep && onboardingConfig ? onboardingConfig.steps.findIndex(step => step.id == currentStep.id) : 0
+  const adjustedCurrentIndex = onboardingConfig ? onboardingConfig.steps.filter((s, i) => s.type == 'focus' && i < currentStepIndex).length : 0
+  const isLastStep = (adjustedCurrentIndex + 1) >= totalSteps
+  const stepTitle = `Tip ${adjustedCurrentIndex + 1} of ${totalSteps}`
 
-  const adjustedCurrentIndex = onboardingConfig ? onboardingConfig.steps.filter((s, i) => s.type == 'focus' && i < currentIndex).length : 0
+  const focusElement = currentStep ? focusElements.current[currentStep.element] : null
 
-  const stepTitle = `${adjustedCurrentIndex + 1} of ${totalSteps}`
+  /*
+  
+    triggered by the various UI elements
+  
+  */
+  const onSetFocusElements = (elements) => {
+    setTimeout(() => {
+      const newElements = Object.assign({}, focusElements.current, elements)
+      focusElements.current = newElements
+      setFocusElementCount(Object.keys(newElements).length)
+    }, 1)
+  }
 
-  const onSetFocusElement = useCallback((element) => {
-    if(!currentStep || currentStep.element != element.id) return
-    setFocusElement(element)
-  }, [
-    currentStep,
-  ])
+  const cancelOnboarding = () => {
+    setTargetStepIndex(onboardingConfig.steps.length)
+  }
 
-  const cancelOnboarding = useCallback(async () => {
-    if(currentStep && currentStep.cleanup) {
-      await currentStep.cleanup(store.dispatch, store.getState)
-    }
-    setCurrentStep(null)
-    setFocusElement({})
-    await dispatch(systemActions.updateWebsiteMeta({
-      onboardingActive: false,
-    }))
-  }, [
-    currentStep,
-  ])
-
-  const incrementStep = useCallback(async () => {
-    if(currentStep && currentStep.cleanup) {
-      await currentStep.cleanup(store.dispatch, store.getState)
-    }
-    setFocusElement({})
-    if(currentIndex >= onboardingConfig.steps.length - 1) {
+  const progressOnboarding = () => {
+    if(currentStepIndex >= onboardingConfig.steps.length - 1) {
       cancelOnboarding()
       return
     }
-    setTriggerStep(onboardingConfig.steps[currentIndex + 1])
-  }, [
-    onboardingConfig,
-    currentStep,
-    currentIndex,
-    cancelOnboarding,
-  ])
+    setTargetStepIndex(currentStepIndex + 1)
+  }
 
-  const progressOnboarding = useCallback(() => {
-    if(currentStep.noProgress) return
-    incrementStep()
-  }, [
-    currentStep,
-    incrementStep,
-  ])
-
-  // this triggers the next step from the onboarding overlay
-  // and not the UI element itself
-  // if the current focus element has a handler - run it
-  const handleCurrentStep = useCallback(() => {
-    if(currentStep && currentStep.type == 'focus' && focusElement) {
-      if(focusElement.handler) {
-        focusElement.handler()
+  useEffect(() => {
+    const handler = async () => {
+      if(onboardingConfig && targetStepIndex >= onboardingConfig.steps.length) {
+        setCurrentStepIndex(targetStepIndex)
+        if(currentStep && currentStep.cleanup) {
+          await currentStep.cleanup(store.dispatch, store.getState)
+        }
+        await dispatch(systemActions.updateWebsiteMeta({
+          onboardingActive: false,
+        }))
+      }
+      else {
+        if(currentStep && currentStep.cleanup) {
+          await currentStep.cleanup(store.dispatch, store.getState)
+        }
+        const nextStep = onboardingConfig ? onboardingConfig.steps[targetStepIndex] : null
+        if(nextStep && nextStep.initialise) {
+          await nextStep.initialise(store.dispatch, store.getState)
+        }
+        setCurrentStepIndex(targetStepIndex)
       }
     }
-    progressOnboarding()
+    handler()
   }, [
-    store,
-    focusElement,
-    currentStep,
-    progressOnboarding,
+    targetStepIndex,
   ])
 
   useEffect(() => {
     if(!website || !website.meta) return
-    setActive(website.meta.onboardingActive || false)
     const config = library.onboarding[website.meta.quickstart] || library.onboarding.default
     setOnboardingConfig(config)
-    setTriggerStep(config.steps[0])
+    setTargetStepIndex(0)
   }, [
     website,
   ])
 
-  useEffect(() => {
-    if(!triggerStep) return
-    if(processedSteps.current[triggerStep.id]) return
-    processedSteps.current[triggerStep.id] = true
-    const handler = async () => {
-      if(triggerStep.initialise) {
-        await triggerStep.initialise(store.dispatch, store.getState)
-      }
-      setCurrentStep(triggerStep)
-    }
-    handler()
-  }, [
-    triggerStep,
-  ])
-
-  useEffect(() => {
-    if(!currentStep) return
-    const handler = async () => {
-      if(currentStep.type == 'wait') { 
-        let passed = false
-        while(!passed) {
-          passed = await currentStep.handler(store.dispatch, store.getState)
-          if(!passed) await Promise.delay(ONBOARDING_WAIT_DELAY)
-        }
-        if(passed.cancel) {
-          cancelOnboarding()
-        }
-        else {
-          incrementStep()
-        }
-        
-      }
-    }
-    handler()
-  }, [
-    currentStep,
-  ])
-
-  if(!active) return children
-
   let info = null
 
   if(currentStep && focusElement && currentStep.element == focusElement.id) {
-    if(focusElement.ref && focusElement.ref.current) {
+    if(targetStepIndex == currentStepIndex && focusElement.ref && focusElement.ref.current) {
       const padding = typeof(focusElement.padding) === 'number' ?
         {
           left: focusElement.padding,
@@ -254,7 +204,7 @@ const OnboardingWizard = ({
 
       const infoContent = (
         <>
-          <DialogTitle>{ currentStep.title } ({ stepTitle })</DialogTitle>
+          <DialogTitle>{ stepTitle }: { currentStep.title }</DialogTitle>
           <DialogContent>
             {
               (description || []).map((text, i) => {
@@ -264,18 +214,24 @@ const OnboardingWizard = ({
               })
             }
           </DialogContent>
-          <DialogActions>
-            <Button onClick={ cancelOnboarding }>
-              Skip
-            </Button>
-            {
-              !currentStep.noSubmit && (
-                <Button onClick={ handleCurrentStep } color="secondary">
+          {
+            isLastStep ? (
+              <DialogActions>
+                <Button onClick={ progressOnboarding } color="secondary">
+                  Finish
+                </Button>
+              </DialogActions>
+            ) : (
+              <DialogActions>
+                <Button onClick={ cancelOnboarding }>
+                  Skip
+                </Button>
+                <Button onClick={ progressOnboarding } color="secondary">
                   Next
                 </Button>
-              )
-            }
-          </DialogActions>
+              </DialogActions>
+            )
+          }
         </>
       )
 
@@ -326,7 +282,7 @@ const OnboardingWizard = ({
     <OnboardingContext.Provider
       value={{
         currentStep,
-        setFocusElement: onSetFocusElement,
+        setFocusElements: onSetFocusElements,
         progressOnboarding,
       }}
     >

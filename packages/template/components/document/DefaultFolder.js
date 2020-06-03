@@ -1,7 +1,6 @@
-import React, { useRef, useEffect, useContext } from 'react'
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
-import OnboardingContext from '../contexts/onboarding'
 
 import icons from '../../icons'
 
@@ -32,9 +31,7 @@ const DefaultFolder = ({
   node,
   addContentFilter,
 }) => {
-  const buttonRef = useRef(null)
   const classes = useStyles()
-  const context = useContext(OnboardingContext)
 
   const {
     getAddContentItems,
@@ -64,33 +61,18 @@ const DefaultFolder = ({
     onClick = menuButton.onClick
   }
 
-  useEffect(() => {
-    setTimeout(() => {
-      context.setFocusElement({
-        id: 'defaultFolder',
-        ref: buttonRef,
-        handler: onClick,
-        padding: 10,
-      })
-    }, 1000)
-  }, [
-    context.currentStep,
-  ])
-
   return (
     <div className={ classes.root }>
       <h3 className={ classes.title }>Your Google folder is ready!</h3>
       <p>Any content you add to this folder will appear on this page.</p>
       <div>
         <Button
-          ref={ buttonRef }
           color="secondary"
           variant="contained"
           size="small"
           onClick={ (e) => {
             e.preventDefault()
             e.stopPropagation()
-            context.progressOnboarding()
             onClick(e)
           }}
         >
