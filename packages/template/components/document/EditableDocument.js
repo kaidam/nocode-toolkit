@@ -58,7 +58,6 @@ const EditableDocument = ({
 }) => {
 
   const editButtonRef = useRef(null)
-  const addWidgetsRef = useRef(null)
   const addContentRef = useRef()
   const classes = useStyles()
   const context = useContext(OnboardingContext)
@@ -95,7 +94,6 @@ const EditableDocument = ({
     icon: 'add',
     title: `${node.name} : ${driveUtils.isFolder(node) ? "Add" : "Widgets" + widgetTitleAppend}`,
     color: 'secondary',
-    useRef: addWidgetsRef,
   })
 
   const rootClassname = classnames(classes.root, className)
@@ -106,11 +104,6 @@ const EditableDocument = ({
       editDocument: {
         id: 'editDocument',
         ref: editButtonRef,
-        padding: 10,
-      },
-      addWidgets: {
-        id: 'addWidgets',
-        ref: addWidgetsRef,
         padding: 10,
       },
     })

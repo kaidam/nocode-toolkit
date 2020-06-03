@@ -8,6 +8,7 @@ const MenuButton = ({
   getButton,
   // should we return a fragment or a div
   asFragment = false,
+  useRef,
   ...props
 }) => {
 
@@ -34,7 +35,7 @@ const MenuButton = ({
   }
   else {
     return (
-      <div className={ className }>
+      <div className={ className } ref={ useRef }>
         { button }
         { menus }
       </div>

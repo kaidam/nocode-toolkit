@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useContext, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
-import Divider from '@material-ui/core/Divider'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+
+import OnboardingContext from '../contexts/onboarding'
 
 const useStyles = makeStyles(theme => ({
   list: {
@@ -17,27 +18,39 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const GlobalSettingsItem = ({
+const GlobalSettingsSettingsItem = ({
   item,
   setOpen,
-  useRef,
 }) => {
 
+  const buttonRef = useRef(null)
   const classes = useStyles()
+  const context = useContext(OnboardingContext)
 
-  if(item === '-') {
-    return (
-      <Divider className={ classes.divider } />
-    )
+  const onClick = () => {
+    if(item.handler) item.handler()
+    setOpen(false)
   }
+
+  useEffect(() => {
+    context.setFocusElements({
+      buildButton: {
+        id: 'settingsButton',
+        ref: buttonRef,
+        handler: onClick,
+      }
+    })
+  }, [
+    context.currentStep,
+  ])
 
   return (
     <ListItem
       button
-      ref={ useRef }
+      ref={ buttonRef }
       onClick={ () => {
-        if(item.handler) item.handler()
-        setOpen(false)
+        context.progressOnboarding()
+        onClick()
       }}
     >
       {
@@ -71,4 +84,4 @@ const GlobalSettingsItem = ({
   )
 }
 
-export default GlobalSettingsItem
+export default GlobalSettingsSettingsItem

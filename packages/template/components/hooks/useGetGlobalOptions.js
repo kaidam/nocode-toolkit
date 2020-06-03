@@ -74,6 +74,7 @@ const useGetGlobalOptions = ({
     },
     '-',
     {
+      id: 'settings',
       title: 'Settings',
       icon: icons.settings,
       handler: () => onOpenSettingsPanel('general'),

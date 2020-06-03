@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useContext, useRef, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -14,7 +14,8 @@ import uiActions from '../../store/modules/ui'
 import useGetGlobalOptions from '../hooks/useGetGlobalOptions'
 
 import GlobalSettingsItem from './GlobalSettingsItem'
-import GlobalSettingsBuildItem from './GlobalSettingsBuildItem'
+
+import OnboardingContext from '../contexts/onboarding'
 
 import icons from '../../icons'
 
@@ -36,6 +37,16 @@ const GlobalSettings = ({
 }) => {
   const classes = useStyles()
 
+  const settingsRef = useRef(null)
+  const buildRef = useRef(null)
+
+  const refs = {
+    settings: settingsRef,
+    build: buildRef,
+  }
+
+  const context = useContext(OnboardingContext)
+
   const actions = Actions(useDispatch(), {
     onSetPreviewMode: uiActions.setPreviewMode,
     onSetSettingsOpen: uiActions.setSettingsOpen,
@@ -52,6 +63,21 @@ const GlobalSettings = ({
 
   const globalOptions = useMemo(() => getGlobalOptions(), [
     getGlobalOptions,
+  ])
+
+  useEffect(() => {
+    context.setFocusElements({
+      buildButton: {
+        id: 'buildButton',
+        ref: buildRef,
+      },
+      settingsButton: {
+        id: 'settingsButton',
+        ref: settingsRef,
+      }
+    })
+  }, [
+    context.currentStep,
   ])
 
   return (
@@ -90,14 +116,12 @@ const GlobalSettings = ({
         >
           {
             globalOptions.map((item, i) => {
-              const ItemComponent = item.id == 'build' ?
-                GlobalSettingsBuildItem :
-                GlobalSettingsItem
               return (
-                <ItemComponent
+                <GlobalSettingsItem
                   key={ i }
                   item={ item }
                   setOpen={ actions.onSetSettingsOpen }
+                  useRef={ item.id ? refs[item.id] : null }
                 />
               )
             })

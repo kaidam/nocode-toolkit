@@ -3,6 +3,7 @@ import { useSelector, useStore, useDispatch } from 'react-redux'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 
+import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import Popper from '@material-ui/core/Popper'
 import Paper from '@material-ui/core/Paper'
@@ -88,6 +89,16 @@ const useStyles = makeStyles(theme => {
         borderStyle: 'solid',
       },
     },
+    title: {
+      margin: 0,
+      padding: theme.spacing(2),
+    },
+    stepTitle: {
+      position: 'absolute',
+      right: theme.spacing(2),
+      top: theme.spacing(1),
+      color: theme.palette.grey[500],
+    },
   }
 })
 
@@ -120,7 +131,7 @@ const OnboardingWizard = ({
   const totalSteps = onboardingConfig ? onboardingConfig.steps.filter(s => s.type == 'focus').length : 0
   const adjustedCurrentIndex = onboardingConfig ? onboardingConfig.steps.filter((s, i) => s.type == 'focus' && i < currentStepIndex).length : 0
   const isLastStep = (adjustedCurrentIndex + 1) >= totalSteps
-  const stepTitle = `Tip ${adjustedCurrentIndex + 1} of ${totalSteps}`
+  const stepTitle = `Step ${adjustedCurrentIndex + 1} of ${totalSteps}`
 
   const focusElement = currentStep ? focusElements.current[currentStep.element] : null
 
@@ -204,7 +215,10 @@ const OnboardingWizard = ({
 
       const infoContent = (
         <>
-          <DialogTitle>{ stepTitle }: { currentStep.title }</DialogTitle>
+          <DialogTitle disableTypography className={classes.title}>
+            <Typography variant="h6">{ currentStep.title }</Typography>
+            <Typography className={classes.stepTitle}>{ stepTitle }</Typography>
+          </DialogTitle>
           <DialogContent>
             {
               (description || []).map((text, i) => {
@@ -224,7 +238,7 @@ const OnboardingWizard = ({
             ) : (
               <DialogActions>
                 <Button onClick={ cancelOnboarding }>
-                  Skip
+                  Close
                 </Button>
                 <Button onClick={ progressOnboarding } color="secondary">
                   Next

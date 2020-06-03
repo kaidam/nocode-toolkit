@@ -1,21 +1,15 @@
-import React, { useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useContext, useRef, useCallback, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
-import IconButton from '@material-ui/core/IconButton'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 
+import OnboardingContext from '../contexts/onboarding'
 import MenuButton from '../widgets/MenuButton'
-import icons from '../../icons'
 
 import useSectionEditor from '../hooks/useSectionEditor'
 import useIconButton from '../hooks/useIconButton'
-import settingsSelectors from '../../store/selectors/settings'
-
-const EditIcon = icons.edit
-const AddIcon = icons.add
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -31,8 +25,6 @@ const useStyles = makeStyles(theme => ({
   menuItem: {
     paddingLeft: theme.spacing(0), 
     paddingRight: theme.spacing(1),
-    //marginTop: theme.spacing(0.2),
-    //marginBottom: theme.spacing(0.2),
     cursor: 'pointer',
     color: theme.palette.grey[600],
     display: 'flex',
@@ -54,6 +46,8 @@ const EditableTree = ({
   section,
 }) => {
   const classes = useStyles()
+  const addContentRef = useRef(null)
+  const context = useContext(OnboardingContext)
 
   const {    
     getAddItems,
@@ -91,6 +85,16 @@ const EditableTree = ({
     color: 'secondary',
   })
 
+  useEffect(() => {
+    context.setFocusElements({
+      [`highlightAddSectionContent_${section}`]: {
+        id: `highlightAddSectionContent_${section}`,
+        ref: addContentRef,
+        padding: 10,
+      },
+    })
+  }, [])
+
   return (
     <div className={ classes.root }>
       <List className={ classes.list }>
@@ -113,6 +117,7 @@ const EditableTree = ({
             header={ `${sectionTitle} : Add` }
             getButton={ getAddButton }
             getItems={ getAddItems }
+            useRef={ addContentRef }
           />
         </ListItem>
       </List>
