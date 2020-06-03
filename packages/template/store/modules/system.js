@@ -175,6 +175,7 @@ const sideEffects = {
     if(library.initialise) {
       initialiseResult = await dispatch(library.initialise())
       if(initialiseResult.reload) {
+        dispatch(actions.loadWebsite())
         await dispatch(jobActions.reload())
       }
     }
