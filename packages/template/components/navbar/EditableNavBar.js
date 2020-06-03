@@ -9,7 +9,12 @@ import useIconButton from '../hooks/useIconButton'
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonMargin: {
+    marginBottom: theme.spacing(1),
   },
   settingsIcon: ({contrast} = {}) => ({
     color: contrast ?
@@ -28,6 +33,7 @@ const NavbarSectionEditor = ({
 
   const {
     getSettingsItems,
+    getAddItems,
   } = useSectionEditor({
     section,
     contrast,
@@ -41,13 +47,28 @@ const NavbarSectionEditor = ({
     title: 'Edit',
   })
 
+  const getAddButton = useIconButton({
+    icon: 'add',
+    title: 'Add Content',
+    color: 'secondary',
+  })
+
   return (
     <div className={ classes.root }>
-      <MenuButton
-        header={ sectionTitle }
-        getButton={ getSettingsButton }
-        getItems={ getSettingsItems }
-      />
+      <div className={ classes.buttonMargin }>
+        <MenuButton
+          header={ sectionTitle }
+          getButton={ getSettingsButton }
+          getItems={ getSettingsItems }
+        />
+      </div>
+      <div>
+        <MenuButton
+          header={ `${sectionTitle} : Add` }
+          getButton={ getAddButton }
+          getItems={ getAddItems }
+        />
+      </div>
     </div>
   )
 }

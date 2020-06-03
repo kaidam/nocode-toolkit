@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: vertical ?
-      'flex-start' :
+      'center' :
       'center',
   }),
   content: ({
@@ -28,18 +28,12 @@ const useStyles = makeStyles(theme => ({
     overflowY: 'auto',
     overflowX: 'hidden',
     flexGrow: 1,
-    padding: vertical ?
-      theme.spacing(1) :
-      0,
   }),
   editor: ({
     vertical,
   }) => ({
-    marginRight: theme.spacing(2),
     flexGrow: 0,
-    paddingTop: vertical ?
-      theme.spacing(2) :
-      0,
+    paddingLeft: theme.spacing(2),
   }),
 }))
 
@@ -59,35 +53,40 @@ const NavBarSection = ({
   const showUI = useSelector(systemSelectors.showUI)
   const rootClassname = classnames(classes.root, className)
 
+  const editor = showUI ? (
+    <div className={ classes.editor }>
+      <Suspense
+        Component={ EditableNavBar }
+        props={{
+          section,
+          contrast,
+        }}
+      />
+    </div>
+  ) : null
+
+  const content = (
+    <div
+      className={ classes.content }
+    >
+      <NavBar
+        section={ section }
+        small={ small }
+        contrast={ contrast }
+        vertical={ vertical }
+        align={ align }
+        withHome={ withHome }
+      />
+    </div>
+  )
+
   return (
     <div
       className={ rootClassname }
     >
-      {
-        showUI && (
-          <div className={ classes.editor }>
-            <Suspense
-              Component={ EditableNavBar }
-              props={{
-                section,
-                contrast,
-              }}
-            />
-          </div>
-        )
-      }
-      <div
-        className={ classes.content }
-      >
-        <NavBar
-          section={ section }
-          small={ small }
-          contrast={ contrast }
-          vertical={ vertical }
-          align={ align }
-          withHome={ withHome }
-        />
-      </div>
+      
+      { content }
+      { editor }
     </div>
   )
 }
