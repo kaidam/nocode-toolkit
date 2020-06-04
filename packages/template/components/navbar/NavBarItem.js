@@ -120,7 +120,7 @@ const NavBarItem = ({
 
   const ancestors = useSelector(contentSelectors.fullRouteAncestors)
 
-  const isNodeActive = ancestors.find(ancestor => ancestor.node.id == node.id)
+  const isNodeActive = ancestors.find(ancestor => ancestor.node && ancestor.node.id == node.id)
 
   const itemClass = classnames({
     [classes.item]: true,
