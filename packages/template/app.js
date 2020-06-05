@@ -58,11 +58,22 @@ const App = ({
   }, [initialised])
   
   if(initialiseError) return (
-    <div>
-      Something has gone wrong:
-      <div>
+    <div
+      style={{
+        fontFamily: 'Arial'
+      }}
+    >
+      <p>
+        <img src="/images/favicon.png" />
+      </p>
+      <p>Oooops! Something has gone wrong.</p>
+      <p>
         { initialiseError }
-      </div>
+      </p>
+      <p>This can sometimes happen if you are not logged in.</p>
+      <p>
+        <a href="https://nocode.works">Click here</a> to try logging in again.
+      </p>
     </div>
   )
 
