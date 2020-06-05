@@ -64,9 +64,14 @@ const Render = ({
     .filter(name => data[name] ? true : false)
     .map((name, i) => {
       const value = data[name]
+
+      const url = value.match(/^https?:\/\//i) ?
+        value :
+        `http://${value}`
+
       return (
         <div style={ styles.item } key={ i }>
-          <a href={ value }>
+          <a href={ url }>
             <span style={ styles[name] }>
               <i className={`fab fa-${name} fa-2x`}></i>
             </span>
