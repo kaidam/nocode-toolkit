@@ -25,7 +25,7 @@ const Publish = async ({
   onProgress,
   concurrency,
 }) => {
-
+  process.env.NODE_ENV = 'production'
   const {
     projectFolder,
     buildPath,
