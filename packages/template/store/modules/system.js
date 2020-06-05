@@ -286,7 +286,17 @@ const sideEffects = {
     onComplete,
   }) => snackbarWrapper('addUrl', async (dispatch, getState) => {
     const config = nocodeSelectors.config(getState())
-    await loaders.addUrl(config.websiteId, url)
+    try {
+      await loaders.addUrl(config.websiteId, url)
+    } catch(e) {
+      const errorMessage = apiUtils.getErrorMessage(e)
+      if(errorMessage.indexOf('Error: getaddrinfo ENOTFOUND') == 0) {
+        throw new Error(`${url} doesn't exist, please retry with a working domain`)
+      }
+      else {
+        throw e
+      }
+    }
     await dispatch(actions.loadWebsite())
     dispatch(snackbarActions.setSuccess(`custom domain added`))
     if(onComplete) onComplete()
