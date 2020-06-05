@@ -380,7 +380,7 @@ const fullRouteAncestors = createSelector(
     if(!homeItem) return ancestors
     if(!homeItem.children) return ancestors
 
-    if(homeItem.children.find(id => id == first.node.id)) {
+    if(homeItem.children.find(id => first && first.node && id == first.node.id)) {
       return [{
         node: homeItem,
         route: homeRoute,
