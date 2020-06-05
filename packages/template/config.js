@@ -1,6 +1,11 @@
+import systemUtils from './utils/system'
+
 export const GOOGLE_FULL_DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive'
 export const GOOGLE_LOGIN = '/api/v1/auth/google'
-export const GOOGLE_UPGRADE_LOGIN = `${window.location.host == 'localhost:8000' ? 'http://localhost' : ''}/api/v1/auth/google_upgrade`
+export const GOOGLE_UPGRADE_LOGIN = systemUtils.isNode ?
+  '' :
+  `${window.location.host == 'localhost:8000' ? 'http://localhost' : ''}/api/v1/auth/google_upgrade`
+
 export const LOGOUT_URL = 'https://nocode.works'
 
 export const RELOAD_APP_JOBS = [
