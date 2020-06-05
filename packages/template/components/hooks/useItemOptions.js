@@ -73,9 +73,9 @@ const useItemOptions = ({
         title: 'Settings',
         icon: icons.settings,
         handler: () => actions.onEditRemoteContent({
-          title: `Edit ${node.type.replace(/^\w/, st => st.toUpperCase())}`,
+          title: `Edit ${(node.type || 'folder').replace(/^\w/, st => st.toUpperCase())}`,
           driver: 'drive',
-          form: `drive.${node.type}`,
+          form: `drive.${node.type || 'folder'}`,
           id: node.id,
         })
       }
@@ -117,9 +117,9 @@ const useItemOptions = ({
             title: 'Sorting',
             icon: icons.sort,
             handler: () => actions.onEditRemoteContent({
-              title: `Edit ${node.type.replace(/^\w/, st => st.toUpperCase())}`,
+              title: `Edit ${(node.type || 'folder').replace(/^\w/, st => st.toUpperCase())}`,
               driver: 'drive',
-              form: `drive.${node.type}`,
+              form: `drive.${node.type || 'folder'}`,
               id: node.id,
               initialTab: 'sorting',
             })
@@ -149,7 +149,7 @@ const useItemOptions = ({
         title: 'Edit',
         icon: icons.edit,
         handler: () => actions.onEditLocalContent({
-          title: `Edit ${node.type.replace(/^\w/, st => st.toUpperCase())}`,
+          title: `Edit ${(node.type || '').replace(/^\w/, st => st.toUpperCase())}`,
           driver: node.driver,
           form: node.type,
           id: node.id,
