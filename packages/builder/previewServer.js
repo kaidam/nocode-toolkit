@@ -8,6 +8,17 @@ const Data = require('./data')
 const HTML = require('./html')
 const WebpackDevServer = require('./webpackDevServer')
 
+const {
+  AuthenticationError,
+} = require('./errors')
+
+const accessDenied = (req, res, error = 'access denied') => {
+  res.status(401)
+  res.json({
+    error,
+  })
+}
+
 // run the preview server in dev mode with webpack dev server
 const DevPreviewServer = ({
   app,
@@ -172,7 +183,12 @@ const PreviewServer = ({
         ...data
       })))
     } catch(e) {
-      return next(e)
+      if(e instanceof AuthenticationError) {
+        return accessDenied(req, res, e.message)
+      }
+      else {
+        return next(e)  
+      }
     }
   }
 
@@ -187,7 +203,12 @@ const PreviewServer = ({
       })
       res.end(data)
     } catch(e) {
-      return next(e)
+      if(e instanceof AuthenticationError) {
+        return accessDenied(req, res, e.message)
+      }
+      else {
+        return next(e)  
+      }
     }
   }
 
