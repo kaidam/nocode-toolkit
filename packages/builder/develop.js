@@ -10,6 +10,7 @@ const Develop = ({
   plugins,
   pluginConfig,
 }) => {
+  process.env.NODE_ENV = 'development'
   
   const context = new Context()
   utils.contextLogger(context, logger)

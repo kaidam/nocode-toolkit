@@ -16,6 +16,7 @@ const runBuild = async ({
   config,
   logger,
 }) => {
+  process.env.NODE_ENV = 'production'
   const compiler = webpack(config)
   let compileErrors = []
   compiler.hooks.afterCompile.tap('compileMessage', (data) => {
