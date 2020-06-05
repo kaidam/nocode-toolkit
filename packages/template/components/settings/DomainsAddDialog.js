@@ -78,7 +78,13 @@ const SettingsDomainsAddDialog = ({
           onBlur={() => setTouched(true)}
         />
         <DialogContentText className={ classes.info }>
-          You must ensure that the domain name you enter resolves to <b>{ ip }</b>
+          You must configure the DNS settings with your domain provider to make this work.
+        </DialogContentText>
+        <DialogContentText className={ classes.info }>
+          You can create a <strong>CNAME</strong> record that points to <strong>nocode.works</strong>
+        </DialogContentText>
+        <DialogContentText className={ classes.info }>
+          Or you can create an <strong>A</strong> record that points to <strong>{ ip }</strong>
         </DialogContentText>
       </DialogContent>
       <DialogActions>
