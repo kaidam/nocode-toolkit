@@ -1,3 +1,4 @@
+const path = require('path')
 const webpack = require('webpack')
 const DevMiddleware = require('webpack-dev-middleware')
 const HotMiddleware = require('webpack-hot-middleware')
@@ -7,6 +8,15 @@ const WebpackConfigProcessor = require('./webpack/configProcessor')
 
 const HTML = require('./html')
 const BuildInfo = require('./buildInfo')
+
+const ALIAS_MODULES = [
+  '@material-ui/styles',
+  '@material-ui/core',
+  'react',
+  ['react-dom', '@hot-loader/react-dom'],
+  'redux',
+  'react-redux',
+]
 
 const WebpackDevServer = ({
   app,
@@ -25,6 +35,19 @@ const WebpackDevServer = ({
     webpackProcessors: [
       webpackProcessors,
       options.webpackProcessors,
+      (webpackConfig, options, env) => {
+        if(options.aliasLinks) {
+          webpackConfig.resolve.alias = ALIAS_MODULES.reduce((all, alias) => {
+            if(typeof(alias) === 'string') {
+              alias = [alias, alias]
+            }
+            const [ from, to ] = alias
+            all[from] = path.resolve(options.projectFolder, 'node_modules', to)
+            return all
+          }, {})
+        }
+        return webpackConfig
+      },
     ]
       .filter(p => p)
       .reduce((all, current) => all.concat(current), [])

@@ -1,4 +1,3 @@
-const path = require('path')
 const express = require('express')
 const axios = require('axios')
 const request = require('request')
@@ -10,15 +9,6 @@ const loggers = require('./loggers')
 const pino = require('pino')({
   name: 'developmentServer',
 })
-
-const ALIAS_MODULES = [
-  '@material-ui/styles',
-  '@material-ui/core',
-  'react',
-  ['react-dom', '@hot-loader/react-dom'],
-  'redux',
-  'react-redux',
-]
 
 const getTrackingLibraryUrl = async () => {
   const trackingHost = process.env.TRACKING_HOST
@@ -129,21 +119,6 @@ const Develop = ({
       return res.data
     },
     getBuildInfo: (id) => ({}),
-    webpackProcessors: [
-      (webpackConfig, options, env) => {
-        if(options.aliasLinks) {
-          webpackConfig.resolve.alias = ALIAS_MODULES.reduce((all, alias) => {
-            if(typeof(alias) === 'string') {
-              alias = [alias, alias]
-            }
-            const [ from, to ] = alias
-            all[from] = path.resolve(options.projectFolder, 'node_modules', to)
-            return all
-          }, {})
-        }
-        return webpackConfig
-      },
-    ],
     webpackCompilerHook: (compiler) => {
       compiler.hooks.afterCompile.tap('compileMessage', (data) => {
         setTimeout(() => {

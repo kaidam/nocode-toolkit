@@ -14,6 +14,8 @@ const ThemeUIRender = (props) => {
   )
 }
 
+console.log('--------------------------------------------')
+console.log('hello')
 /*
 
   only include the material UI theme if we are in showUI mode
@@ -27,10 +29,12 @@ const Theme = ({
   ThemeModule = ThemeUIRender,
   processor,
   children,
+  ...props
 }) => {
   return (
     <ThemeModule
       processor={ processor }
+      {...props}
     >
       { children }
     </ThemeModule>

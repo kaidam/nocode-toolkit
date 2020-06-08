@@ -14,11 +14,14 @@ import useTheme from './useTheme'
 */
 const MaterialTheme = ({
   processor,
+  responsive,
   children,
 }) => {
 
   // pick values from the store that we feed to a theme processor
-  const theme = useTheme(processor)
+  const theme = useTheme(processor, {
+    responsive,
+  })
 
   // remove the server side rendered CSS
   useEffect(() => {

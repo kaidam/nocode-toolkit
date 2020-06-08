@@ -42,6 +42,8 @@ const DEFAULT_OPTIONS = {
   analyze: process.env.ANALYZE,
   // used to not minify the server side code for debugging
   debugBuild: process.env.DEBUG_BUILD,
+  // used to linking @nocode-works modules to templates without node_modules errors
+  aliasLinks: process.env.ALIAS_LINKS,
 }
 
 /*

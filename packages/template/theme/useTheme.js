@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { createMuiTheme } from '@material-ui/core/styles'
+import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles'
 import deepmerge from 'deepmerge'
 
 import settingsSelectors from '../store/selectors/settings'
@@ -29,7 +29,11 @@ const getThemeSettings = ({
   return deepmerge(processorValues, baseUpdates)
 }
 
-const useTheme = (processor) => {
+console.log('--------------------------------------------')
+console.log('here')
+const useTheme = (processor, {
+  responsive = false,
+} = {}) => {
   const settings = useSelector(settingsSelectors.settings) 
   const config = useSelector(nocodeSelectors.config)
   const route = useSelector(routerSelectors.route)
@@ -40,11 +44,17 @@ const useTheme = (processor) => {
       route,
       processor,
     })
-    return createMuiTheme(themeSettings)
+    const finalTheme = createMuiTheme(themeSettings)
+    console.log('--------------------------------------------')
+    console.log(responsive)
+    return responsive ?
+      responsiveFontSizes(finalTheme) :
+      finalTheme
   }, [
     settings,
     config,
     route,
+    responsive,
   ])
   return theme
 }
