@@ -4,7 +4,7 @@ const RunPlugins = require('./runPlugins')
 const DevServer = require('./devServer')
 const utils = require('./utils')
 
-const Develop = ({
+const Develop = async ({
   options,
   logger,
   plugins,
