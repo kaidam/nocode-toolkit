@@ -14,8 +14,6 @@ const ThemeUIRender = (props) => {
   )
 }
 
-console.log('--------------------------------------------')
-console.log('hello')
 /*
 
   only include the material UI theme if we are in showUI mode

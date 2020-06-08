@@ -29,8 +29,6 @@ const getThemeSettings = ({
   return deepmerge(processorValues, baseUpdates)
 }
 
-console.log('--------------------------------------------')
-console.log('here')
 const useTheme = (processor, {
   responsive = false,
 } = {}) => {
@@ -45,8 +43,6 @@ const useTheme = (processor, {
       processor,
     })
     const finalTheme = createMuiTheme(themeSettings)
-    console.log('--------------------------------------------')
-    console.log(responsive)
     return responsive ?
       responsiveFontSizes(finalTheme) :
       finalTheme
