@@ -1,7 +1,7 @@
 import React, { lazy } from 'react'
 import { useSelector } from 'react-redux'
-import { Helmet } from 'react-helmet-async'
-import { withStyles } from '@material-ui/core/styles'
+
+import Header from './Header'
 
 import systemSelectors from '../../store/selectors/system'
 import settingsSelectors from '../../store/selectors/settings'
@@ -29,7 +29,7 @@ const Layout = ({
   
   return (
     <React.Fragment>
-      <Helmet
+      <Header
         title={ settings.company_name || 'Nocode Website' } 
       > 
         <meta name="description" content={ settings.description } />
@@ -47,7 +47,7 @@ const Layout = ({
         {
           head
         }
-      </Helmet>
+      </Header>
       <Snippet
         head
         html={ snippets.head }
