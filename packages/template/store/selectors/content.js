@@ -94,6 +94,8 @@ const section = () => createSelector(
     let addTargetFolderId = defaultFolderId
     if(annotation.addTargetFolderId && sourceFolders.find(f => f.id == annotation.addTargetFolderId)) addTargetFolderId = annotation.addTargetFolderId
 
+    if(!addTargetFolderId && sourceFolders && sourceFolders.length > 0) addTargetFolderId = sourceFolders[0].id
+
     return {
       node: section,
       annotation,
