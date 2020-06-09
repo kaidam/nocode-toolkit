@@ -28,8 +28,8 @@ const useItemOptions = ({
     getInjectedItems,
   }) => {
 
-    const locationId = `${node.route.location}:${node.id}`
-    const isSectionContent = locations[locationId] ? true : false
+    const locationId = node.route ? `${node.route.location}:${node.id}` : null
+    const isSectionContent = locationId && locations[locationId] ? true : false
 
     const injected = getInjectedItems ?
       getInjectedItems() : []
