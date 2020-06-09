@@ -100,7 +100,7 @@ const ManageFoldersDialog = ({
   ])
   
   const getActions = useCallback((folder) => {
-    const isDefault = folder.id == defaultFolderId
+    const isDefault = folder.id == defaultFolderId || sourceFolders.length <= 1
 
     return (
       <div>
@@ -136,6 +136,7 @@ const ManageFoldersDialog = ({
     )
   }, [
     defaultFolderId,
+    addTargetFolderId,
   ])
 
   const sectionTitle = (section || '')
