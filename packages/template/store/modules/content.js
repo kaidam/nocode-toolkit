@@ -165,6 +165,7 @@ const sideEffects = {
     parentId,
     params = {},
   }) => wrapper('createRemoteContent', async (dispatch, getState) => {
+    if(!parentId) throw new Error(`no parent folder found`)
     const result = await dispatch(actions.waitForForm({
       forms: [form],
       processValues: processNodeFormValues,
