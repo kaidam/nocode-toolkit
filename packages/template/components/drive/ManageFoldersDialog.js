@@ -82,7 +82,7 @@ const ManageFoldersDialog = ({
   ])
 
   const tableData = useMemo(() => {
-    return sourceFolders.map(folder => {
+    return (sourceFolders || []).map(folder => {
       const isDefault = folder.id == defaultFolderId
       const name = isDefault ? `Nocode Default Folder` : folder.name
       return {
