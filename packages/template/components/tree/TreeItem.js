@@ -1,4 +1,4 @@
-import React, { lazy, useRef, useCallback, useEffect } from 'react'
+import React, { lazy, useRef, useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/core/styles'
@@ -13,9 +13,13 @@ import Suspense from '../system/Suspense'
 import Link from '../widgets/Link'
 import icons from '../../icons'
 
+import {
+  hasMouse,
+} from '../../utils/browser'
 import eventUtils from '../../utils/events'
 
 const EditableItem = lazy(() => import(/* webpackChunkName: "ui" */ '../content/EditableItem'))
+const EditHoverButton = lazy(() => import(/* webpackChunkName: "ui" */ './EditHoverButton'))
 
 const ExpandMoreIcon = icons.expandMore
 const ExpandLessIcon = icons.expandLess
@@ -63,6 +67,16 @@ const TreeItem = ({
     node,
   } = item
 
+  const [ isHovered, setIsHovered ] = useState(false)
+
+  const onHover = useCallback(() => {
+    setIsHovered(true)
+  })
+
+  const onLeave = useCallback(() => {
+    setIsHovered(false)
+  })
+
   const classes = useStyles({
     depth,
   })
@@ -102,44 +116,6 @@ const TreeItem = ({
     }
   }
 
-  const getRenderedItem = (onItemClick, uiMode) => {
-    const rawTitle = (
-      <ListItemText
-        className={ classes.itemText }
-        classes={{
-          primary: colorClassname
-        }}
-        primary={ item.node.name }
-      />
-    )
-    const title = uiMode ? (
-      <Tooltip
-        title="Click to Edit"
-        placement="top"
-        arrow
-      >
-        { rawTitle }
-      </Tooltip>
-    ) : rawTitle
-    return (
-      <ListItem
-        dense
-        ref={ itemRef }
-        className={ listItemClassname }
-        selected={ item.currentPage }
-        onClick={ onItemClick }
-        onContextMenu={ uiMode ? onItemClick : null }
-      >
-        { title }
-        {
-          FolderIcon && (
-            <FolderIcon className={ colorClassname } onClick={ eventUtils.cancelEventHandler(onOpenItem) } />
-          )
-        }
-      </ListItem>
-    )
-  }
-
   let linkType = ''
   if(item.node.type == 'link') linkType = 'external'
   else if(item.node.type == 'folder') linkType = folderPages ? 'internal' : ''
@@ -177,7 +153,46 @@ const TreeItem = ({
     item,
   ])
 
-  if(showUI) {
+  const getRenderedItem = (onItemClick) => {
+    return (
+      <ListItem
+        dense
+        ref={ itemRef }
+        className={ listItemClassname }
+        selected={ item.currentPage }
+        onMouseEnter={ onHover }
+        onMouseLeave={ onLeave }
+        onClick={ onItemClick }
+      >
+        <ListItemText
+          className={ classes.itemText }
+          classes={{
+            primary: colorClassname
+          }}
+          primary={ item.node.name }
+        />
+        {
+          hasMouse() && isHovered ? (
+            <Suspense>
+              <EditHoverButton
+                node={ item.node }
+                open={ open }
+                folderPages={ folderPages }
+                onOpen={ onOpenItem }
+              />
+            </Suspense>
+          ) : (
+            FolderIcon && (
+              <FolderIcon className={ colorClassname } onClick={ eventUtils.cancelEventHandler(onOpenItem) } />
+            )
+          )
+        }
+        
+      </ListItem>
+    )
+  }
+
+  if(showUI && !hasMouse()) {
     return (
       <Suspense>
         <EditableItem
