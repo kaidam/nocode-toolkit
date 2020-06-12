@@ -6,11 +6,18 @@ import IconButton from '@material-ui/core/IconButton'
 import icons from '../../icons'
 
 const useStyles = makeStyles(theme => ({
-  iconContainer: {
-    borderRadius: '16px',
+  icon: ({fontSize}) => ({
+    fontSize,
+  }),
+  iconContainer: ({
+    borderRadius,
+    padding,
+  }) => ({
+    borderRadius,
     backgroundColor: '#fff',
     boxShadow: '0px 3px 3px 0px rgba(0,0,0,0.2)',
-  },
+    padding,
+  }),
 }))
 
 const useIconButton = ({
@@ -18,8 +25,15 @@ const useIconButton = ({
   title,
   color = 'inherit',
   useRef,
+  fontSize,
+  borderRadius = '16px',
+  padding = 0,
 }) => {
-  const classes = useStyles()
+  const classes = useStyles({
+    fontSize,
+    borderRadius,
+    padding,
+  })
   const getAddButton = useCallback((onClick) => {
     const Icon = icons[icon]
     return (
@@ -31,13 +45,12 @@ const useIconButton = ({
           >
             <Icon
               fontSize="inherit"
+              className={ classes.icon }
               color={ color }
             />
           </IconButton>
         </Tooltip>
-        
       </div>
-      
     )
   }, [
     icon,
@@ -50,3 +63,5 @@ const useIconButton = ({
 }
 
 export default useIconButton
+
+//className={ classes.icon }

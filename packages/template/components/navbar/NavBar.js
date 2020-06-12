@@ -47,6 +47,8 @@ const NavBar = ({
 
   // the name of the section this navbar is for
   section,
+
+  folderPages,
 }) => {
 
   const classes = useStyles({
@@ -114,6 +116,7 @@ const NavBar = ({
                   contrast={ contrast }
                   vertical={ vertical }
                   align={ align }
+                  folderPages={ folderPages }
                 />
               )
             })

@@ -1,4 +1,4 @@
-import React, { lazy } from 'react'
+import React, { lazy, useState, useCallback, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import classnames from 'classnames'
@@ -12,8 +12,13 @@ import NavBarMenu from './NavBarMenu'
 
 import library from '../../library'
 
+import {
+  hasMouse,
+} from '../../utils/browser'
+
 const EditableItem = lazy(() => import(/* webpackChunkName: "ui" */ '../content/EditableItem'))
 const EditableNavBarMenu = lazy(() => import(/* webpackChunkName: "ui" */ './EditableNavBarMenu'))
+const EditHoverButton = lazy(() => import(/* webpackChunkName: "ui" */ './EditHoverButton'))
 
 const NativeLinkComponent = ({
   children,
@@ -60,7 +65,8 @@ const useStyles = makeStyles(theme => {
       padding: theme.spacing(1),
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
-      marginLeft: theme.spacing(1),
+      marginLeft: theme.spacing(0.5),
+      marginRight: theme.spacing(0.5),
       borderRadius: theme.spacing(1),
       textDecoration: 'none',
       cursor: 'pointer',
@@ -108,7 +114,19 @@ const NavBarItem = ({
   contrast,
   align = 'left',
   vertical,
+  folderPages,
 }) => {
+
+  const [ isHovered, setIsHovered ] = useState(false)
+  const hoverRef = useRef()
+
+  const onHover = useCallback(() => {
+    setIsHovered(true)
+  })
+
+  const onLeave = useCallback(() => {
+    setIsHovered(false)
+  })
 
   const classes = useStyles({
     contrast,
@@ -176,16 +194,17 @@ const NavBarItem = ({
     
   }
   else {
-    if(showUI) {
 
-      const onOpenItem = () => {
-        if(node.type == 'link') {
-          window.open(node.url)
-        }
-        else {
-          dispatch(routerActions.navigateTo(node.route.name))
-        }
+    const onOpenItem = () => {
+      if(node.type == 'link') {
+        window.open(node.url)
       }
+      else {
+        dispatch(routerActions.navigateTo(node.route.name))
+      }
+    }
+
+    if(showUI && !hasMouse()) {
 
       const getRenderedItem = (onItemClick, uiMode) => {
         return (
@@ -229,6 +248,9 @@ const NavBarItem = ({
       return (
         <li
           className={ classes.itemContainer }
+          ref={ hoverRef }
+          onMouseEnter={ onHover }
+          onMouseLeave={ onLeave }
         >
           <LinkComponent
             className={ itemClass }
@@ -236,6 +258,20 @@ const NavBarItem = ({
           >
             { node.name }
           </LinkComponent>
+          {
+            isHovered && (
+              <Suspense>
+                <EditHoverButton
+                  node={ node }
+                  open={ false }
+                  folderPages={ folderPages }
+                  anchorRef={ hoverRef }
+                  onOpen={ onOpenItem }
+                  onClose={ onLeave }
+                />
+              </Suspense>
+            )
+          }
         </li>
       )
     }
