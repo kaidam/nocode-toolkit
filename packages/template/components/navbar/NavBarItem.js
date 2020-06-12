@@ -49,28 +49,10 @@ const useStyles = makeStyles(theme => {
     item: ({
       contrast,
       align = 'left',
-    } = {}) => ({
-      ...theme.typography.button,
-      display: 'flex',
-      flexDirection: 'row',
-      alignItems: 'center',
-      justifyContent: align == 'left' ?
-        'flex-start' :
-        'flex-end',
-      fontWeight: '500',
-      color: contrast ?
-        theme.palette.primary.contrastText :
-        theme.palette.primary.main,
-      textAlign: align,
-      padding: theme.spacing(1),
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2),
-      marginLeft: theme.spacing(0.5),
-      marginRight: theme.spacing(0.5),
-      borderRadius: theme.spacing(1),
-      textDecoration: 'none',
-      cursor: 'pointer',
-      '&:hover': {
+      isHovered,
+    } = {}) => {
+
+      const hoverProps = {
         color: contrast ?
           theme.palette.primary.main :
           theme.palette.primary.contrastText,
@@ -82,13 +64,41 @@ const useStyles = makeStyles(theme => {
             theme.palette.primary.main :
             theme.palette.primary.contrastText,
         },
-      },
-      '& .navbar-ui-icon': {
+      }
+
+      const styleProps = {
+        ...theme.typography.button,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: align == 'left' ?
+          'flex-start' :
+          'flex-end',
+        fontWeight: '500',
         color: contrast ?
           theme.palette.primary.contrastText :
-          theme.palette.text.main,
-      },
-    }),
+          theme.palette.primary.main,
+        textAlign: align,
+        padding: theme.spacing(1),
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2),
+        marginLeft: theme.spacing(0.5),
+        marginRight: theme.spacing(0.5),
+        borderRadius: theme.spacing(1),
+        textDecoration: 'none',
+        cursor: 'pointer',
+        '&:hover': hoverProps,
+        '& .navbar-ui-icon': {
+          color: contrast ?
+            theme.palette.primary.contrastText :
+            theme.palette.text.main,
+        },
+      }
+
+      return isHovered ?
+        Object.assign({}, styleProps, hoverProps) :
+        styleProps
+    },
 
     itemActive: ({
       contrast,
@@ -132,6 +142,7 @@ const NavBarItem = ({
     contrast,
     align,
     vertical,
+    isHovered,
   })
 
   const dispatch = useDispatch()
@@ -164,7 +175,7 @@ const NavBarItem = ({
       )
     }
     
-    if(showUI) {
+    if(showUI && !hasMouse()) {
       return (
         <li
           className={ classes.itemContainer }
@@ -183,11 +194,28 @@ const NavBarItem = ({
       return (
         <li
           className={ classes.itemContainer }
+          ref={ hoverRef }
+          onMouseEnter={ onHover }
+          onMouseLeave={ onLeave }
         >
           <NavBarMenu
             children={ node.children }
             getButton={ getButton }
           />
+          {
+            isHovered && (
+              <Suspense>
+                <EditHoverButton
+                  node={ node }
+                  open={ false }
+                  folderPages={ folderPages }
+                  anchorRef={ hoverRef }
+                  onOpen={ () => {} }
+                  onClose={ onLeave }
+                />
+              </Suspense>
+            )
+          }
         </li>
       )
     }

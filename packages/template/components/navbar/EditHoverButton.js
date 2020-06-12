@@ -23,7 +23,6 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    //backgroundColor: 'red',
     cursor: 'pointer',
     zIndex: 3000,
   }),
@@ -33,10 +32,8 @@ const useStyles = makeStyles(theme => ({
     boxShadow: '0px 3px 3px 0px rgba(0,0,0,0.2)',
   },
   icon: {
-    //color: 'red'
     fontSize: '20px',
     color: theme.palette.primary.main,
-    //padding: '4px',
   }
 }))
 
