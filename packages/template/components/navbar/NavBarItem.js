@@ -260,6 +260,7 @@ const NavBarItem = ({
       )
     }
     else {
+
       const LinkComponent = node.type == 'link' ?
         NativeLinkComponent :
         Link

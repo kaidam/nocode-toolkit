@@ -15,7 +15,7 @@ const HEIGHT = 60
 
 const useStyles = makeStyles(theme => ({
   buttonContainer: ({buttonPosition}) => ({
-    position: 'absolute',
+    position: 'fixed',
     width: WIDTH,
     height: HEIGHT,
     left: `${buttonPosition.left}px`,
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    zIndex: 3000,
+    zIndex: 1000,
   }),
   iconContainer: {
     borderRadius: '16px',
