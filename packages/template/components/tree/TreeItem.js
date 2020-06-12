@@ -179,11 +179,15 @@ const TreeItem = ({
                 open={ open }
                 folderPages={ folderPages }
                 onOpen={ onOpenItem }
+                onClose={ onLeave }
               />
             </Suspense>
           ) : (
             FolderIcon && (
-              <FolderIcon className={ colorClassname } onClick={ eventUtils.cancelEventHandler(onOpenItem) } />
+              <FolderIcon
+                className={ colorClassname }
+                onClick={ eventUtils.cancelEventHandler(onOpenItem) }
+              />
             )
           )
         }

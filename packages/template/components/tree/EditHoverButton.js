@@ -17,6 +17,7 @@ const EditHoverButton = ({
   open,
   folderPages,
   onOpen,
+  onClose,
 }) => {
 
   const {
@@ -28,14 +29,16 @@ const EditHoverButton = ({
     onOpen,
   })
 
-  const getButton = useCallback((onClick) => {
+  const getButton = useCallback((onOpenMenu) => {
     return (
       <Tooltip
         title="Click to Edit"
         placement="top"
         arrow
       >
-        <SettingsIcon onClick={ onClick } />
+        <SettingsIcon
+          onClick={ onOpenMenu }
+        />
       </Tooltip>
     )
   }, [])
@@ -47,6 +50,7 @@ const EditHoverButton = ({
       header={ node.name }
       getButton={ getButton }
       getItems={ getEditorItems }
+      onClose={ onClose }
     />
   )
 }
