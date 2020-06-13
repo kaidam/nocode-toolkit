@@ -40,8 +40,8 @@ const NavbarSectionEditor = ({
     .replace(/^(\w)/, (st) => st.toUpperCase())
 
   const getSettingsButton = useIconButton({
-    icon: 'settings',
-    title: `${sectionTitle} : Settings`,
+    title: sectionTitle,
+    settingsButton: true,
   })
 
   return (

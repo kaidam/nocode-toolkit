@@ -1,14 +1,10 @@
-import React, { lazy, useRef, useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import Tooltip from '@material-ui/core/Tooltip'
-import IconButton from '@material-ui/core/IconButton'
 
 import MenuButton from '../widgets/MenuButton'
+import IconButton from '../widgets/IconButton'
+
 import useItemEditor from '../hooks/useItemEditor'
-
-import icons from '../../icons'
-
-const SettingsIcon = icons.settings
 
 const WIDTH = 60
 const HEIGHT = 60
@@ -27,15 +23,6 @@ const useStyles = makeStyles(theme => ({
     cursor: 'pointer',
     zIndex: 1000,
   }),
-  iconContainer: {
-    borderRadius: '16px',
-    backgroundColor: '#fff',
-    boxShadow: '0px 3px 3px 0px rgba(0,0,0,0.2)',
-  },
-  icon: {
-    fontSize: '20px',
-    color: theme.palette.primary.main,
-  }
 }))
 
 const getButtonPosition = ({
@@ -108,18 +95,10 @@ const EditHoverButton = ({
   const getButton = useCallback((onOpenMenu) => {
     return (
       <div className={ classes.buttonContainer } onClick={ onOpenMenu }>
-        <div className={ classes.iconContainer }>
-          <Tooltip title="Edit Settings" placement="top">
-            <IconButton
-              size="small"
-            >
-              <SettingsIcon
-                className={ classes.icon }
-                color="inherit"
-              />
-            </IconButton>
-          </Tooltip>
-        </div>
+        <IconButton
+          settingsButton
+          title={ node.name }
+        />
       </div>
     )
   }, [

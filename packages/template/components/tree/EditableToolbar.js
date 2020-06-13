@@ -1,10 +1,6 @@
 import React, { useContext, useRef, useCallback, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-
 import OnboardingContext from '../contexts/onboarding'
 import MenuButton from '../widgets/MenuButton'
 
@@ -53,8 +49,9 @@ const EditableToolbar = ({
     .replace(/^(\w)/, (st) => st.toUpperCase())
 
   const getSettingsButton = useIconButton({
-    icon: 'settings',
-    title: `${sectionTitle} : Settings`,
+    title: sectionTitle,
+    useRef: settingsRef,
+    settingsButton: true,
   })
 
   // useEffect(() => {

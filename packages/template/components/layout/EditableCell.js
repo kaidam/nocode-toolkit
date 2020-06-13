@@ -3,8 +3,6 @@ import { makeStyles } from '@material-ui/core/styles'
 
 import Tooltip from '@material-ui/core/Tooltip'
 
-import EditableCellMenu from './EditableCellMenu'
-import FocusElement from '../widgets/FocusElement'
 import FocusElementOverlay from '../widgets/FocusElementOverlay'
 import MenuButton from '../widgets/MenuButton'
 
@@ -12,6 +10,7 @@ import colorUtils from '../../utils/color'
 import eventUtils from '../../utils/events'
 
 import useCellEditor from '../hooks/useCellEditor'
+import useIconButton from '../hooks/useIconButton'
 
 import icons from '../../icons'
 const SettingsIcon = icons.settings
@@ -101,22 +100,10 @@ const EditableCell = ({
     cellIndex,
   })
 
-  const getSettingsButton = useCallback((onOpenMenu) => {
-    return (
-      <Tooltip
-        title="Settings"
-        placement="top"
-        arrow
-      >
-        <SettingsIcon
-          className={ classes.settingsIcon }
-          onClick={ onOpenMenu }
-        />
-      </Tooltip>
-    )
-  }, [
-    classes,
-  ])
+  const getSettingsButton = useIconButton({
+    settingsButton: true,
+    title: `Widget`
+  })
 
   const handleClick = (e) => {
     eventUtils.cancelEvent(e)

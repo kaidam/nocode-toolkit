@@ -1,16 +1,8 @@
-import React, { lazy, useRef, useCallback, useEffect } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import Tooltip from '@material-ui/core/Tooltip'
+import React from 'react'
 import MenuButton from '../widgets/MenuButton'
 import useItemEditor from '../hooks/useItemEditor'
 
-
-import icons from '../../icons'
-const SettingsIcon = icons.settings
-
-const useStyles = makeStyles(theme => ({
-  
-}))
+import useIconButton from '../hooks/useIconButton'
 
 const EditHoverButton = ({
   node,
@@ -30,19 +22,10 @@ const EditHoverButton = ({
     onOpenItem,
   })
 
-  const getButton = useCallback((onOpenMenu) => {
-    return (
-      <Tooltip
-        title="Settings"
-        placement="top"
-        arrow
-      >
-        <SettingsIcon
-          onClick={ onOpenMenu }
-        />
-      </Tooltip>
-    )
-  }, [])
+  const getButton = useIconButton({
+    title: node.name,
+    settingsButton: true,
+  })
 
   return (
     <MenuButton
