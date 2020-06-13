@@ -20,6 +20,7 @@ import eventUtils from '../../utils/events'
 
 const EditableItem = lazy(() => import(/* webpackChunkName: "ui" */ '../content/EditableItem'))
 const EditHoverButton = lazy(() => import(/* webpackChunkName: "ui" */ './EditHoverButton'))
+const FocusElementOverlay = lazy(() => import(/* webpackChunkName: "ui" */ '../widgets/FocusElementOverlay'))
 
 const ExpandMoreIcon = icons.expandMore
 const ExpandLessIcon = icons.expandLess
@@ -68,12 +69,22 @@ const TreeItem = ({
   } = item
 
   const [ isHovered, setIsHovered ] = useState(false)
+  const [ isMenuOpen, setIsMenuOpen ] = useState(false)
 
   const onHover = useCallback(() => {
     setIsHovered(true)
   })
 
   const onLeave = useCallback(() => {
+    setIsHovered(false)
+  })
+
+  const onOpenMenu = useCallback(() => {
+    setIsMenuOpen(true)
+  })
+
+  const onCloseMenu = useCallback(() => {
+    setIsMenuOpen(false)
     setIsHovered(false)
   })
 
@@ -155,44 +166,54 @@ const TreeItem = ({
 
   const getRenderedItem = (onItemClick) => {
     return (
-      <ListItem
-        dense
-        ref={ itemRef }
-        className={ listItemClassname }
-        selected={ item.currentPage }
-        onMouseEnter={ onHover }
-        onMouseLeave={ onLeave }
-        onClick={ onItemClick }
-      >
-        <ListItemText
-          className={ classes.itemText }
-          classes={{
-            primary: colorClassname
-          }}
-          primary={ item.node.name }
-        />
+      <>
+        <ListItem
+          dense
+          ref={ itemRef }
+          className={ listItemClassname }
+          selected={ item.currentPage }
+          onMouseEnter={ onHover }
+          onMouseLeave={ onLeave }
+          onClick={ onItemClick }
+        >
+          <ListItemText
+            className={ classes.itemText }
+            classes={{
+              primary: colorClassname
+            }}
+            primary={ item.node.name }
+          />
+          {
+            hasMouse() && isHovered ? (
+              <Suspense>
+                <EditHoverButton
+                  node={ item.node }
+                  isOpen={ open }
+                  folderPages={ folderPages }
+                  onOpenItem={ onOpenItem }
+                  onClose={ onLeave }
+                />
+              </Suspense>
+            ) : (
+              FolderIcon && (
+                <FolderIcon
+                  className={ colorClassname }
+                  onClick={ eventUtils.cancelEventHandler(onOpenItem) }
+                />
+              )
+            )
+          }
+        </ListItem>
         {
-          hasMouse() && isHovered ? (
+          isMenuOpen && (
             <Suspense>
-              <EditHoverButton
-                node={ item.node }
-                isOpen={ open }
-                folderPages={ folderPages }
-                onOpenItem={ onOpenItem }
-                onClose={ onLeave }
+              <FocusElementOverlay
+                contentRef={ itemRef }
               />
             </Suspense>
-          ) : (
-            FolderIcon && (
-              <FolderIcon
-                className={ colorClassname }
-                onClick={ eventUtils.cancelEventHandler(onOpenItem) }
-              />
-            )
           )
         }
-        
-      </ListItem>
+      </>
     )
   }
 
@@ -200,12 +221,15 @@ const TreeItem = ({
     return (
       <Suspense>
         <EditableItem
+          clickPositioning
           node={ item.node }
           isOpen={ open }
           folderPages={ folderPages }
           getRenderedItem={ getRenderedItem }
           autoTooltip={ false }
           onOpenItem={ onOpenItem }
+          onOpenMenu={ onOpenMenu }
+          onCloseMenu={ onCloseMenu }
         />
       </Suspense>
     )

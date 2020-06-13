@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Tooltip from '@material-ui/core/Tooltip'
 
 import colorUtils from '../../utils/color'
+import eventUtils from '../../utils/events'
 import FocusElementOverlay from './FocusElementOverlay'
 
 const useStyles = makeStyles(theme => {
@@ -51,9 +52,7 @@ const FocusElement = ({
   })
 
   const handleClick = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    e.nativeEvent.stopImmediatePropagation()
+    eventUtils.cancelEvent(e)
     if(onClick) return onClick()
     if(!getMenu) throw new Error(`neither onClick nor getMenu was passed to FocusElement`)
     if(!menuAnchor) {

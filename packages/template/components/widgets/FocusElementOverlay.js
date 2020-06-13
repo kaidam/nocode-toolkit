@@ -2,113 +2,152 @@ import React, { useRef, useEffect, useState } from 'react'
 import classnames from 'classnames'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 
-const HIGHLIGHT_BORDER = `0.5px solid #666`
+const processPadding = (obj) => {
+  obj = obj || {}
+  if(typeof(obj) === 'number') {
+    obj = {
+      top: obj,
+      right: obj,
+      bottom: obj,
+      left: obj,
+    }
+  }
+  return {
+    top: obj.top || 0,
+    right: obj.right || 0,
+    bottom: obj.bottom || 0,
+    left: obj.left || 0,
+  }
+}
+
+const processOffset = (obj) => {
+  obj = obj || {}
+  if(typeof(obj) === 'number') {
+    obj = {
+      x: obj,
+      y: obj,
+    }
+  }
+  return {
+    x: obj.x || 0,
+    y: obj.y || 0,
+  }
+}
+
+const calculateBoundingBox = ({
+  coords,
+  padding,
+  offset,
+}) => {
+  return {
+    width: coords.width + padding.left + padding.right,
+    height: coords.height + padding.top + padding.bottom,
+    top: coords.y - padding.top + offset.y,
+    left: coords.x - padding.left + offset.x,
+    bottom: coords.y + coords.height + padding.bottom + offset.y,
+    right: coords.x + coords.width + padding.right + offset.x,
+  }
+}
 
 const useStyles = makeStyles(theme => {
   return {
     root: {
-      
+     
     },
     clicker: {
       
     },
-    panel: ({coords, padding, zIndex}) => ({
+    panel: ({zIndex}) => ({
       backgroundColor: 'rgba(0, 0, 0, 0)',
-      //backdropFilter: 'blur(10px)',
-      position: 'absolute',
+      position: 'fixed',
       zIndex,
       transition: 'background-color 0.2s ease-in',
     }),
-    border: ({coords, padding, zIndex}) => ({
-      position: 'absolute',
-      zIndex,
-    }),
-    top: ({coords, padding}) => ({
+    top: ({boundingBox}) => ({
       width: '100%',
-      height: coords.y - (padding.top ? padding.top : 0),
+      height: boundingBox.top,
       left: '0px',
       top: '0px',
     }),
-    right: ({coords, padding}) => ({
-      width: window.innerWidth - coords.x - coords.width - (padding.right ? padding.right : 0),
-      height: coords.height + (padding.top ? padding.top : 0) + (padding.bottom ? padding.bottom : 0),
-      left: coords.x + coords.width + (padding.right ? padding.right : 0),
-      top: coords.y - (padding.top ? padding.top : 0),
+    right: ({boundingBox}) => ({
+      width: window.innerWidth - boundingBox.left - boundingBox.width,
+      height: boundingBox.height,
+      left: boundingBox.right,
+      top: boundingBox.top,
     }),
-    bottom: ({coords, padding}) => ({
+    bottom: ({boundingBox}) => ({
       width: '100%',
-      height: window.innerHeight - coords.y - coords.height - (padding.bottom ? padding.bottom : 0),
+      height: window.innerHeight - boundingBox.top - boundingBox.height,
       left: '0px',
-      top: coords.y + coords.height + (padding.bottom ? padding.bottom : 0),
+      top: boundingBox.bottom,
     }),
-    left: ({coords, padding}) => ({
-      width: coords.x - (padding.left ? padding.left : 0),
-      height: coords.height + (padding.top ? padding.top : 0) + (padding.bottom ? padding.bottom : 0),
+    left: ({boundingBox}) => ({
+      width: boundingBox.left,
+      height: boundingBox.height,
       left: '0px',
-      top: coords.y - (padding.top ? padding.top : 0),
+      top: boundingBox.top,
     }),
-    borderTop: ({coords, padding}) => ({
-      width: coords.width + (padding.left ? padding.left : 0) + (padding.right ? padding.right : 0),
-      height: 1,
-      left: coords.x - (padding.left ? padding.left : 0),
-      top: coords.y - (padding.top ? padding.top : 0),
-      borderBottom: HIGHLIGHT_BORDER,
-    }),
-    borderBottom: ({coords, padding}) => ({
-      width: coords.width + (padding.left ? padding.left : 0) + (padding.right ? padding.right : 0),
-      height: 1,
-      left: coords.x - (padding.left ? padding.left : 0),
-      top: coords.y + (padding.bottom ? padding.bottom : 0) + coords.height,
-      borderTop: HIGHLIGHT_BORDER,
-    }),
-    borderLeft: ({coords, padding}) => ({
-      width: 1,
-      height: coords.height + 1 + (padding.top ? padding.top : 0) + (padding.bottom ? padding.bottom : 0),
-      left: coords.x - (padding.left ? padding.left : 0),
-      top: coords.y - (padding.top ? padding.top : 0),
-      borderRight: HIGHLIGHT_BORDER,
-    }),
-    borderRight: ({coords, padding}) => ({
-      width: 1,
-      height: coords.height + 1 + (padding.top ? padding.top : 0) + (padding.bottom ? padding.bottom : 0),
-      left: coords.x + (padding.left ? padding.left : 0) + coords.width,
-      top: coords.y - (padding.top ? padding.top : 0),
-      borderLeft: HIGHLIGHT_BORDER,
-    }),
-    disabled: ({coords, padding, zIndex}) => ({
-      position: 'absolute',
+    disabled: ({boundingBox, zIndex}) => ({
+      position: 'fixed',
       zIndex,
-      left: coords.x - (padding.left ? padding.left : 0),
-      top: coords.y - (padding.top ? padding.top : 0),
-      width: coords.width + (padding.left ? padding.left : 0) + (padding.right ? padding.right : 0),
-      height: coords.height + 1 + (padding.top ? padding.top : 0) + (padding.bottom ? padding.bottom : 0),
+      left: boundingBox.left,
+      top: boundingBox.top,
+      width: boundingBox.width,
+      height: boundingBox.height + 1,
     }),
   }
 })
 
 const FocusElementOverlay = ({
   contentRef,
-  padding = {},
+  padding,
+  offset,
   zIndex = 1300,
+  adjustTopbar = true,
   onClick,
   disableClick,
 }) => {
-  const [ windowSize, setWindowSize ] = useState(null)
-  const containerRef = useRef()
-  const el = contentRef.current
-  const coords = el ? el.getBoundingClientRect() : {}
+
+  padding = processPadding(padding)
+  offset = processOffset(offset)
+
   const theme = useTheme()
-  const topbarHeight = theme && theme.layout ? theme.layout.topbarHeight : 0
-  const y = coords.y || 0
-  if(y < topbarHeight) {
-    coords.y = topbarHeight
-    coords.height -= (topbarHeight - y)
-  }
-  const classes = useStyles({
-    coords,
+
+  // this is used as a cache buster not to store the actual values
+  const [ windowSize, setWindowSize ] = useState(null)
+  const [ coords, setCoords ] = useState(null)
+  const containerRef = useRef()
+
+  const boundingBox = calculateBoundingBox({
+    coords: coords || {},
     padding,
+    offset,
+  })
+
+  const classes = useStyles({
+    boundingBox,
     zIndex,
   })
+
+  useEffect(() => {
+    setTimeout(() => {
+      const el = contentRef.current
+      const coords = el ? el.getBoundingClientRect() : {}
+      if(adjustTopbar) {
+        const topbarHeight = theme && theme.layout ? theme.layout.topbarHeight : 0
+        const y = coords.y || 0
+        if(y < topbarHeight) {
+          coords.y = topbarHeight
+          coords.height -= (topbarHeight - y)
+        }
+      }
+      setCoords(coords)
+    }, 1)
+  }, [
+    adjustTopbar,
+    contentRef.current,
+  ])
+
   useEffect(() => {
     setTimeout(() => {
       if(!containerRef.current) return
@@ -116,10 +155,11 @@ const FocusElementOverlay = ({
       for(let i=0; i<divs.length; i++) {
         divs[i].style.backgroundColor = 'rgba(0, 0, 0, 0.2)'
       }
-    }, 1)
+    }, 100)
   }, [
     containerRef.current,
   ])
+
   useEffect(() => {
     const handleResize = () => {
       setWindowSize({
@@ -131,7 +171,7 @@ const FocusElementOverlay = ({
     return () => window.removeEventListener("resize", handleResize)
   }, [])
 
-  if(!el) return null
+  if(!coords) return null
   
   return (
     <div className={ classes.root }>
@@ -140,10 +180,6 @@ const FocusElementOverlay = ({
         <div className={ classnames(classes.panel, classes.right) }></div>
         <div className={ classnames(classes.panel, classes.bottom) }></div>
         <div className={ classnames(classes.panel, classes.left) }></div>
-        <div className={ classnames(classes.border, classes.borderTop) }></div>
-        <div className={ classnames(classes.border, classes.borderRight) }></div>
-        <div className={ classnames(classes.border, classes.borderBottom) }></div>
-        <div className={ classnames(classes.border, classes.borderLeft) }></div>
       </div>
       {
         disableClick && (

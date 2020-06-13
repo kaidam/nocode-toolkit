@@ -1,4 +1,4 @@
-import React, { lazy, useState, useCallback, useRef } from 'react'
+import React, { lazy, useState, useCallback, useRef, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import classnames from 'classnames'
@@ -19,6 +19,7 @@ import {
 const EditableItem = lazy(() => import(/* webpackChunkName: "ui" */ '../content/EditableItem'))
 const EditableNavBarMenu = lazy(() => import(/* webpackChunkName: "ui" */ './EditableNavBarMenu'))
 const EditHoverButton = lazy(() => import(/* webpackChunkName: "ui" */ './EditHoverButton'))
+const FocusElementOverlay = lazy(() => import(/* webpackChunkName: "ui" */ '../widgets/FocusElementOverlay'))
 
 const NativeLinkComponent = ({
   children,
@@ -128,7 +129,10 @@ const NavBarItem = ({
 }) => {
 
   const [ isHovered, setIsHovered ] = useState(false)
-  const hoverRef = useRef()
+  const [ isMenuOpen, setIsMenuOpen ] = useState(false)
+  //const [ containerCoords, setContainerCoords ] = useState(null)
+
+  const containerRef = useRef()
 
   const onHover = useCallback(() => {
     setIsHovered(true)
@@ -138,12 +142,39 @@ const NavBarItem = ({
     setIsHovered(false)
   })
 
+  const onOpenMenu = useCallback(() => {
+    setIsMenuOpen(true)
+  })
+
+  const onCloseMenu = useCallback(() => {
+    setIsMenuOpen(false)
+    setIsHovered(false)
+  })
+
   const classes = useStyles({
     contrast,
     align,
     vertical,
     isHovered,
   })
+
+  // useEffect(() => {
+  //   const newCoords = containerRef.current ? containerRef.current.getBoundingClientRect() : null
+  //   if(newCoords && !containerCoords) {
+  //     setContainerCoords(newCoords)
+  //   }
+  //   console.log('--------------------------------------------')
+  //   console.dir(newCoords)
+  //   console.dir(node.id)
+  //   // const newCoords = containerRef.current ? containerRef.current.getBoundingClientRect() : {width: 0}
+  //   // if(containerRef.current && !containerCoords && newCoords.width > 0) {
+  //   //   console.log('--------------------------------------------')
+  //   //   console.dir(newCoords)
+  //   //   //setContainerCoords(newCoords)
+  //   // }
+  // }, [
+  //   containerRef.current,
+  // ])
 
   const dispatch = useDispatch()
 
@@ -178,6 +209,7 @@ const NavBarItem = ({
           className={ itemClass }
           onClick={ onClick }
           onContextMenu={ showUI ? onClick : null }
+          ref={ containerRef }
         >
           { node.name }
         </div>
@@ -191,10 +223,22 @@ const NavBarItem = ({
         >
           <Suspense>
             <EditableNavBarMenu
+              clickPositioning
               node={ node }
               children={ node.children  }
               getButton={ getButton }
+              onOpenMenu={ onOpenMenu }
+              onCloseMenu={ onCloseMenu }
             />
+            {
+              isMenuOpen && (
+                <FocusElementOverlay
+                  adjustTopbar={ false }
+                  padding={ 4 }
+                  contentRef={ containerRef }
+                />
+              )
+            }
           </Suspense>
         </li>
       )
@@ -203,7 +247,7 @@ const NavBarItem = ({
       return (
         <li
           className={ classes.itemContainer }
-          ref={ hoverRef }
+          ref={ containerRef }
           onMouseEnter={ onHover }
           onMouseLeave={ onLeave }
         >
@@ -218,7 +262,7 @@ const NavBarItem = ({
                   node={ node }
                   isOpen={ false }
                   folderPages={ folderPages }
-                  anchorRef={ hoverRef }
+                  anchorRef={ containerRef }
                   onOpenItem={ onOpenItem }
                   onClose={ onLeave }
                 />
@@ -237,24 +281,40 @@ const NavBarItem = ({
       const getRenderedItem = (onItemClick, uiMode) => {
         return (
           <li
-            className={ classes.itemContainer }
+            className={ classes.itemContainer }  
           >
             <div
               className={ itemClass }
               onClick={ onItemClick }
-              onContextMenu={ uiMode ? onItemClick : null }
+              onContextMenu={ uiMode ? onItemClick : null } 
+              ref={ containerRef }
             >
               { node.name }
             </div>
+            {
+              isMenuOpen && (
+                <Suspense>
+                  <FocusElementOverlay
+                    adjustTopbar={ false }
+                    padding={ 4 }
+                    contentRef={ containerRef }
+                  />
+                </Suspense> 
+              )
+            }
           </li>
         )
       }
+
       return (
         <Suspense>
           <EditableItem
+            clickPositioning
             node={ node }
             getRenderedItem={ getRenderedItem }
             onOpenItem={ onOpenItem }
+            onOpenMenu={ onOpenMenu }
+            onCloseMenu={ onCloseMenu }
           />
         </Suspense>
       )
@@ -277,7 +337,7 @@ const NavBarItem = ({
       return (
         <li
           className={ classes.itemContainer }
-          ref={ hoverRef }
+          ref={ containerRef }
           onMouseEnter={ onHover }
           onMouseLeave={ onLeave }
         >
@@ -294,7 +354,7 @@ const NavBarItem = ({
                   node={ node }
                   isOpen={ false }
                   folderPages={ folderPages }
-                  anchorRef={ hoverRef }
+                  anchorRef={ containerRef }
                   onOpenItem={ onOpenItem }
                   onClose={ onLeave }
                 />

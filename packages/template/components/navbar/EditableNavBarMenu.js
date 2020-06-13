@@ -1,20 +1,52 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import Tooltip from '@material-ui/core/Tooltip'
 import useItemOptions from '../hooks/useItemOptions'
 import MenuButton from '../widgets/MenuButton'
 import icons from '../../icons'
+import eventUtils from '../../utils/events'
 
 const EditableNavBarMenu = ({
+  clickPositioning,
   node,
   children,
   getButton,
+  onOpenMenu,
+  onCloseMenu,
 }) => {
+
+  const [menuAnchor, setMenuAnchor] = useState(null)
+
   const {
     getItemOptions,
   } = useItemOptions()
 
+  const onCloseMenuWrapper = useCallback(() => {
+    if(onCloseMenu) onCloseMenu()
+    setMenuAnchor(null)
+  }, [
+    onCloseMenu,
+  ])
+
   const getTooltipButton = useCallback((onClick) => {
-    const button = getButton(onClick)
+
+    const onClickWrapper = (e) => {
+      eventUtils.cancelEvent(e)
+      if(clickPositioning) {
+        if(!menuAnchor) {
+          setMenuAnchor({
+            el: e.currentTarget,
+            x: e.nativeEvent.clientX + 5,
+            y: e.nativeEvent.clientY + 5,
+          })
+        }
+        else {
+          setMenuAnchor(null)
+        }
+      }
+      onClick(e)
+    }
+
+    const button = getButton(onClickWrapper)
     return (
       <Tooltip title="Click to Edit" placement="top" arrow>
         { button }
@@ -22,6 +54,8 @@ const EditableNavBarMenu = ({
     )
   }, [
     getButton,
+    clickPositioning,
+    menuAnchor,
   ])
 
   const getMenuItems = useCallback(() => {
@@ -81,6 +115,15 @@ const EditableNavBarMenu = ({
       getButton={ getTooltipButton }
       getItems={ getMenuItems }
       processHeaders={ (headers) => headers.filter(header => header != 'View Contents') }
+      parentAnchorEl={ menuAnchor ? menuAnchor.el : null }
+      anchorPosition={ 
+        menuAnchor ? {
+          left: menuAnchor.x,
+          top: menuAnchor.y,
+        } : null
+      }
+      onOpen={ onOpenMenu }
+      onClose={ onCloseMenuWrapper }
     />
   )
 }
