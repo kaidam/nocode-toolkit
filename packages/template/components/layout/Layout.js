@@ -4,6 +4,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import Divider from '@material-ui/core/Divider'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
+import useLayoutGrid from '../hooks/useLayoutGrid'
+
 import settingsSelectors from '../../store/selectors/settings'
 import systemSelectors from '../../store/selectors/system'
 import nocodeSelectors from '../../store/selectors/nocode'
@@ -30,82 +32,39 @@ const Layout = ({
 
   const classes = useStyles()
 
-  const annotations = useSelector(nocodeSelectors.annotations)
-  const annotation = annotations[content_id] || {}
-  const rawData = annotation[layout_id] || []
-  const widgetRenderers = useSelector(settingsSelectors.widgetRenderers)
-  const showUI = useSelector(systemSelectors.showUI)
+  const {
+    layout,
+    getCell,
+  } = useLayoutGrid({
+    content_id,
+    layout_id,
+    simpleMovement,
+  })
 
-  const rows = useMemo(() => {
-    return rawData.map((row, i) => ({
-      id: `row-${i}`,
-      cells: row,
-    }))
-  }, [
-    rawData,
-  ])
-
-  const onDragEnd = useCallback(result => {
-    console.log('--------------------------------------------')
-    console.dir(result)
-  }, [rows])
-
-  if(!rows || rows.length <= 0) return null
+  if(!layout || layout.length <= 0) return null
 
   return (
     <div className={ classes.root }>    
-      <DragDropContext onDragEnd={ onDragEnd }>
-        <Droppable droppableId="droppable">
-          {(provided, snapshot) => (
+      {
+        layout.map((row, i) => {
+          return (
             <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
+              className={ classes.row }
+              key={ i }
             >
               {
-                rows.map((row, i) => {
-                  return (
-                    <Draggable
-                      key={ row.id }
-                      draggableId={ row.id }
-                      index={ i }
-                    >
-                      {(provided, snapshot) => (
-                        <div
-                          className={ classes.row }
-                          ref={ provided.innerRef }
-                          { ...provided.draggableProps }
-                          { ...provided.dragHandleProps }
-                          style={ provided.draggableProps.style }
-                        >
-                          {
-                            row.cells.map((cell, j) => {
-                              return (
-                                <Cell
-                                  key={ j }
-                                  cell={ cell }
-                                  layout={ rawData }
-                                  widgetRenderers={ widgetRenderers }
-                                  showUI={ showUI }
-                                  content_id={ content_id }
-                                  layout_id={ layout_id }
-                                  simpleMovement={ simpleMovement }
-                                  rowIndex={ i }
-                                  cellIndex={ j }
-                                />
-                              )
-                            })
-                          }
-                        </div>
-                      )}
-                    </Draggable>
-                  )
+                row.map((cell, j) => {
+                  return getCell({
+                    cell,
+                    rowIndex: i,
+                    cellIndex: j,
+                  })
                 })
               }
-              { provided.placeholder }
             </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+          )
+        })
+      }
       {
         divider && (
           <Divider />
