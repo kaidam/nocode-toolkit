@@ -15,6 +15,45 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
+const Folder = ({
+  nodes,
+  depth,
+  openFolders,
+  itemProps,
+}) => {
+  const classes = useStyles()
+  if(!nodes || nodes.length <= 0) return null
+  return (
+    <List className={ classes.root }>
+      {
+        nodes.map((node, i) => {
+          const open = openFolders[node.id]
+          return (
+            <React.Fragment key={ i }>
+              <TreeItem
+                node={ node }
+                depth={ depth }
+                open={ open }
+                { ...itemProps }
+              />
+              {
+                open && (
+                  <Folder
+                    nodes={ node.children }
+                    depth={ depth+1 }
+                    openFolders={ openFolders }
+                    itemProps={ itemProps }
+                  />
+                )
+              }
+            </React.Fragment>
+          )
+        })
+      }
+    </List> 
+  )
+}
+
 const Tree = ({
 
   // the name of the section this tree is for
@@ -33,7 +72,8 @@ const Tree = ({
 }) => {
   const {
     onToggleFolder,
-    list,
+    tree,
+    openFolders,
     scrollToCurrentPage,
     onDisableScrollToCurrentPage,
   } = useSectionTree({
@@ -42,27 +82,22 @@ const Tree = ({
 
   const showUI = useSelector(systemSelectors.showUI)
 
-  const classes = useStyles()
+  const itemProps = {
+    showUI,
+    folderPages,
+    containerRef,
+    scrollToCurrentPage,
+    onDisableScrollToCurrentPage,
+    onToggleFolder,
+  }
 
   return (
-    <List className={ classes.root }>
-      {
-        list.map((item, i) => {
-          return (
-            <TreeItem
-              key={ i }
-              showUI={ showUI }
-              item={ item }
-              folderPages={ folderPages }
-              containerRef={ containerRef }
-              scrollToCurrentPage={ scrollToCurrentPage }
-              onDisableScrollToCurrentPage={ onDisableScrollToCurrentPage }
-              onToggleFolder={ onToggleFolder }
-            />
-          )
-        })
-      }
-    </List> 
+    <Folder
+      nodes={ tree }
+      depth={ 0 }
+      openFolders={ openFolders }
+      itemProps={ itemProps }
+    />
   )
 }
 

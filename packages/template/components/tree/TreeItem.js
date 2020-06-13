@@ -53,7 +53,9 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const TreeItem = ({
-  item,
+  node,
+  depth,
+  open,
   showUI,
   folderPages,
   containerRef,
@@ -61,13 +63,6 @@ const TreeItem = ({
   onDisableScrollToCurrentPage,
   onToggleFolder,
 }) => {
-
-  const {
-    depth,
-    open,
-    currentPage,
-    node,
-  } = item
 
   const [ isHovered, setIsHovered ] = useState(false)
   const [ isMenuOpen, setIsMenuOpen ] = useState(false)
@@ -92,7 +87,7 @@ const TreeItem = ({
   const classes = useStyles({
     depth,
     isHovered,
-    active: currentPage,
+    active: node.currentPage,
   })
 
   const dispatch = useDispatch()
@@ -100,23 +95,23 @@ const TreeItem = ({
   const itemRef = useRef()
 
   const listItemClassname = classnames({
-    [classes.active]: currentPage,
+    [classes.active]: node.currentPage,
   }, classes.menuItem)
 
   const colorClassname = classnames({
-    [classes.active]: currentPage,
+    [classes.active]: node.currentPage,
   })
 
   // scroll to the current element so when the page initially renders
   // we can see the selected item
   useEffect(() => {
-    if(!currentPage || !containerRef.current || !scrollToCurrentPage) return
+    if(!node.currentPage || !containerRef.current || !scrollToCurrentPage) return
     setTimeout(() => {
       if(!containerRef.current || !itemRef.current) return
       containerRef.current.scrollTop = itemRef.current.offsetTop
     }, 1)
   }, [
-    currentPage,
+    node.currentPage,
   ])
 
   let FolderIcon = null
@@ -131,8 +126,8 @@ const TreeItem = ({
   }
 
   let linkType = ''
-  if(item.node.type == 'link') linkType = 'external'
-  else if(item.node.type == 'folder') linkType = folderPages ? 'internal' : ''
+  if(node.type == 'link') linkType = 'external'
+  else if(node.type == 'folder') linkType = folderPages ? 'internal' : ''
   else linkType = 'internal'
 
   const onClickItem = useCallback(() => {
@@ -157,14 +152,14 @@ const TreeItem = ({
     const handled = onClickItem()
     if(handled) return
     if(linkType == 'external') {
-      window.open(item.node.url)
+      window.open(node.url)
     }
-    else if(linkType == 'internal' && item.route) {
-      dispatch(routerActions.navigateTo(item.route.name))
+    else if(linkType == 'internal' && node.route) {
+      dispatch(routerActions.navigateTo(node.route.name))
     }
   }, [
     linkType,
-    item,
+    node,
   ])
 
   const getRenderedItem = (onItemClick) => {
@@ -174,7 +169,7 @@ const TreeItem = ({
           dense
           ref={ itemRef }
           className={ listItemClassname }
-          selected={ item.currentPage }
+          selected={ node.currentPage }
           onMouseEnter={ onHover }
           onMouseLeave={ onLeave }
           onClick={ onItemClick }
@@ -184,13 +179,13 @@ const TreeItem = ({
             classes={{
               primary: colorClassname
             }}
-            primary={ item.node.name }
+            primary={ node.name }
           />
           {
             (hasMouse() && (isHovered || isMenuOpen)) ? (
               <Suspense>
                 <EditHoverButton
-                  node={ item.node }
+                  node={ node }
                   isOpen={ open }
                   folderPages={ folderPages }
                   onOpenItem={ onOpenItem }
@@ -236,7 +231,7 @@ const TreeItem = ({
             x: 25,
             y: 0,
           }}
-          node={ item.node }
+          node={ node }
           isOpen={ open }
           folderPages={ folderPages }
           getRenderedItem={ getRenderedItem }
@@ -254,18 +249,18 @@ const TreeItem = ({
   if(linkType == 'external') {
     return (
       <Link
-        url={ item.node.url }
+        url={ node.url }
         className={ classes.link }
       >
         { renderedItem }
       </Link>
     )
   }
-  else if(linkType == 'internal' && item.route) {
+  else if(linkType == 'internal' &&  node.route) {
     return (
       <Link
-        path={ item.route.path }
-        name={ item.route.name }
+        path={ node.route.path }
+        name={ node.route.name }
         className={ classes.link }
       >
         { renderedItem }

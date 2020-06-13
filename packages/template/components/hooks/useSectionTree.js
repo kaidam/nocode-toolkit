@@ -36,45 +36,6 @@ const useSectionTree = ({
     }, 10)
   }, [])
 
-  const list = useMemo(() => {
-    const items = []
-    const addItem = ({
-      node,
-      depth = 0,
-    }) => {
-      const open = openFolders[node.id]
-
-      items.push({
-        id: node.id,
-        node,
-        depth,
-        open,
-        route: node.route,
-        currentPage: node.currentPage,
-      })
-
-      // if the folder is open, include it's children
-      // adding one to the depth so we can render nested items
-      if(open) {
-        node.children.forEach(child => {
-          addItem({
-            node: child,
-            depth: depth + 1,
-          })
-        })
-      }
-    }
-
-    // add the top level section items to the tree
-    tree.forEach(node => addItem({
-      node,
-    }))
-    return items
-  }, [
-    tree,
-    openFolders,
-  ])
-
   // when the route changes - open the ancestor folders
   useEffect(() => {
     setOpenFolders(ancestors.reduce((all, id) => {
@@ -87,7 +48,7 @@ const useSectionTree = ({
 
   return {
     tree,
-    list,
+    openFolders,
     scrollToCurrentPage,
     onToggleFolder,
     onDisableScrollToCurrentPage,

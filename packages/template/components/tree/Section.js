@@ -11,6 +11,7 @@ import Layout from '../layout/Layout'
 
 const EditableToolbar = lazy(() => import(/* webpackChunkName: "ui" */ './EditableToolbar'))
 const EditableLayout = lazy(() => import(/* webpackChunkName: "ui" */ '../layout/EditableLayout'))
+const EditableTree = lazy(() => import(/* webpackChunkName: "ui" */ './EditableTree'))
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -78,11 +79,23 @@ const TreeSection = ({
         className={ classes.content }
         ref={ containerRef }
       >
-        <Tree
-          section={ section }
-          folderPages={ folderPages }
-          containerRef={ containerRef }
-        />
+        {
+          showUI ? (
+            <Suspense>
+              <EditableTree
+                section={ section }
+                folderPages={ folderPages }
+                containerRef={ containerRef }
+              />
+            </Suspense>
+          ) : (
+            <Tree
+              section={ section }
+              folderPages={ folderPages }
+              containerRef={ containerRef }
+            />
+          )
+        }
       </div>
     </div>
   )
