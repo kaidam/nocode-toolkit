@@ -21,12 +21,6 @@ const useSectionEditor = ({
     section,
   })
 
-  const {
-    driveMode,
-  } = useSelector(settingsSelectors.settings)
-
-  const isAdvancedDrive = driveMode == 'advanced'
-
   const actions = Actions(useDispatch(), {
     onCreateRemoteContent: contentActions.createRemoteContent,
     onCreateLocalContent: contentActions.createLocalContent,
@@ -81,59 +75,52 @@ const useSectionEditor = ({
       icon: icons.folder,
     }
 
-    if(isAdvancedDrive) {
-      document.items = [{
-        title: 'New Google Document',
-        icon: icons.docs,
-        secondaryIcon: icons.add,
-        handler: newDocumentHandler,
-      }, {
-        title: 'Existing Google Document',
-        icon: icons.docs,
-        secondaryIcon: icons.search,
-        handler: existingDocumentHandler,
-      }]
+    document.items = [{
+      title: 'New Google Document',
+      icon: icons.docs,
+      secondaryIcon: icons.add,
+      handler: newDocumentHandler,
+    }, {
+      title: 'Existing Google Document',
+      icon: icons.docs,
+      secondaryIcon: icons.search,
+      handler: existingDocumentHandler,
+    }]
 
-      folder.items = [{
-        title: 'New Google Folder',
-        icon: icons.folder,
-        secondaryIcon: icons.add,
-        handler: newFolderHandler,
-      }, {
-        title: 'Existing Google Folder',
-        icon: icons.folder,
-        secondaryIcon: icons.search,
-        handler: existingFolderHandler,
-      }]
-    }
-    else {
-      document.handler = newDocumentHandler
-      folder.handler = newFolderHandler
-    }
-
+    folder.items = [{
+      title: 'New Google Folder',
+      icon: icons.folder,
+      secondaryIcon: icons.add,
+      handler: newFolderHandler,
+    }, {
+      title: 'Existing Google Folder',
+      icon: icons.folder,
+      secondaryIcon: icons.search,
+      handler: existingFolderHandler,
+    }]
+  
     return [
       document,
       folder,
       link,
     ]
   }, [
-    isAdvancedDrive,
     addTargetFolderId,
   ])
   
   const getSettingsItems = useCallback(() => {
     return [
 
-      isAdvancedDrive ? {
+      {
         title: 'Manage Drive Folders',
         icon: icons.folder,
         secondaryIcon: icons.drive,
         handler: () => actions.openManageFoldersDialog({
           section,
         })
-      } : null,
+      },
 
-      isAdvancedDrive ? '-' : null,
+      '-',
       
       {
         title: 'Sorting',
@@ -160,7 +147,6 @@ const useSectionEditor = ({
     ].filter(i => i)
   }, [
     getAddItems,
-    isAdvancedDrive,
   ])
   
   return {

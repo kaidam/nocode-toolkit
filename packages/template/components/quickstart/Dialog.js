@@ -99,59 +99,6 @@ const DriveExperience = ({
   )
 }
 
-const DriveMode = ({
-  onSetDriveMode,
-}) => {
-  const classes = useStyles()
-  return (
-    <div>
-      <div className={ classes.contentRow }>
-        <Typography gutterBottom>Do you have existing content that you want to import from your google drive and use on this website?</Typography>
-      </div>
-      <div className={ classes.contentRow }>
-        <Typography gutterBottom>It's OK if you don't, you can easily create new content with nocode.</Typography>
-      </div>
-      <div className={ classes.contentRow }>
-        <Grid container spacing={ 2 }>
-          {
-            DRIVE_MODE_OPTIONS.map((driveMode, i) => {
-              return (
-                <Grid item key={ i } xs={ 12 } md={ 3 }>
-                  <Card
-                    className={classes.card}
-                  >
-                    <CardActionArea
-                      onClick={ () => onSetDriveMode(driveMode.value) }
-                    >
-                      <CardContent>
-                        <Typography gutterBottom variant="h6" component="h2">
-                          { driveMode.title }
-                        </Typography>
-                        <Typography variant="body2" color="textSecondary" component="p">
-                          { driveMode.description }
-                        </Typography>
-                      </CardContent>
-                    </CardActionArea>
-                    <CardActions>
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={ () => onSetDriveMode(driveMode.value) }
-                      >
-                        Choose...
-                      </Button>
-                    </CardActions>
-                  </Card>
-                </Grid>
-              )
-            })
-          }
-        </Grid>
-      </div>
-    </div>
-  )
-}
-
 const Template = ({
   onSetQuickstart,
 }) => {
@@ -207,15 +154,10 @@ const Template = ({
   )
 }
 
-
 const STEPS = {
   driveExperience: {
     title: 'How well do you know Google Docs?',
     component: DriveExperience,
-  },
-  driveMode: {
-    title: `Do you have existing content?`,
-    component: DriveMode,
   },
   quickstart: {
     title: 'What are you looking to publish today?',
@@ -225,25 +167,13 @@ const STEPS = {
 
 const DRIVE_EXPERIENCE_LEVELS = [{
   title: 'Absolutely None',
-  value: 'none',
-  driveMode: 'basic',
+  value: 'none',  
 }, {
   title: 'I\'ve used it a bit',
   value: 'some',
 }, {
   title: 'Boafide Superuser',
   value: 'lots',
-  driveMode: 'advanced',
-}]
-
-const DRIVE_MODE_OPTIONS = [{
-  title: 'No',
-  description: 'Choose this if do not have existing content and want to create the content from scratch.',
-  value: 'basic',
-}, {
-  title: 'Yes',
-  description: 'Choose this if you want to use content you already have on Google Drive on this website.',
-  value: 'advanced',
 }]
 
 const QuickStartDialog = ({
@@ -256,7 +186,6 @@ const QuickStartDialog = ({
   const [ step, setStep ] = useState('quickstart')
   const [ quickstart, setQuickstart ] = useState('none')
   const [ driveExperience, setDriveExperience ] = useState('none')
-  const [ driveMode, setDriveMode ] = useState('basic')
 
   const actions = Actions(useDispatch(), {
     onSubmit: uiActions.acceptQuickstartWindow,
@@ -267,23 +196,10 @@ const QuickStartDialog = ({
     setStep('driveExperience')
   }, [
     driveExperience,
-    driveMode,
   ])
 
   const onSetDriveExperience = useCallback((value) => {
     setDriveExperience(value)
-    const experienceConfig = DRIVE_EXPERIENCE_LEVELS.find(e => e.value == value)
-    if(experienceConfig.driveMode) {
-      setDriveMode(experienceConfig.driveMode)
-      setStep('submit')
-    }
-    else {
-      setStep('driveMode')
-    }
-  })
-
-  const onSetDriveMode = useCallback((value) => {
-    setDriveMode(value)
     setStep('submit')
   })
 
@@ -296,14 +212,12 @@ const QuickStartDialog = ({
       actions.onSubmit({
         quickstart,
         driveExperience,
-        driveMode,
       })
     }
   }, [
     step,
     quickstart,
     driveExperience,
-    driveMode,
   ])
 
   const STEP = STEPS[step]
