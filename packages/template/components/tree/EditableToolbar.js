@@ -30,6 +30,9 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
+console.log('--------------------------------------------')
+console.log('REMINDER: activate the tree -> editable toolbar quickstart again')
+
 const EditableToolbar = ({
   section,
 }) => {
@@ -38,8 +41,7 @@ const EditableToolbar = ({
   const context = useContext(OnboardingContext)
 
   const {    
-    getAddItems,
-    getSettingsItems,
+    getAllItems,
   } = useSectionEditor({
     section,
     content_id: `section:${section}`,
@@ -73,7 +75,7 @@ const EditableToolbar = ({
           <MenuButton
             header={ `${sectionTitle} : Settings` }
             getButton={ getSettingsButton }
-            getItems={ getAddItems }
+            getItems={ getAllItems }
           />
         </div>
       </div>

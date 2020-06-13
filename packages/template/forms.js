@@ -18,9 +18,9 @@ const forms = {
       }],
     }, {
       id: 'hidden',
-      title: 'Show/Hide Items',
+      title: 'Show / Hide Items',
       schema: [{
-        title: 'Show/Hide Items',
+        title: 'Show / Hide Items',
         helperText: 'Manage the hidden items in this section',
         component: 'hiddenItems',
       }],

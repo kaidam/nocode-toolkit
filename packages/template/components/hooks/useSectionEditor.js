@@ -157,12 +157,39 @@ const useSectionEditor = ({
   }, [
     getAddItems,
   ])
+
+  const getAllItems = useCallback(() => {
+    return [
+
+      {
+        title: 'Add',
+        icon: icons.add,
+        items: getAddItems(),
+      },
+
+      {
+        title: 'Settings',
+        icon: icons.settings,
+        handler: () => actions.onEditSection({
+          title: `Edit Section`,
+          form: `section`,
+          id: section,
+        })
+      },
+
+
+    ].filter(i => i)
+  }, [
+    section,
+    getAddItems,
+  ])
   
   return {
     node,
     annotation,
     getAddItems,
     getSettingsItems,
+    getAllItems,
   }
 }
 
