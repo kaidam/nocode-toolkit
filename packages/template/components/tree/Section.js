@@ -9,9 +9,7 @@ import Suspense from '../system/Suspense'
 import Tree from './Tree'
 import Layout from '../layout/Layout'
 
-const EditableTree = lazy(() => import(/* webpackChunkName: "ui" */ './EditableTree'))
 const EditableToolbar = lazy(() => import(/* webpackChunkName: "ui" */ './EditableToolbar'))
-const EditableTreeWidgets = lazy(() => import(/* webpackChunkName: "ui" */ './EditableTreeWidgets'))
 const EditableLayout = lazy(() => import(/* webpackChunkName: "ui" */ '../layout/EditableLayout'))
 
 const useStyles = makeStyles(theme => ({
