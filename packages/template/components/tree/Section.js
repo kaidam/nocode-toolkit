@@ -66,16 +66,6 @@ const TreeSection = ({
         )
       }
       {
-        showUI && (
-          <div className={ classes.header }>
-            <Suspense
-              Component={ EditableTreeWidgets }
-              props={ layoutProps }
-            />
-          </div>
-        )
-      }
-      {
         showUI ? (
           <Suspense
             Component={ EditableLayout }
@@ -83,18 +73,6 @@ const TreeSection = ({
           />
         ) : (
           <Layout { ...layoutProps } />
-        )
-      }
-      {
-        showUI && (
-          <div className={ classes.header }>
-            <Suspense
-              Component={ EditableTree }
-              props={{
-                section,
-              }}
-            />
-          </div>
         )
       }
       <div
