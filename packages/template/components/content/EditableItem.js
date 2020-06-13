@@ -78,7 +78,7 @@ const EditableItem = ({
   ])
 
   if(!node) return null
-  
+
   return (
     <MenuButton
       asFragment
