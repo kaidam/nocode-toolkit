@@ -201,7 +201,7 @@ const NavBarItem = ({
       dispatch(routerActions.navigateTo(node.route.name))
     }
   }
-  
+
   if(isFolder) {
     const getButton = (onClick) => {
       return (
@@ -265,10 +265,27 @@ const NavBarItem = ({
                 <EditHoverButton
                   node={ node }
                   isOpen={ false }
+                  isMenuOpen={ isMenuOpen }
                   folderPages={ folderPages }
                   anchorRef={ containerRef }
                   onOpenItem={ onOpenItem }
-                  onClose={ onLeave }
+                  offset={{
+                    left: 0,
+                    top: 50,
+                  }}
+                  onOpen={ onOpenMenu }
+                  onClose={ onCloseMenu }
+                />
+              </Suspense>
+            )
+          }
+          {
+            isMenuOpen && (
+              <Suspense>
+                <FocusElementOverlay
+                  adjustTopbar={ false }
+                  padding={ 4 }
+                  contentRef={ containerRef }
                 />
               </Suspense>
             )
@@ -361,10 +378,27 @@ const NavBarItem = ({
                 <EditHoverButton
                   node={ node }
                   isOpen={ false }
+                  isMenuOpen={ isMenuOpen }
                   folderPages={ folderPages }
                   anchorRef={ containerRef }
+                  offset={{
+                    left: 0,
+                    top: 50,
+                  }}
                   onOpenItem={ onOpenItem }
-                  onClose={ onLeave }
+                  onOpen={ onOpenMenu }
+                  onClose={ onCloseMenu }
+                />
+              </Suspense>
+            )
+          }
+          {
+            isMenuOpen && (
+              <Suspense>
+                <FocusElementOverlay
+                  adjustTopbar={ false }
+                  padding={ 4 }
+                  contentRef={ containerRef }
                 />
               </Suspense>
             )

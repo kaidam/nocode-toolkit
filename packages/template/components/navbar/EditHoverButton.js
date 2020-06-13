@@ -14,7 +14,8 @@ const WIDTH = 60
 const HEIGHT = 60
 
 const useStyles = makeStyles(theme => ({
-  buttonContainer: ({buttonPosition}) => ({
+  buttonContainer: ({buttonPosition, isMenuOpen}) => ({
+    opacity: isMenuOpen ? 0 : 1,
     position: 'fixed',
     width: WIDTH,
     height: HEIGHT,
@@ -71,10 +72,16 @@ const getElementCoords = (ref) => {
 const EditHoverButton = ({
   node,
   isOpen,
+  isMenuOpen,
   folderPages,
   anchorRef,
   mode,
+  offset = {
+    left: 0,
+    top: 0,
+  },
   onOpenItem,
+  onOpen,
   onClose,
 }) => {
   const anchorCoords = getElementCoords(anchorRef)
@@ -86,6 +93,7 @@ const EditHoverButton = ({
   
   const classes = useStyles({
     buttonPosition,
+    isMenuOpen,
   })
 
   const {
@@ -122,9 +130,14 @@ const EditHoverButton = ({
     <MenuButton
       asFragment
       rightClick
+      anchorPosition={{
+        left: anchorCoords.left + offset.left,
+        top: anchorCoords.top + offset.top,
+      }}
       header={ node.name }
       getButton={ getButton }
       getItems={ getEditorItems }
+      onOpen={ onOpen }
       onClose={ onClose }
     />
   )
