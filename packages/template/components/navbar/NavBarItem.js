@@ -260,7 +260,7 @@ const NavBarItem = ({
             getButton={ getButton }
           />
           {
-            isHovered && (
+            (isHovered || isMenuOpen) && (
               <Suspense>
                 <EditHoverButton
                   node={ node }
@@ -373,7 +373,7 @@ const NavBarItem = ({
             { node.name }
           </LinkComponent>
           {
-            isHovered && (
+            (isHovered || isMenuOpen) && (
               <Suspense>
                 <EditHoverButton
                   node={ node }

@@ -184,7 +184,7 @@ const TreeItem = ({
             primary={ item.node.name }
           />
           {
-            hasMouse() && isHovered ? (
+            (hasMouse() && (isHovered || isMenuOpen)) ? (
               <Suspense>
                 <EditHoverButton
                   node={ item.node }

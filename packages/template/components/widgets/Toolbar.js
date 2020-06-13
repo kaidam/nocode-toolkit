@@ -6,19 +6,18 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 0,
     height: '39px',
     minHeight: '39px',
-    paddingLeft: '8px',
-    backgroundColor: 'rgb(245, 245, 245)',
+    backgroundColor: theme.palette.grey[100],
     borderBottom: '1px solid rgb(204, 204, 204)',
   },
 }))
 
 const Toolbar = ({
-  
+  children,
 }) => {
   const classes = useStyles()
   return (
     <div className={ classes.toolbar }>
-      TOOLBAR
+      { children }
     </div>
   )
 }
