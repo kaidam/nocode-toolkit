@@ -48,14 +48,12 @@ const Cell = ({
   cell,
   layout,
   widgetRenderers,
-  widgetTitles,
   simpleMovement,
   showUI,
   content_id,
   layout_id,
   rowIndex,
   cellIndex,
-  getAddMenu,
 }) => {
 
   const classes = useStyles(cell.settings || {})
@@ -84,14 +82,12 @@ const Cell = ({
       <EditableCell
         id={ id }
         cell={ cell }
-        layout={ layout }
-        widgetTitles={ widgetTitles }
+        layout={ layout }        
         content_id={ content_id }
         simpleMovement={ simpleMovement }
         layout_id={ layout_id }
         rowIndex={ rowIndex }
         cellIndex={ cellIndex }
-        getAddMenu={ getAddMenu }
       >
         { content }
       </EditableCell>

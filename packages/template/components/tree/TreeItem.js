@@ -192,10 +192,6 @@ const TreeItem = ({
                   node={ item.node }
                   isOpen={ open }
                   folderPages={ folderPages }
-                  offset={{
-                    left: 30,
-                    top: 0,
-                  }}
                   onOpenItem={ onOpenItem }
                   onOpen={ onOpenMenu }
                   onClose={ onCloseMenu }

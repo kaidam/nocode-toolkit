@@ -25,7 +25,6 @@ const Layout = ({
   layout_id,
   simpleMovement,
   divider,
-  getAddMenu,
 }) => {
 
   const classes = useStyles()
@@ -34,7 +33,6 @@ const Layout = ({
   const annotation = annotations[content_id] || {}
   const data = annotation[layout_id]
   const widgetRenderers = useSelector(settingsSelectors.widgetRenderers)
-  const widgetTitles = useSelector(settingsSelectors.widgetTitles)
   const showUI = useSelector(systemSelectors.showUI)
 
   if(!data || data.length <= 0) return null
@@ -56,14 +54,12 @@ const Layout = ({
                       cell={ cell }
                       layout={ data }
                       widgetRenderers={ widgetRenderers }
-                      widgetTitles={ widgetTitles }
                       showUI={ showUI }
                       content_id={ content_id }
                       layout_id={ layout_id }
                       simpleMovement={ simpleMovement }
                       rowIndex={ i }
                       cellIndex={ j }
-                      getAddMenu={ getAddMenu }
                     />
                   )
                 })
