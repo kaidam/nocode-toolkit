@@ -7,6 +7,7 @@ const LayoutEditor = ({
   content_id,
   layout_id,
   simpleMovement,
+  divider,
 }) => {
 
   const {
@@ -22,6 +23,7 @@ const LayoutEditor = ({
       layout_id={ layout_id }
       getAddMenu={ getAddMenu }
       simpleMovement={ simpleMovement }
+      divider={ divider }
     />
   )
 }

@@ -28,7 +28,7 @@ const RightIcon = icons.right
 
 const useStyles = makeStyles(theme => ({
   menuItem: ({depth, active}) => ({
-    paddingLeft: theme.spacing(1) + theme.spacing(depth * 2), 
+    paddingLeft: theme.spacing(depth * 2), 
     paddingRight: theme.spacing(1),
     marginLeft: theme.spacing(0.2),
     marginTop: theme.spacing(0.2),

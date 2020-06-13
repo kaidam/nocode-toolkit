@@ -24,10 +24,8 @@ const useStyles = makeStyles(theme => {
       height: '100%',
       cursor: 'pointer',
       backgroundColor: open ? colorUtils.getAlpha(theme.palette.primary.main, 0.2) : null,
-      border: open ? `1px solid ${theme.palette.grey[400]}` : null,
       '&:hover': {
         backgroundColor: colorUtils.getAlpha(theme.palette.primary.main, 0.2),
-        border: `1px solid ${theme.palette.grey[400]}`,
       }
     }),
     tooltipContent: {

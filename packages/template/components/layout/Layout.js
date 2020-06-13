@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
+import Divider from '@material-ui/core/Divider'
 
 import settingsSelectors from '../../store/selectors/settings'
 import systemSelectors from '../../store/selectors/system'
@@ -23,6 +24,7 @@ const Layout = ({
   content_id,
   layout_id,
   simpleMovement,
+  divider,
   getAddMenu,
 }) => {
 
@@ -69,6 +71,11 @@ const Layout = ({
             </div>
           )
         })
+      }
+      {
+        divider && (
+          <Divider />
+        )
       }
     </div>
   )

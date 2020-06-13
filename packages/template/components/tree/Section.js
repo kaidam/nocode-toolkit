@@ -45,6 +45,7 @@ const TreeSection = ({
     content_id: `section:${section}`,
     layout_id: 'widgets',
     simpleMovement: true,
+    divider: true,
   }
 
   return (
