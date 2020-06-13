@@ -209,6 +209,15 @@ const TreeItem = ({
             <Suspense>
               <FocusElementOverlay
                 contentRef={ itemRef }
+                padding={{
+                  top: 4,
+                  bottom: 4,
+                  right: 6,
+                }}
+                offset={{
+                  x: -4,
+                  y: 0,
+                }}
               />
             </Suspense>
           )
@@ -222,6 +231,10 @@ const TreeItem = ({
       <Suspense>
         <EditableItem
           clickPositioning
+          clickOffset={{
+            x: 25,
+            y: 0,
+          }}
           node={ item.node }
           isOpen={ open }
           folderPages={ folderPages }
