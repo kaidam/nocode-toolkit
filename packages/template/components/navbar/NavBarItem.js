@@ -224,6 +224,10 @@ const NavBarItem = ({
           <Suspense>
             <EditableNavBarMenu
               clickPositioning
+              clickOffset={{
+                x: 5,
+                y: 25,
+              }}
               node={ node }
               children={ node.children  }
               getButton={ getButton }
@@ -310,6 +314,10 @@ const NavBarItem = ({
         <Suspense>
           <EditableItem
             clickPositioning
+            clickOffset={{
+              x: 5,
+              y: 25,
+            }}
             node={ node }
             getRenderedItem={ getRenderedItem }
             onOpenItem={ onOpenItem }

@@ -13,6 +13,10 @@ const EditableItem = ({
   // show the menu where they clicked
   // and not on the actual element
   clickPositioning = false,
+  clickOffset = {
+    x: 5,
+    y: 5,
+  },
   onOpenItem,
   onOpenMenu,
   onCloseMenu,
@@ -44,8 +48,8 @@ const EditableItem = ({
         if(!menuAnchor) {
           setMenuAnchor({
             el: e.currentTarget,
-            x: e.nativeEvent.clientX + 5,
-            y: e.nativeEvent.clientY + 5,
+            x: e.nativeEvent.clientX + clickOffset.x,
+            y: e.nativeEvent.clientY + clickOffset.y,
           })
         }
         else {
@@ -70,6 +74,7 @@ const EditableItem = ({
     getRenderedItem,
     menuAnchor,
     clickPositioning,
+    clickOffset,
   ])
 
   if(!node) return null

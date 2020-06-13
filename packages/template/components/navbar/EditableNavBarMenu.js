@@ -7,6 +7,10 @@ import eventUtils from '../../utils/events'
 
 const EditableNavBarMenu = ({
   clickPositioning,
+  clickOffset = {
+    x: 5,
+    y: 5,
+  },
   node,
   children,
   getButton,
@@ -35,8 +39,8 @@ const EditableNavBarMenu = ({
         if(!menuAnchor) {
           setMenuAnchor({
             el: e.currentTarget,
-            x: e.nativeEvent.clientX + 5,
-            y: e.nativeEvent.clientY + 5,
+            x: e.nativeEvent.clientX + clickOffset.x,
+            y: e.nativeEvent.clientY + clickOffset.y,
           })
         }
         else {
@@ -55,6 +59,7 @@ const EditableNavBarMenu = ({
   }, [
     getButton,
     clickPositioning,
+    clickOffset,
     menuAnchor,
   ])
 
