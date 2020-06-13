@@ -42,6 +42,9 @@ const EditableToolbar = ({
     getSettingsItems,
   } = useSectionEditor({
     section,
+    content_id: `section:${section}`,
+    layout_id: 'widgets',
+    withWidgets: true,
   })
 
   const sectionTitle = (section || '')
@@ -70,7 +73,7 @@ const EditableToolbar = ({
           <MenuButton
             header={ `${sectionTitle} : Settings` }
             getButton={ getSettingsButton }
-            getItems={ getSettingsItems }
+            getItems={ getAddItems }
           />
         </div>
       </div>

@@ -18,11 +18,19 @@ const forms = {
       }],
     }, {
       id: 'hidden',
-      title: 'Hidden Items',
+      title: 'Show/Hide Items',
       schema: [{
-        title: 'Hidden Items',
+        title: 'Show/Hide Items',
         helperText: 'Manage the hidden items in this section',
         component: 'hiddenItems',
+      }],
+    }, {
+      id: 'sourceFolders',
+      title: 'Source Drive Folders',
+      schema: [{
+        title: 'Source Drive Folders',
+        helperText: 'Manage the drive folders loaded into this section',
+        component: 'driveFolders',
       }],
     }],
   },

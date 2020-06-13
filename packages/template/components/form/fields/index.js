@@ -9,6 +9,7 @@ import Image from './Image'
 import Sorting from './Sorting'
 import MakeHomepage from './MakeHomepage'
 import HiddenItems from './HiddenItems'
+import DriveFolders from './DriveFolders'
 
 const fields = {
   text: TextField,
@@ -22,6 +23,7 @@ const fields = {
   sorting: Sorting,
   hiddenItems: HiddenItems,
   makeHomepage: MakeHomepage,
+  driveFolders: DriveFolders,
 }
 
 export const defaultValues = {
@@ -37,6 +39,7 @@ export const defaultValues = {
   image: null,
   sorting: {},
   hiddenItems: {},
+  driveFolders: {},
 }
 
 export default fields

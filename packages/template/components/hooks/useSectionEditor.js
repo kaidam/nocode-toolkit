@@ -8,17 +8,28 @@ import icons from '../../icons'
 import driveUtils from '../../utils/drive'
 
 import useSection from './useSection'
+import useLayoutEditor from './useLayoutEditor'
+
 import settingsSelectors from '../../store/selectors/settings'
 
 const useSectionEditor = ({
   section,
+  content_id,
+  layout_id,
+  withWidgets,
 }) => {
+
   const {
     node,
     annotation,
     addTargetFolderId,
   } = useSection({
     section,
+  })
+
+  const layoutEditor = useLayoutEditor({
+    content_id,
+    layout_id
   })
 
   const actions = Actions(useDispatch(), {
@@ -30,16 +41,6 @@ const useSectionEditor = ({
   })
 
   const getAddItems = useCallback(() => {
-
-    const link = {
-      title: 'Link',
-      icon: icons.link,
-      handler: () => actions.onCreateLocalContent({
-        title: 'Create Link',
-        form: 'link',
-        location: `section:${section}`,
-      })
-    }
 
     const newDocumentHandler = () => actions.onCreateRemoteContent({
       title: 'Create Document',
@@ -65,47 +66,55 @@ const useSectionEditor = ({
       type: 'folder',
     })
 
-    const document = {
-      title: 'Google Document',
-      icon: icons.docs,
-    }
-
-    const folder = {
-      title: 'Google Folder',
-      icon: icons.folder,
-    }
-
-    document.items = [{
-      title: 'New Google Document',
-      icon: icons.docs,
-      secondaryIcon: icons.add,
-      handler: newDocumentHandler,
-    }, {
-      title: 'Existing Google Document',
-      icon: icons.docs,
-      secondaryIcon: icons.search,
-      handler: existingDocumentHandler,
-    }]
-
-    folder.items = [{
-      title: 'New Google Folder',
-      icon: icons.folder,
-      secondaryIcon: icons.add,
-      handler: newFolderHandler,
-    }, {
-      title: 'Existing Google Folder',
-      icon: icons.folder,
-      secondaryIcon: icons.search,
-      handler: existingFolderHandler,
-    }]
-  
     return [
-      document,
-      folder,
-      link,
-    ]
+      {
+        title: 'New Google Document',
+        icon: icons.docs,
+        handler: newDocumentHandler,
+      },
+      {
+        title: 'New Google Folder',
+        icon: icons.folder,
+        handler: newFolderHandler,
+      },
+      {
+        title: 'Import Existing Drive Content',
+        icon: icons.drive,
+        items: [
+          {
+            title: 'Existing Google Document',
+            icon: icons.docs,
+            secondaryIcon: icons.search,
+            handler: existingDocumentHandler,
+          },
+          {
+            title: 'Existing Google Folder',
+            icon: icons.folder,
+            secondaryIcon: icons.search,
+            handler: existingFolderHandler,
+          },
+        ]
+      },
+      '-',
+      {
+        title: 'Link',
+        icon: icons.link,
+        handler: () => actions.onCreateLocalContent({
+          title: 'Create Link',
+          form: 'link',
+          location: `section:${section}`,
+        })
+      },
+      withWidgets ? {
+        title: 'Widget',
+        icon: icons.widget,
+        items: layoutEditor.getAddMenu(),
+      } : null,
+    ].filter(i => i)
   }, [
     addTargetFolderId,
+    withWidgets,
+    layoutEditor.getAddMenu,
   ])
   
   const getSettingsItems = useCallback(() => {
