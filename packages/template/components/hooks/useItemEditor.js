@@ -5,9 +5,12 @@ import library from '../../library'
 
 const useItemEditor = ({
   node,
-  open,
+  // is the folder currently open
+  isOpen,
+  // are folder pages active?
   folderPages,
-  onOpen,
+  // this is for the "open page / open folder handler"
+  onOpenItem,
 }) => {
 
   const {
@@ -27,10 +30,10 @@ const useItemEditor = ({
       // if we don't have folder pages
       // it means we are toggling the state of the menu
       if(!folderPages) {
-        icon = open ?
+        icon = isOpen ?
           icons.expandLess :
           icons.expandMore
-        title = open ?
+        title = isOpen ?
           'Close Folder' :
           'Open Folder'
       }
@@ -41,11 +44,11 @@ const useItemEditor = ({
     return getItemOptions({
       node,
       getInjectedItems: () => {
-        return onOpen ?
+        return onOpenItem ?
           [{
             title,
             icon,
-            handler: onOpen,
+            handler: onOpenItem,
           }, '-'] :
           []
       }
@@ -53,9 +56,9 @@ const useItemEditor = ({
   }, [
     getItemOptions,
     node,
-    open,
+    isOpen,
     folderPages,
-    onOpen,
+    onOpenItem,
   ])
 
   return {

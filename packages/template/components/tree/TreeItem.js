@@ -176,9 +176,9 @@ const TreeItem = ({
             <Suspense>
               <EditHoverButton
                 node={ item.node }
-                open={ open }
+                isOpen={ open }
                 folderPages={ folderPages }
-                onOpen={ onOpenItem }
+                onOpenItem={ onOpenItem }
                 onClose={ onLeave }
               />
             </Suspense>
@@ -201,11 +201,11 @@ const TreeItem = ({
       <Suspense>
         <EditableItem
           node={ item.node }
-          open={ open }
+          isOpen={ open }
           folderPages={ folderPages }
           getRenderedItem={ getRenderedItem }
           autoTooltip={ false }
-          onOpen={ onOpenItem }
+          onOpenItem={ onOpenItem }
         />
       </Suspense>
     )

@@ -162,6 +162,15 @@ const NavBarItem = ({
     library.handlers.isFolder(node) :
     node.type == 'folder'
 
+  const onOpenItem = () => {
+    if(node.type == 'link') {
+      window.open(node.url)
+    }
+    else {
+      dispatch(routerActions.navigateTo(node.route.name))
+    }
+  }
+  
   if(isFolder) {
     const getButton = (onClick) => {
       return (
@@ -207,10 +216,10 @@ const NavBarItem = ({
               <Suspense>
                 <EditHoverButton
                   node={ node }
-                  open={ false }
+                  isOpen={ false }
                   folderPages={ folderPages }
                   anchorRef={ hoverRef }
-                  onOpen={ () => {} }
+                  onOpenItem={ onOpenItem }
                   onClose={ onLeave }
                 />
               </Suspense>
@@ -222,15 +231,6 @@ const NavBarItem = ({
     
   }
   else {
-
-    const onOpenItem = () => {
-      if(node.type == 'link') {
-        window.open(node.url)
-      }
-      else {
-        dispatch(routerActions.navigateTo(node.route.name))
-      }
-    }
 
     if(showUI && !hasMouse()) {
 
@@ -254,7 +254,7 @@ const NavBarItem = ({
           <EditableItem
             node={ node }
             getRenderedItem={ getRenderedItem }
-            onOpen={ onOpenItem }
+            onOpenItem={ onOpenItem }
           />
         </Suspense>
       )
@@ -292,10 +292,10 @@ const NavBarItem = ({
               <Suspense>
                 <EditHoverButton
                   node={ node }
-                  open={ false }
+                  isOpen={ false }
                   folderPages={ folderPages }
                   anchorRef={ hoverRef }
-                  onOpen={ onOpenItem }
+                  onOpenItem={ onOpenItem }
                   onClose={ onLeave }
                 />
               </Suspense>

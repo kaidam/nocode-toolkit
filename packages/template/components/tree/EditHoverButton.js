@@ -14,9 +14,9 @@ const useStyles = makeStyles(theme => ({
 
 const EditHoverButton = ({
   node,
-  open,
+  isOpen,
   folderPages,
-  onOpen,
+  onOpenItem,
   onClose,
 }) => {
 
@@ -24,9 +24,9 @@ const EditHoverButton = ({
     getEditorItems,
   } = useItemEditor({
     node,
-    open,
+    isOpen,
     folderPages,
-    onOpen,
+    onOpenItem,
   })
 
   const getButton = useCallback((onOpenMenu) => {

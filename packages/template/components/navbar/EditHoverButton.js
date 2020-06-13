@@ -70,11 +70,11 @@ const getElementCoords = (ref) => {
 
 const EditHoverButton = ({
   node,
-  open,
+  isOpen,
   folderPages,
   anchorRef,
   mode,
-  onOpen,
+  onOpenItem,
   onClose,
 }) => {
   const anchorCoords = getElementCoords(anchorRef)
@@ -92,9 +92,9 @@ const EditHoverButton = ({
     getEditorItems,
   } = useItemEditor({
     node,
-    open,
+    isOpen,
     folderPages,
-    onOpen,
+    onOpenItem,
   })
 
   const getButton = useCallback((onOpenMenu) => {
