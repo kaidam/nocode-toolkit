@@ -130,7 +130,6 @@ const NavBarItem = ({
 
   const [ isHovered, setIsHovered ] = useState(false)
   const [ isMenuOpen, setIsMenuOpen ] = useState(false)
-  //const [ containerCoords, setContainerCoords ] = useState(null)
 
   const containerRef = useRef()
 
@@ -157,24 +156,6 @@ const NavBarItem = ({
     vertical,
     isHovered,
   })
-
-  // useEffect(() => {
-  //   const newCoords = containerRef.current ? containerRef.current.getBoundingClientRect() : null
-  //   if(newCoords && !containerCoords) {
-  //     setContainerCoords(newCoords)
-  //   }
-  //   console.log('--------------------------------------------')
-  //   console.dir(newCoords)
-  //   console.dir(node.id)
-  //   // const newCoords = containerRef.current ? containerRef.current.getBoundingClientRect() : {width: 0}
-  //   // if(containerRef.current && !containerCoords && newCoords.width > 0) {
-  //   //   console.log('--------------------------------------------')
-  //   //   console.dir(newCoords)
-  //   //   //setContainerCoords(newCoords)
-  //   // }
-  // }, [
-  //   containerRef.current,
-  // ])
 
   const dispatch = useDispatch()
 

@@ -88,9 +88,8 @@ const NavBarSection = ({
     <div
       className={ rootClassname }
     >
-      
-      { content }
       { editor }
+      { content }
     </div>
   )
 }

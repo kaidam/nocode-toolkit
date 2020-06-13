@@ -1,16 +1,13 @@
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import Actions from '../../utils/actions'
 import contentActions from '../../store/modules/content'
 
 import icons from '../../icons'
-import driveUtils from '../../utils/drive'
 
 import useSection from './useSection'
 import useLayoutEditor from './useLayoutEditor'
-
-import settingsSelectors from '../../store/selectors/settings'
 
 const useSectionEditor = ({
   section,

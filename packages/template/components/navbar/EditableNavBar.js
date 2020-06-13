@@ -13,9 +13,6 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  buttonMargin: {
-    marginBottom: theme.spacing(1),
-  },
   settingsIcon: ({contrast} = {}) => ({
     color: contrast ?
       theme.palette.primary.contrastText :
@@ -31,44 +28,29 @@ const NavbarSectionEditor = ({
     contrast,
   })
 
-  const {
-    getSettingsItems,
-    getAddItems,
+  const {    
+    getAllItems,
   } = useSectionEditor({
     section,
-    contrast,
+    content_id: `section:${section}`,
+    layout_id: 'widgets',
   })
-
+  
   const sectionTitle = (section || '')
     .replace(/^(\w)/, (st) => st.toUpperCase())
 
   const getSettingsButton = useIconButton({
-    icon: 'edit',
+    icon: 'settings',
     title: `${sectionTitle} : Settings`,
-  })
-
-  const getAddButton = useIconButton({
-    icon: 'add',
-    title: `${sectionTitle} : Add`,
-    color: 'secondary',
   })
 
   return (
     <div className={ classes.root }>
-      <div className={ classes.buttonMargin }>
-        <MenuButton
-          header={ `${sectionTitle} : Settings` }
-          getButton={ getSettingsButton }
-          getItems={ getSettingsItems }
-        />
-      </div>
-      <div>
-        <MenuButton
-          header={ `${sectionTitle} : Add` }
-          getButton={ getAddButton }
-          getItems={ getAddItems }
-        />
-      </div>
+      <MenuButton
+        header={ `${sectionTitle} : Settings` }
+        getButton={ getSettingsButton }
+        getItems={ getAllItems }
+      />
     </div>
   )
 }
