@@ -27,7 +27,7 @@ const ExpandLessIcon = icons.expandLess
 const RightIcon = icons.right
 
 const useStyles = makeStyles(theme => ({
-  menuItem: ({depth, active}) => ({
+  menuItem: ({depth, active, isHovered}) => ({
     paddingLeft: theme.spacing(depth * 2), 
     paddingRight: theme.spacing(1),
     marginLeft: theme.spacing(0.2),
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     marginBottom: theme.spacing(0.2),
     cursor: 'pointer',
     color: theme.palette.grey[600],
-    backgroundColor: active ? [colorUtils.getAlpha(theme.palette.primary.main, 0.1), '!important'] : '',
+    backgroundColor: active ? [colorUtils.getAlpha(theme.palette.primary.main, isHovered ? 0.2 : 0.1), '!important'] : '',
     '&:hover': {
       backgroundColor: colorUtils.getAlpha(theme.palette.primary.main, 0.2),
     }
@@ -91,6 +91,7 @@ const TreeItem = ({
 
   const classes = useStyles({
     depth,
+    isHovered,
     active: currentPage,
   })
 
@@ -215,11 +216,8 @@ const TreeItem = ({
                 padding={{
                   top: 4,
                   bottom: 4,
-                  right: 6,
-                }}
-                offset={{
-                  x: -4,
-                  y: 0,
+                  right: 2,
+                  left: 6,
                 }}
               />
             </Suspense>

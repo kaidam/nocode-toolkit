@@ -33,7 +33,7 @@ const EditHoverButton = ({
   const getButton = useCallback((onOpenMenu) => {
     return (
       <Tooltip
-        title="Click to Edit"
+        title="Settings"
         placement="top"
         arrow
       >

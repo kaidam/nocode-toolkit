@@ -1,12 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
+
+
+const useStyles = makeStyles(theme => {
+  return {
+    root: {
+      color: 'rgb(117, 117, 117)',
+    },
+  }
+})
 
 const Render = ({
   data,
 }) => {
+
+  const classes = useStyles()
   data = data || {}
   return (
-    <Typography variant={ data.style || 'body1' }>
+    <Typography
+      className={ classes.root }
+      variant={ data.style || 'body1' }
+    >
       { data.text || 'text...' }
     </Typography>
   )

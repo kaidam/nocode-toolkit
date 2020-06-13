@@ -41,11 +41,14 @@ const useStyles = makeStyles(theme => {
       width: '100%',
       height: '100%',
     },
-    settingsIcon: {
+    settingsButtonContainer: {
       position: 'absolute',
       right: 0,
       top: 0,
       padding: theme.spacing(1),
+    },
+    settingsIcon: {
+      color: theme.palette.grey[600],
     },
   }
 })
@@ -60,12 +63,30 @@ const EditableCell = ({
   children,
 }) => {
 
-  const [menuAnchor, setMenuAnchor] = useState(null)
-  const open = Boolean(menuAnchor)
+  const [ isHovered, setIsHovered ] = useState(false)
+  const [ isMenuOpen, setIsMenuOpen ] = useState(false)
+  
   const contentRef = useRef(null)
 
+  const onHover = useCallback(() => {
+    setIsHovered(true)
+  })
+
+  const onLeave = useCallback(() => {
+    setIsHovered(false)
+  })
+
+  const onOpenMenu = useCallback(() => {
+    setIsMenuOpen(true)
+  })
+
+  const onCloseMenu = useCallback(() => {
+    setIsMenuOpen(false)
+    setIsHovered(false)
+  })
+
   const classes = useStyles({
-    open,
+    open: isMenuOpen,
   })
 
   const {
@@ -88,32 +109,27 @@ const EditableCell = ({
         arrow
       >
         <SettingsIcon
+          className={ classes.settingsIcon }
           onClick={ onOpenMenu }
         />
       </Tooltip>
     )
-  }, [])
+  }, [
+    classes,
+  ])
 
   const handleClick = (e) => {
     eventUtils.cancelEvent(e)
-    if(!menuAnchor) {
-      setMenuAnchor({
-        title: 'Cell',
-        el: e.currentTarget,
-        x: e.nativeEvent.clientX + 5,
-        y: e.nativeEvent.clientY + 5,
-      })
-    }
-    else {
-      setMenuAnchor(null)
-    }
+    onEdit()
   }
-
-  const handleReset = () => setMenuAnchor(null)
 
   return (
     <>
-      <div className={ classes.root }>
+      <div
+        className={ classes.root }
+        onMouseEnter={ onHover }
+        onMouseLeave={ onLeave }
+      >
         <div className="content" ref={ contentRef }>
           { children }
         </div>
@@ -122,66 +138,39 @@ const EditableCell = ({
           onClick={ handleClick }
         >
           {
-            open ? null : (
+            !isMenuOpen && (
               <Tooltip title="Click to Edit" placement="top" arrow>
                 <div className={ classes.tooltipContent }></div>
               </Tooltip>
             )
           }
-        </div>
-        <div className={ classes.settingsIcon }>
-          <MenuButton
-            asFragment
-            rightClick
-            header={ "settings" }
-            getButton={ getSettingsButton }
-            getItems={ getMenuItems }
-          />
+          {
+            (isHovered || isMenuOpen) && (
+              <div className={ classes.settingsButtonContainer }>
+                <MenuButton
+                  asFragment
+                  rightClick
+                  header={ "settings" }
+                  getButton={ getSettingsButton }
+                  getItems={ getMenuItems }
+                  onOpen={ onOpenMenu }
+                  onClose={ onCloseMenu }
+                />
+              </div>
+            )
+          }
         </div>
       </div>
       {
-        open && contentRef.current && (
+        isMenuOpen && contentRef.current && (
           <FocusElementOverlay
             contentRef={ contentRef }
+            padding={ 4 }
           />
         )
       }
-    </>
-    
+    </> 
   )
-
-
-  // const title = widgetTitles[cell.type]
-
-  // const getMenu = ({
-  //   menuAnchor,
-  //   onReset,
-  // }) => {
-  //   return (
-  //     <EditableCellMenu
-  //       menuAnchor={ menuAnchor }
-  //       layout={ layout }
-  //       cell={ cell }
-  //       content_id={ content_id }
-  //       layout_id={ layout_id }
-  //       simpleMovement={ simpleMovement }
-  //       rowIndex={ rowIndex }
-  //       cellIndex={ cellIndex }
-  //       getAddMenu={ getAddMenu }
-  //       onClose={ onReset }
-  //       onReset={ onReset }
-  //     />
-  //   )
-  // }
-
-  // return (
-  //   <FocusElement
-  //     getMenu={ getMenu }
-  //     title={ title }
-  //   >
-  //     { children }
-  //   </FocusElement>
-  // )
 }
 
 export default EditableCell
