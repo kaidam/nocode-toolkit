@@ -17,6 +17,7 @@ const EditHoverButton = ({
   isOpen,
   folderPages,
   onOpenItem,
+  onOpen,
   onClose,
 }) => {
 
@@ -50,6 +51,7 @@ const EditHoverButton = ({
       header={ node.name }
       getButton={ getButton }
       getItems={ getEditorItems }
+      onOpen={ onOpen }
       onClose={ onClose }
     />
   )
