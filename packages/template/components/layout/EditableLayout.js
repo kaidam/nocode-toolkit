@@ -1,8 +1,11 @@
 import React, { useMemo, useCallback } from 'react'
+import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import Divider from '@material-ui/core/Divider'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
+import Actions from '../../utils/actions'
+import layoutActions from '../../store/modules/layout'
 import useLayoutGrid from '../hooks/useLayoutGrid'
 
 const useStyles = makeStyles(theme => ({
@@ -22,6 +25,10 @@ const LayoutEditor = ({
   simpleMovement,
   divider,
 }) => {
+
+  const actions = Actions(useDispatch(), {
+    onLayoutSwapRow: layoutActions.swapRow,
+  })
 
   const classes = useStyles()
 
@@ -45,9 +52,20 @@ const LayoutEditor = ({
   ])
 
   const onDragEnd = useCallback(result => {
-    console.log('--------------------------------------------')
-    console.dir(result)
-  }, [rows])
+    if (!result.destination) return
+    const sourceIndex = result.source.index
+    const targetIndex = result.destination.index
+    actions.onLayoutSwapRow({
+      content_id,
+      layout_id,
+      sourceIndex,
+      targetIndex,
+    })
+  }, [
+    layout,
+    content_id,
+    layout_id,
+  ])
 
   if(!rows || rows.length <= 0) return null
 

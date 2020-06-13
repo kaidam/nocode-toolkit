@@ -52,6 +52,19 @@ const updateCell = ({
   return newLayout
 }
 
+const swapRow = ({
+  layout,
+  params: {
+    sourceIndex,
+    targetIndex,
+  },
+}) => {
+  const newLayout = copyLayout(layout)
+  const [removed] = newLayout.splice(sourceIndex, 1)
+  newLayout.splice(targetIndex, 0, removed)
+  return newLayout
+}
+
 const moveCell = ({
   layout,
   params: {
@@ -128,6 +141,7 @@ const layoutUtils = {
   insertRow,
   insertCell,
   updateCell,
+  swapRow,
   moveCell,
   deleteCell,
 }

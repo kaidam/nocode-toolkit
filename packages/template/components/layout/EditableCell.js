@@ -12,9 +12,6 @@ import eventUtils from '../../utils/events'
 import useCellEditor from '../hooks/useCellEditor'
 import useIconButton from '../hooks/useIconButton'
 
-import icons from '../../icons'
-const SettingsIcon = icons.settings
-
 const useStyles = makeStyles(theme => {
   return {
     root: {

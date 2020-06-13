@@ -52,6 +52,7 @@ const sideEffects = {
     if(!handlerFn) throw new Error(`no handler found ${handler}`)
     const annotations = nocodeSelectors.annotations(getState())
     const annotation = annotations[content_id] || {}
+
     const layout = handlerFn({
       layout: annotation[layout_id] || [],
       params
@@ -59,12 +60,22 @@ const sideEffects = {
     const newAnnotation = Object.assign({}, annotation, {
       [layout_id]: layout,
     })
-    await loaders.updateAnnotation(getState, content_id, newAnnotation)
-    await dispatch(nocodeActions.setItem({
+
+    dispatch(nocodeActions.setItem({
       type: 'annotation',
       id: content_id,
       data: newAnnotation,
     }))
+
+    try {
+      await loaders.updateAnnotation(getState, content_id, newAnnotation)
+    } catch(e) {
+      dispatch(nocodeActions.setItem({
+        type: 'annotation',
+        id: content_id,
+        data: annotation,
+      }))
+    }
   },
 
   // appends a new widget to the last row of a layout
@@ -185,6 +196,24 @@ const sideEffects = {
         cellIndex,
         direction,
         merge,
+      }
+    }))
+    await dispatch(snackbarActions.setSuccess(`layout updated`))
+  }),
+
+  swapRow: ({
+    content_id,
+    layout_id,
+    sourceIndex,
+    targetIndex,
+  }) => wrapper('swapRow', async (dispatch, getState) => {
+    await dispatch(actions.update({
+      content_id,
+      layout_id,
+      handler: 'swapRow',
+      params: {
+        sourceIndex,
+        targetIndex,
       }
     }))
     await dispatch(snackbarActions.setSuccess(`layout updated`))
