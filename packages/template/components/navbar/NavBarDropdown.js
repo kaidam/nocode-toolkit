@@ -10,6 +10,7 @@ import MenuButton from '../widgets/MenuButton'
 const NavBarDropdown = ({
   children,
   getButton,
+  onClose,
 }) => {
 
   const getMenuItems = useCallback(() => {
@@ -39,6 +40,7 @@ const NavBarDropdown = ({
     <MenuButton
       getButton={ getButton }
       getItems={ getMenuItems }
+      onClose={ onClose }
     />
   )
 }

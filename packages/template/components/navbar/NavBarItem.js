@@ -241,6 +241,7 @@ const NavBarItem = ({
           <NavBarDropdown
             children={ node.children }
             getButton={ getButton }
+            onClose={ onCloseMenu }
           />
           {
             (isHovered || isMenuOpen) && (
