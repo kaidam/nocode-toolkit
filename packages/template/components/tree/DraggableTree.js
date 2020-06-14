@@ -83,7 +83,7 @@ const Folder = ({
   )
 }
 
-const Tree = ({
+const DraggableTree = ({
 
   // the name of the section this tree is for
   section,
@@ -162,4 +162,4 @@ const Tree = ({
   )
 }
 
-export default Tree
+export default DraggableTree

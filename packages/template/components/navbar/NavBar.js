@@ -10,7 +10,7 @@ import Suspense from '../system/Suspense'
 import NavBarItem from './NavBarItem'
 import NavBarDropdown from './NavBarDropdown'
 
-const EditableNavBarDropdown = lazy(() => import(/* webpackChunkName: "ui" */ './EditableNavBarDropdown'))
+const NavBarDropdownUI = lazy(() => import(/* webpackChunkName: "ui" */ './NavBarDropdownUI'))
 const DraggableNavBar = lazy(() => import(/* webpackChunkName: "ui" */ './DraggableNavBar'))
 
 import icons from '../../icons'
@@ -84,7 +84,7 @@ const NavBar = ({
     if(showUI) {
       return (
         <Suspense>
-          <EditableNavBarDropdown
+          <NavBarDropdownUI
             children={ navbarItems }
             getButton={ getButton }
           />

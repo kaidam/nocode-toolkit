@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 console.log('--------------------------------------------')
 console.log('REMINDER: activate the tree -> editable toolbar quickstart again')
 
-const EditableToolbar = ({
+const TreeToolbar = ({
   section,
   focusRef,
 }) => {
@@ -101,4 +101,4 @@ const EditableToolbar = ({
   )
 }
 
-export default EditableToolbar
+export default TreeToolbar

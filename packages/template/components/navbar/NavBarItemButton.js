@@ -10,6 +10,8 @@ const WIDTH = 60
 const HEIGHT = 60
 
 const useStyles = makeStyles(theme => ({
+
+  // the top right wrapper for the settings icon button
   buttonContainer: ({buttonPosition, isMenuOpen}) => ({
     opacity: isMenuOpen ? 0 : 1,
     position: 'fixed',
@@ -56,7 +58,7 @@ const getElementCoords = (ref) => {
     }
 }
 
-const EditHoverButton = ({
+const NavBarItemButton = ({
   node,
   isOpen,
   isMenuOpen,
@@ -117,4 +119,4 @@ const EditHoverButton = ({
   )
 }
 
-export default EditHoverButton
+export default NavBarItemButton

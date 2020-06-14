@@ -8,9 +8,9 @@ import Suspense from '../system/Suspense'
 import Tree from './Tree'
 import Layout from '../layout/Layout'
 
-const EditableToolbar = lazy(() => import(/* webpackChunkName: "ui" */ './EditableToolbar'))
+const Toolbar = lazy(() => import(/* webpackChunkName: "ui" */ './Toolbar'))
 const EditableLayout = lazy(() => import(/* webpackChunkName: "ui" */ '../layout/EditableLayout'))
-const EditableTree = lazy(() => import(/* webpackChunkName: "ui" */ './EditableTree'))
+const DraggableTree = lazy(() => import(/* webpackChunkName: "ui" */ './DraggableTree'))
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -61,7 +61,7 @@ const TreeSection = ({
         showUI && (
           <div className={ classes.header }>
             <Suspense
-              Component={ EditableToolbar }
+              Component={ Toolbar }
               props={{
                 section,
                 focusRef,
@@ -88,7 +88,7 @@ const TreeSection = ({
           {
             showUI ? (
               <Suspense>
-                <EditableTree
+                <DraggableTree
                   section={ section }
                   containerRef={ containerRef }
                 />

@@ -20,7 +20,8 @@ import {
 import eventUtils from '../../utils/events'
 
 const EditableItem = lazy(() => import(/* webpackChunkName: "ui" */ '../content/EditableItem'))
-const EditHoverButton = lazy(() => import(/* webpackChunkName: "ui" */ './EditHoverButton'))
+const TreeItemButton = lazy(() => import(/* webpackChunkName: "ui" */ './TreeItemButton'))
+
 const FocusElementOverlay = lazy(() => import(/* webpackChunkName: "ui" */ '../widgets/FocusElementOverlay'))
 
 const ExpandMoreIcon = icons.expandMore
@@ -188,7 +189,7 @@ const TreeItem = ({
           {
             (hasMouse() && (isHovered || isMenuOpen)) ? (
               <Suspense>
-                <EditHoverButton
+                <TreeItemButton
                   node={ node }
                   isOpen={ open }
                   onOpenItem={ onOpenItem }

@@ -4,9 +4,8 @@ import useItemEditor from '../hooks/useItemEditor'
 import MenuButton from '../widgets/MenuButton'
 import icons from '../../icons'
 import eventUtils from '../../utils/events'
-import { isTouchscreen } from '../../utils/browser' 
 
-const EditableNavBarDropdown = ({
+const NavBarDropdownUI = ({
   clickPositioning,
   clickOffset = {
     x: 5,
@@ -136,4 +135,4 @@ const EditableNavBarDropdown = ({
   )
 }
 
-export default EditableNavBarDropdown
+export default NavBarDropdownUI

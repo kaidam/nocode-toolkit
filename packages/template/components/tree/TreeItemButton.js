@@ -4,7 +4,7 @@ import useItemEditor from '../hooks/useItemEditor'
 
 import useIconButton from '../hooks/useIconButton'
 
-const EditHoverButton = ({
+const TreeItemButton = ({
   node,
   isOpen,
   onOpenItem,
@@ -37,4 +37,4 @@ const EditHoverButton = ({
   )
 }
 
-export default EditHoverButton
+export default TreeItemButton

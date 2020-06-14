@@ -17,8 +17,8 @@ import {
 } from '../../utils/browser'
 
 const EditableItem = lazy(() => import(/* webpackChunkName: "ui" */ '../content/EditableItem'))
-const EditableNavBarDropdown = lazy(() => import(/* webpackChunkName: "ui" */ './EditableNavBarDropdown'))
-const EditHoverButton = lazy(() => import(/* webpackChunkName: "ui" */ './EditHoverButton'))
+const NavBarDropdownUI = lazy(() => import(/* webpackChunkName: "ui" */ './NavBarDropdownUI'))
+const NavBarItemButton = lazy(() => import(/* webpackChunkName: "ui" */ './NavBarItemButton'))
 const FocusElementOverlay = lazy(() => import(/* webpackChunkName: "ui" */ '../widgets/FocusElementOverlay'))
 
 const NativeLinkComponent = ({
@@ -246,7 +246,7 @@ const NavBarItem = ({
           {
             (isHovered || isMenuOpen) && (
               <Suspense>
-                <EditHoverButton
+                <NavBarItemButton
                   node={ node }
                   isOpen={ false }
                   isMenuOpen={ isMenuOpen }
@@ -358,7 +358,7 @@ const NavBarItem = ({
           {
             (isHovered || isMenuOpen) && (
               <Suspense>
-                <EditHoverButton
+                <NavBarItemButton
                   node={ node }
                   isOpen={ false }
                   isMenuOpen={ isMenuOpen }

@@ -322,6 +322,8 @@ const useMenuButton = ({
       left: anchorCoords.left + useOffet.left,
       top: anchorCoords.top + useOffet.top,
     }
+    console.log('--------------------------------------------')
+    console.dir(anchorPosition)
   }
 
   const mainMenu = useMemo(

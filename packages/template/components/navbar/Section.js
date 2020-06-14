@@ -8,7 +8,7 @@ import systemSelectors from '../../store/selectors/system'
 import Suspense from '../system/Suspense'
 import NavBar from './NavBar'
 
-const EditableNavBar = lazy(() => import(/* webpackChunkName: "ui" */ './EditableNavBar'))
+const Settings = lazy(() => import(/* webpackChunkName: "ui" */ './Settings'))
 
 const useStyles = makeStyles(theme => ({
   root: ({
@@ -52,7 +52,7 @@ const NavBarSection = ({
   const editor = showUI ? (
     <div className={ classes.editorContainer }>
       <Suspense
-        Component={ EditableNavBar }
+        Component={ Settings }
         props={{
           section,
           contrast,

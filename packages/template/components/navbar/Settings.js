@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   }),
 }))
 
-const NavbarSectionEditor = ({
+const NavbarSettings = ({
   section,
   vertical,
   contrast,
@@ -95,4 +95,4 @@ const NavbarSectionEditor = ({
   )
 }
 
-export default NavbarSectionEditor
+export default NavbarSettings
