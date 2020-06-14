@@ -205,7 +205,7 @@ const NavBarItem = ({
           className={ classes.itemContainer }
         >
           <Suspense>
-            <EditableNavBarDropdown
+            <NavBarDropdownUI
               clickPositioning
               clickOffset={{
                 x: 5,
