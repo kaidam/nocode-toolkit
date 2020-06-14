@@ -1,10 +1,11 @@
-import React, { useContext, useRef, useCallback, useEffect } from 'react'
+import React, { useContext, useRef, useState, useCallback } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 import OnboardingContext from '../contexts/onboarding'
 import MenuButton from '../widgets/MenuButton'
 
 import Toolbar from '../widgets/Toolbar'
+import FocusElementOverlay from '../widgets/FocusElementOverlay'
 
 import useSectionEditor from '../hooks/useSectionEditor'
 import useIconButton from '../hooks/useIconButton'
@@ -31,10 +32,21 @@ console.log('REMINDER: activate the tree -> editable toolbar quickstart again')
 
 const EditableToolbar = ({
   section,
+  focusRef,
 }) => {
   const classes = useStyles()
   const settingsRef = useRef(null)
   const context = useContext(OnboardingContext)
+  const [ isMenuOpen, setIsMenuOpen ] = useState(false)
+
+
+  const onOpenMenu = useCallback(() => {
+    setIsMenuOpen(true)
+  })
+
+  const onCloseMenu = useCallback(() => {
+    setIsMenuOpen(false)
+  })
 
   const {    
     getAllItems,
@@ -73,9 +85,19 @@ const EditableToolbar = ({
             header={ `${sectionTitle} : Settings` }
             getButton={ getSettingsButton }
             getItems={ getAllItems }
+            onOpen={ onOpenMenu }
+            onClose={ onCloseMenu }
           />
         </div>
       </div>
+      {
+        isMenuOpen && (
+          <FocusElementOverlay
+            contentRef={ focusRef }
+            padding={ 0 }
+          />
+        )
+      }
     </Toolbar>
   )
 }

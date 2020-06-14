@@ -24,6 +24,12 @@ const useStyles = makeStyles(theme => ({
   header: {
     flexGrow: 0,
   },
+  contentContainer: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    flexGrow: 1,
+  },
   widgets: {
     flexGrow: 0,
   },
@@ -41,6 +47,7 @@ const TreeSection = ({
   
   const folderPages = settings.folderPages === 'yes'
   const containerRef = useRef()
+  const focusRef = useRef()
 
   const layoutProps = {
     content_id: `section:${section}`,
@@ -60,42 +67,45 @@ const TreeSection = ({
               Component={ EditableToolbar }
               props={{
                 section,
+                focusRef,
               }}
             />
           </div>
         )
       }
-      {
-        showUI ? (
-          <Suspense
-            Component={ EditableLayout }
-            props={ layoutProps }
-          />
-        ) : (
-          <Layout { ...layoutProps } />
-        )
-      }
-      <div
-        className={ classes.content }
-        ref={ containerRef }
-      >
+      <div ref={ focusRef } className={ classes.contentContainer }>
         {
           showUI ? (
-            <Suspense>
-              <EditableTree
+            <Suspense
+              Component={ EditableLayout }
+              props={ layoutProps }
+            />
+          ) : (
+            <Layout { ...layoutProps } />
+          )
+        }
+        <div
+          className={ classes.content }
+          ref={ containerRef }
+        >
+          {
+            showUI ? (
+              <Suspense>
+                <EditableTree
+                  section={ section }
+                  folderPages={ folderPages }
+                  containerRef={ containerRef }
+                />
+              </Suspense>
+            ) : (
+              <Tree
                 section={ section }
                 folderPages={ folderPages }
                 containerRef={ containerRef }
               />
-            </Suspense>
-          ) : (
-            <Tree
-              section={ section }
-              folderPages={ folderPages }
-              containerRef={ containerRef }
-            />
-          )
-        }
+            )
+          }
+        </div>
       </div>
     </div>
   )
