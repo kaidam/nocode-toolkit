@@ -183,6 +183,24 @@ const ItemMenu = ({
   )
 }
 
+const getElementCoords = (ref) => {
+  return ref.current ?
+    ref.current.getBoundingClientRect() :
+    {
+      width: 0,
+      height: 0,
+      top: 0,
+      left: 0,
+    }
+}
+
+const getOffset = (offset) => {
+  return {
+    left: offset && offset.left ? offset.left : 0,
+    top: offset && offset.top ? offset.top : 0,
+  }
+}
+
 const useMenuButton = ({
 
   // test that appears above the menu in bold with a divider
@@ -204,6 +222,11 @@ const useMenuButton = ({
 
   // screen co-ordinates for the menu
   anchorPosition,
+
+  // use these to pin the menu to another ref
+  // and with an offset
+  offsetRef,
+  offset,
 
   // a function that when called with return
   // an array of items to render
@@ -292,6 +315,15 @@ const useMenuButton = ({
   const mainMenuOpen = useParentEl && !subItems ? true : false
   const subMenuOpen = useParentEl && subItems ? true : false
 
+  if(offsetRef && offsetRef.current) {
+    const anchorCoords = getElementCoords(offsetRef)
+    const useOffet = getOffset(offset)
+    anchorPosition = {
+      left: anchorCoords.left + useOffet.left,
+      top: anchorCoords.top + useOffet.top,
+    }
+  }
+
   const mainMenu = useMemo(
     () => {
       if(!mainMenuOpen) return null
@@ -314,6 +346,7 @@ const useMenuButton = ({
       mainMenuOpen,
       getItems,
       getItemsParams,
+      anchorPosition,
       handleClose,
       handleItemClick,
     ]
@@ -340,6 +373,7 @@ const useMenuButton = ({
       headers,
       noHeader,
       subMenuOpen,
+      anchorPosition,
       handleClose,
       handleItemClick,
     ]

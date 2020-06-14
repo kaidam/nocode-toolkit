@@ -250,12 +250,12 @@ const NavBarItem = ({
                   node={ node }
                   isOpen={ false }
                   isMenuOpen={ isMenuOpen }
-                  anchorRef={ containerRef }
-                  onOpenItem={ onOpenItem }
+                  offsetRef={ containerRef }
                   offset={{
                     left: 0,
                     top: 50,
                   }}
+                  onOpenItem={ onOpenItem }
                   onOpen={ onOpenMenu }
                   onClose={ onCloseMenu }
                 />
@@ -362,7 +362,7 @@ const NavBarItem = ({
                   node={ node }
                   isOpen={ false }
                   isMenuOpen={ isMenuOpen }
-                  anchorRef={ containerRef }
+                  offsetRef={ containerRef }
                   offset={{
                     left: 0,
                     top: 50,

@@ -60,8 +60,8 @@ const EditHoverButton = ({
   node,
   isOpen,
   isMenuOpen,
-  anchorRef,
   mode,
+  offsetRef,
   offset = {
     left: 0,
     top: 0,
@@ -70,7 +70,7 @@ const EditHoverButton = ({
   onOpen,
   onClose,
 }) => {
-  const anchorCoords = getElementCoords(anchorRef)
+  const anchorCoords = getElementCoords(offsetRef)
 
   const buttonPosition = getButtonPosition({
     anchorCoords,
@@ -107,10 +107,8 @@ const EditHoverButton = ({
     <MenuButton
       asFragment
       rightClick
-      anchorPosition={{
-        left: anchorCoords.left + offset.left,
-        top: anchorCoords.top + offset.top,
-      }}
+      offsetRef={ offsetRef }
+      offset={ offset }
       getButton={ getButton }
       getItems={ getEditorItems }
       onOpen={ onOpen }

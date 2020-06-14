@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useState, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Divider from '@material-ui/core/Divider'
 
@@ -39,7 +39,7 @@ const NavbarSectionEditor = ({
     contrast,
   })
   const [ isMenuOpen, setIsMenuOpen ] = useState(false)
-
+  const containerRef = useRef(null)
   const onOpenMenu = useCallback(() => {
     setIsMenuOpen(true)
   })
@@ -62,6 +62,7 @@ const NavbarSectionEditor = ({
   const getSettingsButton = useIconButton({
     title: sectionTitle,
     settingsButton: true,
+    useRef: containerRef,
   })
 
   return (
@@ -69,6 +70,11 @@ const NavbarSectionEditor = ({
       <MenuButton
         getButton={ getSettingsButton }
         getItems={ getAllItems }
+        anchorRef={ containerRef }
+        offset={{
+          left: 0,
+          top: 50,
+        }}
         onOpen={ onOpenMenu }
         onClose={ onCloseMenu }
       />
