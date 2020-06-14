@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Actions from '../../utils/actions'
 import contentActions from '../../store/modules/content'
 import driveUtils from '../../utils/drive'
@@ -16,17 +16,63 @@ const useDocumentEditor = ({
 
   const actions = Actions(useDispatch(), {
     onCreateRemoteContent: contentActions.createRemoteContent,
+    onEditRemoteContent: contentActions.editRemoteContent,
+    onHideContent: contentActions.hideContent,
+    onRemoveRemoteContent: contentActions.removeRemoteContent,
   })
 
+  const locations = useSelector(nocodeSelectors.locations)
+  const isSectionContent = itemUtils.isSectionContent(node, locations)
+  const openUrl = driveUtils.getItemUrl(node)
+  const isFolder = driveUtils.isFolder(node)
+
   const {
-    getAddMenu,
+    getAddWidgetMenu,
   } = useLayoutEditor({
     content_id: node.id,
     layout_id,
   })
 
-  const getAddContentItems = useCallback(() => {
-    return [{
+  const onOpenDrive = useCallback(() => {
+    window.open(openUrl)
+  }, [
+    openUrl,
+  ])
+
+  const onRemove = useCallback(() => {
+    if(isSectionContent) {
+      actions.onRemoveRemoteContent({
+        id: node.id,
+        name: node.name,
+        driver: 'drive',
+        location: node.route.location,
+      })
+    }
+    else {
+      actions.onHideContent({
+        id: node.id,
+        name: node.name,
+      })
+    }
+  }, [
+    isSectionContent,
+    node,
+  ])
+
+  const onOpenSettings = useCallback(() => {
+    actions.onEditRemoteContent({
+      title: `Edit ${(node.type || 'folder').replace(/^\w/, st => st.toUpperCase())}`,
+      driver: 'drive',
+      form: `drive.${node.type || 'folder'}`,
+      id: node.id,
+    })
+  }, [
+    node,
+  ])
+
+  const getAddMenu = useCallback(() => {
+
+    const baseParts = isFolder ? [{
       id: 'document',
       title: 'Google Document',
       icon: icons.docs,
@@ -48,36 +94,27 @@ const useDocumentEditor = ({
         parentId: node.id,
         params: addContentParams,
       })
-    }].filter(item => {
-      if(!addContentFilter) return true
-      return addContentFilter.indexOf(item.id) >= 0
-    })
+    }] : []
+
+    const widgets = [{
+      title: 'Widget',
+      icon: icons.widget,
+      items: getAddWidgetMenu(),
+    }]
+
+    return baseParts.concat(widgets)
   }, [
+    addContentParams,
+    addContentFilter,
     node,
+    isFolder,
   ])
   
-
-  const getAddItems = useCallback(() => {
-    return driveUtils.isFolder(node) ?
-      [{
-        title: 'Content',
-        icon: icons.drive,
-        items: getAddContentItems(),
-      }, {
-        title: 'Widgets',
-        icon: icons.widget,
-        items: getAddMenu(),
-      }] :
-      getAddMenu()
-  }, [
-    getAddMenu,
-    getAddContentItems,
-    node,
-  ])
-
   return {
-    getAddContentItems,
-    getAddItems,
+    onOpenDrive,
+    onRemove,
+    onOpenSettings,
+    getAddMenu,
   }
 }
 

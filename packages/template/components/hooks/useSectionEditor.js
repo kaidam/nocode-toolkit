@@ -24,7 +24,9 @@ const useSectionEditor = ({
     section,
   })
 
-  const layoutEditor = useLayoutEditor({
+  const {
+    getAddWidgetMenu,
+  } = useLayoutEditor({
     content_id,
     layout_id
   })
@@ -105,13 +107,13 @@ const useSectionEditor = ({
       withWidgets ? {
         title: 'Widget',
         icon: icons.widget,
-        items: layoutEditor.getAddMenu(),
+        items: getAddWidgetMenu(),
       } : null,
     ].filter(i => i)
   }, [
     addTargetFolderId,
     withWidgets,
-    layoutEditor.getAddMenu,
+    getAddWidgetMenu,
   ])
   
   const getSettingsItems = useCallback(() => {

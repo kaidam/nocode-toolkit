@@ -34,32 +34,15 @@ const DefaultFolder = ({
   const classes = useStyles()
 
   const {
-    getAddContentItems,
+    getAddMenu,
   } = useDocumentEditor({
     node,
     addContentFilter,
   })
 
-  let title = ''
-  let menus = null
-  let onClick = null
-
-  const items = getAddContentItems()
-
-  if(items && items.length == 1) {
-    const item = items[0]
-    title = `Add ${item.title}`
-    onClick = item.handler
-  }
-  else {
-    const menuButton = useMenuButton({
-      getItems: getAddContentItems,
-    })
-
-    title = 'Add Content'
-    menus = menuButton.menus
-    onClick = menuButton.onClick
-  }
+  const menuButton = useMenuButton({
+    getItems: getAddMenu,
+  })
 
   return (
     <div className={ classes.root }>
@@ -73,14 +56,14 @@ const DefaultFolder = ({
           onClick={ (e) => {
             e.preventDefault()
             e.stopPropagation()
-            onClick(e)
+            menuButton.onClick(e)
           }}
         >
-          <AddIcon />&nbsp;&nbsp;{ title }
+          <AddIcon />&nbsp;&nbsp;Add Content
         </Button>
       </div>
       {
-        menus
+        menuButton.menus
       }
     </div>
   )

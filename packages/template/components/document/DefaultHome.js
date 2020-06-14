@@ -38,7 +38,7 @@ const DefaultHome = ({
   const sectionData = useSelector(state => sectionSelector(state, 'topbar'))
 
   const {
-    getAddContentItems,
+    getAddMenu,
   } = useDocumentEditor({
     node: {
       id: sectionData ? sectionData.defaultFolderId : '',
@@ -52,7 +52,7 @@ const DefaultHome = ({
     menus,
     onClick,
   } = useMenuButton({
-    getItems: getAddContentItems,
+    getItems: getAddMenu,
   })
 
   if(!sectionData || !sectionData.defaultFolderId) {

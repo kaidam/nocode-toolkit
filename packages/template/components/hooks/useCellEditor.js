@@ -49,13 +49,17 @@ const useCellEditor = ({
   })
 
   const {
-    getAddMenu,
+    getAddWidgetMenu,
   } = useLayoutEditor({
     content_id,
     layout_id
   })
 
-  const getAddMenuItems = useCallback(() => getAddMenu(rowIndex+1), [rowIndex])
+  const getAddWidgetMenuItems = useCallback(() => getAddWidgetMenu(rowIndex+1), [
+    rowIndex,
+    getAddWidgetMenu
+  ])
+
   const getMoveMenuItems = useMoveMenu({
     layout,
     content_id,
@@ -78,21 +82,21 @@ const useCellEditor = ({
     } : null, {
       title: 'Add',
       icon: AddIcon,
-      items: getAddMenuItems(),
+      items: getAddWidgetMenuItems(),
     }, {
       title: 'Delete',
       icon: DeleteIcon,
       handler: onDelete,
     }].filter(i => i)
   }, [
-    getAddMenuItems,
+    getAddWidgetMenuItems,
     getMoveMenuItems,
   ])
 
   return {
     onEdit,
     onDelete,
-    getAddMenuItems,
+    getAddWidgetMenuItems,
     getMoveMenuItems,
     getMenuItems,
   }

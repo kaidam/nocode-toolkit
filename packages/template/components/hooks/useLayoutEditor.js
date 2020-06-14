@@ -36,13 +36,13 @@ const useLayoutEditor = ({
     layout_id,
   ])
 
-  const getAddMenu = useWidgetMenu({
+  const getAddWidgetMenu = useWidgetMenu({
     onAdd: onAddWidget,
   })
   
   return {
     data,
-    getAddMenu,
+    getAddWidgetMenu,
   }
   
 }
