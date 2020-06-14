@@ -4,13 +4,14 @@ import { makeStyles } from '@material-ui/core/styles'
 import Tooltip from '@material-ui/core/Tooltip'
 
 import FocusElementOverlay from '../widgets/FocusElementOverlay'
-import MenuButton from '../widgets/MenuButton'
 
 import colorUtils from '../../utils/color'
 import eventUtils from '../../utils/events'
+import { isTouchscreen } from '../../utils/browser'
 
 import useCellEditor from '../hooks/useCellEditor'
 import useIconButton from '../hooks/useIconButton'
+import useMenuButton from '../hooks/useMenuButton'
 
 const useStyles = makeStyles(theme => {
   return {
@@ -61,7 +62,8 @@ const EditableCell = ({
 
   const [ isHovered, setIsHovered ] = useState(false)
   const [ isMenuOpen, setIsMenuOpen ] = useState(false)
-  
+  const [ anchorPosition, setAnchorPosition ] = useState(null)
+
   const contentRef = useRef(null)
 
   const onHover = useCallback(() => {
@@ -79,6 +81,7 @@ const EditableCell = ({
   const onCloseMenu = useCallback(() => {
     setIsMenuOpen(false)
     setIsHovered(false)
+    setAnchorPosition(null)
   })
 
   const classes = useStyles({
@@ -102,9 +105,28 @@ const EditableCell = ({
     title: `Widget`
   })
 
+  const {
+    menus,
+    onClick,
+  } = useMenuButton({
+    getItems: getMenuItems,
+    anchorPosition,
+    onOpen: onOpenMenu,
+    onClose: onCloseMenu,
+  })
+
   const handleClick = (e) => {
     eventUtils.cancelEvent(e)
-    onEdit()
+    if(isTouchscreen()) {
+      setAnchorPosition({
+        left: e.nativeEvent.clientX + 10,
+        top: e.nativeEvent.clientY + 10,
+      })
+      onClick(e)
+    }
+    else {
+      onEdit()
+    }
   }
 
   return (
@@ -129,16 +151,11 @@ const EditableCell = ({
             )
           }
           {
-            (isHovered || isMenuOpen) && (
+            (isHovered || isMenuOpen) && (!isTouchscreen()) && (
               <div className={ classes.settingsButtonContainer }>
-                <MenuButton
-                  asFragment
-                  rightClick
-                  getButton={ getSettingsButton }
-                  getItems={ getMenuItems }
-                  onOpen={ onOpenMenu }
-                  onClose={ onCloseMenu }
-                />
+                {
+                  getSettingsButton(onClick)
+                }
               </div>
             )
           }
@@ -151,6 +168,9 @@ const EditableCell = ({
             padding={ 4 }
           />
         )
+      }
+      {
+        menus
       }
     </> 
   )

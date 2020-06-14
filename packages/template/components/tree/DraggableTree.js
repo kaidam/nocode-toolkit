@@ -39,8 +39,8 @@ const Folder = ({
               nodes.map((node, i) => {
                 const open = openFolders[node.id]
 
-                console.log('--------------------------------------------')
-                console.dir(`tree: ${node.id}`)
+                // console.log('--------------------------------------------')
+                // console.dir(`tree: ${node.id}`)
                 return (
                   <Draggable
                     key={ node.id }

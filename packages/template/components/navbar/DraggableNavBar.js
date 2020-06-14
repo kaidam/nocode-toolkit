@@ -92,8 +92,8 @@ const DraggableNavBar = ({
               <ul className={ classes.navbar }>
                 {
                   items.map((item, i) => {
-                    console.log('--------------------------------------------')
-                    console.dir(`navbar: ${item.id}`)
+                    // console.log('--------------------------------------------')
+                    // console.dir(`navbar: ${item.id}`)
                     return (
                       <Draggable
                         key={ item.id }
