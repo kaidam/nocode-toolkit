@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Divider from '@material-ui/core/Divider'
 
 import MenuButton from '../widgets/MenuButton'
+
+import FocusElementOverlay from '../widgets/FocusElementOverlay'
 
 import useSectionEditor from '../hooks/useSectionEditor'
 import useIconButton from '../hooks/useIconButton'
@@ -30,10 +32,20 @@ const NavbarSectionEditor = ({
   section,
   vertical,
   contrast,
+  focusRef,
 }) => {
   const classes = useStyles({
     vertical,
     contrast,
+  })
+  const [ isMenuOpen, setIsMenuOpen ] = useState(false)
+
+  const onOpenMenu = useCallback(() => {
+    setIsMenuOpen(true)
+  })
+
+  const onCloseMenu = useCallback(() => {
+    setIsMenuOpen(false)
   })
 
   const {    
@@ -58,11 +70,22 @@ const NavbarSectionEditor = ({
         header={ `${sectionTitle} : Settings` }
         getButton={ getSettingsButton }
         getItems={ getAllItems }
+        onOpen={ onOpenMenu }
+        onClose={ onCloseMenu }
       />
       <Divider
         orientation="vertical"
         className={ classes.divider }
       />
+      {
+        isMenuOpen && (
+          <FocusElementOverlay
+            contentRef={ focusRef }
+            padding={ 0 }
+            adjustTopbar={ false }
+          />
+        )
+      }
     </div>
   )
 }

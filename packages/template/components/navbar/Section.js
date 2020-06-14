@@ -50,6 +50,7 @@ const NavBarSection = ({
   const rootClassname = classnames(classes.root, className)
   const settings = useSelector(settingsSelectors.settings)
   const folderPages = settings.folderPages === 'yes'
+  const focusRef = useRef()
 
   const editor = showUI ? (
     <div className={ classes.editorContainer }>
@@ -59,6 +60,7 @@ const NavBarSection = ({
           section,
           contrast,
           vertical,
+          focusRef,
         }}
       />
     </div>
@@ -67,6 +69,7 @@ const NavBarSection = ({
   const content = (
     <div
       className={ classes.content }
+      ref={ focusRef }
     >
       <NavBar
         section={ section }
