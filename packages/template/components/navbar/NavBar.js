@@ -11,6 +11,7 @@ import NavBarItem from './NavBarItem'
 import NavBarMenu from './NavBarMenu'
 
 const EditableNavBarMenu = lazy(() => import(/* webpackChunkName: "ui" */ './EditableNavBarMenu'))
+const DraggableNavBar = lazy(() => import(/* webpackChunkName: "ui" */ './DraggableNavBar'))
 
 import icons from '../../icons'
 
@@ -103,30 +104,48 @@ const NavBar = ({
     
   }
   else {
-    return (
+
+    const getNavbarItem = useCallback((node, i) => {
+      return (
+        <NavBarItem
+          key={ i }
+          showUI={ showUI }
+          node={ node }
+          contrast={ contrast }
+          vertical={ vertical }
+          align={ align }
+          folderPages={ folderPages }
+        />
+      )
+    }, [
+      showUI,
+      contrast,
+      vertical,
+      align,
+      folderPages,
+    ])
+
+    return showUI ? (
+      <Suspense>
+        <DraggableNavBar
+          section={ section }
+          items={ navbarItems }
+          contrast={ contrast }
+          vertical={ vertical }
+          align={ align }
+          getNavbarItem={ getNavbarItem }
+        />
+      </Suspense>
+    ) : (
       <nav>
         <ul className={ classes.navbar }>
           {
-            navbarItems.map((node, i) => {
-              return (
-                <NavBarItem
-                  key={ i }
-                  showUI={ showUI }
-                  node={ node }
-                  contrast={ contrast }
-                  vertical={ vertical }
-                  align={ align }
-                  folderPages={ folderPages }
-                />
-              )
-            })
+            navbarItems.map(getNavbarItem)
           }
         </ul>
       </nav>
     )
-  }
-
-  
+  }  
 }
 
 export default NavBar

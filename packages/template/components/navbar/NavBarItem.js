@@ -51,6 +51,7 @@ const useStyles = makeStyles(theme => {
       contrast,
       align = 'left',
       isHovered,
+      vertical,
     } = {}) => {
 
       const hoverProps = {
@@ -85,6 +86,7 @@ const useStyles = makeStyles(theme => {
         paddingRight: theme.spacing(2),
         marginLeft: theme.spacing(0.5),
         marginRight: theme.spacing(0.5),
+        marginBottom: vertical ? theme.spacing(1) : 0,
         borderRadius: theme.spacing(1),
         textDecoration: 'none',
         cursor: 'pointer',
