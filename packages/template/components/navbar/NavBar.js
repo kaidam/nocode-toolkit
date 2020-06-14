@@ -76,7 +76,7 @@ const NavBar = ({
           className={ classes.icon }
           onClick={ onClick }
         >
-          <MoreVertIcon fontSize="inherit" />
+          <MoreVertIcon color="inherit" fontSize="inherit" />
         </IconButton>
       )
     }, [])
