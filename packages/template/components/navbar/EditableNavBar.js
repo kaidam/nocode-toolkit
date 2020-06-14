@@ -1,5 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import Divider from '@material-ui/core/Divider'
 
 import MenuButton from '../widgets/MenuButton'
 
@@ -7,14 +8,18 @@ import useSectionEditor from '../hooks/useSectionEditor'
 import useIconButton from '../hooks/useIconButton'
 
 const useStyles = makeStyles(theme => ({
-  root: {
+  sectionEditorRoot: ({vertical}) => ({
+    height: '100%',
     display: 'flex',
-    flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: theme.spacing(2),
-  },
-  settingsIcon: ({contrast} = {}) => ({
+  }),
+  divider: ({contrast}) => ({
+    marginLeft: theme.spacing(contrast ? 2 : 2),
+    marginRight: theme.spacing(contrast ? 2 : 0),
+    backgroundColor: contrast ? theme.palette.primary.contrastText : '',
+  }),
+  settingsIcon: ({contrast}) => ({
     color: contrast ?
       theme.palette.primary.contrastText :
       theme.palette.text.main,
@@ -23,9 +28,11 @@ const useStyles = makeStyles(theme => ({
 
 const NavbarSectionEditor = ({
   section,
+  vertical,
   contrast,
 }) => {
   const classes = useStyles({
+    vertical,
     contrast,
   })
 
@@ -46,11 +53,15 @@ const NavbarSectionEditor = ({
   })
 
   return (
-    <div className={ classes.root }>
+    <div className={ classes.sectionEditorRoot }>
       <MenuButton
         header={ `${sectionTitle} : Settings` }
         getButton={ getSettingsButton }
         getItems={ getAllItems }
+      />
+      <Divider
+        orientation="vertical"
+        className={ classes.divider }
       />
     </div>
   )

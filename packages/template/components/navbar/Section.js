@@ -15,13 +15,9 @@ const useStyles = makeStyles(theme => ({
   root: ({
     vertical,
   }) => ({
-    height: '100%',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    alignItems: vertical ?
-      'center' :
-      'center',
   }),
   content: ({
     vertical,
@@ -30,11 +26,15 @@ const useStyles = makeStyles(theme => ({
     overflowX: 'hidden',
     flexGrow: 1,
   }),
-  editor: ({
+  editorContainer: ({
     vertical,
   }) => ({
-    flexGrow: 0,
-    paddingLeft: theme.spacing(2),
+    flexGrow: 1,
+  }),
+  apples: ({
+    vertical,
+  }) => ({
+    backgroundColor: 'red',
   }),
 }))
 
@@ -57,12 +57,13 @@ const NavBarSection = ({
   const folderPages = settings.folderPages === 'yes'
 
   const editor = showUI ? (
-    <div className={ classes.editor }>
+    <div className={ classes.editorContainer }>
       <Suspense
         Component={ EditableNavBar }
         props={{
           section,
           contrast,
+          vertical,
         }}
       />
     </div>
