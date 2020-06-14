@@ -11,7 +11,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 
 import Actions from '../../../utils/actions'
 
-import useSection from '../../hooks/useSection'
+import useSectionSelector from '../../hooks/useSectionSelector'
 import contentActions from '../../../store/modules/content'
 import dialogSelectors from '../../../store/selectors/dialog'
 import SimpleTable from '../../table/SimpleTable'
@@ -65,7 +65,7 @@ const DriveFoldersEditor = ({
     sourceFolders,
     defaultFolderId,
     addTargetFolderId,
-  } = useSection({
+  } = useSectionSelector({
     section,
   })
 

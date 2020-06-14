@@ -2,7 +2,7 @@ import React from 'react'
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 
-import useGetGlobalOptions from '../hooks/useGetGlobalOptions'
+import useGlobalOptions from '../hooks/useGlobalOptions'
 import MenuButton from '../widgets/MenuButton'
 
 const GlobalOptions = ({
@@ -12,7 +12,7 @@ const GlobalOptions = ({
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.up('md'))
 
-  const getGlobalOptions = useGetGlobalOptions({
+  const getGlobalOptions = useGlobalOptions({
     includeExtra: matches ? false : true,
   })
 

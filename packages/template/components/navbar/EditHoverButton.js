@@ -60,7 +60,6 @@ const EditHoverButton = ({
   node,
   isOpen,
   isMenuOpen,
-  folderPages,
   anchorRef,
   mode,
   offset = {
@@ -88,7 +87,6 @@ const EditHoverButton = ({
   } = useItemEditor({
     node,
     isOpen,
-    folderPages,
     onOpenItem,
   })
 

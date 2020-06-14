@@ -7,7 +7,7 @@ import settingsSelectors from '../../store/selectors/settings'
 import systemSelectors from '../../store/selectors/system'
 import nocodeSelectors from '../../store/selectors/nocode'
 
-const useLayoutGrid = ({
+const useLayoutCellRenderer = ({
   content_id,
   layout_id,
   simpleMovement,
@@ -47,4 +47,4 @@ const useLayoutGrid = ({
 
 }
 
-export default useLayoutGrid
+export default useLayoutCellRenderer

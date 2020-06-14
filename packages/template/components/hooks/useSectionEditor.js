@@ -6,7 +6,7 @@ import contentActions from '../../store/modules/content'
 
 import icons from '../../icons'
 
-import useSection from './useSection'
+import useSectionSelector from './useSectionSelector'
 import useLayoutEditor from './useLayoutEditor'
 
 const useSectionEditor = ({
@@ -20,7 +20,7 @@ const useSectionEditor = ({
     node,
     annotation,
     addTargetFolderId,
-  } = useSection({
+  } = useSectionSelector({
     section,
   })
 

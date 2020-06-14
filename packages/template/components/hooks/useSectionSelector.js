@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import contentSelectors from '../../store/selectors/content'
 
-const useSection = ({
+const useSectionSelector = ({
   section,
 }) => {
   const sectionSelector = useMemo(contentSelectors.section, [])
@@ -10,4 +10,4 @@ const useSection = ({
   return sectionData || {}
 }
 
-export default useSection
+export default useSectionSelector

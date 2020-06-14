@@ -1,12 +1,13 @@
 import React, { lazy, useRef, useCallback, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/core/styles'
-import Tooltip from '@material-ui/core/Tooltip'
 
 import routerActions from '../../store/modules/router'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
+
+import settingsSelectors from '../../store/selectors/settings'
 
 import colorUtils from '../../utils/color'
 import Suspense from '../system/Suspense'
@@ -56,13 +57,15 @@ const TreeItem = ({
   node,
   depth,
   open,
-  showUI,
-  folderPages,
+  showUI, 
   containerRef,
   scrollToCurrentPage,
   onDisableScrollToCurrentPage,
   onToggleFolder,
 }) => {
+
+  const settings = useSelector(settingsSelectors.settings)
+  const folderPages = settings.folderPages === 'yes'
 
   const [ isHovered, setIsHovered ] = useState(false)
   const [ isMenuOpen, setIsMenuOpen ] = useState(false)
@@ -160,6 +163,7 @@ const TreeItem = ({
   }, [
     linkType,
     node,
+    onClickItem,
   ])
 
   const getRenderedItem = (onItemClick) => {
@@ -187,7 +191,6 @@ const TreeItem = ({
                 <EditHoverButton
                   node={ node }
                   isOpen={ open }
-                  folderPages={ folderPages }
                   onOpenItem={ onOpenItem }
                   onOpen={ onOpenMenu }
                   onClose={ onCloseMenu }
@@ -233,7 +236,6 @@ const TreeItem = ({
           }}
           node={ node }
           isOpen={ open }
-          folderPages={ folderPages }
           getRenderedItem={ getRenderedItem }
           autoTooltip={ false }
           onOpenItem={ onOpenItem }

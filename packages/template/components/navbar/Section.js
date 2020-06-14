@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
 
 import systemSelectors from '../../store/selectors/system'
-import settingsSelectors from '../../store/selectors/settings'
 
 import Suspense from '../system/Suspense'
 import NavBar from './NavBar'
@@ -48,8 +47,6 @@ const NavBarSection = ({
   })
   const showUI = useSelector(systemSelectors.showUI)
   const rootClassname = classnames(classes.root, className)
-  const settings = useSelector(settingsSelectors.settings)
-  const folderPages = settings.folderPages === 'yes'
   const focusRef = useRef()
 
   const editor = showUI ? (
@@ -78,7 +75,6 @@ const NavBarSection = ({
         vertical={ vertical }
         align={ align }
         withHome={ withHome }
-        folderPages={ folderPages }
       />
     </div>
   )

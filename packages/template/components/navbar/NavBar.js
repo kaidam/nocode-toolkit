@@ -8,9 +8,9 @@ import systemSelectors from '../../store/selectors/system'
 import Suspense from '../system/Suspense'
 
 import NavBarItem from './NavBarItem'
-import NavBarMenu from './NavBarMenu'
+import NavBarDropdown from './NavBarDropdown'
 
-const EditableNavBarMenu = lazy(() => import(/* webpackChunkName: "ui" */ './EditableNavBarMenu'))
+const EditableNavBarDropdown = lazy(() => import(/* webpackChunkName: "ui" */ './EditableNavBarDropdown'))
 const DraggableNavBar = lazy(() => import(/* webpackChunkName: "ui" */ './DraggableNavBar'))
 
 import icons from '../../icons'
@@ -48,8 +48,6 @@ const NavBar = ({
 
   // the name of the section this navbar is for
   section,
-
-  folderPages,
 }) => {
 
   const classes = useStyles({
@@ -86,7 +84,7 @@ const NavBar = ({
     if(showUI) {
       return (
         <Suspense>
-          <EditableNavBarMenu
+          <EditableNavBarDropdown
             children={ navbarItems }
             getButton={ getButton }
           />
@@ -95,7 +93,7 @@ const NavBar = ({
     }
     else {
       return (
-        <NavBarMenu
+        <NavBarDropdown
           children={ navbarItems }
           getButton={ getButton }
         />
@@ -114,15 +112,13 @@ const NavBar = ({
           contrast={ contrast }
           vertical={ vertical }
           align={ align }
-          folderPages={ folderPages }
         />
       )
     }, [
       showUI,
       contrast,
       vertical,
-      align,
-      folderPages,
+      align, 
     ])
 
     return showUI ? (

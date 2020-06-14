@@ -31,7 +31,7 @@ import icons from '../../icons'
 
 */
 
-const useGetGlobalOptions = ({
+const useGlobalOptions = ({
   
 }) => {
   const actions = Actions(useDispatch(), {
@@ -126,4 +126,4 @@ const useGetGlobalOptions = ({
   return getMenuItems
 }
 
-export default useGetGlobalOptions
+export default useGlobalOptions

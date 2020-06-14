@@ -11,7 +11,7 @@ import Actions from '../../utils/actions'
 import systemSelectors from '../../store/selectors/system'
 import uiSelectors from '../../store/selectors/ui'
 import uiActions from '../../store/modules/ui'
-import useGetGlobalOptions from '../hooks/useGetGlobalOptions'
+import useGlobalOptions from '../hooks/useGlobalOptions'
 
 import GlobalSettingsItem from './GlobalSettingsItem'
 
@@ -57,7 +57,7 @@ const GlobalSettings = ({
   const showUI = useSelector(systemSelectors.showUI)
   const onDisablePreview = () => actions.onSetPreviewMode(false)
 
-  const getGlobalOptions = useGetGlobalOptions({
+  const getGlobalOptions = useGlobalOptions({
     includeExtra: true,
   })
 

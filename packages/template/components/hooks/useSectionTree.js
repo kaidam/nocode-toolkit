@@ -21,6 +21,9 @@ const useSectionTree = ({
     openFolders,
   ])
 
+  // console.log(section)
+  // console.log(JSON.stringify(openFolders, null, 4))
+
   const treeSelector = useMemo(contentSelectors.sectionTree, [])
   const tree = useSelector(state => treeSelector(state, section))
   const ancestors = useSelector(routerSelectors.ancestorsWithRoute)

@@ -8,7 +8,7 @@ import contentSelectors from '../../store/selectors/content'
 import Suspense from '../system/Suspense'
 import Link from '../widgets/Link'
 
-import NavBarMenu from './NavBarMenu'
+import NavBarDropdown from './NavBarDropdown'
 
 import library from '../../library'
 
@@ -17,7 +17,7 @@ import {
 } from '../../utils/browser'
 
 const EditableItem = lazy(() => import(/* webpackChunkName: "ui" */ '../content/EditableItem'))
-const EditableNavBarMenu = lazy(() => import(/* webpackChunkName: "ui" */ './EditableNavBarMenu'))
+const EditableNavBarDropdown = lazy(() => import(/* webpackChunkName: "ui" */ './EditableNavBarDropdown'))
 const EditHoverButton = lazy(() => import(/* webpackChunkName: "ui" */ './EditHoverButton'))
 const FocusElementOverlay = lazy(() => import(/* webpackChunkName: "ui" */ '../widgets/FocusElementOverlay'))
 
@@ -128,7 +128,6 @@ const NavBarItem = ({
   contrast,
   align = 'left',
   vertical,
-  folderPages,
 }) => {
 
   const [ isHovered, setIsHovered ] = useState(false)
@@ -206,7 +205,7 @@ const NavBarItem = ({
           className={ classes.itemContainer }
         >
           <Suspense>
-            <EditableNavBarMenu
+            <EditableNavBarDropdown
               clickPositioning
               clickOffset={{
                 x: 5,
@@ -239,7 +238,7 @@ const NavBarItem = ({
           onMouseEnter={ onHover }
           onMouseLeave={ onLeave }
         >
-          <NavBarMenu
+          <NavBarDropdown
             children={ node.children }
             getButton={ getButton }
           />
@@ -250,7 +249,6 @@ const NavBarItem = ({
                   node={ node }
                   isOpen={ false }
                   isMenuOpen={ isMenuOpen }
-                  folderPages={ folderPages }
                   anchorRef={ containerRef }
                   onOpenItem={ onOpenItem }
                   offset={{
@@ -363,7 +361,6 @@ const NavBarItem = ({
                   node={ node }
                   isOpen={ false }
                   isMenuOpen={ isMenuOpen }
-                  folderPages={ folderPages }
                   anchorRef={ containerRef }
                   offset={{
                     left: 0,

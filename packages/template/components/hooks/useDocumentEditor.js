@@ -55,6 +55,7 @@ const useDocumentEditor = ({
   }, [
     node,
   ])
+  
 
   const getAddItems = useCallback(() => {
     return driveUtils.isFolder(node) ?

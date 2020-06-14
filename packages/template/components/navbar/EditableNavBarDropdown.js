@@ -1,11 +1,12 @@
 import React, { useCallback, useState } from 'react'
 import Tooltip from '@material-ui/core/Tooltip'
-import useItemOptions from '../hooks/useItemOptions'
+import useItemEditor from '../hooks/useItemEditor'
 import MenuButton from '../widgets/MenuButton'
 import icons from '../../icons'
 import eventUtils from '../../utils/events'
+import { isTouchscreen } from '../../utils/browser' 
 
-const EditableNavBarMenu = ({
+const EditableNavBarDropdown = ({
   clickPositioning,
   clickOffset = {
     x: 5,
@@ -22,7 +23,8 @@ const EditableNavBarMenu = ({
 
   const {
     getItemOptions,
-  } = useItemOptions()
+    folderPages,
+  } = useItemEditor({})
 
   const onCloseMenuWrapper = useCallback(() => {
     if(onCloseMenu) onCloseMenu()
@@ -67,7 +69,7 @@ const EditableNavBarMenu = ({
 
     const getInjectedItems = (node) => {
       let expandItem = null
-      const openItem = {
+      let openItem = {
         title: 'Open Page',
         icon: icons.forward,
       }
@@ -78,6 +80,7 @@ const EditableNavBarMenu = ({
           icon: icons.expandMore,
           items: getItems(node.children || [])
         }
+        openItem = null
       }
       else if(node.type == 'link') {
         openItem.url = node.url
@@ -112,6 +115,7 @@ const EditableNavBarMenu = ({
   }, [
     getItemOptions,
     children,
+    folderPages,
   ])
 
   return (
@@ -133,4 +137,4 @@ const EditableNavBarMenu = ({
   )
 }
 
-export default EditableNavBarMenu
+export default EditableNavBarDropdown

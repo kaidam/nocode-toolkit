@@ -7,7 +7,6 @@ import eventUtils from '../../utils/events'
 const EditableItem = ({
   node,
   isOpen,
-  folderPages,
   getRenderedItem,
   autoTooltip = true,
   // show the menu where they clicked
@@ -29,7 +28,6 @@ const EditableItem = ({
   } = useItemEditor({
     node,
     isOpen,
-    folderPages,
     onOpenItem,
   })
 

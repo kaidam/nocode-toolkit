@@ -14,6 +14,11 @@ const EditIcon = icons.edit
 const DeleteIcon = icons.delete
 const MoveIcon = icons.move
 
+/*
+
+  return handlers for editing a cell
+
+*/
 const useCellEditor = ({
   layout,
   content_id,
@@ -83,18 +88,6 @@ const useCellEditor = ({
     getAddMenuItems,
     getMoveMenuItems,
   ])
-
-  // const mainMenu = useMenuButton({
-  //   parentAnchorEl: menuAnchor.el,
-  //   anchorPosition: menuAnchor ? {
-  //     left: menuAnchor.x,
-  //     top: menuAnchor.y,
-  //   } : null,
-  //   getItems: getMenuItems,
-  //   header: `Widget : ${menuAnchor.title}`,
-  //   onClick: onReset,
-  //   onClose,
-  // })
 
   return {
     onEdit,

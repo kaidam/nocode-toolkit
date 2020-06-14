@@ -59,13 +59,6 @@ const Tree = ({
   // the name of the section this tree is for
   section,
 
-  // folder pages means we treat folders as routes
-  // if this is false, then clicking
-  // on a folder just toggles it
-  // if this is true - clicking on the folder itself
-  // will open the folder route
-  folderPages = true,
-
   // a ref for the container element for the tree
   // this is used so we can scroll to active elements
   containerRef,
@@ -84,7 +77,6 @@ const Tree = ({
 
   const itemProps = {
     showUI,
-    folderPages,
     containerRef,
     scrollToCurrentPage,
     onDisableScrollToCurrentPage,

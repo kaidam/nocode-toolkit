@@ -4,8 +4,8 @@ import { makeStyles } from '@material-ui/core/styles'
 const useStyles = makeStyles(theme => ({
   toolbar: {
     flexGrow: 0,
-    height: '39px',
-    minHeight: '39px',
+    height: '50px',
+    minHeight: '50px',
     backgroundColor: theme.palette.grey[100],
     borderBottom: '1px solid rgb(204, 204, 204)',
   },

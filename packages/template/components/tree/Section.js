@@ -2,7 +2,6 @@ import React, { lazy, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
 
-import settingsSelectors from '../../store/selectors/settings'
 import systemSelectors from '../../store/selectors/system'
 
 import Suspense from '../system/Suspense'
@@ -43,9 +42,7 @@ const TreeSection = ({
 }) => {
   const classes = useStyles()
   const showUI = useSelector(systemSelectors.showUI)
-  const settings = useSelector(settingsSelectors.settings)
   
-  const folderPages = settings.folderPages === 'yes'
   const containerRef = useRef()
   const focusRef = useRef()
 
@@ -93,14 +90,12 @@ const TreeSection = ({
               <Suspense>
                 <EditableTree
                   section={ section }
-                  folderPages={ folderPages }
                   containerRef={ containerRef }
                 />
               </Suspense>
             ) : (
               <Tree
                 section={ section }
-                folderPages={ folderPages }
                 containerRef={ containerRef }
               />
             )

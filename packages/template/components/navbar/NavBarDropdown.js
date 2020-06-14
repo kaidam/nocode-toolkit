@@ -1,7 +1,13 @@
 import React, { useCallback } from 'react'
 import MenuButton from '../widgets/MenuButton'
 
-const NavBarMenu = ({
+/*
+
+  this is a Menu used for 
+  navigation when the screen is small
+
+*/
+const NavBarDropdown = ({
   children,
   getButton,
 }) => {
@@ -38,4 +44,4 @@ const NavBarMenu = ({
   )
 }
 
-export default NavBarMenu
+export default NavBarDropdown

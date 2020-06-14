@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Divider from '@material-ui/core/Divider'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
-import useLayoutGrid from '../hooks/useLayoutGrid'
+import useLayoutCellRenderer from '../hooks/useLayoutCellRenderer'
 
 import settingsSelectors from '../../store/selectors/settings'
 import systemSelectors from '../../store/selectors/system'
@@ -35,7 +35,7 @@ const Layout = ({
   const {
     layout,
     getCell,
-  } = useLayoutGrid({
+  } = useLayoutCellRenderer({
     content_id,
     layout_id,
     simpleMovement,

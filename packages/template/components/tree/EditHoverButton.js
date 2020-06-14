@@ -7,7 +7,6 @@ import useIconButton from '../hooks/useIconButton'
 const EditHoverButton = ({
   node,
   isOpen,
-  folderPages,
   onOpenItem,
   onOpen,
   onClose,
@@ -18,7 +17,6 @@ const EditHoverButton = ({
   } = useItemEditor({
     node,
     isOpen,
-    folderPages,
     onOpenItem,
   })
 

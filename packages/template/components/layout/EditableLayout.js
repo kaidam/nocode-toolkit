@@ -6,7 +6,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 import Actions from '../../utils/actions'
 import layoutActions from '../../store/modules/layout'
-import useLayoutGrid from '../hooks/useLayoutGrid'
+import useLayoutCellRenderer from '../hooks/useLayoutCellRenderer'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,7 +35,7 @@ const LayoutEditor = ({
   const {
     layout,
     getCell,
-  } = useLayoutGrid({
+  } = useLayoutCellRenderer({
     content_id,
     layout_id,
     simpleMovement,
