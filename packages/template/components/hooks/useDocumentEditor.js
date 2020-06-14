@@ -3,8 +3,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import Actions from '../../utils/actions'
 import contentActions from '../../store/modules/content'
 import driveUtils from '../../utils/drive'
+import itemUtils from '../../utils/item'
 import icons from '../../icons'
 
+import nocodeSelectors from '../../store/selectors/nocode'
 import useLayoutEditor from './useLayoutEditor'
 
 const useDocumentEditor = ({
@@ -72,7 +74,9 @@ const useDocumentEditor = ({
 
   const getAddMenu = useCallback(() => {
 
-    const baseParts = isFolder ? [{
+    if(!isFolder) return getAddWidgetMenu()
+
+    return [{
       id: 'document',
       title: 'Google Document',
       icon: icons.docs,
@@ -94,15 +98,11 @@ const useDocumentEditor = ({
         parentId: node.id,
         params: addContentParams,
       })
-    }] : []
-
-    const widgets = [{
+    },{
       title: 'Widget',
       icon: icons.widget,
       items: getAddWidgetMenu(),
     }]
-
-    return baseParts.concat(widgets)
   }, [
     addContentParams,
     addContentFilter,

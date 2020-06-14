@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
 import Button from '@material-ui/core/Button'
 import Divider from '@material-ui/core/Divider'
 
 import Toolbar from '../widgets/Toolbar'
+import MenuButton from '../widgets/MenuButton'
+import useDocumentEditor from '../hooks/useDocumentEditor'
 
 import driveUtils from '../../utils/drive'
 import icons from '../../icons'
@@ -13,6 +15,8 @@ import contentSelectors from '@nocode-works/template/store/selectors/content'
 
 const EditIcon = icons.edit
 const AddIcon = icons.add
+const OpenIcon = icons.open
+const RemoveIcon = icons.clear
 const SettingsIcon = icons.settings
 
 const useStyles = makeStyles(theme => ({
@@ -59,6 +63,7 @@ const useStyles = makeStyles(theme => ({
 
 const EditableDocumentToolbar = ({
   className,
+  defaultLayoutId,
 }) => {
   const classes = useStyles()
 
@@ -69,16 +74,47 @@ const EditableDocumentToolbar = ({
   const isFolder = driveUtils.isFolder(node)
   const openUrl = driveUtils.getItemUrl(node)
 
+  const {
+    onOpenDrive,
+    getAddMenu,
+    onRemove,
+    onOpenSettings,
+  } = useDocumentEditor({
+    node,
+    layout_id: defaultLayoutId,
+  })
+
+  const getAddButton = useCallback((onClick) => {
+    return (
+      <Button
+        className={ classes.button }
+        size="small"
+        onClick={ onClick }
+      >
+        <AddIcon className={ classes.icon } />&nbsp;&nbsp;Add
+      </Button>
+    )
+  })
+
   return (
     <Toolbar>
       <div className={ className }>
         <div className={ classes.container }>
           <div className={ classes.left }>
             {
-              node.type != 'folder' && (
+              node.type == 'folder' ? (
                 <Button
                   className={ classes.button }
                   size="small"
+                  onClick={ onOpenDrive }
+                >
+                  <OpenIcon className={ classes.icon } />&nbsp;&nbsp;Open Folder
+                </Button>
+              ) : (
+                <Button
+                  className={ classes.button }
+                  size="small"
+                  onClick={ onOpenDrive }
                 >
                   <EditIcon className={ classes.icon } />&nbsp;&nbsp;Edit Document
                 </Button>
@@ -87,11 +123,20 @@ const EditableDocumentToolbar = ({
           </div>
           <div className={ classes.filler }></div>
           <div className={ classes.right }>
+            <MenuButton
+              getButton={ getAddButton }
+              getItems={ getAddMenu }
+            />
+            <Divider
+              className={ classes.divider }
+              orientation="vertical"
+            />
             <Button
               className={ classes.button }
               size="small"
+              onClick={ onRemove }
             >
-              <AddIcon className={ classes.icon } />&nbsp;&nbsp;Add
+              <RemoveIcon className={ classes.icon } />&nbsp;&nbsp;Remove
             </Button>
             <Divider
               className={ classes.divider }
@@ -100,6 +145,7 @@ const EditableDocumentToolbar = ({
             <Button
               className={ classes.button }
               size="small"
+              onClick={ onOpenSettings }
             >
               <SettingsIcon className={ classes.icon } />&nbsp;&nbsp;Settings
             </Button>
