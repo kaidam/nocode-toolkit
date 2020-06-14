@@ -1,6 +1,10 @@
 import React, { useCallback } from 'react'
+import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+
+import Actions from '../../utils/actions'
+import contentActions from '../../store/modules/content'
 
 const useStyles = makeStyles(theme => {
   return {
@@ -38,11 +42,36 @@ const DraggableNavBar = ({
     vertical,
   })
 
-  const onDragEnd = useCallback(result => {
-    console.log('--------------------------------------------')
-    console.dir(result)
-  }, [
+  const actions = Actions(useDispatch(), {
+    onUpdateAnnotation: contentActions.updateAnnotation,
+  })
 
+  const ids = items.map(item => item.id)
+
+  const onDragEnd = useCallback(result => {
+    if (!result.destination) return
+
+    const startIndex = result.source.index
+    const endIndex = result.destination.index
+
+    const newIds = [].concat(ids)
+    const [removed] = newIds.splice(startIndex, 1)
+    newIds.splice(endIndex, 0, removed)
+
+    actions.onUpdateAnnotation({
+      id: `section:${section}`,
+      data: {
+        sorting: {
+          type: 'manual',
+          ids: newIds,
+        },
+      },
+      snackbarMessage: 'sorting updated',
+      reload: false,
+    })
+  }, [
+    section,
+    ids,
   ])
 
   return (
@@ -50,7 +79,11 @@ const DraggableNavBar = ({
       <DragDropContext
         onDragEnd={ onDragEnd }
       >
-        <Droppable droppableId={ `navbar-${section}` } type={ `navbar-${section}` }>
+        <Droppable
+          direction={ vertical ? 'vertical' : 'horizontal' }
+          droppableId={ `navbar-${section}` }
+          type={ `navbar-${section}` }
+        >
           {(provided, snapshot) => (
             <div
               {...provided.droppableProps}

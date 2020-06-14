@@ -31,11 +31,6 @@ const useStyles = makeStyles(theme => ({
   }) => ({
     flexGrow: 1,
   }),
-  apples: ({
-    vertical,
-  }) => ({
-    backgroundColor: 'red',
-  }),
 }))
 
 const NavBarSection = ({
