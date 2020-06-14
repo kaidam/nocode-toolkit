@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import List from '@material-ui/core/List'
 import TreeItem from './TreeItem'
 import useSectionTree from '../hooks/useSectionTree'
-
+import Actions from '../../utils/actions'
+import contentActions from '../../store/modules/content'
 import systemSelectors from '../../store/selectors/system'
 
 const useStyles = makeStyles(theme => ({
@@ -98,9 +99,15 @@ const Tree = ({
   // this is used so we can scroll to active elements
   containerRef,
 }) => {
+
+  const actions = Actions(useDispatch(), {
+    onUpdateAnnotation: contentActions.updateAnnotation,
+  })
+
   const {
     onToggleFolder,
     tree,
+    childrenMap,
     openFolders,
     scrollToCurrentPage,
     onDisableScrollToCurrentPage,
@@ -112,9 +119,32 @@ const Tree = ({
 
   const onDragEnd = useCallback(result => {
     if (!result.destination) return
-    console.log('--------------------------------------------')
-    console.dir(result)
-  }, [])
+
+    const parentId = result.type
+    const ids = childrenMap[parentId]
+
+    const startIndex = result.source.index
+    const endIndex = result.destination.index
+
+    const newIds = [].concat(ids)
+    const [removed] = newIds.splice(startIndex, 1)
+    newIds.splice(endIndex, 0, removed)
+
+    actions.onUpdateAnnotation({
+      id: parentId,
+      data: {
+        sorting: {
+          type: 'manual',
+          ids: newIds,
+        },
+      },
+      snackbarMessage: 'sorting updated',
+      reload: false,
+    })
+  }, [
+    childrenMap,
+    tree,
+  ])
 
   const itemProps = {
     showUI,

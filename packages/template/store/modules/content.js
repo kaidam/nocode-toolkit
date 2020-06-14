@@ -26,6 +26,7 @@ import settingsSelectors from '../selectors/settings'
 const prefix = 'content'
 
 const wrapper = networkWrapper.factory(prefix)
+const overwriteMerge = (destinationArray, sourceArray, options) => sourceArray
 
 const reducers = {
   openFormWindow: (state, action) => {
@@ -441,12 +442,26 @@ const sideEffects = {
   updateAnnotation: ({
     id,
     data,
+    snackbarMessage,
+    reload = true,
   }) => wrapper('updateAnnotation', async (dispatch, getState) => {
     const annotations = nocodeSelectors.annotations(getState())
-    const annotationUpdate = deepmerge(annotations[id] || {}, data)
+    const annotationUpdate = deepmerge(annotations[id] || {}, data, {
+      arrayMerge: overwriteMerge,
+    })
+    dispatch(nocodeActions.setItem({
+      type: 'annotation',
+      id,
+      data: annotationUpdate,
+    }))
     const result = await loaders.updateAnnotation(getState, id, annotationUpdate)
     if(!result) return
-    await dispatch(jobActions.reload())
+    if(reload) {
+      await dispatch(jobActions.reload())
+    }
+    if(snackbarMessage) {
+      dispatch(snackbarActions.setSuccess(snackbarMessage))
+    }
   }),
 
   editNode: ({

@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import uiActions from '../../store/modules/ui'
 import uiSelectors from '../../store/selectors/ui'
 import contentSelectors from '../../store/selectors/content'
+import nocodeSelectors from '../../store/selectors/nocode'
 import routerSelectors from '../../store/selectors/router'
 
 const useSectionTree = ({
@@ -24,6 +25,22 @@ const useSectionTree = ({
   const tree = useSelector(state => treeSelector(state, section))
   const ancestors = useSelector(routerSelectors.ancestorsWithRoute)
   const scrollToCurrentPage = useSelector(uiSelectors.scrollToCurrentPage)
+
+  const childrenMap = useMemo(() => {
+    const map = {}
+    const processItem = (parentId, nodes) => {
+      if(!nodes) return
+      map[parentId] = nodes.map(node => node.id)
+      nodes.forEach(node => {
+        processItem(node.id, node.children)
+      })
+    }
+    processItem(`section:${section}`, tree)
+    return map
+  }, [
+    tree,
+    section,
+  ])
 
   // this is used when a tree item is actually clicked
   // because they clicked it - we assume that they can see
@@ -48,6 +65,7 @@ const useSectionTree = ({
 
   return {
     tree,
+    childrenMap,
     openFolders,
     scrollToCurrentPage,
     onToggleFolder,
