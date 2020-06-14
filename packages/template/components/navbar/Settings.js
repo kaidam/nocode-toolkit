@@ -39,7 +39,6 @@ const NavbarSettings = ({
     contrast,
   })
   const [ isMenuOpen, setIsMenuOpen ] = useState(false)
-  const containerRef = useRef(null)
   const onOpenMenu = useCallback(() => {
     setIsMenuOpen(true)
   })
@@ -62,7 +61,6 @@ const NavbarSettings = ({
   const getSettingsButton = useIconButton({
     title: sectionTitle,
     settingsButton: true,
-    useRef: containerRef,
   })
 
   return (
@@ -70,10 +68,13 @@ const NavbarSettings = ({
       <MenuButton
         getButton={ getSettingsButton }
         getItems={ getAllItems }
-        anchorRef={ containerRef }
-        offset={{
-          left: 0,
-          top: 50,
+        anchorOrigin={{
+          horizontal: 'right',
+          vertical: 'top',
+        }}
+        transformOrigin={{
+          horizontal: 'right',
+          vertical: 'top',
         }}
         onOpen={ onOpenMenu }
         onClose={ onCloseMenu }

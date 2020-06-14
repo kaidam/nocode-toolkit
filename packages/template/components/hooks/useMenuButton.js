@@ -43,6 +43,8 @@ const useStyles = makeStyles(theme => ({
 const ItemMenu = ({
   anchorEl,
   anchorPosition,
+  anchorOrigin,
+  transformOrigin,
   header,
   menuItems,
   open,
@@ -66,8 +68,9 @@ const ItemMenu = ({
   }
   else {
     menuProps.anchorEl = anchorEl
+    menuProps.anchorOrigin = anchorOrigin
+    menuProps.transformOrigin = transformOrigin
   }
-
   
   return (
     <Menu {...menuProps}>
@@ -223,6 +226,11 @@ const useMenuButton = ({
   // screen co-ordinates for the menu
   anchorPosition,
 
+  // control which direction the menu goes
+  // https://material-ui.com/api/popover/#props
+  anchorOrigin,
+  transformOrigin,
+
   // use these to pin the menu to another ref
   // and with an offset
   offsetRef,
@@ -322,8 +330,6 @@ const useMenuButton = ({
       left: anchorCoords.left + useOffet.left,
       top: anchorCoords.top + useOffet.top,
     }
-    console.log('--------------------------------------------')
-    console.dir(anchorPosition)
   }
 
   const mainMenu = useMemo(
@@ -333,6 +339,8 @@ const useMenuButton = ({
         <ItemMenu
           anchorEl={ useParentEl }
           anchorPosition={ anchorPosition }
+          anchorOrigin={ anchorOrigin }
+          transformOrigin={ transformOrigin }
           header={ noHeader ? null : processHeaders(headers).join(' : ') }
           menuItems={ getItems(getItemsParams, handleClose) }
           open={ mainMenuOpen }
@@ -349,6 +357,7 @@ const useMenuButton = ({
       getItems,
       getItemsParams,
       anchorPosition,
+      anchorOrigin,
       handleClose,
       handleItemClick,
     ]
@@ -361,6 +370,8 @@ const useMenuButton = ({
         <ItemMenu
           anchorEl={ useParentEl }
           anchorPosition={ anchorPosition }
+          anchorOrigin={ anchorOrigin }
+          transformOrigin={ transformOrigin }
           header={ noHeader ? null : processHeaders(headers).join(' : ') }
           menuItems={ subItems }
           open={ subMenuOpen }
@@ -376,6 +387,7 @@ const useMenuButton = ({
       noHeader,
       subMenuOpen,
       anchorPosition,
+      anchorOrigin,
       handleClose,
       handleItemClick,
     ]
