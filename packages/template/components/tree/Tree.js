@@ -59,6 +59,9 @@ const Tree = ({
   // the name of the section this tree is for
   section,
 
+  // when an item is opened
+  onClick,
+
   // a ref for the container element for the tree
   // this is used so we can scroll to active elements
   containerRef,
@@ -81,6 +84,7 @@ const Tree = ({
     scrollToCurrentPage,
     onDisableScrollToCurrentPage,
     onToggleFolder,
+    onClick,
   }
 
   return (

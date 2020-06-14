@@ -63,6 +63,7 @@ const TreeItem = ({
   scrollToCurrentPage,
   onDisableScrollToCurrentPage,
   onToggleFolder,
+  onClick,
 }) => {
 
   const settings = useSelector(settingsSelectors.settings)
@@ -135,6 +136,7 @@ const TreeItem = ({
   else linkType = 'internal'
 
   const onClickItem = useCallback(() => {
+    if(onClick) onClick()
     onDisableScrollToCurrentPage()
 
     // if we do not have folder pages - we toggle the
@@ -147,6 +149,7 @@ const TreeItem = ({
       return false
     }
   }, [
+    onClick,
     node,
     folderPages,
     onToggleFolder,

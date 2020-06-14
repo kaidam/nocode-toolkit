@@ -39,6 +39,7 @@ const useStyles = makeStyles(theme => ({
 
 const TreeSection = ({
   section,
+  onClick,
 }) => {
   const classes = useStyles()
   const showUI = useSelector(systemSelectors.showUI)
@@ -91,12 +92,14 @@ const TreeSection = ({
                 <DraggableTree
                   section={ section }
                   containerRef={ containerRef }
+                  onClick={ onClick }
                 />
               </Suspense>
             ) : (
               <Tree
                 section={ section }
                 containerRef={ containerRef }
+                onClick={ onClick }
               />
             )
           }

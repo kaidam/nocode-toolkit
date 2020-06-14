@@ -93,6 +93,8 @@ const DraggableTree = ({
   // a ref for the container element for the tree
   // this is used so we can scroll to active elements
   containerRef,
+
+  onClick,
 }) => {
 
   const actions = Actions(useDispatch(), {
@@ -147,6 +149,7 @@ const DraggableTree = ({
     scrollToCurrentPage,
     onDisableScrollToCurrentPage,
     onToggleFolder,
+    onClick,
   }
 
   return (
