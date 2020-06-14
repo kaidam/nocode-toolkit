@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import useMenuButton from '../hooks/useMenuButton'
 import Actions from '../../utils/actions'
 import layoutActions from '../../store/modules/layout'
 

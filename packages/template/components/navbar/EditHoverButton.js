@@ -111,7 +111,6 @@ const EditHoverButton = ({
         left: anchorCoords.left + offset.left,
         top: anchorCoords.top + offset.top,
       }}
-      header={ node.name }
       getButton={ getButton }
       getItems={ getEditorItems }
       onOpen={ onOpen }

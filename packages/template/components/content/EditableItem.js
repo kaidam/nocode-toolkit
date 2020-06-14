@@ -81,7 +81,6 @@ const EditableItem = ({
     <MenuButton
       asFragment
       rightClick
-      header={ node.name }
       getButton={ getButton }
       getItems={ getEditorItems }
       parentAnchorEl={ menuAnchor ? menuAnchor.el : null }

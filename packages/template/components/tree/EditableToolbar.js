@@ -82,7 +82,6 @@ const EditableToolbar = ({
         <div className={ classes.filler }></div>
         <div className={ classes.button }>
           <MenuButton
-            header={ `${sectionTitle} : Settings` }
             getButton={ getSettingsButton }
             getItems={ getAllItems }
             onOpen={ onOpenMenu }

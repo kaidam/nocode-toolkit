@@ -29,7 +29,6 @@ const EditHoverButton = ({
     <MenuButton
       asFragment
       rightClick
-      header={ node.name }
       getButton={ getButton }
       getItems={ getEditorItems }
       onOpen={ onOpen }

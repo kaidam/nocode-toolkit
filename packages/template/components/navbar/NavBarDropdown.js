@@ -37,7 +37,6 @@ const NavBarDropdown = ({
   
   return (
     <MenuButton
-      noHeader
       getButton={ getButton }
       getItems={ getMenuItems }
     />

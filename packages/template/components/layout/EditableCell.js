@@ -134,7 +134,6 @@ const EditableCell = ({
                 <MenuButton
                   asFragment
                   rightClick
-                  header={ "settings" }
                   getButton={ getSettingsButton }
                   getItems={ getMenuItems }
                   onOpen={ onOpenMenu }

@@ -67,7 +67,6 @@ const NavbarSectionEditor = ({
   return (
     <div className={ classes.sectionEditorRoot }>
       <MenuButton
-        header={ `${sectionTitle} : Settings` }
         getButton={ getSettingsButton }
         getItems={ getAllItems }
         onOpen={ onOpenMenu }

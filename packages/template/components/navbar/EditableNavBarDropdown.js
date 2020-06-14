@@ -120,7 +120,6 @@ const EditableNavBarDropdown = ({
 
   return (
     <MenuButton
-      header={ node ? node.name : '' }
       getButton={ getTooltipButton }
       getItems={ getMenuItems }
       processHeaders={ (headers) => headers.filter(header => header != 'View Contents') }
