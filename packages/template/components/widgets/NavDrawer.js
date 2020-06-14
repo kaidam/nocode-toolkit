@@ -69,6 +69,7 @@ const NavDrawer = ({
       >
         <div className={ navbarClassname }>
           <Component
+            isNavDrawer
             onClick={ closeDrawer }
             {...props}
           />

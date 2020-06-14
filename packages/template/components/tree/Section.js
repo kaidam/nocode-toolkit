@@ -39,6 +39,7 @@ const useStyles = makeStyles(theme => ({
 
 const TreeSection = ({
   section,
+  isNavDrawer,
   onClick,
 }) => {
   const classes = useStyles()
@@ -66,6 +67,7 @@ const TreeSection = ({
               props={{
                 section,
                 focusRef,
+                isNavDrawer,
               }}
             />
           </div>

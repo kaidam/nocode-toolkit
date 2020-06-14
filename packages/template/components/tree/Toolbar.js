@@ -33,6 +33,7 @@ console.log('REMINDER: activate the tree -> editable toolbar quickstart again')
 const TreeToolbar = ({
   section,
   focusRef,
+  isNavDrawer,
 }) => {
   const classes = useStyles()
   const settingsRef = useRef(null)
@@ -90,7 +91,7 @@ const TreeToolbar = ({
         </div>
       </div>
       {
-        isMenuOpen && (
+        isMenuOpen && !isNavDrawer && (
           <FocusElementOverlay
             contentRef={ focusRef }
             padding={ 0 }
