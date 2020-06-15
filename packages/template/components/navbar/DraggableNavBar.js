@@ -48,7 +48,7 @@ const DraggableNavBar = ({
 
   const ids = items.map(item => item.id)
 
-  const onDragEnd = useCallback(result => {
+  const onDragEnd = result => {
     if (!result.destination) return
 
     const startIndex = result.source.index
@@ -69,10 +69,7 @@ const DraggableNavBar = ({
       snackbarMessage: 'sorting updated',
       reload: false,
     })
-  }, [
-    section,
-    ids,
-  ])
+  }
 
   return (
     <nav>
@@ -92,12 +89,10 @@ const DraggableNavBar = ({
               <ul className={ classes.navbar }>
                 {
                   items.map((item, i) => {
-                    // console.log('--------------------------------------------')
-                    // console.dir(`navbar: ${item.id}`)
                     return (
                       <Draggable
-                        key={ item.id }
-                        draggableId={ item.id }
+                        key={ `navbar-${section}-${item.id}` }
+                        draggableId={ `navbar-${section}-${item.id}` }
                         index={ i }
                       >
                         {(provided, snapshot) => (

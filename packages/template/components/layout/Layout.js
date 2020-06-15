@@ -1,16 +1,8 @@
-import React, { useCallback, useMemo } from 'react'
-import { useSelector } from 'react-redux'
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Divider from '@material-ui/core/Divider'
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 import useLayoutCellRenderer from '../hooks/useLayoutCellRenderer'
-
-import settingsSelectors from '../../store/selectors/settings'
-import systemSelectors from '../../store/selectors/system'
-import nocodeSelectors from '../../store/selectors/nocode'
-
-import Cell from './Cell'
 
 const useStyles = makeStyles(theme => ({
   root: {

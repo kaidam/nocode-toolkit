@@ -9,7 +9,7 @@ import Tree from './Tree'
 import Layout from '../layout/Layout'
 
 const Toolbar = lazy(() => import(/* webpackChunkName: "ui" */ './Toolbar'))
-const EditableLayout = lazy(() => import(/* webpackChunkName: "ui" */ '../layout/EditableLayout'))
+const DraggableLayout = lazy(() => import(/* webpackChunkName: "ui" */ '../layout/DraggableLayout'))
 const DraggableTree = lazy(() => import(/* webpackChunkName: "ui" */ './DraggableTree'))
 
 const useStyles = makeStyles(theme => ({
@@ -77,7 +77,7 @@ const TreeSection = ({
         {
           showUI ? (
             <Suspense
-              Component={ EditableLayout }
+              Component={ DraggableLayout }
               props={ layoutProps }
             />
           ) : (

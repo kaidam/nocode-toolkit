@@ -18,6 +18,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
   },
   title: {
+    paddingLeft: theme.spacing(2),
     flexGrow: 1,
   },
   tabs: {

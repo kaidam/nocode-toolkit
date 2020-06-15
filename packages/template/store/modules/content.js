@@ -172,6 +172,8 @@ const sideEffects = {
       processValues: processNodeFormValues,
       formWindowConfig: {
         title,
+        size: 'md',
+        fullHeight: false,
       },
       onSubmit: async ({
         data,
@@ -332,6 +334,8 @@ const sideEffects = {
       forms: [form],
       formWindowConfig: {
         title,
+        size: 'md',
+        fullHeight: false,
       },
       onSubmit: async (data) => {
         const result = await loaders.saveContent(getState, {
@@ -365,6 +369,8 @@ const sideEffects = {
       formWindowConfig: {
         title,
         initialTab,
+        size: 'md',
+        fullHeight: false,
       },
       onSubmit: async (data) => {
         const result = await loaders.saveContent(getState, {
@@ -426,6 +432,8 @@ const sideEffects = {
       formWindowConfig: {
         title,
         initialTab,
+        size: 'md',
+        fullHeight: false,
       },
       onSubmit: async ({
         annotation,
@@ -475,6 +483,8 @@ const sideEffects = {
       processValues: processNodeFormValues,
       formWindowConfig: {
         title,
+        size: 'md',
+        fullHeight: false,
       },
       onSubmit: async ({
         annotation,

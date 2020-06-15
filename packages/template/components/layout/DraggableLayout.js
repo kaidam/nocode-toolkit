@@ -41,17 +41,7 @@ const LayoutEditor = ({
     simpleMovement,
   })
 
-  const rows = useMemo(() => {
-    return layout.map((row, i) => ({
-      id: `row-${i}`,
-      index: i,
-      cells: row,
-    }))
-  }, [
-    layout,
-  ])
-
-  const onDragEnd = useCallback(result => {
+  const onDragEnd = result => {
     if (!result.destination) return
     const sourceIndex = result.source.index
     const targetIndex = result.destination.index
@@ -61,13 +51,9 @@ const LayoutEditor = ({
       sourceIndex,
       targetIndex,
     })
-  }, [
-    layout,
-    content_id,
-    layout_id,
-  ])
+  }
 
-  if(!rows || rows.length <= 0) return null
+  if(!layout || layout.length <= 0) return null
 
   return (
     <div className={ classes.root }>    
@@ -79,11 +65,14 @@ const LayoutEditor = ({
               ref={provided.innerRef}
             >
               {
-                rows.map((row, i) => {
+                layout.map((row, i) => {
+
+                  const rowId = row[0].id
+
                   return (
                     <Draggable
-                      key={ row.id }
-                      draggableId={ row.id }
+                      key={ rowId }
+                      draggableId={ rowId }
                       index={ i }
                     >
                       {(provided, snapshot) => (
@@ -95,7 +84,7 @@ const LayoutEditor = ({
                           style={ provided.draggableProps.style }
                         >
                           {
-                            row.cells.map((cell, j) => {
+                            row.map((cell, j) => {
                               return getCell({
                                 cell,
                                 rowIndex: i,

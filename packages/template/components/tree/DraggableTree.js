@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -28,7 +28,10 @@ const Folder = ({
 
   if(!nodes || nodes.length <= 0) return null
   return (
-    <Droppable droppableId={ parentId } type={ parentId }>
+    <Droppable
+      droppableId={ `tree-${parentId}` }
+      type={ `tree-${parentId}` }
+    >
       {(provided, snapshot) => (
         <div
           {...provided.droppableProps}
@@ -38,13 +41,10 @@ const Folder = ({
             {
               nodes.map((node, i) => {
                 const open = openFolders[node.id]
-
-                // console.log('--------------------------------------------')
-                // console.dir(`tree: ${node.id}`)
                 return (
                   <Draggable
-                    key={ node.id }
-                    draggableId={ node.id }
+                    key={ `tree-${node.id}` }
+                    draggableId={ `tree-${node.id}` }
                     index={ i }
                   >
                     {(provided, snapshot) => (
@@ -114,10 +114,9 @@ const DraggableTree = ({
 
   const showUI = useSelector(systemSelectors.showUI)
 
-  const onDragEnd = useCallback(result => {
+  const onDragEnd = result => {
     if (!result.destination) return
-
-    const parentId = result.type
+    const parentId = result.type.replace(/^tree-/, '')
     const ids = childrenMap[parentId]
 
     const startIndex = result.source.index
@@ -138,10 +137,7 @@ const DraggableTree = ({
       snackbarMessage: 'sorting updated',
       reload: false,
     })
-  }, [
-    childrenMap,
-    tree,
-  ])
+  }
 
   const itemProps = {
     showUI,
