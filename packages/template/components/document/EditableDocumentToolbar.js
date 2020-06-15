@@ -63,7 +63,7 @@ const useStyles = makeStyles(theme => ({
 
 const EditableDocumentToolbar = ({
   className,
-  defaultLayoutId,
+  layouts,
 }) => {
   const classes = useStyles()
 
@@ -71,17 +71,16 @@ const EditableDocumentToolbar = ({
     node,
   } = useSelector(contentSelectors.document)
 
-  const isFolder = driveUtils.isFolder(node)
-  const openUrl = driveUtils.getItemUrl(node)
-
   const {
+    isFolder,
     onOpenDrive,
     getAddMenu,
+    onAddWidget,
     onRemove,
     onOpenSettings,
   } = useDocumentEditor({
     node,
-    layout_id: defaultLayoutId,
+    layouts,
   })
 
   const getAddButton = useCallback((onClick) => {
@@ -102,7 +101,7 @@ const EditableDocumentToolbar = ({
         <div className={ classes.container }>
           <div className={ classes.left }>
             {
-              node.type == 'folder' ? (
+              isFolder ? (
                 <Button
                   className={ classes.button }
                   size="small"
@@ -123,10 +122,23 @@ const EditableDocumentToolbar = ({
           </div>
           <div className={ classes.filler }></div>
           <div className={ classes.right }>
-            <MenuButton
-              getButton={ getAddButton }
-              getItems={ getAddMenu }
-            />
+            {
+              isFolder ? (
+                <MenuButton
+                  getButton={ getAddButton }
+                  getItems={ getAddMenu }
+                />
+              ) : (
+                <Button
+                  className={ classes.button }
+                  size="small"
+                  onClick={ onAddWidget }
+                >
+                  <AddIcon className={ classes.icon } />&nbsp;&nbsp;Add
+                </Button>
+              )
+            }
+            
             <Divider
               className={ classes.divider }
               orientation="vertical"

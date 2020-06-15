@@ -1,19 +1,18 @@
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Actions from '../../utils/actions'
-import contentActions from '../../store/modules/content'
 import driveUtils from '../../utils/drive'
 import itemUtils from '../../utils/item'
 import icons from '../../icons'
 
 import nocodeSelectors from '../../store/selectors/nocode'
-import useLayoutEditor from './useLayoutEditor'
+import contentActions from '../../store/modules/content'
+import layoutActions from '../../store/modules/layout'
 
 const useDocumentEditor = ({
   node,
-  layout_id = 'none',
+  layouts,
   addContentParams = {},
-  addContentFilter,
 }) => {
 
   const actions = Actions(useDispatch(), {
@@ -21,6 +20,7 @@ const useDocumentEditor = ({
     onEditRemoteContent: contentActions.editRemoteContent,
     onHideContent: contentActions.hideContent,
     onRemoveRemoteContent: contentActions.removeRemoteContent,
+    onAddWidget: layoutActions.addWidget,
   })
 
   const locations = useSelector(nocodeSelectors.locations)
@@ -28,12 +28,15 @@ const useDocumentEditor = ({
   const openUrl = driveUtils.getItemUrl(node)
   const isFolder = driveUtils.isFolder(node)
 
-  const {
-    getAddWidgetMenu,
-  } = useLayoutEditor({
-    content_id: node.id,
-    layout_id,
-  })
+  const onAddWidget = useCallback(() => {
+    actions.onAddWidget({
+      content_id: node.id,
+      layouts,
+    })
+  }, [
+    node,
+    layouts,
+  ])
 
   const onOpenDrive = useCallback(() => {
     window.open(openUrl)
@@ -74,7 +77,7 @@ const useDocumentEditor = ({
 
   const getAddMenu = useCallback(() => {
 
-    if(!isFolder) return getAddWidgetMenu()
+    if(!isFolder) return []
 
     return [{
       id: 'document',
@@ -101,20 +104,22 @@ const useDocumentEditor = ({
     },{
       title: 'Widget',
       icon: icons.widget,
-      items: getAddWidgetMenu(),
+      handler: onAddWidget,
     }]
   }, [
     addContentParams,
-    addContentFilter,
     node,
     isFolder,
+    onAddWidget,
   ])
   
   return {
+    isFolder,
     onOpenDrive,
     onRemove,
     onOpenSettings,
     getAddMenu,
+    onAddWidget,
   }
 }
 
