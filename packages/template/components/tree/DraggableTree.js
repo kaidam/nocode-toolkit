@@ -10,6 +10,8 @@ import Actions from '../../utils/actions'
 import contentActions from '../../store/modules/content'
 import systemSelectors from '../../store/selectors/system'
 
+import EmptyState from './EmptyState'
+
 const useStyles = makeStyles(theme => ({
   root: {
     paddingTop: 0,
@@ -148,6 +150,12 @@ const DraggableTree = ({
     onClick,
   }
 
+  if(!tree || tree.length <= 0) {
+    return (
+      <EmptyState />
+    )
+  }
+  
   return (
     <DragDropContext
       onDragEnd={ onDragEnd }
