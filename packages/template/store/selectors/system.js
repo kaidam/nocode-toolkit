@@ -12,7 +12,6 @@ import {
 const previewMode = state => state.ui.previewMode
 const user = state => state.system.user
 const driveAccessStatus = state => state.system.driveAccessStatus
-const drivePickerCredentials = state => state.system.drivePickerCredentials
 const config = state => state.system.config
 const website = state => state.system.website
 const dnsInfo = state => state.system.dnsInfo
@@ -66,8 +65,7 @@ const hasFullDriveAccess = createSelector(
 
 const selectors = {
   user,
-  driveAccessStatus,
-  drivePickerCredentials,
+  driveAccessStatus, 
   config,
   website,
   dnsInfo,

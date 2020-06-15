@@ -56,26 +56,6 @@ const reducers = {
   clearWindow: (state, action) => {
     state.window = null
   },
-  openPicker: (state, action) => {
-    state.picker = action.payload
-  },
-  acceptPicker: (state, action) => {
-    if(state.picker) {
-      state.picker.accepted = true
-      state.picker.result = action.payload
-    }
-  },
-  cancelPicker: (state, action) => {
-    if(state.picker) {
-      state.picker.accepted = false
-    }
-  },
-  resetPicker: (state, action) => {
-    state.picker.accepted = null
-  },
-  clearPicker: (state, action) => {
-    state.picker = null
-  },
   openUpgradeWindow: (state, action) => {
     state.upgradeWindow = action.payload
   },
@@ -196,26 +176,6 @@ const sideEffects = {
     return result
   },
 
-  getPickerItem: (pickerProps = {}) => async (dispatch, getState) => {
-    dispatch(actions.openPicker({
-      ...pickerProps
-    }))    
-    let result = null
-    try {
-      const confirmed = await dispatch(uiActions.waitForWindow(driveSelectors.picker))
-      if(confirmed) {
-        const currentSettings = driveSelectors.picker(getState())
-        result = currentSettings.result
-      }
-    } catch(e) {
-      dispatch(actions.resetWindow())
-      console.error(e)
-      dispatch(snackbarActions.setError(e.toString()))
-    }
-    dispatch(actions.clearPicker())
-    return result
-  },
-
   // wrapper that will decide if we need full drive access for the
   // given mime type
   // we can do documents with normal scope but the rest will need
@@ -225,20 +185,11 @@ const sideEffects = {
   getItem: ({
     type = 'folder',
   } = {}) => async (dispatch, getState) => {
-    const hasFullDriveAccess = systemSelectors.hasFullDriveAccess(getState())
-    if(!hasFullDriveAccess && type == 'document') {
-      const result = await dispatch(actions.getPickerItem({
-        filter: type,
-      }))
-      return result
-    }
-    else {
-      const result = await dispatch(actions.getDriveItem({
-        listFilter: type == 'folder' ? `folder` : `folder,${type}`,
-        addFilter: type,
-      }))
-      return result
-    }
+    const result = await dispatch(actions.getDriveItem({
+      listFilter: type == 'folder' ? `folder` : `folder,${type}`,
+      addFilter: type,
+    }))
+    return result
   },
 
 }

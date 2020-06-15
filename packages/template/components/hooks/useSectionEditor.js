@@ -3,11 +3,11 @@ import { useDispatch } from 'react-redux'
 
 import Actions from '../../utils/actions'
 import contentActions from '../../store/modules/content'
+import layoutActions from '../../store/modules/layout'
 
 import icons from '../../icons'
 
 import useSectionSelector from './useSectionSelector'
-import useLayoutEditor from './useLayoutEditor'
 
 const useSectionEditor = ({
   section,
@@ -17,6 +17,14 @@ const useSectionEditor = ({
   withWidgets,
 }) => {
 
+  const actions = Actions(useDispatch(), {
+    onCreateRemoteContent: contentActions.createRemoteContent,
+    onCreateLocalContent: contentActions.createLocalContent,
+    onAddRemoteContent: contentActions.addRemoteContent,
+    onEditSection: contentActions.editSection,
+    onWidgetAdd: layoutActions.addWidget,
+  })
+
   const {
     node,
     annotation,
@@ -25,22 +33,17 @@ const useSectionEditor = ({
     section,
   })
 
-  const {
-    onAddWidget,
-    getAddWidgetMenu,
-  } = useLayoutEditor({
+  const onAddWidget = useCallback(() => {
+    actions.onWidgetAdd({
+      content_id,
+      layout_id,
+      layouts,
+    })
+  }, [
     content_id,
     layout_id,
     layouts,
-  })
-
-  const actions = Actions(useDispatch(), {
-    onCreateRemoteContent: contentActions.createRemoteContent,
-    onCreateLocalContent: contentActions.createLocalContent,
-    onAddRemoteContent: contentActions.addRemoteContent,
-    onEditSection: contentActions.editSection,
-    openManageFoldersDialog: contentActions.openManageFoldersDialog,
-  })
+  ])
 
   const getAddItems = useCallback(() => {
 
@@ -110,61 +113,15 @@ const useSectionEditor = ({
       withWidgets ? {
         title: 'Widget',
         icon: icons.widget,
-        items: getAddWidgetMenu(),
-      } : null,
-      withWidgets ? {
-        title: 'Widget2',
-        icon: icons.widget,
         handler: onAddWidget,
       } : null,
     ].filter(i => i)
   }, [
     addTargetFolderId,
     withWidgets,
-    getAddWidgetMenu,
+    onAddWidget,
   ])
   
-  const getSettingsItems = useCallback(() => {
-    return [
-
-      {
-        title: 'Manage Drive Folders',
-        icon: icons.folder,
-        secondaryIcon: icons.drive,
-        handler: () => actions.openManageFoldersDialog({
-          section,
-        })
-      },
-
-      '-',
-      
-      {
-        title: 'Sorting',
-        icon: icons.sort,
-        handler: () => actions.onEditSection({
-          title: `Edit Section`,
-          form: `section`,
-          id: section,
-          initialTab: 'sorting'
-        })
-      },
-
-      {
-        title: 'Hidden Items',
-        icon: icons.hide,
-        handler: () => actions.onEditSection({
-          title: `Edit Section`,
-          form: `section`,
-          id: section,
-          initialTab: 'hidden'
-        })
-      },
-
-    ].filter(i => i)
-  }, [
-    getAddItems,
-  ])
-
   const getAllItems = useCallback(() => {
     return [
 
@@ -195,7 +152,6 @@ const useSectionEditor = ({
     node,
     annotation,
     getAddItems,
-    getSettingsItems,
     getAllItems,
   }
 }

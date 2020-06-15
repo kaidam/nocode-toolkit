@@ -488,18 +488,6 @@ const sideEffects = {
     dispatch(snackbarActions.setSuccess(`item updated`))
   }),
 
-  openManageFoldersDialog: ({
-    section,
-  } = {}) => (dispatch, getState) => {
-    dispatch(dialogActions.open('manageSectionFolders', {
-      section,
-    }))
-  },
-
-  closeManageFoldersDialog: () => (dispatch, getState) => {
-    dispatch(dialogActions.close('manageSectionFolders'))
-  },
-
   addManagedFolder: ({
     section,
   }) => wrapper('addManagedFolder', async (dispatch, getState) => {

@@ -58,7 +58,6 @@ const DriveFoldersEditor = ({
     onAddFolder: contentActions.addManagedFolder,
     onRemoveFolder: contentActions.removeManagedFolder,
     onUpdateAnnotation: contentActions.updateAnnotation,
-    onCancel: contentActions.closeManageFoldersDialog,
   })
 
   const {
