@@ -24,23 +24,7 @@ const DeleteIcon = icons.delete
 
 const useStyles = makeStyles(theme => ({
   container: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-  },
-  tabs: {
-    flexGrow: 0,
-  },
-  content: {
     padding: theme.spacing(2),
-    flexGrow: 1,
-    overflowY: 'auto',
-  },
-  appbar: {
-    flexGrow: 0,
-  },
-  grow: {
-    flexGrow: 1,
   },
   subdomainButton: {
     marginTop: theme.spacing(1),
@@ -55,17 +39,6 @@ const useStyles = makeStyles(theme => ({
   urlTableContainer: {
     borderTop: '1px solid #ccc'
   },
-  listContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexGrow: 1,
-    height: "100%",
-    overflowY: 'auto',
-  },
-  listCell: {
-    flexGrow: 1,
-    width: '50%',
-  },
   subdomainPadding: {
     paddingTop: theme.spacing(1),
     paddingBottom: theme.spacing(1),
@@ -79,7 +52,7 @@ const getSubdomainError = (subdomain, defaultSubdomain) => {
 }
 
 const SettingsDomains = ({
-  onClose,
+  currentTab,
 }) => {
 
   const classes = useStyles()
@@ -132,76 +105,76 @@ const SettingsDomains = ({
     }
   })
 
+  const subdomainElement = (
+    <Grid container>
+      <Grid item xs={ 6 }>
+        <TextField
+          label="Subdomain"
+          placeholder={ defaultSubdomain }
+          helperText={ error ? errorText : "" }
+          fullWidth
+          error={ error ? true : false }
+          value={subdomain || ''}
+          onChange={(e) => setSubdomain(e.target.value)}
+        />
+      </Grid>
+      <Grid item xs={ 6 } className={ classes.fullDomain }>
+        <Typography>
+          .{ systemConfig.main_domain }
+        </Typography>
+      </Grid>
+      <Grid item xs={ 12 } className={ classes.subdomainPadding }>
+        <Typography variant="caption">Enter the subdomain your website will be published to</Typography>
+      </Grid>
+      <Grid item xs={ 12 }>
+        <Button
+          className={ classes.subdomainButton }
+          size="small"
+          color={ saveDisabled ? "default" : "secondary" }
+          variant="contained"
+          disabled={ saveDisabled }
+          onClick={ () => actions.onSetSubdomain(subdomain) }
+        >
+          Update Subdomain
+        </Button>
+      </Grid>
+    </Grid>
+  )
+
+  const customdomainElement = (
+    <Grid container>
+      <Grid item xs={ 12 }>
+        <SimpleTable
+          hideHeader
+          data={ urlData }
+          fields={ urlFields }
+          getActions={ (item) => (
+            <IconButton
+              onClick={ () => setDeleteDialogUrl(item.url) }
+            >
+              <DeleteIcon />
+            </IconButton>
+          )}
+        />
+      </Grid>
+      <Grid item xs={ 12 }>
+        <Button
+          className={ classes.subdomainButton }
+          size="small"
+          color="secondary"
+          variant="contained"
+          onClick={ onOpenAddDialog }
+        >
+          Add custom domain
+        </Button>
+      </Grid>
+    </Grid>
+  )
+
   return (
     <div className={ classes.container }>
-      <div className={ classes.content }>
-        <div className={ classes.listContainer }>
-          <div className={ classes.listCell }>
-            <Grid container>
-              <Grid item xs={ 6 }>
-                <TextField
-                  label="Subdomain"
-                  placeholder={ defaultSubdomain }
-                  helperText={ error ? errorText : "" }
-                  fullWidth
-                  error={ error ? true : false }
-                  value={subdomain || ''}
-                  onChange={(e) => setSubdomain(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={ 6 } className={ classes.fullDomain }>
-                <Typography>
-                  .{ systemConfig.main_domain }
-                </Typography>
-              </Grid>
-              <Grid item xs={ 12 } className={ classes.subdomainPadding }>
-                <Typography variant="caption">Enter the subdomain your website will be published to</Typography>
-              </Grid>
-              <Grid item xs={ 12 }>
-                <Button
-                  className={ classes.subdomainButton }
-                  size="small"
-                  color={ saveDisabled ? "default" : "secondary" }
-                  variant="contained"
-                  disabled={ saveDisabled }
-                  onClick={ () => actions.onSetSubdomain(subdomain) }
-                >
-                  Update Subdomain
-                </Button>
-              </Grid>
-            </Grid>
-          </div>
-          <div className={ classes.listCell }>
-            <Grid container>
-              <Grid item xs={ 12 }>
-                <SimpleTable
-                  hideHeader
-                  data={ urlData }
-                  fields={ urlFields }
-                  getActions={ (item) => (
-                    <IconButton
-                      onClick={ () => setDeleteDialogUrl(item.url) }
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  )}
-                />
-              </Grid>
-              <Grid item xs={ 12 }>
-                <Button
-                  className={ classes.subdomainButton }
-                  size="small"
-                  color="secondary"
-                  variant="contained"
-                  onClick={ onOpenAddDialog }
-                >
-                  Add custom domain
-                </Button>
-              </Grid>
-            </Grid>
-          </div>
-        </div>
-      </div>
+      { currentTab == 'subdomain' && subdomainElement }
+      { currentTab == 'custom' && customdomainElement }
       {
         addDialogOpen && (
           <DomainsAddDialog

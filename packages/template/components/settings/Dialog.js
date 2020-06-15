@@ -47,9 +47,28 @@ const settingsTabRender = (tabName, title) => ({
 
 const PANELS = [{
   id: 'general',
-  title: 'General',
+  title: 'Settings',
   icon: icons.settings,
-  render: settingsTabRender('main', 'General Settings'),
+  render: ({
+    librarySettings,
+    renderForm,
+    currentTabId,
+    onChangeTab,
+  }) => {
+    const currentTab = librarySettings.tabs.find(tab => tab.id == currentTabId) || librarySettings.tabs[0]
+    return {
+      header: (
+        <Tabs
+          tabs={ librarySettings.tabs }
+          current={ currentTab.id }
+          onChange={ onChangeTab }
+        />
+      ),
+      body: renderForm({
+        schema: currentTab.schema,
+      })
+    }
+  }
 }, {
   id: 'layout',
   title: 'Layout',
@@ -104,29 +123,38 @@ const PANELS = [{
   icon: icons.domain,
   submitButton: false,
   render: ({
-    classes,
-  }) => ({
-    header: (
-      <Grid container>
-        <Grid item xs={ 6 }>
-          <Typography variant="h6" className={ classes.headingTitle }>Nocode Subdomain</Typography>
-        </Grid>
-        <Grid item xs={ 6 }>
-          <Typography variant="h6" className={ classes.headingTitle }>Custom Domains</Typography>
-        </Grid>
-      </Grid>
-    ),
-    body: (
-      <Domains />
-    )
-  })
+    currentTabId,
+    onChangeTab,
+  }) => {
+    const domainTabs = [{
+      id: 'subdomain',
+      title: 'Subdomain',
+    },{
+      id: 'custom',
+      title: 'Custom Domains',
+    }]
+    const currentTab = domainTabs.find(tab => tab.id == currentTabId) || domainTabs[0]
+    return {
+      header: (
+        <Tabs
+          tabs={ domainTabs }
+          current={ currentTab.id }
+          onChange={ onChangeTab }
+        />
+      ),
+      body: (
+        <Domains
+          currentTab={ currentTab.id }
+        />
+      )
+    }
+  }
 }, {
   id: 'snippets',
   title: 'Snippets',
   size: 'md',
   icon: icons.code,
   render: ({
-    classes,
     currentTabId,
     snippets,
     onUpdateSnippets,
@@ -134,7 +162,7 @@ const PANELS = [{
   }) => {
     const snippetTabs = [{
       id: 'normal',
-      title: 'Snippets',
+      title: 'Page Snippets',
     },{
       id: 'global',
       title: 'Global Snippets',
@@ -166,15 +194,27 @@ const PANELS = [{
   icon: icons.lock,
   submitButton: false,
   render: ({
-    classes,
-  }) => ({
-    header: (
-      <Typography variant="h6" className={ classes.headingTitle }>Website Security</Typography>
-    ),
-    body: (
-      <Security />
-    )
-  })
+    currentTabId,
+    onChangeTab,
+  }) => {
+    const securityTabs = [{
+      id: 'password',
+      title: 'Password Protection',
+    }]
+    const currentTab = securityTabs.find(tab => tab.id == currentTabId) || securityTabs[0]
+    return {
+      header: (
+        <Tabs
+          tabs={ securityTabs }
+          current={ currentTab.id }
+          onChange={ onChangeTab }
+        />
+      ),
+      body: (
+        <Security />
+      )
+    }
+  }
 }]
 
 const SettingsDialog = ({

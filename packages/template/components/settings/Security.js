@@ -178,7 +178,6 @@ const SettingsSecurity = ({
             <Grid container>
               <Grid item xs={ 12 }>
                 <FormControl component="fieldset">
-                  <FormLabel component="legend">Password Protection:</FormLabel>
                   <RadioGroup value={ mode } onChange={ onUpdateMode }>
                     <FormControlLabel value="off" control={<Radio />} label="Off" />
                     <FormControlLabel value="password" control={<Radio />} label="Usernames & Passwords" />
