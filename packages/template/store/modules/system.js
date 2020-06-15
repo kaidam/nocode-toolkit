@@ -95,6 +95,9 @@ const loaders = {
   updateWebsiteMeta: (id, data) => axios.put(apiUtils.apiUrl(`/websites/${id}/meta`), data)
     .then(apiUtils.process),
 
+  updateUserMeta: (data) => axios.put(apiUtils.apiUrl(`/auth/update`), data)
+    .then(apiUtils.process),
+
   saveSecuritySettings: (id, data) => axios.put(apiUtils.apiUrl(`/websites/${id}/security`), data)
     .then(apiUtils.process),
 
@@ -221,6 +224,12 @@ const sideEffects = {
     const website = systemSelectors.website(getState())
     await loaders.updateWebsiteMeta(website.id, data)
     await dispatch(actions.loadWebsite())
+  },
+
+  // merge data into the user meta reccord
+  updateUserMeta: (data) => async (dispatch, getState) => {
+    await loaders.updateUserMeta(data)
+    await dispatch(actions.loadUser())
   },
 
   /*

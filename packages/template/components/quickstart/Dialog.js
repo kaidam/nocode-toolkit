@@ -183,6 +183,8 @@ const QuickStartDialog = ({
   const classes = useStyles()
   const user = useSelector(systemSelectors.user)
 
+  const existingDriveExperience = user.meta.driveExperience
+
   const [ step, setStep ] = useState('quickstart')
   const [ quickstart, setQuickstart ] = useState('none')
   const [ driveExperience, setDriveExperience ] = useState('none')
@@ -193,9 +195,17 @@ const QuickStartDialog = ({
 
   const onSetQuickstart = useCallback((value) => {
     setQuickstart(value)
-    setStep('driveExperience')
+
+    if(existingDriveExperience) {
+      setDriveExperience(existingDriveExperience)
+      setStep('submit')
+    }
+    else {
+      setStep('driveExperience')
+    }
+    
   }, [
-    driveExperience,
+    existingDriveExperience,
   ])
 
   const onSetDriveExperience = useCallback((value) => {
