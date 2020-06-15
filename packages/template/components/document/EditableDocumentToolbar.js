@@ -8,7 +8,6 @@ import Toolbar from '../widgets/Toolbar'
 import MenuButton from '../widgets/MenuButton'
 import useDocumentEditor from '../hooks/useDocumentEditor'
 
-import driveUtils from '../../utils/drive'
 import icons from '../../icons'
 
 import contentSelectors from '@nocode-works/template/store/selectors/content'
@@ -64,6 +63,7 @@ const useStyles = makeStyles(theme => ({
 const EditableDocumentToolbar = ({
   className,
   layouts,
+  small,
 }) => {
   const classes = useStyles()
 
@@ -93,79 +93,140 @@ const EditableDocumentToolbar = ({
         <AddIcon className={ classes.icon } />&nbsp;&nbsp;Add
       </Button>
     )
-  })
+  }, [
+    classes
+  ])
 
-  return (
-    <Toolbar>
-      <div className={ className }>
-        <div className={ classes.container }>
-          <div className={ classes.left }>
-            {
-              isFolder ? (
-                <Button
-                  className={ classes.button }
-                  size="small"
-                  onClick={ onOpenDrive }
-                >
-                  <OpenIcon className={ classes.icon } />&nbsp;&nbsp;Open Folder
-                </Button>
-              ) : (
-                <Button
-                  className={ classes.button }
-                  size="small"
-                  onClick={ onOpenDrive }
-                >
-                  <EditIcon className={ classes.icon } />&nbsp;&nbsp;Edit Document
-                </Button>
-              )
-            }
-          </div>
-          <div className={ classes.filler }></div>
-          <div className={ classes.right }>
-            {
-              isFolder ? (
-                <MenuButton
-                  getButton={ getAddButton }
-                  getItems={ getAddMenu }
-                />
-              ) : (
-                <Button
-                  className={ classes.button }
-                  size="small"
-                  onClick={ onAddWidget }
-                >
-                  <AddIcon className={ classes.icon } />&nbsp;&nbsp;Add
-                </Button>
-              )
-            }
-            
-            <Divider
-              className={ classes.divider }
-              orientation="vertical"
+  const getSettingsButton = useCallback((onClick) => {
+    return (
+      <Button
+        className={ classes.button }
+        size="small"
+        onClick={ onClick }
+      >
+        <AddIcon className={ classes.icon } />&nbsp;&nbsp;Settings
+      </Button>
+    )
+  }, [
+    classes
+  ])
+
+  const getSmallMenuItems = useCallback(() => {
+    return [{
+      title: isFolder ? 'Open Folder' : 'Edit Document',
+      icon: isFolder ? OpenIcon : EditIcon,
+      handler: onOpenDrive,
+    }, {
+      title: 'Add',
+      icon: AddIcon,
+      handler: isFolder ? null : onAddWidget,
+      items: isFolder ? getAddMenu() : null,
+    }, {
+      title: 'Remove',
+      icon: RemoveIcon,
+      handler: onRemove,
+    }, {
+      title: 'Settings',
+      icon: SettingsIcon,
+      handler: onOpenSettings,
+    }]
+  }, [
+    isFolder,
+    onOpenDrive,
+    getAddMenu,
+    onAddWidget,
+    onRemove,
+    onOpenSettings,
+  ])
+
+  if(small) {
+    return (
+      <Toolbar>
+        <div className={ className }>
+          <div className={ classes.container }>
+            <MenuButton
+              getButton={ getSettingsButton }
+              getItems={ getSmallMenuItems }
             />
-            <Button
-              className={ classes.button }
-              size="small"
-              onClick={ onRemove }
-            >
-              <RemoveIcon className={ classes.icon } />&nbsp;&nbsp;Remove
-            </Button>
-            <Divider
-              className={ classes.divider }
-              orientation="vertical"
-            />
-            <Button
-              className={ classes.button }
-              size="small"
-              onClick={ onOpenSettings }
-            >
-              <SettingsIcon className={ classes.icon } />&nbsp;&nbsp;Settings
-            </Button>
           </div>
         </div>
-      </div>
-    </Toolbar>
-  )
+      </Toolbar>
+    )
+  }
+  else {
+    return (
+      <Toolbar>
+        <div className={ className }>
+          <div className={ classes.container }>
+            <div className={ classes.left }>
+              {
+                isFolder ? (
+                  <Button
+                    className={ classes.button }
+                    size="small"
+                    onClick={ onOpenDrive }
+                  >
+                    <OpenIcon className={ classes.icon } />&nbsp;&nbsp;Open Folder
+                  </Button>
+                ) : (
+                  <Button
+                    className={ classes.button }
+                    size="small"
+                    onClick={ onOpenDrive }
+                  >
+                    <EditIcon className={ classes.icon } />&nbsp;&nbsp;Edit Document
+                  </Button>
+                )
+              }
+            </div>
+            <div className={ classes.filler }></div>
+            <div className={ classes.right }>
+              {
+                isFolder ? (
+                  <MenuButton
+                    getButton={ getAddButton }
+                    getItems={ getAddMenu }
+                  />
+                ) : (
+                  <Button
+                    className={ classes.button }
+                    size="small"
+                    onClick={ onAddWidget }
+                  >
+                    <AddIcon className={ classes.icon } />&nbsp;&nbsp;Add
+                  </Button>
+                )
+              }
+              
+              <Divider
+                className={ classes.divider }
+                orientation="vertical"
+              />
+              <Button
+                className={ classes.button }
+                size="small"
+                onClick={ onRemove }
+              >
+                <RemoveIcon className={ classes.icon } />&nbsp;&nbsp;Remove
+              </Button>
+              <Divider
+                className={ classes.divider }
+                orientation="vertical"
+              />
+              <Button
+                className={ classes.button }
+                size="small"
+                onClick={ onOpenSettings }
+              >
+                <SettingsIcon className={ classes.icon } />&nbsp;&nbsp;Settings
+              </Button>
+            </div>
+          </div>
+        </div>
+      </Toolbar>
+    )
+  }
+  
 }
 
 export default EditableDocumentToolbar

@@ -27,7 +27,10 @@ const useStyles = makeStyles(theme => {
       fontSize: '1em',
       textAlign: 'right',
     },
-    icon: ({contrast} = {}) => ({
+    iconButton: ({vertical}) => ({
+      marginLeft: theme.spacing(vertical ? 0 : 1),
+    }),
+    icon: ({contrast}) => ({
       color: contrast ?
         theme.palette.primary.contrastText :
         theme.palette.primary.main,
@@ -52,6 +55,7 @@ const NavBar = ({
 
   const classes = useStyles({
     contrast,
+    vertical,
   })
 
   const treeSelector = useMemo(contentSelectors.sectionTree, [])
@@ -73,13 +77,15 @@ const NavBar = ({
       return (
         <IconButton
           size="small"
-          className={ classes.icon }
+          className={ classes.iconButton }
           onClick={ onClick }
         >
-          <MoreVertIcon color="inherit" fontSize="inherit" />
+          <MoreVertIcon className={ classes.icon } fontSize="inherit" />
         </IconButton>
       )
-    }, [])
+    }, [
+      classes,
+    ])
 
     if(showUI) {
       return (
