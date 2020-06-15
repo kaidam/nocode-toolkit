@@ -7,11 +7,13 @@ import GlobalLoading from '../system/GlobalLoading'
 import uiSelectors from '../../store/selectors/ui'
 import dialogSelectors from '../../store/selectors/dialog'
 import contentSelectors from '../../store/selectors/content'
+import layoutSelectors from '../../store/selectors/layout'
 import driveSelectors from '../../store/selectors/drive'
 import unsplashSelectors from '../../store/selectors/unsplash'
 
 import ConfirmDialog from './Confirm'
 import ContentDialog from '../content/Dialog'
+import AddWidgetDialog from '../layout/AddWidgetDialog'
 import DriveDialog from '../drive/Dialog'
 import DrivePicker from '../drive/Picker'
 import DriveUpgradeScopeDialog from '../system/DriveUpgradeRequestModal'
@@ -41,6 +43,7 @@ const DialogLoader = ({
   const loading = useSelector(uiSelectors.loading)
   const confirmWindow = useSelector(uiSelectors.confirmWindow)
   const formWindow = useSelector(contentSelectors.formWindow)
+  const widgetWindow = useSelector(layoutSelectors.widgetWindow)
   const driveWindow = useSelector(driveSelectors.window)
   const drivePicker = useSelector(driveSelectors.picker)
   const driveUpgradeWindow = useSelector(driveSelectors.upgradeWindow)
@@ -72,6 +75,11 @@ const DialogLoader = ({
       {
         formWindow && (
           <ContentDialog />
+        ) 
+      }
+      {
+        widgetWindow && (
+          <AddWidgetDialog />
         ) 
       }
       {

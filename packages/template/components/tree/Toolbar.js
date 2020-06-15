@@ -55,6 +55,9 @@ const TreeToolbar = ({
     section,
     content_id: `section:${section}`,
     layout_id: 'widgets',
+    layouts: [{
+      id: 'widgets',
+    }],
     withWidgets: true,
   })
 

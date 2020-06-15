@@ -13,6 +13,7 @@ const useSectionEditor = ({
   section,
   content_id,
   layout_id,
+  layouts,
   withWidgets,
 }) => {
 
@@ -25,10 +26,12 @@ const useSectionEditor = ({
   })
 
   const {
+    onAddWidget,
     getAddWidgetMenu,
   } = useLayoutEditor({
     content_id,
-    layout_id
+    layout_id,
+    layouts,
   })
 
   const actions = Actions(useDispatch(), {
@@ -108,6 +111,11 @@ const useSectionEditor = ({
         title: 'Widget',
         icon: icons.widget,
         items: getAddWidgetMenu(),
+      } : null,
+      withWidgets ? {
+        title: 'Widget2',
+        icon: icons.widget,
+        handler: onAddWidget,
       } : null,
     ].filter(i => i)
   }, [

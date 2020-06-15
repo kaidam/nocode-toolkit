@@ -8,6 +8,7 @@ import apiUtils from '../utils/api'
 import { layout as initialState } from '../initialState'
 
 import nocodeSelectors from '../selectors/nocode'
+import layoutSelectors from '../selectors/layout'
 import nocodeActions from './nocode'
 import contentActions from './content'
 import snackbarActions from './snackbar'
@@ -22,7 +23,26 @@ const prefix = 'layout'
 const wrapper = networkWrapper.factory(prefix)
 
 const reducers = {
-  
+  openWidgetWindow: (state, action) => {
+    state.widgetWindow = action.payload
+  },
+  acceptWidgetWindow: (state, action) => {
+    if(state.widgetWindow) {
+      state.widgetWindow.accepted = true
+      state.widgetWindow.values = action.payload
+    }
+  },
+  cancelWidgetWindow: (state, action) => {
+    if(state.widgetWindow) {
+      state.widgetWindow.accepted = false
+    }
+  },
+  resetWidgetWindow: (state, action) => {
+    state.widgetWindow.accepted = null
+  },
+  clearWidgetWindow: (state, action) => {
+    state.widgetWindow = null
+  },
 }
 
 const loaders = {
@@ -217,6 +237,62 @@ const sideEffects = {
       }
     }))
     await dispatch(snackbarActions.setSuccess(`layout updated`))
+  }),
+
+  getWidget: ({
+    layouts,
+    layout_id,
+  }) => async (dispatch, getState) => {
+    dispatch(actions.openWidgetWindow({
+      open: true,
+      layouts,
+      layout_id,
+    }))
+    let result = null
+    try {
+      const confirmed = await dispatch(uiActions.waitForWindow(layoutSelectors.widgetWindow))
+      if(confirmed) {
+        const currentSettings = layoutSelectors.widgetWindow(getState())
+        result = currentSettings.values
+      }
+      
+    } catch(e) {
+      dispatch(actions.resetWidgetWindow())
+      console.error(e)
+      dispatch(snackbarActions.setError(e.toString()))
+    }
+    dispatch(actions.clearWidgetWindow())
+    return result
+  },
+
+  // layouts is an array of title/value objects that
+  // describe the layouts that can be added to
+  // if length > 1 a select will be shown
+  addWidget: ({
+    content_id,
+    layouts,
+    layout_id,
+    rowIndex = -1,
+  }) => wrapper('addWidget', async (dispatch, getState) => {
+    const result = await dispatch(actions.getWidget({
+      layouts,
+      layout_id,
+    }))
+    if(!result) return null
+
+    const {
+      form,
+      data,
+      targetLayout,
+    } = result
+
+    dispatch(actions.add({
+      content_id,
+      layout_id: targetLayout,
+      form,
+      data,
+      rowIndex,
+    }))
   }),
 
 }

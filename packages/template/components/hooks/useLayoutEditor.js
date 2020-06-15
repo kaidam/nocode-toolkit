@@ -10,16 +10,28 @@ import useWidgetMenu from './useWidgetMenu'
 const useLayoutEditor = ({
   content_id,
   layout_id,
+  layouts,
 }) => {
   const actions = Actions(useDispatch(), {
     onLayoutAdd: layoutActions.add,
+    onWidgetAdd: layoutActions.addWidget,
   })
 
   const annotations = useSelector(nocodeSelectors.annotations)
   const annotation = annotations[content_id] || {}
   const data = annotation[layout_id]
 
-  const onAddWidget = useCallback(({
+  const onAddWidget = useCallback(() => {
+    actions.onWidgetAdd({
+      content_id,
+      layouts,
+    })
+  }, [
+    content_id,
+    layouts,
+  ])
+    
+  const onAdd = useCallback(({
     form,
     data,
     rowIndex = -1,
@@ -37,12 +49,13 @@ const useLayoutEditor = ({
   ])
 
   const getAddWidgetMenu = useWidgetMenu({
-    onAdd: onAddWidget,
+    onAdd,
   })
   
   return {
     data,
     getAddWidgetMenu,
+    onAddWidget,
   }
   
 }

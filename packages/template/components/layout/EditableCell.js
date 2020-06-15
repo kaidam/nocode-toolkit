@@ -109,6 +109,7 @@ const EditableCell = ({
     menus,
     onClick,
   } = useMenuButton({
+    noHeader: true,
     getItems: getMenuItems,
     anchorPosition,
     onOpen: onOpenMenu,

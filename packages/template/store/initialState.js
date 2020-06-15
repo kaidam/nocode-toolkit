@@ -31,7 +31,7 @@ export const dialog = {
 }
 
 export const layout = {
-  
+  widgetWindow: null,
 }
 
 export const content = {

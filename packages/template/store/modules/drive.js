@@ -150,21 +150,17 @@ const sideEffects = {
     dispatch(actions.openUpgradeWindow({
       open: true,
     }))
-    let success = false
     let result = null
-    while(!success) {
-      try {
-        const confirmed = await dispatch(uiActions.waitForWindow(driveSelectors.upgradeWindow))
-        if(confirmed) {
-          const currentSettings = driveSelectors.upgradeWindow(getState())
-          result = currentSettings.result
-        }
-        success = true
-      } catch(e) {
-        dispatch(actions.resetUpgradeWindow())
-        console.error(e)
-        dispatch(snackbarActions.setError(e.toString()))
-      }
+    try {
+      const confirmed = await dispatch(uiActions.waitForWindow(driveSelectors.upgradeWindow))
+      if(confirmed) {
+        const currentSettings = driveSelectors.upgradeWindow(getState())
+        result = currentSettings.result
+      }      
+    } catch(e) {
+      dispatch(actions.resetUpgradeWindow())
+      console.error(e)
+      dispatch(snackbarActions.setError(e.toString()))
     }
     dispatch(actions.clearUpgradeWindow())
     return result
@@ -182,22 +178,18 @@ const sideEffects = {
     dispatch(actions.openWindow({
       ...windowProps
     }))
-    let success = false
     let result = null
-    while(!success) {
-      try {
-        const confirmed = await dispatch(uiActions.waitForWindow(driveSelectors.window))
-        if(confirmed) {
-          const currentSettings = driveSelectors.window(getState())
-          result = currentSettings.result
-        }
-        success = true
-      } catch(e) {
-        dispatch(uiActions.setLoading(false))
-        dispatch(actions.resetWindow())
-        console.error(e)
-        dispatch(snackbarActions.setError(e.toString()))
+    try {
+      const confirmed = await dispatch(uiActions.waitForWindow(driveSelectors.window))
+      if(confirmed) {
+        const currentSettings = driveSelectors.window(getState())
+        result = currentSettings.result
       }
+    } catch(e) {
+      dispatch(uiActions.setLoading(false))
+      dispatch(actions.resetWindow())
+      console.error(e)
+      dispatch(snackbarActions.setError(e.toString()))
     }
     dispatch(uiActions.setLoading(false))
     dispatch(actions.clearWindow())
@@ -207,22 +199,18 @@ const sideEffects = {
   getPickerItem: (pickerProps = {}) => async (dispatch, getState) => {
     dispatch(actions.openPicker({
       ...pickerProps
-    }))
-    let success = false
+    }))    
     let result = null
-    while(!success) {
-      try {
-        const confirmed = await dispatch(uiActions.waitForWindow(driveSelectors.picker))
-        if(confirmed) {
-          const currentSettings = driveSelectors.picker(getState())
-          result = currentSettings.result
-        }
-        success = true
-      } catch(e) {
-        dispatch(actions.resetWindow())
-        console.error(e)
-        dispatch(snackbarActions.setError(e.toString()))
+    try {
+      const confirmed = await dispatch(uiActions.waitForWindow(driveSelectors.picker))
+      if(confirmed) {
+        const currentSettings = driveSelectors.picker(getState())
+        result = currentSettings.result
       }
+    } catch(e) {
+      dispatch(actions.resetWindow())
+      console.error(e)
+      dispatch(snackbarActions.setError(e.toString()))
     }
     dispatch(actions.clearPicker())
     return result

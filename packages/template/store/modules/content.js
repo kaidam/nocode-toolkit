@@ -679,42 +679,39 @@ const sideEffects = {
       ...formWindowConfig
     }))
 
-    let success = false
     let result = null
 
-    while(!success) {
-      try {
-        const confirmed = await dispatch(uiActions.waitForWindow(contentSelectors.formWindow))
-        if(confirmed) {
-          const currentSettings = contentSelectors.formWindow(getState())
-          const formValues = processValues(
-            forms.reduce((all, name) => {
-              const formConfig = storeForms[name]
-              const formContext = formConfig.contextSelector ?
-                formConfig.contextSelector(getState()) :
-                {}
-              return formConfig.processFormValues ?
-                formConfig.processFormValues(all, formContext) :
-                all
-            }, currentSettings.values)
-          )
-          if(onSubmit) {
-            await Promise.delay(100)
-            dispatch(uiActions.setLoading(loadingConfig))
-            result = await onSubmit(formValues)
-          }
-          else {
-            result = formValues
-          }
+    try {
+      const confirmed = await dispatch(uiActions.waitForWindow(contentSelectors.formWindow))
+      if(confirmed) {
+        const currentSettings = contentSelectors.formWindow(getState())
+        const formValues = processValues(
+          forms.reduce((all, name) => {
+            const formConfig = storeForms[name]
+            const formContext = formConfig.contextSelector ?
+              formConfig.contextSelector(getState()) :
+              {}
+            return formConfig.processFormValues ?
+              formConfig.processFormValues(all, formContext) :
+              all
+          }, currentSettings.values)
+        )
+        if(onSubmit) {
+          await Promise.delay(100)
+          dispatch(uiActions.setLoading(loadingConfig))
+          result = await onSubmit(formValues)
         }
-        success = true
-      } catch(e) {
-        dispatch(uiActions.setLoading(false))
-        dispatch(actions.resetFormWindow())
-        console.error(e)
-        dispatch(snackbarActions.setError(e.toString()))
+        else {
+          result = formValues
+        }
       }
+    } catch(e) {
+      dispatch(uiActions.setLoading(false))
+      dispatch(actions.resetFormWindow())
+      console.error(e)
+      dispatch(snackbarActions.setError(e.toString()))
     }
+
     dispatch(uiActions.setLoading(false))
     dispatch(actions.clearFormWindow())
     return result

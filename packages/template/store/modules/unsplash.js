@@ -81,22 +81,18 @@ const sideEffects = {
     dispatch(actions.openWindow({
       ...windowProps
     }))
-    let success = false
     let result = null
-    while(!success) {
-      try {
-        const confirmed = await dispatch(uiActions.waitForWindow(unsplashSelectors.window))
-        if(confirmed) {
-          const currentSettings = unsplashSelectors.window(getState())
-          result = currentSettings.result
-        }
-        success = true
-      } catch(e) {
-        dispatch(uiActions.setLoading(false))
-        dispatch(actions.resetWindow())
-        console.error(e)
-        dispatch(snackbarActions.setError(e.toString()))
+    try {
+      const confirmed = await dispatch(uiActions.waitForWindow(unsplashSelectors.window))
+      if(confirmed) {
+        const currentSettings = unsplashSelectors.window(getState())
+        result = currentSettings.result
       }
+    } catch(e) {
+      dispatch(uiActions.setLoading(false))
+      dispatch(actions.resetWindow())
+      console.error(e)
+      dispatch(snackbarActions.setError(e.toString()))
     }
     dispatch(uiActions.setLoading(false))
     dispatch(actions.clearWindow())
