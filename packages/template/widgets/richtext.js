@@ -35,6 +35,10 @@ const form = {
     style: 'body1',
   },
   schema: [{
+    id: 'text',
+    rows: 5,
+    component: 'textarea',
+  }, {
     id: 'style',
     component: 'select',
     options: [{
@@ -65,10 +69,6 @@ const form = {
       title: 'Heading 6',
       value: 'h6',
     }]
-  }, {
-    id: 'text',
-    rows: 5,
-    component: 'textarea',
   }],
 }
 

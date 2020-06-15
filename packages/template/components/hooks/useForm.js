@@ -109,7 +109,7 @@ const useForm = ({
     handlerContext,
   ])
 
-  const getFooter = useCallback(({
+  const getButtons = useCallback(({
     isValid,
     onSubmit,
   }) => (
@@ -134,7 +134,7 @@ const useForm = ({
           (formProps) => renderFn({
             getTabs: () => getTabs(formProps),
             getForm: () => getForm(formProps),
-            getFooter: () => getFooter(formProps),
+            getButtons: () => getButtons(formProps),
           })
         }
       </FormWrapper>
@@ -145,7 +145,7 @@ const useForm = ({
     onSubmit,
     getTabs,
     getForm,
-    getFooter,
+    getButtons,
   ])
 
   return render

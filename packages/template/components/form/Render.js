@@ -1,5 +1,5 @@
 import React from 'react'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import classnames from 'classnames'
 import { Field } from 'formik'
 import dotty from 'dotty'
@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography'
 import FormHelperText from '@material-ui/core/FormHelperText'
 import utils from './utils'
 
-const useStyles = makeStyles(theme => createStyles({
+const useStyles = makeStyles(theme => ({
   errorContainer: {
     marginTop: theme.spacing(2),
   },

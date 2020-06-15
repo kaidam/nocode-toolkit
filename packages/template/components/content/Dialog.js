@@ -1,18 +1,35 @@
-import React, { useCallback } from 'react'
+import React from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 import { useSelector, useDispatch } from 'react-redux'
+
+import Typography from '@material-ui/core/Typography'
 
 import Actions from '../../utils/actions'
 import contentActions from '../../store/modules/content'
 import contentSelectors from '../../store/selectors/content'
-import FormWrapper from '../form/Wrapper'
 import Window from '../dialog/Window'
 
 import useForm from '../hooks/useForm'
-import Form from './Form'
+
+const useStyles = makeStyles(theme => ({
+  header: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  title: {
+    flexGrow: 1,
+  },
+  tabs: {
+    flexGrow: 0,
+  },
+}))
 
 const ContentDialog = ({
 
 }) => {
+
+  const classes = useStyles()
   const formWindow = useSelector(contentSelectors.formWindow)
 
   const actions = Actions(useDispatch(), {
@@ -28,26 +45,38 @@ const ContentDialog = ({
   return renderForm(({
     getTabs,
     getForm,
-    getFooter,
+    getButtons,
   }) => {
     return (
       <Window
         open
+        size={ formWindow.size || "lg" }
         fullHeight={ 
           typeof(formWindow.fullHeight) === 'boolean' ?
             formWindow.fullHeight :
             true
         }
-        compact
-        noScroll
-        noActions
-        title={ formWindow.title }
-        size={ formWindow.size || "lg" }
+        compact={
+          typeof(formWindow.compact) === 'boolean' ?
+            formWindow.compact :
+            false
+        }
+        title={(
+          <div className={ classes.header }>
+            <div className={ classes.title }>
+              <Typography variant="h6">
+                { formWindow.title }
+              </Typography>
+            </div>
+            <div className={ classes.tabs }>
+              { getTabs() }
+            </div>
+          </div>
+        )}
+        buttons={ getButtons() }
         onCancel={ actions.onCancel }
       >
-        { getTabs() }
         { getForm() }
-        { getFooter() }
       </Window>
     )
   })
