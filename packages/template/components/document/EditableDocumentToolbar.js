@@ -1,9 +1,10 @@
-import React, { useCallback } from 'react'
+import React, { useContext, useCallback, useRef, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
 import Button from '@material-ui/core/Button'
 import Divider from '@material-ui/core/Divider'
 
+import OnboardingContext from '../contexts/onboarding'
 import Toolbar from '../widgets/Toolbar'
 import MenuButton from '../widgets/MenuButton'
 import useDocumentEditor from '../hooks/useDocumentEditor'
@@ -66,6 +67,8 @@ const EditableDocumentToolbar = ({
   small,
 }) => {
   const classes = useStyles()
+  const context = useContext(OnboardingContext)
+  const editButtonRef = useRef(null)
 
   const {
     node,
@@ -139,11 +142,21 @@ const EditableDocumentToolbar = ({
     onOpenSettings,
   ])
 
+  useEffect(() => {
+    context.setFocusElements({
+      [`editDocument`]: {
+        id: 'editDocument',
+        ref: editButtonRef,
+        //padding: 10,
+      },
+    })
+  }, [])
+
   if(small) {
     return (
       <Toolbar>
         <div className={ className }>
-          <div className={ classes.container }>
+          <div className={ classes.container } ref={ editButtonRef }>
             <MenuButton
               getButton={ getSettingsButton }
               getItems={ getSmallMenuItems }
@@ -164,6 +177,7 @@ const EditableDocumentToolbar = ({
                   <Button
                     className={ classes.button }
                     size="small"
+                    ref={ editButtonRef }
                     onClick={ onOpenDrive }
                   >
                     <OpenIcon className={ classes.icon } />&nbsp;&nbsp;Open Folder
@@ -172,6 +186,7 @@ const EditableDocumentToolbar = ({
                   <Button
                     className={ classes.button }
                     size="small"
+                    ref={ editButtonRef }
                     onClick={ onOpenDrive }
                   >
                     <EditIcon className={ classes.icon } />&nbsp;&nbsp;Edit Document

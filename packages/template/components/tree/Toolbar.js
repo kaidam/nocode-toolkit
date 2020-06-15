@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState, useCallback } from 'react'
+import React, { useContext, useRef, useState, useCallback, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
 import OnboardingContext from '../contexts/onboarding'
@@ -26,9 +26,6 @@ const useStyles = makeStyles(theme => ({
     paddingRight: theme.spacing(1),
   },
 }))
-
-console.log('--------------------------------------------')
-console.log('REMINDER: activate the tree -> editable toolbar quickstart again')
 
 const TreeToolbar = ({
   section,
@@ -67,15 +64,15 @@ const TreeToolbar = ({
     settingsButton: true,
   })
 
-  // useEffect(() => {
-  //   context.setFocusElements({
-  //     [`highlightAddSectionContent_${section}`]: {
-  //       id: `highlightAddSectionContent_${section}`,
-  //       ref: addContentRef,
-  //       padding: 10,
-  //     },
-  //   })
-  // }, [])
+  useEffect(() => {
+    context.setFocusElements({
+      [`addSectionContent_${section}`]: {
+        id: `addSectionContent_${section}`,
+        ref: settingsRef,
+        padding: 10,
+      },
+    })
+  }, [])
 
   return (
     <Toolbar>

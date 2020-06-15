@@ -240,7 +240,6 @@ const QuickStartDialog = ({
       <div className={ classes.contentRow }>
         <RenderComponent
           onSetDriveExperience={ onSetDriveExperience }
-          onSetDriveMode={ onSetDriveMode }
           onSetQuickstart={ onSetQuickstart }
         />
         <Typography gutterBottom>or <a href="#" onClick={ onSubmit }>skip</a></Typography>

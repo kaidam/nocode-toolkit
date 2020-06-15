@@ -67,12 +67,12 @@ const GlobalSettings = ({
 
   useEffect(() => {
     context.setFocusElements({
-      buildButton: {
-        id: 'buildButton',
+      publishWebsite: {
+        id: 'publishWebsite',
         ref: buildRef,
       },
-      settingsButton: {
-        id: 'settingsButton',
+      editSettings: {
+        id: 'editSettings',
         ref: settingsRef,
       }
     })

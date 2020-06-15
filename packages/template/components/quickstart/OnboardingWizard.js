@@ -133,7 +133,7 @@ const OnboardingWizard = ({
   const isLastStep = (adjustedCurrentIndex + 1) >= totalSteps
   const stepTitle = `Step ${adjustedCurrentIndex + 1} of ${totalSteps}`
 
-  const focusElement = currentStep ? focusElements.current[currentStep.element] : null
+  const focusElement = currentStep ? focusElements.current[currentStep.id] : null
 
   /*
   
@@ -198,7 +198,7 @@ const OnboardingWizard = ({
 
   let info = null
 
-  if(currentStep && focusElement && currentStep.element == focusElement.id) {
+  if(currentStep && focusElement && currentStep.id == focusElement.id) {
     if(targetStepIndex == currentStepIndex && focusElement.ref && focusElement.ref.current) {
       const padding = typeof(focusElement.padding) === 'number' ?
         {
