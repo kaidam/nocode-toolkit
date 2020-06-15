@@ -161,6 +161,7 @@ const AddWidgetDialog = ({
                           onClick={ () => actions.onSubmit({
                             form: item.form,
                             data: item.data,
+                            config: item.config,
                             targetLayout,
                           }) }
                         >

@@ -36,6 +36,9 @@ const useWidgets = ({
           data: {
             id: snippet.id
           },
+          config: {
+            autoAdd: true,
+          },
         }
       })
 
@@ -72,6 +75,9 @@ const useWidgets = ({
         title: 'Search',
         icon: icons.search,
         form: 'search',
+        config: {
+          autoAdd: true,
+        },
       },
       {
         title: 'HTML',

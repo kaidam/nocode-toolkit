@@ -105,16 +105,29 @@ const sideEffects = {
     form,
     data,
     rowIndex = -1,
+    autoAdd = false,
   }) => wrapper('add', async (dispatch, getState) => {
     const storeForms = settingsSelectors.forms(getState())
     const storeForm = storeForms[form]
-    const values = await dispatch(contentActions.waitForForm({
-      forms: [storeForm ? form : null, `cell.settings`].filter(i => i),
-      formWindowConfig: {
-        title: `Create ${storeForm ? storeForm.title : 'Item'}`,
-      },
-      processValues: processCellSettings,
-    }))
+
+    let values = null
+
+    if(autoAdd) {
+      values = {
+        data,
+        settings: {},
+      }
+    }
+    else {
+      values = await dispatch(contentActions.waitForForm({
+        forms: [storeForm ? form : null, `cell.settings`].filter(i => i),
+        formWindowConfig: {
+          title: `Create ${storeForm ? storeForm.title : 'Item'}`,
+        },
+        processValues: processCellSettings,
+      }))
+    }
+    
     if(!values) return
     const itemData = {
       type: form,
@@ -278,11 +291,13 @@ const sideEffects = {
       layouts,
       layout_id,
     }))
+
     if(!result) return null
 
     const {
       form,
       data,
+      config = {},
       targetLayout,
     } = result
 
@@ -292,6 +307,7 @@ const sideEffects = {
       form,
       data,
       rowIndex,
+      autoAdd: config.autoAdd,
     }))
   }),
 
