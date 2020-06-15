@@ -6,7 +6,6 @@ import layoutActions from '../../store/modules/layout'
 import icons from '../../icons'
 
 import useMoveMenu from './useMoveMenu'
-import useLayoutEditor from './useLayoutEditor'
 
 const AddIcon = icons.add
 const EditIcon = icons.edit
@@ -31,6 +30,7 @@ const useCellEditor = ({
     onLayoutEdit: layoutActions.edit,
     onLayoutDelete: layoutActions.delete,
     onLayoutMove: layoutActions.move,
+    onLayoutAdd: layoutActions.addWidget,
   })
 
   const onEdit = () => actions.onLayoutEdit({
@@ -47,17 +47,11 @@ const useCellEditor = ({
     cellIndex,
   })
 
-  const {
-    getAddWidgetMenu,
-  } = useLayoutEditor({
+  const onAdd = () => actions.onLayoutAdd({
     content_id,
-    layout_id
+    layout_id,
+    rowIndex: rowIndex+1,
   })
-
-  const getAddWidgetMenuItems = useCallback(() => getAddWidgetMenu(rowIndex+1), [
-    rowIndex,
-    getAddWidgetMenu
-  ])
 
   const getMoveMenuItems = useMoveMenu({
     layout,
@@ -81,21 +75,19 @@ const useCellEditor = ({
     } : null, {
       title: 'Add',
       icon: AddIcon,
-      items: getAddWidgetMenuItems(),
+      handler: onAdd,
     }, {
       title: 'Delete',
       icon: DeleteIcon,
       handler: onDelete,
     }].filter(i => i)
   }, [
-    getAddWidgetMenuItems,
     getMoveMenuItems,
   ])
 
   return {
     onEdit,
     onDelete,
-    getAddWidgetMenuItems,
     getMoveMenuItems,
     getMenuItems,
   }
