@@ -66,8 +66,8 @@ const TreeToolbar = ({
 
   useEffect(() => {
     context.setFocusElements({
-      [`addSectionContent_${section}`]: {
-        id: `addSectionContent_${section}`,
+      [`sectionSettings_${section}`]: {
+        id: `sectionSettings_${section}`,
         ref: settingsRef,
         padding: 10,
       },

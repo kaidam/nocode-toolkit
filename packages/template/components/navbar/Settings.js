@@ -1,11 +1,11 @@
-import React, { useCallback, useState, useRef } from 'react'
+import React, { useCallback, useState, useRef, useContext, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Divider from '@material-ui/core/Divider'
 
 import MenuButton from '../widgets/MenuButton'
 
 import FocusElementOverlay from '../widgets/FocusElementOverlay'
-
+import OnboardingContext from '../contexts/onboarding'
 import useSectionEditor from '../hooks/useSectionEditor'
 import useIconButton from '../hooks/useIconButton'
 
@@ -38,10 +38,13 @@ const NavbarSettings = ({
     vertical,
     contrast,
   })
+  const context = useContext(OnboardingContext)
   const [ isMenuOpen, setIsMenuOpen ] = useState(false)
   const onOpenMenu = useCallback(() => {
     setIsMenuOpen(true)
   })
+
+  const settingsRef = useRef(null)
 
   const onCloseMenu = useCallback(() => {
     setIsMenuOpen(false)
@@ -60,8 +63,19 @@ const NavbarSettings = ({
 
   const getSettingsButton = useIconButton({
     title: sectionTitle,
+    useRef: settingsRef,
     settingsButton: true,
   })
+
+  useEffect(() => {
+    context.setFocusElements({
+      [`sectionSettings_${section}`]: {
+        id: `sectionSettings_${section}`,
+        ref: settingsRef,
+        padding: 10,
+      },
+    })
+  }, [])
 
   return (
     <div className={ classes.sectionEditorRoot }>

@@ -69,6 +69,7 @@ const EditableDocumentToolbar = ({
   const classes = useStyles()
   const context = useContext(OnboardingContext)
   const editButtonRef = useRef(null)
+  const addButtonRef = useRef(null)
 
   const {
     node,
@@ -91,6 +92,7 @@ const EditableDocumentToolbar = ({
       <Button
         className={ classes.button }
         size="small"
+        ref={ addButtonRef }
         onClick={ onClick }
       >
         <AddIcon className={ classes.icon } />&nbsp;&nbsp;Add
@@ -147,7 +149,10 @@ const EditableDocumentToolbar = ({
       [`editDocument`]: {
         id: 'editDocument',
         ref: editButtonRef,
-        //padding: 10,
+      },
+      [`addBlogContent`]: {
+        id: 'addBlogContent',
+        ref: addButtonRef,
       },
     })
   }, [])

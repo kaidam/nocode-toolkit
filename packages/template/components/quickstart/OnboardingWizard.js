@@ -72,7 +72,7 @@ const useStyles = makeStyles(theme => {
       },
     },
     paper: {
-      maxWidth: '400px',
+      maxWidth: '450px',
       overflow: 'auto',
     },
     arrow: {
@@ -98,6 +98,9 @@ const useStyles = makeStyles(theme => {
       right: theme.spacing(2),
       top: theme.spacing(1),
       color: theme.palette.grey[500],
+    },
+    dialogContent: {
+      minWidth: '400px',
     },
   }
 })
@@ -209,7 +212,7 @@ const OnboardingWizard = ({
         } :
         focusElement.padding
 
-      const description = isBigScreen ?
+      const Description = isBigScreen ?
         currentStep.description :
         currentStep.smallDescription
 
@@ -219,13 +222,15 @@ const OnboardingWizard = ({
             <Typography variant="h6">{ currentStep.title }</Typography>
             <Typography className={classes.stepTitle}>{ stepTitle }</Typography>
           </DialogTitle>
-          <DialogContent>
+          <DialogContent className={ classes.dialogContent }>
             {
-              (description || []).map((text, i) => {
-                return (
-                  <DialogContentText key={ i }>{ text }</DialogContentText>
-                )
-              })
+              typeof(Description) == 'function' ? 
+                <Description store={store} /> :
+                (Description || []).map((row, i) => {
+                  return (
+                    <DialogContentText key={ i }>{ row }</DialogContentText>
+                  )
+                })
             }
           </DialogContent>
           {
@@ -255,7 +260,7 @@ const OnboardingWizard = ({
             <Popper 
               open
               anchorEl={ focusElement.ref.current }
-              placement="right"
+              placement={ currentStep.placement || 'right' }
               className={ classes.popper }
               modifiers={{
                 arrow: {
