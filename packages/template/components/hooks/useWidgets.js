@@ -56,7 +56,7 @@ const useWidgets = ({
       {
         title: 'Social Links',
         icon: icons.people,
-        form: 'video',
+        form: 'social_links',
       },
     ]
 

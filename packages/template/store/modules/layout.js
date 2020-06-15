@@ -109,6 +109,7 @@ const sideEffects = {
   }) => wrapper('add', async (dispatch, getState) => {
     const storeForms = settingsSelectors.forms(getState())
     const storeForm = storeForms[form]
+    const widgetTitle = storeForm ? storeForm.title : 'Item'
 
     let values = null
 
@@ -121,10 +122,12 @@ const sideEffects = {
     else {
       values = await dispatch(contentActions.waitForForm({
         forms: [storeForm ? form : null, `cell.settings`].filter(i => i),
-        formWindowConfig: {
-          title: `Create ${storeForm ? storeForm.title : 'Item'}`,
-        },
         processValues: processCellSettings,
+        formWindowConfig: {
+          title: `Create ${widgetTitle} Widget`,
+          size: 'md',
+          fullHeight: false,
+        }
       }))
     }
     
@@ -143,7 +146,7 @@ const sideEffects = {
         data: itemData,
       }
     }))
-    await dispatch(snackbarActions.setSuccess(`layout updated`))
+    await dispatch(snackbarActions.setSuccess(`${widgetTitle} created`))
   }),
 
   edit: ({
@@ -151,7 +154,7 @@ const sideEffects = {
     layout_id,
     rowIndex,
     cellIndex,
-  }) => wrapper('add', async (dispatch, getState) => {
+  }) => wrapper('edit', async (dispatch, getState) => {
     const annotations = nocodeSelectors.annotations(getState())
     const annotation = annotations[content_id] || {}
     const layout = annotation[layout_id]
@@ -160,6 +163,7 @@ const sideEffects = {
     if(!cell) throw new Error(`no cell found`)
     const storeForms = settingsSelectors.forms(getState())
     const storeForm = storeForms[cell.type]
+    const widgetTitle = storeForm ? storeForm.title : 'Item'
     const values = await dispatch(contentActions.waitForForm({
       forms: [storeForm ? cell.type : null, `cell.settings`].filter(i => i),
       values: {
@@ -167,7 +171,9 @@ const sideEffects = {
         ...cell.data
       },
       formWindowConfig: {
-        title: `Edit ${storeForm ? storeForm.title : 'Item'}`,
+        title: `Edit ${widgetTitle} Widget`,
+        size: 'md',
+        fullHeight: false,
       },
       processValues: processCellSettings,
     }))
@@ -182,7 +188,7 @@ const sideEffects = {
         data: Object.assign({}, cell, values),
       }
     }))
-    await dispatch(snackbarActions.setSuccess(`layout updated`))
+    await dispatch(snackbarActions.setSuccess(`${widgetTitle} updated`))
   }),
 
   delete: ({

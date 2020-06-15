@@ -239,18 +239,16 @@ const form = createSelector(
   formWindow,
   (storeForms, formWindow) => {
     const formNames = formWindow.forms || []
-    if(formNames.length <= 1) {
-      return storeForms[formNames[0]] || {
-        schema: [],
-      }
-    }
+   
     const initialValues = deepmerge.all(
       formNames.map(name => {
         const formConfig = storeForms[name]
         return formConfig.initialValues
       }).concat([formWindow.values])  
     )
-    const tabs = formNames.reduce((all, name) => {
+
+    // if we want tabs - reduce the form names into their respective schema tabs
+    const tabs = formWindow.singlePage ? null : formNames.reduce((all, name) => {
       const formConfig = storeForms[name]
       if(formConfig.tabs) {
         return all.concat(formConfig.tabs)
@@ -268,16 +266,43 @@ const form = createSelector(
       }
     }, [])
 
+    // if we want single page - reduce the form names into a long list
+    const schema = formWindow.singlePage ? formNames.reduce((all, name) => {
+      const formConfig = storeForms[name]
+      if(formConfig.tabs) {
+        return all
+          .concat(formConfig.tabs.reduce((all, tab) => {
+            return all
+              .concat([
+                tab.title,
+              ])
+              .concat(tab.schema)
+          }, []))
+      }
+      else if(formConfig.schema) {
+        return all
+          .concat([
+            formConfig.title
+          ])
+          .concat(formConfig.schema)
+      }
+      else {
+        return all
+      }
+    }, []) : null
+
     const otherProps = formNames.reduce((all, name) => {
       const formConfig = storeForms[name]
       const ret = Object.assign({}, all, formConfig)
       delete(ret.tabs)
+      delete(ret.schema)
       delete(ret.initialValues)
       return ret
     }, {})
 
     return {
       tabs,
+      schema,
       initialValues,
       ...otherProps
     }
