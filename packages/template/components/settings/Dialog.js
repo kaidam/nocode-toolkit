@@ -1,9 +1,6 @@
 import React, { useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
-import Grid from '@material-ui/core/Grid'
-import Typography from '@material-ui/core/Typography'
-
 import Actions from '../../utils/actions'
 import settingsActions from '../../store/modules/settings'
 import settingsSelectors from '../../store/selectors/settings'
@@ -27,22 +24,6 @@ import icons from '../../icons'
 const QUERY_NAMES = {
   tab: `dialog_settings_tab`,
   panel: `dialog_settings_panel`,
-}
-
-const settingsTabRender = (tabName, title) => ({
-  classes,
-  librarySettings,
-  renderForm,
-}) => {
-  const currentTab = librarySettings.tabs.find(tab => tab.id == tabName) || librarySettings.tabs[0]
-  return {
-    header: (
-      <Typography variant="h6" className={ classes.headingTitle }>{ title }</Typography>
-    ),
-    body: renderForm({
-      schema: currentTab.schema,
-    }),
-  }
 }
 
 const PANELS = [{
@@ -69,11 +50,6 @@ const PANELS = [{
       })
     }
   }
-}, {
-  id: 'layout',
-  title: 'Layout',
-  icon: icons.layout,
-  render: settingsTabRender('layout', 'Layout Settings'),
 }, {
   id: 'plugins',
   title: 'Plugins',

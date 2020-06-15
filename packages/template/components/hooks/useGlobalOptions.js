@@ -64,42 +64,18 @@ const useGlobalOptions = ({
       iconColor: 'secondary',
       handler: actions.onPublish,
     },{
-      title: 'Reload',
-      icon: icons.refresh,
-      handler: actions.onRebuild,
-    },{
-      title: `${previewMode ? 'Disable' : 'Enable'} Preview`,
-      icon: previewMode ? icons.hide : icons.look,
-      handler: previewMode ? onDisablePreview : onEnablePreview,
-    },
-    '-',
-    {
       id: 'settings',
       title: 'Settings',
       icon: icons.settings,
       handler: () => onOpenSettingsPanel('general'),
-    }, {
-      title: 'Layout',
-      icon: icons.layout,
-      handler: () => onOpenSettingsPanel('layout'),
-    }, 
-    '-',
-    {
-      title: 'Plugins',
-      icon: icons.plugin,
-      handler: () => onOpenSettingsPanel('plugins'),
-    }, {
-      title: 'Snippets',
-      icon: icons.code,
-      handler: () => onOpenSettingsPanel('snippets'),
     },{
-      title: 'Security',
-      icon: icons.lock,
-      handler: () => onOpenSettingsPanel('security'),
+      title: `${previewMode ? 'Disable' : 'Enable'} Preview`,
+      icon: previewMode ? icons.hide : icons.look,
+      handler: previewMode ? onDisablePreview : onEnablePreview,
     },{
-      title: 'Domains',
-      icon: icons.domain,
-      handler: () => onOpenSettingsPanel('domain'),
+      title: 'Sync Drive',
+      icon: icons.refresh,
+      handler: actions.onRebuild,
     },
     '-',
     {
@@ -127,3 +103,31 @@ const useGlobalOptions = ({
 }
 
 export default useGlobalOptions
+
+/*
+
+  {
+      title: 'Layout',
+      icon: icons.layout,
+      handler: () => onOpenSettingsPanel('layout'),
+    }, 
+    '-',
+    {
+      title: 'Plugins',
+      icon: icons.plugin,
+      handler: () => onOpenSettingsPanel('plugins'),
+    }, {
+      title: 'Snippets',
+      icon: icons.code,
+      handler: () => onOpenSettingsPanel('snippets'),
+    },{
+      title: 'Security',
+      icon: icons.lock,
+      handler: () => onOpenSettingsPanel('security'),
+    },{
+      title: 'Domains',
+      icon: icons.domain,
+      handler: () => onOpenSettingsPanel('domain'),
+    },
+
+*/

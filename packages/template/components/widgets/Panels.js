@@ -22,9 +22,9 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'row',
     height: '100%',
   },
-  sidebar: ({showTitles}) => ({
-    width: showTitles ? '300px' : '58px',
-    minWidth: showTitles ? '300px' : '58px',
+  sidebar: ({showTitles, sidebarWidth}) => ({
+    width: showTitles ? `${sidebarWidth}px` : '58px',
+    minWidth: showTitles ? `${sidebarWidth}px` : '58px',
     flexGrow: 0,
     height: '100%',
     borderRight: '1px solid rgba(0, 0, 0, 0.12)',
@@ -66,6 +66,7 @@ const PanelsWrapper = ({
   body,
   footer,
   current,
+  sidebarWidth = 300,
   autoScroll = true,
   showMenu = true,
   showTitles = true,
@@ -74,6 +75,7 @@ const PanelsWrapper = ({
 }) => {
   const classes = useStyles({
     showTitles,
+    sidebarWidth,
   })
 
   if(!panels || panels.length <= 0) return null

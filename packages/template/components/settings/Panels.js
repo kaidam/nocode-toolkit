@@ -119,7 +119,8 @@ const SettingsPanels = ({
         header: classes.header,
         footer: classes.footer,
       }}
-      showTitles={ false }
+      showTitles={ true }
+      sidebarWidth={ 170 }
       onChange={ onChangePanel }
       {...renderResults}
     />
