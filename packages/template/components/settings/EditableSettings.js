@@ -31,22 +31,6 @@ const EditableSettings = ({
       { children }
     </FocusElement>
   )
-
-  // return (
-  //   <IconButton
-  //     size="small"
-  //     className={ classNames.button }
-  //     onClick={ (e) => {
-  //       eventUtils.cancelEvent(e)
-  //       actions.onOpenSettings() 
-  //     }}
-  //   >
-  //     <EditIcon
-  //       fontSize="inherit"
-  //       className={ iconClassname }
-  //     />
-  //   </IconButton>
-  // )
 }
 
 export default EditableSettings
