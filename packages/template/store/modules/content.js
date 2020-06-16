@@ -172,8 +172,9 @@ const sideEffects = {
       processValues: processNodeFormValues,
       formWindowConfig: {
         title,
-        size: 'md',
+        size: 'sm',
         fullHeight: false,
+        minHeight: 100,
       },
       onSubmit: async ({
         data,
@@ -244,6 +245,8 @@ const sideEffects = {
       formWindowConfig: {
         title,
         initialTab,
+        size: 'md',
+        fullHeight: false,
       },
       onSubmit: async ({
         data,

@@ -210,7 +210,7 @@ const useMenuButton = ({
   header,
 
   // turn off the auto-sub menu headers
-  noHeader,
+  noHeader = true,
 
   // a function to process the header we display
   processHeaders = (parts) => parts,

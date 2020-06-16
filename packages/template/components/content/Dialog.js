@@ -12,6 +12,9 @@ import Window from '../dialog/Window'
 import useForm from '../hooks/useForm'
 
 const useStyles = makeStyles(theme => ({
+  window: ({minHeight = 350}) => ({
+    minHeight: `${minHeight}px`,
+  }),
   header: {
     display: 'flex',
     flexDirection: 'row',
@@ -30,8 +33,11 @@ const ContentDialog = ({
 
 }) => {
 
-  const classes = useStyles()
+  
   const formWindow = useSelector(contentSelectors.formWindow)
+  const classes = useStyles({
+    minHeight: formWindow.minHeight,
+  })
 
   const actions = Actions(useDispatch(), {
     onSubmit: contentActions.acceptFormWindow,
@@ -52,6 +58,9 @@ const ContentDialog = ({
       <Window
         open
         size={ formWindow.size || "lg" }
+        theme={{
+          paper: classes.window,
+        }}
         fullHeight={ 
           typeof(formWindow.fullHeight) === 'boolean' ?
             formWindow.fullHeight :

@@ -18,6 +18,10 @@ import settingsSelectors from '../selectors/settings'
 
 import layoutUtils from '../../utils/layout'
 
+import {
+  LAYOUT_CELL_DEFAULTS,
+} from '../../config'
+
 const prefix = 'layout'
 
 const wrapper = networkWrapper.factory(prefix)
@@ -116,7 +120,7 @@ const sideEffects = {
     if(autoAdd) {
       values = {
         data,
-        settings: {},
+        settings: LAYOUT_CELL_DEFAULTS.settings,
       }
     }
     else {
@@ -124,8 +128,8 @@ const sideEffects = {
         forms: [storeForm ? form : null, `cell.settings`].filter(i => i),
         processValues: processCellSettings,
         formWindowConfig: {
-          title: `Create ${widgetTitle} Widget`,
-          size: 'md',
+          title: `${widgetTitle} Widget`,
+          size: 'sm',
           fullHeight: false,
         }
       }))
@@ -171,8 +175,8 @@ const sideEffects = {
         ...cell.data
       },
       formWindowConfig: {
-        title: `Edit ${widgetTitle} Widget`,
-        size: 'md',
+        title: `${widgetTitle} Widget`,
+        size: 'sm',
         fullHeight: false,
       },
       processValues: processCellSettings,

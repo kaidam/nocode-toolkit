@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import InputLabel from '@material-ui/core/InputLabel'
 import Select from '@material-ui/core/Select'
+import Paper from '@material-ui/core/Paper'
 import FormControl from '@material-ui/core/FormControl'
 import MenuItem from '@material-ui/core/MenuItem'
 
@@ -129,7 +130,7 @@ const DriveFoldersEditor = ({
             window.open(driveUtils.getItemUrl(folder._data))
           }}
         >
-          View in drive
+          Open in drive
         </Button>
       </div>
     )
@@ -144,67 +145,66 @@ const DriveFoldersEditor = ({
 
   return (
     <div className={ classes.root }>
-      <Grid container spacing={ 2 }>
+      <Grid container spacing={ 2 } alignItems="center">
 
-        <Grid item xs={ 12 } sm={ 6 }>
-        <div className={ classes.margin }>
-            <Button
-              size="small"
-              variant="contained"
-              color="secondary"
-              onClick={ () => {
-                actions.onAddFolder({
-                  section,
-                })
+        <Grid item xs={ 6 }>
+          <Button
+            size="small"
+            variant="outlined"
+            color="secondary"
+            onClick={ () => {
+              actions.onAddFolder({
+                section,
+              })
+            }}
+          >
+            Add Source Folder
+          </Button>
+        </Grid>
+        <Grid item xs={ 6 }>
+          <FormControl component="fieldset" className={ classes.select }>
+            <InputLabel htmlFor="choose-folder">Newly created content will be added to:</InputLabel>
+            <Select
+              value={ addTargetFolderId }
+              onChange={ onUpdateTargetFolder }
+              inputProps={{
+                name: 'choose-folder',
+                id: 'choose-folder',
               }}
             >
-              Add Folder
-            </Button>
-          </div>
-          <div className={ classes.bigMargin }>
+              {
+                sourceFolders.map((folder, i) => {
+                  const isDefault = folder.id == defaultFolderId
+                  return (
+                    <MenuItem
+                      key={ i }
+                      value={ folder.id }
+                    >
+                      { isDefault ? `Nocode Default Folder` : folder.name }
+                    </MenuItem>
+                  )
+                })
+              }
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={ 12 }>
+          <Paper>
             <SimpleTable
               hideHeader
               data={ tableData }
               fields={ FIELDS }
               getActions={ getActions }
             />
-          </div>
-          <div className={ classes.margin }>
-            <Typography variant="body1">
-              The content in the above folders will be merged into the {sectionTitle} section.
-            </Typography>
-          </div>
+          </Paper>
         </Grid>
-        <Grid item xs={ 12 } sm={ 6 }>
-          <div className={ classes.bigMargin }>
-            <FormControl component="fieldset" className={ classes.select }>
-              <InputLabel htmlFor="choose-folder">Add newly created content to:</InputLabel>
-              <Select
-                value={ addTargetFolderId }
-                onChange={ onUpdateTargetFolder }
-                inputProps={{
-                  name: 'choose-folder',
-                  id: 'choose-folder',
-                }}
-              >
-                {
-                  sourceFolders.map((folder, i) => {
-                    const isDefault = folder.id == defaultFolderId
-                    return (
-                      <MenuItem
-                        key={ i }
-                        value={ folder.id }
-                      >
-                        { isDefault ? `Nocode Default Folder` : folder.name }
-                      </MenuItem>
-                    )
-                  })
-                }
-              </Select>
-            </FormControl>
-          </div>
-          
+        <Grid item xs={ 12 }>
+          <Typography variant="caption">
+            The content in all source folders will be merged into the {sectionTitle} section.
+          </Typography>
         </Grid>
+        
+        
       </Grid>
     </div>
   )

@@ -17,6 +17,14 @@ export const RELOAD_APP_JOBS = [
 
 export const SEARCH_DELAY = 1000
 
+export const LAYOUT_CELL_DEFAULTS = {
+  settings: {
+    horizontal_align: 'left',
+    vertical_align: 'center',
+    padding: 8,
+  },
+}
+
 export const LAYOUT_CELLS = {
   breadcrumbs: {
     component: 'breadcrumbs',

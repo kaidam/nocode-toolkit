@@ -1,5 +1,9 @@
 const valueInjector = (inject = {}) => (values = {}) => Object.assign({}, values, inject)
 
+import {
+  LAYOUT_CELL_DEFAULTS,
+} from './config'
+
 const forms = {
   'section': {
     initialValues: {
@@ -8,6 +12,14 @@ const forms = {
       },
     },
     tabs: [{
+      id: 'sourceFolders',
+      title: 'Drive Folders',
+      schema: [{
+        title: 'Drive Folders',
+        helperText: 'Manage the drive folders loaded into this section',
+        component: 'driveFolders',
+      }],
+    }, {
       id: 'sorting',
       title: 'Sorting',
       schema: [{
@@ -24,25 +36,11 @@ const forms = {
         helperText: 'Manage the hidden items in this section',
         component: 'hiddenItems',
       }],
-    }, {
-      id: 'sourceFolders',
-      title: 'Source Drive Folders',
-      schema: [{
-        title: 'Source Drive Folders',
-        helperText: 'Manage the drive folders loaded into this section',
-        component: 'driveFolders',
-      }],
     }],
   },
   // this will be merged into other cell forms
   'cell.settings': {
-    initialValues: {
-      settings: {
-        horizontal_align: 'left',
-        vertical_align: 'top',
-        padding: 8,
-      },
-    },
+    initialValues: LAYOUT_CELL_DEFAULTS,
     tabs: [{
       id: 'settings',
       title: 'Settings',
@@ -103,7 +101,7 @@ const forms = {
     }) => {
       return values.id ?
         tabs :
-        tabs.filter(tab => tab.id != 'actions')
+        tabs.filter(tab => tab.id == 'settings')
     },
     tabs: [{
       id: 'settings',
@@ -150,7 +148,7 @@ const forms = {
     }) => {
       return values.id ?
         tabs :
-        tabs.filter(tab => tab.id != 'actions')
+        tabs.filter(tab => tab.id == 'settings')
     },
     tabs: [{
       id: 'settings',

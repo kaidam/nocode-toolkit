@@ -28,6 +28,7 @@ const useStyles = makeStyles(theme => ({
       padding: padding,
       height: '100%',
       display: 'flex',
+      minHeight: '45px',
       justifyContent: hAlign,
       alignItems: vAlign,
     }
