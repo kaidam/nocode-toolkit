@@ -31,6 +31,18 @@ const useForm = ({
       {}
   })
 
+  const useValues = useMemo(() => {
+    if(form.processInitialValues) {
+      return form.processInitialValues(formValues, handlerContext)
+    }
+    else {
+      return formValues
+    }
+  }, [
+    formValues,
+    handlerContext,
+  ])
+
   const currentTabId = useMemo(() => {
     if(form.tabs && form.tabs.length > 0) {
       const currentTab = form.tabs.find(t => t.id == tab) || form.tabs[0]
@@ -127,7 +139,7 @@ const useForm = ({
     return (
       <FormWrapper
         schema={ flatFormSchema }
-        initialValues={ formValues }
+        initialValues={ useValues }
         onSubmit={ onSubmit }
       >
         {
@@ -141,7 +153,7 @@ const useForm = ({
     )
   }, [
     flatFormSchema,
-    formValues,
+    useValues,
     onSubmit,
     getTabs,
     getForm,

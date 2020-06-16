@@ -66,7 +66,7 @@ const useDocumentEditor = ({
 
   const onOpenSettings = useCallback(() => {
     actions.onEditRemoteContent({
-      title: `Edit ${(node.type || 'folder').replace(/^\w/, st => st.toUpperCase())}`,
+      title: `${(node.type || 'folder').replace(/^\w/, st => st.toUpperCase())} Settings`,
       driver: 'drive',
       form: `drive.${node.type || 'folder'}`,
       id: node.id,

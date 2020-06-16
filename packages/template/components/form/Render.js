@@ -11,6 +11,9 @@ import FormHelperText from '@material-ui/core/FormHelperText'
 import utils from './utils'
 
 const useStyles = makeStyles(theme => ({
+  root: {
+    padding: theme.spacing(1),
+  },
   errorContainer: {
     marginTop: theme.spacing(2),
   },
@@ -190,7 +193,7 @@ const FormRender = ({
     schema
  
   return (
-    <React.Fragment>
+    <div className={ classes.root }>
       <Grid
         container
         spacing={ 3 }
@@ -245,7 +248,7 @@ const FormRender = ({
           </div> 
         )
       }
-    </React.Fragment>
+    </div>
   )
 }
 
