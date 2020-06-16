@@ -72,16 +72,17 @@ const FormWrapperRow = ({
           row == '-' ? (
             <Divider className={ classes.divider } />
           ) : (
-            <Typography
-              variant='subtitle1'
-              style={{
-                fontWeight: 'bold',
-                marginTop: '10px',
-                marginBottom: '10px',
-              }}
-            >
-              { row }
-            </Typography>
+            <>
+              <Typography
+                variant='subtitle1'
+                style={{
+                  fontWeight: 'bold',
+                }}
+              >
+                { row }
+              </Typography>
+              <Divider />
+            </>
           )
         }
         
@@ -101,15 +102,25 @@ const FormWrapperRow = ({
       })
       .map((item, i) => (
         <Grid item xs={ 12 } sm={ colSize } key={ rowKey + '-' + i }>
-          <FormWrapperItem
-            item={ item }
-            values={ values }
-            errors={ errors }
-            touched={ touched }
-            onSetFieldValue={ onSetFieldValue }
-            handlers={ handlers }
-            handlerContext={ handlerContext }
-          />
+          {
+            typeof(item) === 'string' ? (
+              <Typography
+                variant='body1'
+              >
+                { item }
+              </Typography>
+            ) : (
+              <FormWrapperItem
+                item={ item }
+                values={ values }
+                errors={ errors }
+                touched={ touched }
+                onSetFieldValue={ onSetFieldValue }
+                handlers={ handlers }
+                handlerContext={ handlerContext }
+              />
+            )
+          }
         </Grid>
       ))
   }
@@ -182,7 +193,7 @@ const FormRender = ({
     <React.Fragment>
       <Grid
         container
-        spacing={ 2 }
+        spacing={ 3 }
         className={classnames({
           [classes.fullHeight]: fullHeight,
         })}

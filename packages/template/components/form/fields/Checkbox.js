@@ -11,7 +11,8 @@ import HelperText from './HelperText'
 const useStyles = makeStyles(theme => createStyles({
   root: {
     display: 'flex',
-    marginTop: theme.spacing(2),
+    marginTop: theme.spacing(0),
+    padding: 0,
   },
 }))
 
@@ -28,9 +29,17 @@ const CheckboxField = ({
   const classes = useStyles()
   const title = item.title || name
 
+  const showTitle = typeof(item.showTitle) === 'boolean' ?
+    item.showTitle :
+    true
+
   return (
     <FormControl component="fieldset" className={ classes.root }>
-      <FormLabel component="legend">{ title }</FormLabel>
+      {
+        showTitle && (
+          <FormLabel component="legend">{ title }</FormLabel>
+        )
+      }
       <FormGroup>
         <FormControlLabel
           control={

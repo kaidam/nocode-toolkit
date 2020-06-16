@@ -73,7 +73,7 @@ const useGlobalOptions = ({
       icon: previewMode ? icons.hide : icons.look,
       handler: previewMode ? onDisablePreview : onEnablePreview,
     },{
-      title: 'Sync Drive',
+      title: 'Re-Sync Drive',
       icon: icons.refresh,
       handler: actions.onRebuild,
     },
