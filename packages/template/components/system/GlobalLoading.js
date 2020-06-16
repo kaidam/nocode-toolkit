@@ -57,6 +57,7 @@ const GlobalLoading = ({
           ) : (
             <Loading
               message={ message }
+              useLibraryComponent
             >
               {
                 logs.map((log, i) => {

@@ -54,11 +54,6 @@ const useSectionEditor = ({
       parentId: addTargetFolderId,
     })
 
-    const existingDocumentHandler = () => actions.onAddRemoteContent({
-      section,
-      type: 'document',
-    })
-
     const newFolderHandler = () => actions.onCreateRemoteContent({
       title: 'Create Folder',
       driver: 'drive',
@@ -66,9 +61,10 @@ const useSectionEditor = ({
       parentId: addTargetFolderId,
     })
 
-    const existingFolderHandler = () => actions.onAddRemoteContent({
+    const importContentHandler = () => actions.onAddRemoteContent({
       section,
-      type: 'folder',
+      listFilter: 'folder,document',
+      addFilter: 'folder,document',
     })
 
     return [
@@ -85,20 +81,7 @@ const useSectionEditor = ({
       {
         title: 'Import Existing Drive Content',
         icon: icons.drive,
-        items: [
-          {
-            title: 'Existing Google Document',
-            icon: icons.docs,
-            secondaryIcon: icons.search,
-            handler: existingDocumentHandler,
-          },
-          {
-            title: 'Existing Google Folder',
-            icon: icons.folder,
-            secondaryIcon: icons.search,
-            handler: existingFolderHandler,
-          },
-        ]
+        handler: importContentHandler,
       },
       '-',
       {

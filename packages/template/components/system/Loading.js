@@ -1,8 +1,9 @@
 import React from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 
-import CircularProgress from '@material-ui/core/CircularProgress'
 import Typography from '@material-ui/core/Typography'
+
+import CircularLoading from './CircularLoading'
 
 import library from '../../library'
 
@@ -26,9 +27,10 @@ const Loading = ({
   color = 'primary',
   message = 'loading',
   children,
+  useLibraryComponent = false,
 }) => {
   const classes = useStyles()
-  const LoadingComponent = library.components.loading
+  const LoadingComponent = useLibraryComponent ? (library.components.loading || CircularLoading) : CircularLoading
   return (
     <div className={classes.root}>
       <div className={classes.container}>

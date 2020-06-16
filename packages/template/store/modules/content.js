@@ -210,10 +210,12 @@ const sideEffects = {
 
   addRemoteContent: ({
     section,
-    type,
+    listFilter,
+    addFilter,
   }) => wrapper('addRemoteContent', async (dispatch, getState) => {
-    const result = await dispatch(driveActions.getItem({
-      type,
+    const result = await dispatch(driveActions.getDriveItem({
+      listFilter,
+      addFilter,
     }))
     if(!result) return
     await dispatch(actions.saveContent({
@@ -505,8 +507,9 @@ const sideEffects = {
   addManagedFolder: ({
     section,
   }) => wrapper('addManagedFolder', async (dispatch, getState) => {
-    const result = await dispatch(driveActions.getItem({
-      type: 'folder',
+    const result = await dispatch(driveActions.getDriveItem({
+      listFilter: 'folder',
+      addFilter: 'folder',
     }))
     if(!result) return
     await loaders.addSectionFolder(getState, section, {
