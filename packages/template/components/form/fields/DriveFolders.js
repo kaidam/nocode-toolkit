@@ -35,6 +35,7 @@ const useStyles = makeStyles(theme => ({
   },
   select: {
     display: 'flex',
+    width: '400px',
   },
   
 }))
@@ -145,23 +146,9 @@ const DriveFoldersEditor = ({
 
   return (
     <div className={ classes.root }>
-      <Grid container spacing={ 2 } alignItems="center">
+      <Grid container spacing={ 3 } alignItems="center">
 
-        <Grid item xs={ 6 }>
-          <Button
-            size="small"
-            variant="outlined"
-            color="secondary"
-            onClick={ () => {
-              actions.onAddFolder({
-                section,
-              })
-            }}
-          >
-            Add Source Folder
-          </Button>
-        </Grid>
-        <Grid item xs={ 6 }>
+        <Grid item xs={ 12 }>
           <FormControl component="fieldset" className={ classes.select }>
             <InputLabel htmlFor="choose-folder">Newly created content will be added to:</InputLabel>
             <Select
@@ -188,6 +175,9 @@ const DriveFoldersEditor = ({
             </Select>
           </FormControl>
         </Grid>
+
+        
+        
         <Grid item xs={ 12 }>
           <Paper>
             <SimpleTable
@@ -198,6 +188,24 @@ const DriveFoldersEditor = ({
             />
           </Paper>
         </Grid>
+        
+        
+
+        <Grid item xs={ 12 }>
+          <Button
+            size="small"
+            variant="outlined"
+            color="secondary"
+            onClick={ () => {
+              actions.onAddFolder({
+                section,
+              })
+            }}
+          >
+            Add Source Folder
+          </Button>
+        </Grid>
+
         <Grid item xs={ 12 }>
           <Typography variant="caption">
             The content in all source folders will be merged into the {sectionTitle} section.

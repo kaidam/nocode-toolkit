@@ -273,9 +273,7 @@ const form = createSelector(
         return all
           .concat(formConfig.tabs.reduce((all, tab) => {
             return all
-              .concat([
-                tab.title,
-              ])
+              .concat(tab.noTitle ? [] : [tab.title])
               .concat(tab.schema)
           }, []))
       }

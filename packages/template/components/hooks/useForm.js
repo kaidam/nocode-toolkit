@@ -81,7 +81,7 @@ const useForm = ({
       tabs: form.tabs,
       values,
     }) : form.tabs
-    return useTabs.length > 1 ? (
+    return (useTabs || []).length > 1 ? (
       <Tabs
         tabs={ useTabs }
         current={ currentTabId }

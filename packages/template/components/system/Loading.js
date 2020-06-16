@@ -4,6 +4,8 @@ import { createStyles, makeStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import Typography from '@material-ui/core/Typography'
 
+import library from '../../library'
+
 const useStyles = makeStyles(theme => createStyles({
   root: {
     display: 'flex',
@@ -26,13 +28,12 @@ const Loading = ({
   children,
 }) => {
   const classes = useStyles()
+  const LoadingComponent = library.components.loading
   return (
     <div className={classes.root}>
       <div className={classes.container}>
         <div className={classes.item}>
-          <CircularProgress 
-            color={ color }
-          />
+          <LoadingComponent />
           { 
             message && (
               <Typography

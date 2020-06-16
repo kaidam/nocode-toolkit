@@ -106,6 +106,7 @@ const forms = {
     tabs: [{
       id: 'settings',
       title: 'Settings',
+      noTitle: true,
       schema: [{
         id: 'name',
         title: 'Name',
@@ -153,6 +154,7 @@ const forms = {
     tabs: [{
       id: 'settings',
       title: 'Settings',
+      noTitle: true,
       schema: [{
         id: 'name',
         title: 'Name',

@@ -247,6 +247,7 @@ const sideEffects = {
         initialTab,
         size: 'md',
         fullHeight: false,
+        singlePage: true,
       },
       onSubmit: async ({
         data,
@@ -337,7 +338,7 @@ const sideEffects = {
       forms: [form],
       formWindowConfig: {
         title,
-        size: 'md',
+        size: 'sm',
         fullHeight: false,
       },
       onSubmit: async (data) => {
@@ -372,7 +373,7 @@ const sideEffects = {
       formWindowConfig: {
         title,
         initialTab,
-        size: 'md',
+        size: 'sm',
         fullHeight: false,
       },
       onSubmit: async (data) => {
