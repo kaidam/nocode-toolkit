@@ -21,6 +21,12 @@ const useStyles = makeStyles(theme => createStyles({
     textAlign: 'center',
     display: 'inline-block',
   },
+  loading: {
+    width: '100%',
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+  }
 }))
 
 const Loading = ({
@@ -35,7 +41,9 @@ const Loading = ({
     <div className={classes.root}>
       <div className={classes.container}>
         <div className={classes.item}>
-          <LoadingComponent />
+          <div className={classes.loading}>
+            <LoadingComponent />
+          </div>
           { 
             message && (
               <Typography
