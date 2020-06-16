@@ -76,7 +76,8 @@ const sideEffects = {
       values,
       formWindowConfig: {
         title,
-        size: 'md',
+        size: 'sm',
+        fullHeight: false,
       },
       onSubmit: async (data) => {
         await dispatch(contentActions.saveContent({

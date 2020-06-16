@@ -29,11 +29,22 @@ const useStyles = makeStyles(theme => createStyles({
     marginTop: theme.spacing(1),
   },
   image: {
-    maxWidth: '200px',
+    maxWidth: '100px',
     border: '1px solid #000',
+    marginTop: theme.spacing(2),
+  },
+  placeholder: {
+    width: '100px',
+    height: '100px',
+    border: '1px solid #000',
+    backgroundColor: '#e5e5e5',
+    marginTop: theme.spacing(2),
   },
   editIcon: {
     marginRight: theme.spacing(1),
+  },
+  buttons: {
+    marginTop: theme.spacing(2),
   },
   buttonTitle: {
     display: 'inline-block',
@@ -44,7 +55,8 @@ const useStyles = makeStyles(theme => createStyles({
     height: '20px',
   },
   button: {
-    margin: theme.spacing(1),
+    margin: theme.spacing(0.5),
+    fontSize: '0.8em',
   }
 }))
 
@@ -168,7 +180,7 @@ const ImageField = ({
         return (
           <Tooltip title={ item.help } key={ i }>
             <Button
-              variant="contained"
+              variant="outlined"
               size="small"
               onClick={ item.handler }
               className={ classes.button }
@@ -204,8 +216,8 @@ const ImageField = ({
     </div>
   ) : (
     <div className={ classes.container }>
-      <Grid container spacing={4}>
-        <Grid item xs={12} sm={2}>
+      <Grid container spacing={0}>
+        <Grid item xs={12}>
           <InputLabel 
             htmlFor={ name }>{ item.title || item.id }</InputLabel>
           {
@@ -216,15 +228,22 @@ const ImageField = ({
             ) : null
           }
         </Grid>
+        <Grid item xs={12} sm={3}>
         {
-          value && value.url && isImage(value.url) ? (
-            <Grid item xs={12} sm={3}>
+          value && value.url && isImage(value.url) ? 
+            (
               <img className={ classes.image } src={ value.url } />
-              </Grid>
-          ) : ''
+            ) :
+            (
+              <div className={ classes.placeholder }></div>
+            )
         }
-        <Grid item xs={12} sm={7}>
-          { buttons }
+        </Grid>
+        <Grid item xs={12} sm={9}>
+          <div className={ classes.buttons }>
+            { buttons }
+          </div>
+          
         </Grid>
         <Grid item xs={12}>
           <div {...getRootProps()}>
