@@ -62,14 +62,23 @@ const HiddenItemsEditor = ({
         </Typography>
       </Grid>
       <Grid item xs={ 12 } sm={ 6 }>
-        <ButtonList
-          items={ hiddenItems }
-          theme={{
-            root: classes.hiddenRoot,
-          }}
-          IconClass={ HideIcon }
-          getButtons={ getButtons }
-        />
+        {
+          hiddenItems && hiddenItems.length > 0 ? (
+            <ButtonList
+              items={ hiddenItems }
+              theme={{
+                root: classes.hiddenRoot,
+              }}
+              IconClass={ HideIcon }
+              getButtons={ getButtons }
+            />
+          ) : (
+            <Typography variant="caption">
+              There are no hidden items in this section
+            </Typography>
+          )
+        }
+        
       </Grid>
     </Grid>
   )

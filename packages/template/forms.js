@@ -30,9 +30,9 @@ const forms = {
       }],
     }, {
       id: 'hidden',
-      title: 'Show / Hide Items',
+      title: 'Hidden Items',
       schema: [{
-        title: 'Show / Hide Items',
+        title: 'Hidden Items',
         helperText: 'Manage the hidden items in this section',
         component: 'hiddenItems',
       }],

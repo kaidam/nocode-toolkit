@@ -51,7 +51,7 @@ const DefaultFolder = ({
       <div>
         <Button
           color="secondary"
-          variant="contained"
+          variant="outlined"
           size="small"
           onClick={ (e) => {
             e.preventDefault()

@@ -152,7 +152,9 @@ const DraggableTree = ({
 
   if(!tree || tree.length <= 0) {
     return (
-      <EmptyState />
+      <EmptyState
+        section={ section }
+      />
     )
   }
   

@@ -46,7 +46,7 @@ const TreeToolbar = ({
     setIsMenuOpen(false)
   })
 
-  const {    
+  const {
     getAllItems,
   } = useSectionEditor({
     section,
