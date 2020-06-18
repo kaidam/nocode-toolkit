@@ -84,7 +84,6 @@ const ContentDialog = ({
           </div>
         )}
         buttons={ getButtons() }
-        onCancel={ actions.onCancel }
       >
         { getForm() }
       </Window>
