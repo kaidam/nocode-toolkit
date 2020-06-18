@@ -5,6 +5,10 @@ const websiteUrl = (getState, path) => {
   return [`/builder/api/${websiteId}`, path].join('/').replace(/\/+/g, '/')
 }
 
+const googleProxyUrl = (getState, url) => {
+  return `${websiteUrl(getState, '/googleproxy')}?url=${encodeURIComponent(url)}`
+}
+
 const apiUrl = (path) => [`/api/v1`, path].join('/').replace(/\/+/g, '/')
 
 // catch bad status codes and run an error handler
@@ -40,6 +44,7 @@ const del = (path) => (getState) => axios.delete(websiteUrl(getState, path))
 const apiUtils = {
   websiteUrl,
   apiUrl,
+  googleProxyUrl,
   processResult,
   process: processResult,
   getErrorMessage,
