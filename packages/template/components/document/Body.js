@@ -1,5 +1,5 @@
 import React, { lazy, useEffect, useRef, useMemo } from 'react'
-import { useSelector, useDispatch, useStore } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 
 import routerActions from '../../store/modules/router'
 import nocodeSelectors from '../../store/selectors/nocode'
@@ -10,7 +10,6 @@ import Actions from '../../utils/actions'
 import systemUtils from '../../utils/system'
 import driveUtils from '../../utils/drive'
 import documentUtils from '../../utils/document'
-import apiUtils from '../../store/utils/api'
 
 import Suspense from '../system/Suspense'
 
@@ -38,14 +37,11 @@ const DocumentBody = ({
   html,
 }) => {
 
-  const store = useStore()
-
   const actions = Actions(useDispatch(), {
     navigateTo: routerActions.navigateTo,
   })
 
   const showUI = useSelector(systemSelectors.showUI)
-  const showCoreUI = useSelector(systemSelectors.showCoreUI)
   const routePathMap = useSelector(routerSelectors.routePathMap)
   const config = useSelector(nocodeSelectors.config)
 

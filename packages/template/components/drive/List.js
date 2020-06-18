@@ -1,4 +1,5 @@
 import React from 'react'
+import { useStore } from 'react-redux'
 import classnames from 'classnames'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -9,6 +10,7 @@ import TableBody from '@material-ui/core/TableBody'
 import TableCell from '@material-ui/core/TableCell'
 import TableRow from '@material-ui/core/TableRow'
 
+import apiUtils from '../../store/utils/api'
 import driveUtils from '../../utils/drive'
 import icons from '../../icons'
 
@@ -67,6 +69,7 @@ const FinderList = ({
   onOpenFolder,
   onSelectItem,
 }) => {
+  const store = useStore()
   const classes = useStyles()
 
   const actionsCellClassname = classnames(classes.tableCell, classes.actionsCell)
@@ -93,6 +96,8 @@ const FinderList = ({
 
                   const canAdd = !addFilter || addFilter.indexOf(type) >= 0
                   const canOpen = type == 'folder'
+
+                  const proxyThumbnailUrl = apiUtils.googleProxyUrl(store.getState, thumbnail)
 
                   return (
                     <TableRow
@@ -122,7 +127,7 @@ const FinderList = ({
                                 <img 
                                   className={ classes.thumbnail }
                                   referrerPolicy="no-referrer" 
-                                  src={ thumbnail } 
+                                  src={ proxyThumbnailUrl } 
                                 />
                               )
                             }
