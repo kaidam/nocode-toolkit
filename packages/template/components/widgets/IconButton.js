@@ -12,11 +12,12 @@ const useStyles = makeStyles(theme => ({
   iconContainer: ({
     borderRadius,
     padding,
+    dropShadow,
   }) => ({
     borderRadius,
-    border: `0.5px solid #ccc`,
+    border: `1px solid ${theme.palette.secondary.main}`,
     backgroundColor: '#fff',
-    boxShadow: '0px 5px 5px 0px rgba(0,0,0,0.3)',
+    boxShadow: dropShadow ? '0px 5px 5px 0px rgba(0,0,0,0.3)' : '',
     padding,
   }),
 }))
@@ -28,6 +29,7 @@ const NocodeIconButton = ({
   useRef,
   fontSize,
   borderRadius = '16px',
+  dropShadow = false,
   padding = 0,
   settingsButton = false,
   onClick,
@@ -36,6 +38,7 @@ const NocodeIconButton = ({
     fontSize,
     borderRadius,
     padding,
+    dropShadow,
   })
   title = settingsButton ? `${title ? title + ' : ' : ''}Settings` : title
   icon = settingsButton ? 'code' : icon
