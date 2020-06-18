@@ -171,6 +171,7 @@ const DriveDialog = ({
               ) : (
                 <List
                   items={ items }
+                  listFilter={ listFilter }
                   addFilter={ addFilter }
                   searchActive={ searchActive }
                   onOpenFolder={ onOpenFolder }

@@ -64,6 +64,7 @@ const useStyles = makeStyles(theme => createStyles({
 
 const FinderList = ({
   items,
+  listFilter = '',
   addFilter = '',
   searchActive,
   onOpenFolder,
@@ -78,7 +79,23 @@ const FinderList = ({
     return searchActive ? (
       <Typography>No results found...</Typography>
     ) : (
-      <Typography>This folder is empty...</Typography>
+      <div>
+        <Typography gutterBottom>This folder is empty.</Typography>
+        <Typography variant="caption">We are showing the following types...</Typography>
+        <Typography variant="caption">
+          <ul>
+            {
+              listFilter.split(',').map((type, i) => {
+                return (
+                  <li key={i}>{type}</li>
+                )
+              })
+            }
+          </ul>
+        </Typography>
+        
+      </div>
+      
     )
   }
   else {
