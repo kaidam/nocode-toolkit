@@ -25,11 +25,18 @@ const DocumentInfo = ({
     lastModifyingUser,
   } = node
 
-  if(!modifiedTime || !lastModifyingUser) return null
+  if(!modifiedTime && !lastModifyingUser) return null
 
   return (
     <div className={ classes.root }>
-      Updated <span className={ classes.bold }>{ new Date(modifiedTime).toLocaleString() }</span> by <span className={ classes.bold }>{ lastModifyingUser }</span>
+      Updated <span className={ classes.bold }>{ new Date(modifiedTime).toLocaleString() }</span>
+      {
+        lastModifyingUser && (
+          <>
+            &nbsp;by <span className={ classes.bold }>{ lastModifyingUser }</span>
+          </>
+        )
+      }
     </div>
   )
 }
