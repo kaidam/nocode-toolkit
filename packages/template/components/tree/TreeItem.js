@@ -52,7 +52,20 @@ const useStyles = makeStyles(theme => ({
   link: {
     textDecoration: 'none',
   },
+  nonFolderIcon: {
+    opacity: 0,
+  },
 }))
+
+const NonFolderIcon = ({
+  className,
+}) => {
+  return (
+    <RightIcon
+      className={ className }
+    />
+  )
+}
 
 const TreeItem = ({
   node,
@@ -119,15 +132,29 @@ const TreeItem = ({
     node.currentPage,
   ])
 
-  let FolderIcon = null
+  let rightIcon = null
 
   if(node.type == 'folder') {
+    let FolderIcon = null
     if(folderPages) FolderIcon = RightIcon
     else {
       FolderIcon = open ?
         ExpandLessIcon :
         ExpandMoreIcon
     }
+    rightIcon = (
+      <FolderIcon
+        className={ colorClassname }
+        onClick={ eventUtils.cancelEventHandler(onOpenItem) }
+      />
+    )
+  }
+  else {
+    rightIcon = (
+      <NonFolderIcon
+        className={ classes.nonFolderIcon }
+      />
+    )
   }
 
   let linkType = ''
@@ -201,12 +228,7 @@ const TreeItem = ({
                 />
               </Suspense>
             ) : (
-              FolderIcon && (
-                <FolderIcon
-                  className={ colorClassname }
-                  onClick={ eventUtils.cancelEventHandler(onOpenItem) }
-                />
-              )
+              rightIcon
             )
           }
         </ListItem>
