@@ -5,7 +5,7 @@ import Link from '../widgets/Link'
 import contentSelectors from '../../store/selectors/content'
 
 const BreadCrumbs = ({
-
+  activeWidgets,
 } = {}) => {
 
   const pathToItem = useSelector(contentSelectors.routeAncestors)
@@ -17,37 +17,46 @@ const BreadCrumbs = ({
       title: 'Home',
       path: '/',
       name: 'root',
+      isLink: true,
     }]
 
     return base
       .concat(
         useItems
           .filter(item => item.node)
-          .map(item => {
+          .map((item, i) => {
+            if(!item.node) return null
+
+            // if the document title is turned on - let's not render the document
+            // in the breadcrumbs
+            if(activeWidgets.documentTitle && i == useItems.length - 1) return null
+
             return {
               title: item.node.name.replace(/^\w/, st => st.toUpperCase()),
               path: item.route.path,
               name: item.route.name,
+              isLink: i < useItems.length - 1,
             }
           })
       )
       .filter(i => i)
   }, [
     pathToItem,
+    activeWidgets,
   ])
 
   return (
     <div>
       {
         breadcrumbs.map((breadcrumb, i) => {
-          const link = (
+          const link = breadcrumb.isLink ? (
             <Link
               path={ breadcrumb.path }
               name={ breadcrumb.name }
             >
               { breadcrumb.title }
             </Link>
-          )
+          ) : breadcrumb.title
 
           const seperator = i < breadcrumbs.length - 1 ?
             ' / ' : ''
