@@ -109,7 +109,7 @@ const EditableDocumentToolbar = ({
         size="small"
         onClick={ onClick }
       >
-        <AddIcon className={ classes.icon } />&nbsp;&nbsp;Settings
+        <SettingsIcon className={ classes.icon } />&nbsp;&nbsp;Settings
       </Button>
     )
   }, [

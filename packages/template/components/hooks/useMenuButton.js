@@ -12,6 +12,9 @@ import Link from '../widgets/Link'
 
 import eventUtils from '../../utils/events'
 
+import icons from '../../icons'
+const RightIcon = icons.right
+
 const useStyles = makeStyles(theme => ({
   list: {
     paddingTop: theme.spacing(0.5),
@@ -36,6 +39,7 @@ const useStyles = makeStyles(theme => ({
     color: '#000',
   },
   smallIcon: {
+    paddingTop: theme.spacing(1),
     transform: 'scale(0.7)',
   },
 }))
@@ -98,6 +102,12 @@ const ItemMenu = ({
             )
           }
 
+          let SecondaryIcon = item.secondaryIcon
+
+          if(!SecondaryIcon && item.items && item.items.length > 0) {
+            SecondaryIcon = RightIcon
+          }
+
           let contents = (
             <React.Fragment>
               {
@@ -122,10 +132,10 @@ const ItemMenu = ({
                 }}
               />
               {
-                item.secondaryIcon && (
+                SecondaryIcon && (
                   <ListItemSecondaryAction>
                     <div className={ classes.smallIcon }>
-                      <item.secondaryIcon />
+                      <SecondaryIcon />
                     </div>
                   </ListItemSecondaryAction>
                 )
