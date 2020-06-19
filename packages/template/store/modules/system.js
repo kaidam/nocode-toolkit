@@ -46,8 +46,8 @@ const reducers = {
   setUser: (state, action) => {
     state.user = action.payload
   },
-  setDriveAccessStatus: (state, action) => {
-    state.driveAccessStatus = action.payload
+  setTokenStatus: (state, action) => {
+    state.tokenStatus = action.payload
   },
   setWebsite: (state, action) => {
     state.website = action.payload
@@ -78,7 +78,7 @@ const loaders = {
   user: () => axios.get(apiUtils.apiUrl(`/auth/status`))
     .then(apiUtils.process),
 
-  driveAccessStatus: () => axios.get(apiUtils.apiUrl(`/auth/driveAccessStatus`))
+  tokenStatus: () => axios.get(apiUtils.apiUrl(`/auth/tokenStatus`))
     .then(apiUtils.process),
 
   website: (id) => axios.get(apiUtils.apiUrl(`/websites/${id}`))
@@ -145,17 +145,17 @@ const sideEffects = {
     await Promise.all([
       dispatch(actions.loadConfig()),
       dispatch(actions.loadUser()),
-      dispatch(actions.loadDriveAccessStatus()),
+      dispatch(actions.loadTokenStatus()),
       dispatch(actions.loadWebsite()),
       dispatch(actions.loadDnsInfo()),
       dispatch(jobActions.getPublishStatus()),
     ])
 
-    const accessStatus = systemSelectors.driveAccessStatus(getState())
+    const tokenStatus = systemSelectors.tokenStatus(getState())
 
-    // if no access then stop and display modal
-    // the modal is displayed in app.js
-    if(accessStatus && !accessStatus.hasScope) {
+    // we need to upgrade our scope
+    if(tokenStatus && tokenStatus.action == 'login') {
+      document.location = `/scope/${tokenStatus.name}` 
       return
     }
 
@@ -243,9 +243,9 @@ const sideEffects = {
     dispatch(actions.setUser(user))
   },
 
-  loadDriveAccessStatus: () => async (dispatch, getState) => {
-    const data = await loaders.driveAccessStatus(getState)
-    dispatch(actions.setDriveAccessStatus(data))
+  loadTokenStatus: () => async (dispatch, getState) => {
+    const data = await loaders.tokenStatus(getState)
+    dispatch(actions.setTokenStatus(data))
   },
 
   loadConfig: () => async (dispatch, getState) => {

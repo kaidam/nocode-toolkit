@@ -11,7 +11,7 @@ import {
 
 const previewMode = state => state.ui.previewMode
 const user = state => state.system.user
-const driveAccessStatus = state => state.system.driveAccessStatus
+const tokenStatus = state => state.system.tokenStatus
 const config = state => state.system.config
 const website = state => state.system.website
 const dnsInfo = state => state.system.dnsInfo
@@ -53,19 +53,14 @@ const initialiseError = createSelector(
     `we have had trouble loading the nocode data source`
 )
 
-const googleScopes = createSelector(
-  driveAccessStatus,
-  status => status ? status.scopes || [] : [],
-)
-
 const hasFullDriveAccess = createSelector(
-  googleScopes,
-  scopes => scopes.find(scope => scope == GOOGLE_FULL_DRIVE_SCOPE) ? true : false
+  tokenStatus,
+  tokenStatus => tokenStatus && tokenStatus.driveLevel >= 2
 )
 
 const selectors = {
   user,
-  driveAccessStatus, 
+  tokenStatus,
   config,
   website,
   dnsInfo,
@@ -75,7 +70,6 @@ const selectors = {
   initialised,
   initialiseCalled,
   initialiseError,
-  googleScopes,
   hasFullDriveAccess,
 }
 
