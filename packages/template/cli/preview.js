@@ -112,7 +112,9 @@ const publishWebsite = async ({
 }) => {
   logger(loggers.info(`building website HTML`))
   await Publish({
-    options: Options.get({}),
+    options: Options.get({
+      debugBuild: options.debugBuild,
+    }),
     plugins: () => [
       (context) => {
         context.data = collection

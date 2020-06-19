@@ -41,6 +41,7 @@ const DEFAULT_OPTIONS = {
   // whether we should generate a webpack-bundle-analyzer file
   analyze: process.env.ANALYZE,
   // used to not minify the server side code for debugging
+  // this also includes the source maps in the published site
   debugBuild: process.env.DEBUG_BUILD,
   // used to linking @nocode-works modules to templates without node_modules errors
   aliasLinks: process.env.ALIAS_LINKS,

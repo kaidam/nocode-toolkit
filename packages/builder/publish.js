@@ -36,6 +36,7 @@ const Publish = async ({
     serverBuildFilename,
     nocodeDataPath,
     baseUrl,
+    debugBuild,
   } = options
 
   // build files to remove from the publish folder
@@ -122,23 +123,25 @@ const Publish = async ({
     await fsextra.copy(mediaSourceFolder, mediaDestFolder)
   }
 
-  const fileList = await readDirAsync(publishFolder)
+  if(!debugBuild) {
+    const fileList = await readDirAsync(publishFolder)
 
-  const cleanFiles = fileList.filter(filename => {
-    if(CLEAN_BUILD_FILES.indexOf(filename) >= 0) return true
-    if(filename.match(/server\.js$/i)) return true
-    if(filename.match(/\.map$/i)) return true
-    if(filename.indexOf('vendors~ui-bundle') == 0) return true
-    if(filename.indexOf('ui-bundle') == 0) return true
-    return false
-  })
-
-  // remove the CLEAN_BUILD_FILES
-  await Promise.each(cleanFiles, async removeFilePath => {
-    const fullRemoveFilePath = path.join(publishFolder, removeFilePath)
-    logger(`removing build file from publish: ${removeFilePath}`)
-    await fsextra.remove(fullRemoveFilePath)
-  })
+    const cleanFiles = fileList.filter(filename => {
+      if(CLEAN_BUILD_FILES.indexOf(filename) >= 0) return true
+      if(filename.match(/server\.js$/i)) return true
+      if(filename.match(/\.map$/i)) return true
+      if(filename.indexOf('vendors~ui-bundle') == 0) return true
+      if(filename.indexOf('ui-bundle') == 0) return true
+      return false
+    })
+  
+    // remove the CLEAN_BUILD_FILES
+    await Promise.each(cleanFiles, async removeFilePath => {
+      const fullRemoveFilePath = path.join(publishFolder, removeFilePath)
+      logger(`removing build file from publish: ${removeFilePath}`)
+      await fsextra.remove(fullRemoveFilePath)
+    })
+  }
   
   // write the data script for items and routes
   // we only pass routes here because the items will be present in the
