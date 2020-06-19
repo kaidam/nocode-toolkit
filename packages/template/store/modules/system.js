@@ -155,7 +155,10 @@ const sideEffects = {
 
     // we need to upgrade our scope
     if(tokenStatus && tokenStatus.action == 'login') {
-      document.location = `/scope/${tokenStatus.name}` 
+      const redirect = document.location.host == 'localhost:8000' ?
+        `http://localhost/scope/${tokenStatus.name}` :
+        `${tokenStatus.name}`
+      document.location = redirect
       return
     }
 
