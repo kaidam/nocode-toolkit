@@ -1,3 +1,4 @@
+// main app entry
 import React, { lazy, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
