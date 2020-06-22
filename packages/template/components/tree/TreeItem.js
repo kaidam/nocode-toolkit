@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
   },
   active: {
     color: theme.palette.primary.main,
-    fontWeight: 'bold',
+    //fontWeight: 'bold',
   },
   link: {
     textDecoration: 'none',
@@ -149,7 +149,7 @@ const TreeItem = ({
       />
     )
   }
-  else {
+  else if(showUI) {
     rightIcon = (
       <NonFolderIcon
         className={ classes.nonFolderIcon }
@@ -217,7 +217,7 @@ const TreeItem = ({
             primary={ node.name }
           />
           {
-            (hasMouse() && (isHovered || isMenuOpen)) ? (
+            (showUI && hasMouse() && (isHovered || isMenuOpen)) ? (
               <Suspense>
                 <TreeItemButton
                   node={ node }
