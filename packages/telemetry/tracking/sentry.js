@@ -1,3 +1,4 @@
+// ping events to sentry
 const Sentry = require('@sentry/node')
 const tools = require('./tools')
 
