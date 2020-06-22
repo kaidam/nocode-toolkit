@@ -51,7 +51,7 @@ const useItemEditor = ({
 
     if(node.driver == 'drive') {
       const removeItem = isSectionContent ? {
-        title: 'Remove',
+        title: 'Hide',
         icon: icons.clear,
         handler: () => actions.onRemoveRemoteContent({
           id: node.id,
@@ -60,7 +60,7 @@ const useItemEditor = ({
           location: node.route.location,
         })
       } : {
-        title: 'Remove',
+        title: 'Hide',
         icon: icons.clear,
         handler: () => actions.onHideContent({
           id: node.id,

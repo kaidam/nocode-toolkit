@@ -1,6 +1,6 @@
 {
   "name": "@nocode-works/telemetry",
-  "version": "1.0.2",
+  "version": "1.0.1",
   "description": "Code we use for tracking our backend services",
   "publishConfig": {
     "access": "public"
@@ -11,5 +11,6 @@
     "on-finished": "^2.3.0",
     "prom-client": "^11.5.3"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "gitHead": "8f575d37d2565e26c7bebc3add6c281b2c11ab9f"
 }
