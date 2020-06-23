@@ -50,5 +50,6 @@
     "tap-spec": "^5.0.0",
     "tape": "^4.10.1"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "gitHead": "7346e71a821b5547b771483328c19651d7c5ce0a"
 }
