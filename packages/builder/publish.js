@@ -37,6 +37,7 @@ const Publish = async ({
     nocodeDataPath,
     baseUrl,
     debugBuild,
+    cacheId,
   } = options
 
   // build files to remove from the publish folder
@@ -80,6 +81,7 @@ const Publish = async ({
       extraConfig: {
         externalsUrl: url,
         baseUrl,
+        cacheId,
       },
     })
   }
@@ -229,6 +231,7 @@ const Publish = async ({
       routeHtml = HTML({
         buildInfo,
         hash: buildInfo.hash,
+        cacheId,
         initialState,
         helmet,
         injectedHTML,

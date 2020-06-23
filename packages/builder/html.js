@@ -37,6 +37,7 @@ const HTML = ({
   bodyHtml,
   initialState,
   hash,
+  cacheId,
   buildInfo,
 }) => `
 <!DOCTYPE html>
@@ -46,8 +47,8 @@ ${ tags.html(helmet) }
   ${ injectedHTML || '' }
     <div id="_nocode_root">${ bodyHtml || '' }</div>
   ${ getInitialState(initialState) }
-    <script type="text/javascript" src="_nocode_data.js?${ hash || new Date().getTime() }"></script>
-    <script type="text/javascript" src="${ buildInfo.appFilename }?${ hash || new Date().getTime() }"></script>
+    <script type="text/javascript" src="_nocode_data.js?${ cacheId || hash || new Date().getTime() }"></script>
+    <script type="text/javascript" src="${ buildInfo.appFilename }?${ cacheId || hash || new Date().getTime() }"></script>
   </body>
 </html>
 `

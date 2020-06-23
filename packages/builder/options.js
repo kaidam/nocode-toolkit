@@ -32,6 +32,8 @@ const DEFAULT_OPTIONS = {
   mediaPath: process.env.MEDIA_PATH || '_media',
   // the base URL the website will serve on
   baseUrl: process.env.BASE_URL || '/',
+  // an id that will be used on data and external URL's for cache busting
+  cacheId: process.env.CACHE_ID,
   // the filename we write the build info to (inside the buildPath)
   buildinfoFilename: process.env.BUILDINFO_FILENAME || 'buildInfo.json',
   // what folder do we write externals to
