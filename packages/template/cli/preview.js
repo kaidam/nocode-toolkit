@@ -56,6 +56,7 @@ const waitForPublishJob = async ({
   })
 
   let filename = options.previewFile
+  let jobId = new Date().getTime()
 
   if(!filename) {
 
@@ -90,6 +91,7 @@ const waitForPublishJob = async ({
     }
 
     filename = job.result.filename
+    jobId = job.jobid
   }
 
   logger(loggers.success(`job complete`))
@@ -99,6 +101,8 @@ const waitForPublishJob = async ({
     api,
     filename,
   })
+
+  collection.config.cacheId = jobId
 
   logger(loggers.success(`download complete`))
 
@@ -114,6 +118,7 @@ const publishWebsite = async ({
   await Publish({
     options: Options.get({
       debugBuild: options.debugBuild,
+      cacheId: options.cacheId,
     }),
     plugins: () => [
       (context) => {
@@ -165,7 +170,9 @@ const Preview = async ({
   })
 
   await publishWebsite({
-    options,
+    options: Object.assign({}, options, {
+      cacheId: collection.config.cacheId,
+    }),
     collection,
     logger,
   })
