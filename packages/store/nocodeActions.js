@@ -56,7 +56,9 @@ const reducers = {
 const sideEffects = {
   loadExternal: (id) => (dispatch, getState) => {
     const config = nocodeSelectors.config(getState())
-    return axios.get(`${config.externalsUrl}/${id}`)
+    // if we have not been given a cache id then force a reload
+    const cacheId = config.cacheId || new Date().getTime()
+    return axios.get(`${config.externalsUrl}/${id}?version=${cacheId}`)
       .then(res => res.data)
       .then(data => {
         dispatch(actions.setExternal({
