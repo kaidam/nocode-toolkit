@@ -20,6 +20,42 @@ const initialise = (params) => {
   })
 }
 
+const bold = (value) => {
+  if(!value) return
+  if(value.toString().match(/^http/i)) return value
+  return `*${value}*`
+}
+
+const getMessageBlock = (title, props) => {
+
+  const imageField = Object.keys(props).find(field => field.indexOf('_image_') == 0)
+
+  const fieldString = Object
+    .keys(props)
+    .filter(field => props[field] ? true : false)
+    .filter(field => field.indexOf('_image_') == 0 ? false : true)
+    .map(field => ` -> ${field}: ${bold(props[field])}`)
+    .join("\n")
+
+  const block = {
+    type: 'section',
+    text: {
+      type: 'mrkdwn',
+      text: `${title}\n${fieldString}`,
+    },
+  }
+
+  if(imageField) {
+    block.accessory = {
+      type: 'image',
+      image_url: props[imageField],
+      alt_text: imageField,
+    }
+  }
+
+  return block
+}
+
 const identifyUser = (user) => {
   if(!bot) return
   user = tools.processUser(user)
@@ -29,42 +65,31 @@ const identifyUser = (user) => {
     name,
     email,
   } = user
+
   bot.postMessageToChannel(USERS_CHANNEL, 'new user', {
     icon_emoji: ':nocode:',
     blocks: [
+      getMessageBlock(`*new user*:`, {
+        id,
+        name,
+        email,
+      }),
       {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: `A new user (${id}) just registered:
- * name: ${name}
- * email: ${email}
-`
-        }
+        "type": "divider"
       },
     ]
   })
-
 }
 
 const trackEvent = (userid, name, params) => {
   if(!bot) return
-  const props = Object.assign({}, initParams, params)
-  const fields = Object
-    .keys(props)
-    .map(field => ` * ${field}: ${props[field]}`)
-    .join("\n")
+  const fields = Object.assign({}, initParams, params)
   bot.postMessageToChannel(EVENTS_CHANNEL, 'event', {
     icon_emoji: ':nocode:',
     blocks: [
+      getMessageBlock(`*${name}*`, fields),
       {
-        type: 'section',
-        text: {
-          type: 'mrkdwn',
-          text: `A new event (${name}) just happened:
-${fields}
-`
-        }
+        "type": "divider"
       },
     ]
   })
