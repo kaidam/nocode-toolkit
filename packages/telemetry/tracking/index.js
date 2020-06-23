@@ -24,10 +24,12 @@
 */
 const sentryTracker = require('./sentry')
 const segmentTracker = require('./segment')
+const slackTracker = require('./slack')
 
 const allTrackers = {
   sentry: sentryTracker,
   segment: segmentTracker,
+  slack: slackTracker,
 }
 
 const trackers = Object.keys(allTrackers).reduce((all, name) => {
