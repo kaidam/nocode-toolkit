@@ -8,14 +8,32 @@ const getValue = (item, field) => {
   return (val || '').toLowerCase().replace(/\W/g, '')
 }
 
-const fieldSorter = (field, direction) => (a, b) => {
-  if ( getValue(a, field) < getValue(b, field) ) {
-    return direction == 'asc' ? -1 : 1
+const fieldSorter = (field, direction, debug) => (a, b) => {
+
+  const aValue = getValue(a, field)
+  const bValue = getValue(b, field)
+
+  let answer = 0
+
+  if ( aValue < bValue ) {
+    answer = direction == 'asc' ? -1 : 1
   }
-  if ( getValue(a, field) > getValue(b, field) ) {
-    return direction == 'asc' ? 1 : -1
+  if ( aValue > bValue ) {
+    answer = direction == 'asc' ? 1 : -1
   }
-  return 0
+
+  if(debug) {
+    console.log('field sorter')
+    console.dir({
+      answer,
+      field,
+      direction,
+      aValue,
+      bValue,
+    })
+  }
+
+  return answer
 }
 
 // sort children based on a value of their field
@@ -23,10 +41,19 @@ const sortByField = ({
   items,
   field,
   direction = 'asc',
+  debug = false,
 }) => {
-  const sorter = fieldSorter(field, direction)
+  const sorter = fieldSorter(field, direction, debug)
   const sortedItems = [].concat(items)
+  if(debug) {
+    console.log('before sort value')
+    console.log(sortedItems.map(item => `${item.name} (${item.id}) = ${getValue(item, field)}`).join(', '))
+  }
   sortedItems.sort(sorter)
+  if(debug) {
+    console.log('post sort value')
+    console.log(sortedItems.map(item => `${item.name} (${item.id}) = ${getValue(item, field)}`).join(', '))
+  }
   return sortedItems
 }
 
@@ -54,6 +81,7 @@ const sortChildren = ({
   nodes,
   childIds,
   annotation = {},
+  debug = false,
 }) => {
   if(!childIds) return []
   const {
@@ -77,6 +105,7 @@ const sortChildren = ({
       items,
       field: type,
       direction,
+      debug,
     }).map(item => item.id)
   }
 }
