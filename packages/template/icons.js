@@ -88,6 +88,7 @@ import SendIcon from '@material-ui/icons/Send'
 import MenuIcon from '@material-ui/icons/Menu'
 import LockIcon from '@material-ui/icons/Lock'
 import WidgetIcon from '@material-ui/icons/Widgets'
+import GuideIcon from '@material-ui/icons/Subject'
 
 import UnsplashLogo from './components/icons/UnsplashLogo'
 import GoogleDriveLogo from './components/icons/GoogleDriveLogo'
@@ -177,6 +178,7 @@ const icons = {
   lock: LockIcon,
   sort: SortIcon,
   home: HomeIcon,
+  guide: GuideIcon,
 }
 
 export default icons

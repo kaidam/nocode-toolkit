@@ -89,9 +89,9 @@ const sideEffects = {
 
   openLiveChat: () => (dispatch, getState) => {
     dispatch(dialogActions.closeAll())
-    const crisp = globals.getTracker('crisp')
-    if(!crisp) return
-    crisp.open()
+    const chatlio = globals.getTracker('chatlio')
+    if(!chatlio) return
+    chatlio.open()
   },
 
   getQuickstartConfig: (windowConfig = {}) => async (dispatch, getState) => {

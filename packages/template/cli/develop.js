@@ -32,10 +32,10 @@ const processHTML = (html, libraryUrl) => {
   if(!libraryUrl) return html
   const trackingHost = process.env.TRACKING_HOST
   if(!trackingHost) return html
-  return `
-<script type="text/javascript" src="http://${trackingHost}${libraryUrl}"></script>
-${html}
-`
+  return html.replace('</head>', `
+    <script type="text/javascript" src="http://${trackingHost}${libraryUrl}"></script>
+  </head>
+`)
 }
 
 const Develop = ({

@@ -86,10 +86,16 @@ const useGlobalOptions = ({
       title: 'Website List',
       icon: icons.content,
       handler: onListWebsites,
-    }, {
-      title: 'Help',
+    },
+    '-',
+    {
+      title: 'Get Help',
       icon: icons.help,
       handler: actions.onViewHelp,
+    }, {
+      title: 'Nocode Guide',
+      icon: icons.guide,
+      handler: () => window.open('https://guide.nocode.works'),
     }, {
       title: 'Logout',
       icon: icons.logout,

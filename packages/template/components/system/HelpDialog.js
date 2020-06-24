@@ -29,29 +29,30 @@ const HelpDialog = ({
     onClose: dialogActions.closeAll,
   })
 
-  const crisp = globals.getTracker('crisp')
+  const chatlio = globals.getTracker('chatlio')
 
   return (
     <Window
       open
       title="Help"
-      size="lg"
+      size="sm"
       cancelTitle="Close"
       withCancel
       onCancel={ actions.onClose }
     >
-      <Typography>You can email us at <b>support@kaidam.ltd</b></Typography>
+      <Typography gutterBottom>You can email us at <b>support@kaidam.ltd</b></Typography>
+      <Typography gutterBottom>Make sure you check out our <a target="_blank" href="https://guide.nocode.works"><b>guide</b></a> which has lots of tips for using nocode.</Typography>
       {
-        crisp && (
+        chatlio && (
           <React.Fragment>
-             <Typography>OR open the live chat widget:</Typography>
+             <Typography gutterBottom>Or you can open our live chat widget:</Typography>
              <p>
               <Button
                 variant="contained"
                 color="secondary"
                 onClick={ () => actions.onOpenLiveChat() }
               >
-                Open live chat <HelpIcon />
+                Open live chat&nbsp;&nbsp;&nbsp;<HelpIcon />
               </Button>
             </p>
           </React.Fragment>
