@@ -10,6 +10,7 @@ import Link from '../widgets/Link'
 
 import NavBarDropdown from './NavBarDropdown'
 
+import eventUtils from '../../utils/events'
 import library from '../../library'
 
 import {
@@ -178,7 +179,13 @@ const NavBarItem = ({
 
   const onOpenItem = () => {
     if(node.type == 'link') {
-      window.open(node.url)
+      if(node.url.indexOf('code:') == 0) {
+        const code = node.url.replace(/^code:/, '')
+        eval(code)
+      }
+      else {
+        window.open(node.url)
+      }
     }
     else {
       dispatch(routerActions.navigateTo(node.route.name))
@@ -333,7 +340,7 @@ const NavBarItem = ({
         NativeLinkComponent :
         Link
 
-      const linkProps = node.type == 'link' ?
+      let linkProps = node.type == 'link' ?
         {
           href: node.url,
           target: '_external'
@@ -341,6 +348,17 @@ const NavBarItem = ({
         {
           name: node.route.name,
         }
+
+      if(node.type == 'link' && node.url.indexOf('code:') == 0) {
+        linkProps = {
+          href: '#',
+          onClick: (e) => {
+            eventUtils.cancelEvent(e)
+            onOpenItem()
+            return false
+          }
+        }
+      }
 
       return (
         <li

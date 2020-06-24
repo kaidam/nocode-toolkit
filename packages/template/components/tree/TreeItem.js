@@ -158,7 +158,9 @@ const TreeItem = ({
   }
 
   let linkType = ''
-  if(node.type == 'link') linkType = 'external'
+  if(node.type == 'link') {
+    linkType = node.url.indexOf('code:') == 0 ? 'code' : 'external'
+  }
   else if(node.type == 'folder') linkType = folderPages ? 'internal' : ''
   else linkType = 'internal'
 
@@ -187,6 +189,10 @@ const TreeItem = ({
     if(handled) return
     if(linkType == 'external') {
       window.open(node.url)
+    }
+    else if(linkType == 'code') {
+      const code = node.url.replace(/^code:/, '')
+      eval(code)
     }
     else if(linkType == 'internal' && node.route) {
       dispatch(routerActions.navigateTo(node.route.name))
@@ -279,6 +285,21 @@ const TreeItem = ({
       <Link
         url={ node.url }
         className={ classes.link }
+      >
+        { renderedItem }
+      </Link>
+    )
+  }
+  else if(linkType == 'code') {
+    return (
+      <Link
+        url="#"
+        className={ classes.link }
+        onClick={(e) => {
+          eventUtils.cancelEvent(e)
+          const code = node.url.replace(/^code:/, '')
+          eval(code)
+        }}
       >
         { renderedItem }
       </Link>

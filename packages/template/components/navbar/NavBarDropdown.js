@@ -23,7 +23,15 @@ const NavBarDropdown = ({
           menuItem.items = getItems(child.children || [])
         }
         else if(child.type == 'link') {
-          menuItem.url = child.url
+          if(child.url.indexOf('code:') == 0) {
+            menuItem.handler = () => {
+              const code = child.url.replace(/^code:/, '')
+              eval(code)
+            }
+          }
+          else {
+            menuItem.url = child.url
+          }
         }
         else {
           menuItem.route = child.route

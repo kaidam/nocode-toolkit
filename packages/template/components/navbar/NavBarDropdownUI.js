@@ -82,7 +82,15 @@ const NavBarDropdownUI = ({
         openItem = null
       }
       else if(node.type == 'link') {
-        openItem.url = node.url
+        if(node.url.indexOf('code:') == 0) {
+          openItem.handler = () => {
+            const code = node.url.replace(/^code:/, '')
+            eval(code)
+          }
+        }
+        else {
+          openItem.url = node.url
+        }
       }
       else {
         openItem.route = node.route

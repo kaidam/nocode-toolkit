@@ -201,7 +201,7 @@ const forms = {
         type: 'string',
         methods: [
           ['required', 'The url is required'],
-          ['url', 'Must be a valid url - e.g. http://google.com'],
+          ['matches', '^(code:|https?:\/\/)', 'Must be a valid url - e.g. http://google.com'],
         ],
       }
     }],
