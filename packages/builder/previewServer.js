@@ -63,6 +63,7 @@ const BuildPreviewServer = ({
       const filePath = path.join(buildFolder, filename)
       const stat = await statAsync(filePath)
       if(!stat) return next()
+      res.header('Cache-Control', 'no-store')
       res.sendFile(filePath)
     } catch(e) {
       return next()
@@ -72,12 +73,6 @@ const BuildPreviewServer = ({
   // build and send the HTML based on the buildinfo
   const serveHTML = async (req, res, next) => {
     const websiteId = getWebsiteId(req)
-
-    // don't cache the HTML response in dev mode
-    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate')
-    res.header('Expires', '-1')
-    res.header('Pragma', 'no-cache')
-
     try {
       const buildInfo = await getBuildInfo(websiteId)
       let html = HTML({
@@ -88,6 +83,7 @@ const BuildPreviewServer = ({
       if(processHTML) {
         html = await processHTML(html)
       }
+      res.header('Cache-Control', 'no-store')
       res.end(html)
     } catch(e) {
       return next(e)
@@ -175,6 +171,7 @@ const PreviewServer = ({
         id,
         req,
       })
+      res.header('Cache-Control', 'no-store')
       res.end(Data.script(Data.factory({
         extraConfig: {
           externalsUrl: externalsPath,
@@ -201,6 +198,7 @@ const PreviewServer = ({
         filename,
         req,
       })
+      res.header('Cache-Control', 'no-store')
       res.end(data)
     } catch(e) {
       if(e instanceof AuthenticationError) {
