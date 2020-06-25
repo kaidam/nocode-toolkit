@@ -5,6 +5,7 @@ import { reducer as nocode } from './modules/nocode'
 import { reducer as router } from './modules/router'
 import { reducer as snackbar } from './modules/snackbar'
 import { reducer as search } from './modules/search'
+import { reducer as document } from './modules/document'
 
 import importPromises from './importer'
 
@@ -33,6 +34,7 @@ const reducers = {
   router,
   snackbar,
   search,
+  document,
   network: GetReducer('network'),
   system: GetReducer('system'),
   settings: GetReducer('settings'),

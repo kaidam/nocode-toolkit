@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect'
 import deepmerge from 'deepmerge'
 import childrenUtils from '../../utils/children'
+import documentUtils from '../../utils/document'
 import nocodeSelectors from './nocode'
 import routerSelectors from './router'
 import systemSelectors from './system'
@@ -342,11 +343,18 @@ const document = createSelector(
     }
     const externals = (route.externals || []).map(id => externalMap[id])
     const annotation = annotations[node.id] || {}
+
+    const {
+      html,
+      cssImports,
+    } = documentUtils.extractImports(externals[0])
+
     return {
       node: Object.assign({}, node, {route}),
       route,
       annotation,
-      html: externals[0],
+      html,
+      cssImports,
     }
   },
 )

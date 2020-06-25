@@ -5,6 +5,7 @@ import Header from './Header'
 
 import systemSelectors from '../../store/selectors/system'
 import settingsSelectors from '../../store/selectors/settings'
+import documentSelectors from '../../store/selectors/document'
 
 import Snippet from './Snippet'
 import Suspense from './Suspense'
@@ -20,13 +21,14 @@ const Layout = ({
 
   const showUI = useSelector(systemSelectors.showUI)
   const settings = useSelector(settingsSelectors.settings)
+  const cssImports = useSelector(documentSelectors.cssImports)
 
   const snippets = {
     head: useSelector(settingsSelectors.headSnippetCode),
     before: useSelector(settingsSelectors.beforeBodySnippetCode),
     after: useSelector(settingsSelectors.afterBodySnippetCode),
   }
-  
+
   return (
     <React.Fragment>
       <Header
@@ -43,6 +45,14 @@ const Layout = ({
         }
         {
           (material || showUI) && <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+        }
+        {
+          // render the various CSS imports found in document HTML
+          Object.keys(cssImports).map((cssImport) => {
+            return (
+              <link key={ cssImport } rel="stylesheet" href={ cssImport } />
+            )
+          })
         }
         {
           head
