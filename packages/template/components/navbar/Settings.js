@@ -30,6 +30,7 @@ const useStyles = makeStyles(theme => ({
 
 const NavbarSettings = ({
   section,
+  small,
   vertical,
   contrast,
   focusRef,
@@ -68,13 +69,15 @@ const NavbarSettings = ({
   })
 
   useEffect(() => {
-    context.setFocusElements({
-      [`sectionSettings_${section}`]: {
-        id: `sectionSettings_${section}`,
-        ref: settingsRef,
-        padding: 10,
-      },
-    })
+    if(!small) {
+      context.setFocusElements({
+        [`sectionSettings_${section}`]: {
+          id: `sectionSettings_${section}`,
+          ref: settingsRef,
+          padding: 10,
+        },
+      })
+    }
   }, [])
 
   return (

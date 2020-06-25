@@ -145,6 +145,7 @@ const EditableDocumentToolbar = ({
   ])
 
   useEffect(() => {
+    if(small) return
     context.setFocusElements({
       [`editDocument`]: {
         id: 'editDocument',

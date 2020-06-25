@@ -55,6 +55,7 @@ const NavBarSection = ({
         Component={ Settings }
         props={{
           section,
+          small,
           contrast,
           vertical,
           focusRef,

@@ -53,7 +53,7 @@ const Develop = ({
       const apiRes = await axios({
         method: req.method,
         url: targetUrl,
-        headers: api.getAuthHeaders(),
+        headers: Object.assign({}, req.headers, api.getAuthHeaders()),
         data: req,
         responseType: 'stream',
       })

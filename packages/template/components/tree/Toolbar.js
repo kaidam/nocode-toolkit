@@ -29,6 +29,7 @@ const useStyles = makeStyles(theme => ({
 
 const TreeToolbar = ({
   section,
+  type,
   focusRef,
   isNavDrawer,
 }) => {
@@ -66,8 +67,8 @@ const TreeToolbar = ({
 
   useEffect(() => {
     context.setFocusElements({
-      [`sectionSettings_${section}`]: {
-        id: `sectionSettings_${section}`,
+      [`sectionSettings_${section}_${type}`]: {
+        id: `sectionSettings_${section}_${type}`,
         ref: settingsRef,
         padding: 10,
       },
