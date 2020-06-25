@@ -16,12 +16,14 @@ import uiActions from './ui'
 import driveActions from './drive'
 import jobActions from './job'
 import nocodeActions from './nocode'
-import dialogActions from './dialog'
 import snackbarActions from './snackbar'
 import routerActions from './router'
 
 import { content as initialState } from '../initialState'
 import settingsSelectors from '../selectors/settings'
+import {
+  GOOGLE_DOUBLE_BUBBLE_RELOAD_DELAY,
+} from '../../config'
 
 const prefix = 'content'
 
@@ -56,6 +58,9 @@ const loaders = {
     .then(apiUtils.process),
 
   deleteContent: (getState, driver, content_id, location) => axios.delete(apiUtils.websiteUrl(getState, `/content/${driver}/${content_id}/${location}`))
+    .then(apiUtils.process),
+
+  getRemoteContent: (getState, driver, id) => axios.get(apiUtils.websiteUrl(getState, `/remote/item/${driver}/${id}`))
     .then(apiUtils.process),
 
   createRemoteContent: (getState, payload) => axios.post(apiUtils.websiteUrl(getState, `/remotecontent`), payload)
@@ -645,19 +650,45 @@ const sideEffects = {
     driver,
     id,
   }) => wrapper('reloadExternalContent', async (dispatch, getState) => {
-    const {
-      reloadPreview,
-      reloadDocument,
-    } = await loaders.reloadExternalContent(getState, driver, id)
 
-    // the name has changed so we need to do a full rebuild
-    if(reloadPreview) {
-      await dispatch(jobActions.reload())
+    const nodes = nocodeSelectors.nodes(getState())
+    const node = nodes[id]
+
+    if(!node) return
+
+    // called when we see a new document version coming through
+    const updateChanges = async () => {
+      const {
+        reloadPreview,
+        reloadDocument,
+      } = await loaders.reloadExternalContent(getState, driver, id)
+
+      // the name has changed so we need to do a full rebuild
+      if(reloadPreview) {
+        await dispatch(jobActions.reload())
+      }
+      // otherwise just reload the external
+      else if (reloadDocument) {
+        await dispatch(nocodeActions.loadExternal(`${driver}:${id}.html`))
+      }
     }
-    // otherwise just reload the external
-    else if (reloadDocument) {
-      await dispatch(nocodeActions.loadExternal(`${driver}:${id}.html`))
+
+    const newItem1 = await loaders.getRemoteContent(getState, driver, id)
+
+    if(newItem1.version != node.version) {
+      await updateChanges()
+      return
     }
+
+    // wait for 5 seconds for eventual consistency
+    await Promise.delay(GOOGLE_DOUBLE_BUBBLE_RELOAD_DELAY)
+
+    const newItem2 = await loaders.getRemoteContent(getState, driver, id)
+
+    if(newItem2.version != node.version) {
+      await updateChanges()
+      return
+    }    
   }),
 
   waitForForm: ({
