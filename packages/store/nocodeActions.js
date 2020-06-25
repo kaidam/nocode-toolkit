@@ -54,41 +54,67 @@ const reducers = {
 }
 
 const sideEffects = {
-  loadExternal: (id) => (dispatch, getState) => {
+  loadExternal: (id) => async (dispatch, getState) => {
     const config = nocodeSelectors.config(getState())
     // if we have not been given a cache id then force a reload
     const cacheId = config.cacheId || new Date().getTime()
-    return axios.get(`${config.externalsUrl}/${id}?version=${cacheId}`)
-      .then(res => res.data)
-      .then(data => {
-        dispatch(actions.setExternal({
-          id,
-          data,
-        }))
-        return data
+
+    const url = `${config.externalsUrl}/${id}?version=${cacheId}`
+
+    try {
+      const externalResponse = await axios({
+        method: 'get',
+        url,
       })
-      .catch(err => {
+      dispatch(actions.setExternal({
+        id,
+        data: externalResponse.data,
+      }))
+    } catch(err) {
 
-        let errorMessage = err.toString()
+      let errorMessage = err.toString()
 
-        if(err.response && err.response.data) {
-          errorMessage = err.response.data.error ?
-            err.response.data.error :
-            err.response.data
-        }
+      if(err.response && err.response.data) {
+        errorMessage = err.response.data.error ?
+          err.response.data.error :
+          err.response.data
+      }
 
-        dispatch(actions.setExternal({
-          id,
-          data: `
+      let data = ''
+      let throwError = false
+
+      // this is likely a permissions error
+      if(err.response.status == 404) {
+        const documentURL = `https://docs.google.com/document/d/${id}/edit`
+        const openURL = `https://accounts.google.com/ServiceLoginAuth?continue=${encodeURIComponent(documentURL)}`
+
+        data = `
+<div style="font-family: Arial;">
+  <p><b>This page was not found!</b></p>
+  <p style="color: #666666;">Please check that you have access to this Google document.</p>
+  <p style="color: #666666;">You can <b><a href="${openURL}" target="_blank">CLICK HERE</a></b> to open the document in Google Drive.</p>
+</div>
+        `
+      }
+      else {
+        throwError = true
+        data = `
 <div style="font-family: Arial;">
   <p><b>There was an error loading this page:</b></p>
   <p style="color: red;">${ errorMessage }</p>
 </div>
-          `
-        }))
+`
+      }
 
+      dispatch(actions.setExternal({
+        id,
+        data,
+      }))
+
+      if(throwError) {
         throw err
-      })
+      }
+    }
   },
 }
 
