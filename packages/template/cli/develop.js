@@ -1,6 +1,5 @@
 const express = require('express')
 const axios = require('axios')
-const request = require('request')
 const PreviewServer = require('@nocode-works/builder/previewServer')
 
 const Api = require('./api')
@@ -50,13 +49,16 @@ const Develop = ({
 
   const requestProxy = async (req, res, next) => {
     const targetUrl = api.getUrl(req.originalUrl, 'raw')
-    req
-      .pipe(request({
-        method: req.method,
-        url: targetUrl,
-        headers: api.getAuthHeaders(),
-      }))
-      .pipe(res)
+    const apiRes = await axios({
+      method: req.method,
+      url: targetUrl,
+      headers: api.getAuthHeaders(),
+      data: req,
+      responseType: 'stream',
+    })
+    res.status(apiRes.status)
+    res.set(apiRes.headers)
+    apiRes.data.pipe(res)
   }
 
   const getPreviewData = async (rebuild) => {
@@ -156,14 +158,26 @@ you can view your website at: http://localhost:${options.devserverPort}
   })
 
   app.use((err, req, res, next) => {
+
+    let code = err._code || err.code || res._code || 500
+    let responseBody = {}
+
+    if(err.response) {
+      code = err.response.status
+      responseBody = err.response.data
+    }
+    else {
+      responseBody =  { error: err.toString() }
+    }
+
     pino.error({
       action: 'error',
       error: err.toString(),
       stack: err.stack,
-      code: res._code
+      code,
     })
-    res.status(res._code || 500)
-    res.json({ error: err.toString() })
+    res.status(code)
+    res.json(responseBody)
   })
 
   app.listen(options.devserverPort, () => {

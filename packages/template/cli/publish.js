@@ -1,6 +1,5 @@
 const fs = require('fs')
 const axios = require('axios')
-const request = require('request')
 const path = require('path')
 const archiver = require('archiver')
 const Build = require('./build')
@@ -92,33 +91,39 @@ const uploadFiles = async ({
 
   logger(loggers.info(`uploading files`))
 
-  await new Promise((resolve, reject) => {
-    const uploadRequest = request.post(api.getApiUrl(`/templates/${name}/upload/${version}`), {
-      headers: api.getAuthHeaders(),
-    }, function (error, response, body) {
-      if(error) return reject(error)
+  await new Promise(async (resolve, reject) => {
 
-      if(response.statusCode < 400) return resolve()
-      reject(body)
-    })
+    try {
+      const archive = archiver('tar', {})
+      archive.on('warning', (err) => {
+        if (err.code === 'ENOENT') {
+          console.log(err.toString())
+        } else {
+          reject(err)
+        }
+      })
+      archive.on('error', (err) => {
+        reject(err)
+      })
 
-    const archive = archiver('tar', {})
+      archive.directory(folder, '/')
+      archive.finalize()
 
-    archive.on('warning', (err) => {
-      if (err.code === 'ENOENT') {
-        console.log(err.toString())
-      } else {
-        throw err
+      await axios({
+        method: 'post',
+        url: api.getApiUrl(`/templates/${name}/upload/${version}`),
+        headers: api.getAuthHeaders(),
+        data: archive,
+      })
+
+      resolve()
+    } catch(e) {
+      reject(e)
+      if(e.response) {
+        e._code = e.response.status
+        reject(e)
       }
-    })
-    
-    archive.on('error', (err) => {
-      throw err
-    })
-
-    archive.pipe(uploadRequest)
-    archive.directory(folder, '/')
-    archive.finalize()
+    }
   })
 
   logger(loggers.success(`all files uploaded`))
