@@ -48,17 +48,23 @@ const Develop = ({
   const app = express()
 
   const requestProxy = async (req, res, next) => {
-    const targetUrl = api.getUrl(req.originalUrl, 'raw')
-    const apiRes = await axios({
-      method: req.method,
-      url: targetUrl,
-      headers: api.getAuthHeaders(),
-      data: req,
-      responseType: 'stream',
-    })
-    res.status(apiRes.status)
-    res.set(apiRes.headers)
-    apiRes.data.pipe(res)
+    try {
+      const targetUrl = api.getUrl(req.originalUrl, 'raw')
+      const apiRes = await axios({
+        method: req.method,
+        url: targetUrl,
+        headers: api.getAuthHeaders(),
+        data: req,
+        responseType: 'stream',
+      })
+      res.status(apiRes.status)
+      res.set(apiRes.headers)
+      apiRes.data.pipe(res)
+    } catch(err) {
+      res.status(err.response.status)
+      err.response.data.pipe(res)
+    }
+    
   }
 
   const getPreviewData = async (rebuild) => {
