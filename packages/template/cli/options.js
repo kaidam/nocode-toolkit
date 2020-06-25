@@ -89,6 +89,9 @@ const addCli = (cli) => {
     .option('preview-file', {
       describe: 'use an existing preview file',
     })
+    .option('cache-preview-file', {
+      describe: 'save the job results to a local file',
+    })
     .option('build', {
       describe: 'Build the template before doing a preview?',
     })

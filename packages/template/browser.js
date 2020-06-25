@@ -6,10 +6,7 @@ import { HelmetProvider } from 'react-helmet-async'
 import Store from './store'
 
 const rootEl = document.querySelector('#_nocode_root')
-
-// TODO: https://github.com/kaidam/nocode-stack/issues/394
-//const renderFunction = process.env.NODE_ENV == 'production' ? hydrate : render
-const renderFunction = render
+const renderFunction = process.env.NODE_ENV == 'production' ? hydrate : render
 
 const Render = ({
   reducers,

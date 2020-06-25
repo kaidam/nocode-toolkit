@@ -55,10 +55,15 @@ const waitForPublishJob = async ({
     options,
   })
 
-  let filename = options.previewFile
   let jobId = new Date().getTime()
+  let filename = options.previewFile
 
-  if(!filename) {
+  const cachePreviewFile = options.cachePreviewFile
+  let cachePreviewFileExists = cachePreviewFile ?
+    fs.existsSync(cachePreviewFile) :
+    false
+
+  if(!filename && !cachePreviewFileExists) {
 
     logger(loggers.info(`creating remote publish job`))
     const { id } = await createJob({api})
@@ -97,10 +102,22 @@ const waitForPublishJob = async ({
   logger(loggers.success(`job complete`))
   logger(loggers.info(`downloading results: ${filename}`))
 
-  const collection = await loadResults({
-    api,
-    filename,
-  })
+  let collection = null
+
+  if(cachePreviewFileExists) {
+    const cacheData = fs.readFileSync(cachePreviewFile, 'utf8')
+    collection = JSON.parse(cacheData)
+  }
+  else {
+    collection = await loadResults({
+      api,
+      filename,
+    })
+
+    if(cachePreviewFile) {
+      fs.writeFileSync(cachePreviewFile, JSON.stringify(collection), 'utf8')
+    }
+  }
 
   collection.config.cacheId = jobId
 
