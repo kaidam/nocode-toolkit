@@ -81,8 +81,16 @@ const Data = (globals) => {
         return all.concat(candidates)
       }, [])
     
-    const allRoutes = baseRoutes.concat(redirectRoutes)
+    const allRoutes = baseRoutes
+      .concat(redirectRoutes)
+      .concat([
+        {
+          name: '_external_loader',
+          path: '/_external_loader/:id',
+        }
+      ])
 
+    // prevent double route injection
     const foundNames = {}
 
     return allRoutes.filter((route) => {

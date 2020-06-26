@@ -1,7 +1,7 @@
 const cancelEvent = (e) => {
   if(!e) return
   e.stopPropagation()
-  e.nativeEvent.stopImmediatePropagation()
+  if(e.nativeEvent) e.nativeEvent.stopImmediatePropagation()
   e.preventDefault()
 }
 

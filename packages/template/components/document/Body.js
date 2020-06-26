@@ -6,9 +6,9 @@ import nocodeSelectors from '../../store/selectors/nocode'
 import routerSelectors from '../../store/selectors/router'
 import systemSelectors from '../../store/selectors/system'
 
-import Actions from '../../utils/actions'
 import systemUtils from '../../utils/system'
 import driveUtils from '../../utils/drive'
+import eventUtils from '../../utils/events'
 import documentUtils from '../../utils/document'
 
 import Suspense from '../system/Suspense'
@@ -37,9 +37,7 @@ const DocumentBody = ({
   html,
 }) => {
 
-  const actions = Actions(useDispatch(), {
-    navigateTo: routerActions.navigateTo,
-  })
+  const dispatch = useDispatch()
 
   const showUI = useSelector(systemSelectors.showUI)
   const routePathMap = useSelector(routerSelectors.routePathMap)
@@ -60,18 +58,22 @@ const DocumentBody = ({
     html,
   ])
 
-  // handle internal links by canceling the click event and triggering an internal
-  // route refresh (don't do this is ctrl is held down)
-  //
-  // also handle hash links that point to the same page
-  // but prepending the full browser URL before the hash
-  // this will not trigger a router reload
+  
   useEffect(() => {
     if(systemUtils.isNode) return
     if(!contentRef.current) return
+
+    // handle internal links by canceling the click event and triggering an internal
+    // route refresh (don't do this is ctrl is held down)
+    //
+    // also handle hash links that point to the same page
+    // but prepending the full browser URL before the hash
+    // this will not trigger a router reload
+    
     const internalLinks = Array.prototype.slice.call(
       contentRef.current.querySelectorAll('a[data-nocode-internal-route]')
     )
+
     internalLinks.forEach(internalLink => {
       internalLink.addEventListener('click', (e) => {
         if (e.ctrlKey) return
@@ -79,9 +81,23 @@ const DocumentBody = ({
         const findUrl = (config.baseUrl + url).replace(/\/\//g, '/')
         const route = routePathMap[findUrl]
         if(!route) return
-        e.stopImmediatePropagation()
-        e.preventDefault()        
-        actions.navigateTo(route.name)        
+        eventUtils.cancelEvent(e)
+        dispatch(routerActions.navigateTo(route.name))
+        return false
+      })
+    })
+
+    // handle external loader links
+    const externalLoaderLinks = Array.prototype.slice.call(
+      contentRef.current.querySelectorAll('a[data-nocode-external-document-id]')
+    )
+
+    externalLoaderLinks.forEach(externalLoaderLink => {
+      externalLoaderLink.addEventListener('click', (e) => {
+        if (e.ctrlKey) return
+        eventUtils.cancelEvent(e)
+        const id = externalLoaderLink.getAttribute('data-nocode-external-document-id')
+        dispatch(routerActions.navigateTo('_external_loader', {id}))
         return false
       })
     })
