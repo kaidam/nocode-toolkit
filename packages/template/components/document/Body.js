@@ -5,6 +5,7 @@ import routerActions from '../../store/modules/router'
 import nocodeSelectors from '../../store/selectors/nocode'
 import routerSelectors from '../../store/selectors/router'
 import systemSelectors from '../../store/selectors/system'
+import driveActions from '../../store/modules/drive'
 
 import systemUtils from '../../utils/system'
 import driveUtils from '../../utils/drive'
@@ -42,6 +43,7 @@ const DocumentBody = ({
   const showUI = useSelector(systemSelectors.showUI)
   const routePathMap = useSelector(routerSelectors.routePathMap)
   const config = useSelector(nocodeSelectors.config)
+  const tokenStatus = useSelector(systemSelectors.tokenStatus)
 
   const contentRef = useRef(null)
   const classes = useStyles({
@@ -91,6 +93,13 @@ const DocumentBody = ({
     const externalLoaderLinks = Array.prototype.slice.call(
       contentRef.current.querySelectorAll('a[data-nocode-external-document-id]')
     )
+
+    // there are links to external documents and we don't have full drive access
+    if(showUI && externalLoaderLinks.length > 0 && tokenStatus.driveLevel < 2) {
+      dispatch(driveActions.upgradeScope({
+        mode: 'linked_documents',
+      }))
+    }
 
     externalLoaderLinks.forEach(externalLoaderLink => {
       externalLoaderLink.addEventListener('click', (e) => {
