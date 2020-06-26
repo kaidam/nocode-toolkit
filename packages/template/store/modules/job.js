@@ -229,7 +229,9 @@ const sideEffects = {
       // (probably because we discovered links to other documentss)
       if(job.result && job.result.action == 'driveAccess') {
         dispatch(dialogActions.closeAll())
-        dispatch(driveActions.upgradeScope())
+        dispatch(driveActions.upgradeScope({
+          mode: job.result.mode,
+        }))
       }
       else {
         dispatch(dialogActions.replace('publishSummary', {

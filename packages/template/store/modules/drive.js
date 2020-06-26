@@ -126,9 +126,12 @@ const sideEffects = {
     dispatch(actions.setAncestors(ancestors))
   }),
 
-  upgradeScope: () => async (dispatch, getState) => {
+  upgradeScope: ({
+    mode = 'unknown',
+  } = {}) => async (dispatch, getState) => {
     dispatch(actions.openUpgradeWindow({
       open: true,
+      mode,
     }))
     let result = null
     try {

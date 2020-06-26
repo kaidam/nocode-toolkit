@@ -1,12 +1,13 @@
 import React, { useCallback } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Typography from '@material-ui/core/Typography'
 import GoogleButton from 'react-google-button'
 
 import Actions from '../../utils/actions'
 
 import driveActions from '../../store/modules/drive'
+import driveSelectors from '../../store/selectors/drive'
 
 import Window from '../dialog/Window'
 
@@ -39,15 +40,13 @@ const DriveUpgradeRequestModal = ({
     onCancel: driveActions.cancelUpgradeWindow,
   })
 
-  return (
-    <Window
-      open
-      title="Full Drive Access Required"
-      fullHeight
-      withCancel
-      size="md"
-      onCancel={ actions.onCancel }
-    >
+  const upgradeWindow = useSelector(driveSelectors.upgradeWindow)
+
+  const content = upgradeWindow.mode == 'linked_documents' ? (
+    <>
+      <Typography gutterBottom>
+        We have found links to other documents on your Google drive.
+      </Typography>
       <Typography gutterBottom>
         To perform this action we will need full access to your Google Drive.
       </Typography>
@@ -57,6 +56,31 @@ const DriveUpgradeRequestModal = ({
       <Typography gutterBottom>
         Click the button below to login with Google.
       </Typography>
+    </>
+  ) : (
+    <>
+      <Typography gutterBottom>
+        To perform this action we will need full access to your Google Drive.
+      </Typography>
+      <Typography gutterBottom>
+        Presently - we can only see content you have created with nocode.
+      </Typography>
+      <Typography gutterBottom>
+        Click the button below to login with Google.
+      </Typography>
+    </>
+  )
+
+  return (
+    <Window
+      open
+      title="Full Drive Access Required"
+      fullHeight
+      withCancel
+      size="md"
+      onCancel={ actions.onCancel }
+    >
+      { content }
       <div className={ classes.googleButton }>
         <GoogleButton
           type="dark"
