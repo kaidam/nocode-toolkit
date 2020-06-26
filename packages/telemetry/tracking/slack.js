@@ -56,6 +56,7 @@ const getMessageBlock = (title, props) => {
   return block
 }
 
+// opts can contain "existing"
 const identifyUser = (user, opts) => {
   if(!bot) return
   user = tools.processUser(user)

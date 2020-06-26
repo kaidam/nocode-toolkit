@@ -53,5 +53,6 @@
     "yargs": "^15.0.2",
     "yup": "^0.28.3"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "gitHead": "409770c92ee39e5a8372ac299d2c624bcbfc8d24"
 }

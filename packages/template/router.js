@@ -1,3 +1,4 @@
+// main app router
 import React from 'react'
 import { useSelector } from 'react-redux'
 import routerSelectors from './store/selectors/router'
