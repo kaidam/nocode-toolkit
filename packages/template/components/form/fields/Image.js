@@ -99,6 +99,7 @@ const ImageField = ({
     onDrop: async (files) => {
       const file = files[0]
       const result = await actions.onUploadFiles({
+        group: name,
         files,
       })
       setFieldValue(name, result[0], file)
@@ -196,7 +197,16 @@ const ImageField = ({
 
   const helperText = item.helperText
 
-  return uploadInProgress || syncLoading ? (
+  let showProgress = false
+
+  if(uploadInProgress) {
+    const nonGroupUpload = Object.keys(uploadStatus).find(filename => {
+      return uploadStatus[filename].group != name
+    })
+    if(!nonGroupUpload) showProgress = true
+  }
+
+  return showProgress || syncLoading ? (
     <div className={ classes.container }>
       <Grid container spacing={4}>
         <Grid item xs={12}>

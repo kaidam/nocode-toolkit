@@ -33,6 +33,7 @@ const reducers = {
     resetState(state)
     
     const {
+      group,
       files,
       method,
       url,
@@ -48,6 +49,7 @@ const reducers = {
 
     state.status = files.reduce((all, file) => {
       all[file.name] = {
+        group,
         startTime: new Date().getTime(),
         size: file.size,
         uploadedBytes: 0,
@@ -126,10 +128,12 @@ const loaders = {
 
 const sideEffects = {
   uploadFiles: ({
+    group,
     files,
   }) => wrapper('uploadFiles', async (dispatch, getState) => {
 
     dispatch(actions.startUploads({
+      group,
       files,
     }))
 
