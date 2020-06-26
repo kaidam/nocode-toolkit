@@ -1,6 +1,6 @@
 {
   "name": "@nocode-works/telemetry",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Code we use for tracking our backend services",
   "publishConfig": {
     "access": "public"
