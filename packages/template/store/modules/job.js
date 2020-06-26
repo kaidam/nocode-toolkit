@@ -10,6 +10,7 @@ import { job as initialState } from '../initialState'
 import snackbarActions from './snackbar'
 import uiActions from './ui'
 import dialogActions from './dialog'
+import driveActions from './drive'
 
 import nocodeSelectors from '../selectors/nocode'
 import jobSelectors from '../selectors/job'
@@ -220,12 +221,21 @@ const sideEffects = {
         id,
       } = await loaders.publish(getState, {})
       dispatch(dialogActions.open('publish', {}))
-      await dispatch(actions.waitForJob({
+      const job = await dispatch(actions.waitForJob({
         id,
       }))
-      dispatch(dialogActions.replace('publishSummary', {
-        id,
-      }))
+      // the publish job has told us we will need to upgrade
+      // drive access before it can continue
+      // (probably because we discovered links to other documentss)
+      if(job.result && job.result.action == 'driveAccess') {
+        dispatch(dialogActions.closeAll())
+        dispatch(driveActions.upgradeScope())
+      }
+      else {
+        dispatch(dialogActions.replace('publishSummary', {
+          id,
+        }))
+      }
     }    
   }),
 
