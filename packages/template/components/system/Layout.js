@@ -16,6 +16,7 @@ const DialogLoader = lazy(() => import(/* webpackChunkName: "ui" */ '../dialog/L
 const Layout = ({
   children,
   head,
+  favicon,
   material = false,
 }) => {
 
@@ -29,6 +30,8 @@ const Layout = ({
     after: useSelector(settingsSelectors.afterBodySnippetCode),
   }
 
+  favicon = favicon || 'images/favicon.png'
+
   return (
     <React.Fragment>
       <Header
@@ -39,7 +42,7 @@ const Layout = ({
         <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
         <meta name="format-detection" content="telephone=no"></meta>
         <meta name="viewport" content="user-scalable=0, initial-scale=1, minimum-scale=1, width=device-width, height=device-height" />
-        <link rel="shortcut icon" href="images/favicon.png" />
+        <link rel="shortcut icon" href={ favicon } />
         {
           (material || showUI) && <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
         }
