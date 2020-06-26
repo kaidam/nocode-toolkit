@@ -56,10 +56,11 @@ const getMessageBlock = (title, props) => {
   return block
 }
 
-const identifyUser = (user) => {
+const identifyUser = (user, opts) => {
   if(!bot) return
   user = tools.processUser(user)
   if(!user) return
+  if(opts && opts.existing) return
   const {
     id,
     name,

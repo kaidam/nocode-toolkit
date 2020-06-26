@@ -56,10 +56,10 @@ const initialise = (params) => {
   })
 }
 
-const identifyUser = (user) => {
+const identifyUser = (user, opts = {}) => {
   loopTrackers(tracker => {
     if(!tracker.identifyUser) return
-    tracker.identifyUser(user)
+    tracker.identifyUser(user, opts)
   })
 }
 
