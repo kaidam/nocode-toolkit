@@ -201,47 +201,51 @@ const EditableDocumentToolbar = ({
               }
             </div>
             <div className={ classes.filler }></div>
-            <div className={ classes.right }>
-              {
-                isFolder ? (
-                  <MenuButton
-                    getButton={ getAddButton }
-                    getItems={ getAddMenu }
+            {
+              !node.externallyLoaded && (
+                <div className={ classes.right }>
+                  {
+                    isFolder ? (
+                      <MenuButton
+                        getButton={ getAddButton }
+                        getItems={ getAddMenu }
+                      />
+                    ) : (
+                      <Button
+                        className={ classes.button }
+                        size="small"
+                        onClick={ onAddWidget }
+                      >
+                        <AddIcon className={ classes.icon } />&nbsp;&nbsp;Add
+                      </Button>
+                    )
+                  }
+                  
+                  <Divider
+                    className={ classes.divider }
+                    orientation="vertical"
                   />
-                ) : (
                   <Button
                     className={ classes.button }
                     size="small"
-                    onClick={ onAddWidget }
+                    onClick={ onRemove }
                   >
-                    <AddIcon className={ classes.icon } />&nbsp;&nbsp;Add
+                    <RemoveIcon className={ classes.icon } />&nbsp;&nbsp;Remove
                   </Button>
-                )
-              }
-              
-              <Divider
-                className={ classes.divider }
-                orientation="vertical"
-              />
-              <Button
-                className={ classes.button }
-                size="small"
-                onClick={ onRemove }
-              >
-                <RemoveIcon className={ classes.icon } />&nbsp;&nbsp;Remove
-              </Button>
-              <Divider
-                className={ classes.divider }
-                orientation="vertical"
-              />
-              <Button
-                className={ classes.button }
-                size="small"
-                onClick={ onOpenSettings }
-              >
-                <SettingsIcon className={ classes.icon } />&nbsp;&nbsp;Settings
-              </Button>
-            </div>
+                  <Divider
+                    className={ classes.divider }
+                    orientation="vertical"
+                  />
+                  <Button
+                    className={ classes.button }
+                    size="small"
+                    onClick={ onOpenSettings }
+                  >
+                    <SettingsIcon className={ classes.icon } />&nbsp;&nbsp;Settings
+                  </Button>
+                </div>
+              )
+            }
           </div>
         </div>
       </Toolbar>

@@ -331,17 +331,34 @@ const flatFormSchema = createSelector(
 
 const document = createSelector(
   routerSelectors.route,
+  routerSelectors.queryParams,
   nocodeSelectors.nodes,
   nocodeSelectors.annotations,
   nocodeSelectors.externals,
-  (route, nodes, annotations, externalMap) => {
-    const node = nodes[route.item]
+  (route, routeParams, nodes, annotations, externalMap) => {
+    let externalIds = []
+    let node = null
+
+    if(route.name == '_external_loader') {
+      node = {
+        id: routeParams.id,
+        type: 'document',
+        externallyLoaded: true,
+      }
+      externalIds = [`drive:${routeParams.id}.html`]
+    }
+    else {
+      node = nodes[route.item]
+      externalIds = route.externals || []
+    }
+
     if(!node) return {
       node: {},
       route,
       html: '',
     }
-    const externals = (route.externals || []).map(id => externalMap[id])
+
+    const externals = externalIds.map(id => externalMap[id])
     const annotation = annotations[node.id] || {}
 
     const {

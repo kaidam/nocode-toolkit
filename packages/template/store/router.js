@@ -30,10 +30,20 @@ const externalsMiddleware = ({
 
   const resolvePromises = toActivate.reduce((all, routeName) => {
     const route = routes.find(r => r.name == routeName)
-    if(!route || !route.externals) return all
-    const externals = route.externals.constructor === Array ?
-      route.externals :
-      [route.externals]
+    if(!route) return all
+
+    let externals = null
+
+    if(route.externals) externals = route.externals
+    else if(route.name == '_external_loader') {
+      externals = [`drive:${toState.params.id}.html`]
+    }
+
+    if(!externals) return all
+
+    externals = externals.constructor === Array ?
+      externals :
+      [externals]
 
     externals.map(external => {
       const config = nocodeSelectors.config(store.getState())
