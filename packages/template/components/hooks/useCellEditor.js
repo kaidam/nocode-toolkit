@@ -47,12 +47,6 @@ const useCellEditor = ({
     cellIndex,
   })
 
-  const onAdd = () => actions.onLayoutAdd({
-    content_id,
-    layout_id,
-    rowIndex: rowIndex+1,
-  })
-
   const getMoveMenuItems = useMoveMenu({
     layout,
     content_id,
@@ -73,10 +67,6 @@ const useCellEditor = ({
       icon: MoveIcon,
       items: moveItems,
     } : null, {
-      title: 'Add',
-      icon: AddIcon,
-      handler: onAdd,
-    }, {
       title: 'Delete',
       icon: DeleteIcon,
       handler: onDelete,
