@@ -15,7 +15,7 @@ const useWidgets = ({
 
   const widgets = useMemo(() => {
     const plugins = [
-      forms.stripe_payment_button && activePluginMap.stripe_payment_button ? {
+      forms.stripe_payment_button && activePluginMap.stripe ? {
         title: 'Payment Button',
         icon: icons.image,
         form: 'stripe_payment_button',
