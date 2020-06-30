@@ -115,13 +115,9 @@ const sideEffects = {
     // their stripe account is now connected
     if(params.trigger == 'stripe_connect') {
       dispatch(routerActions.navigateTo(route.name, {
-        dialog: 'settings',
-        driver: 'local',
-        type: 'settings',
-        location: `singleton:settings`,
-        id: 'settings',
-        section: 'plugins',
-        tab: 'stripe',
+        dialog_settings_panel: 'plugins',
+        dialog_settings_open: 'yes',
+        dialog_settings_tab: 'stripe',
       }))
       dispatch(setSuccess(`Your stripe account is now connected`))
     }

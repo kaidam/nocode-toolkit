@@ -18,7 +18,10 @@ const axiosWrapper = async ({
     return res.data
   } catch(err) {
     if (err.response) {
-      throw new Error(`${message}: ${err.response.status} ${err.response.data}`)
+      const errorMessage = err.response.data && err.response.data.error ?
+        err.response.data.error :
+        err.toString()
+      throw new Error(`${message}: ${err.response.status} ${errorMessage}`)
     }
     else {
       throw new Error(`${message}: ${e.toString()}`)
@@ -65,7 +68,7 @@ const getWebsiteSettings = async ({
   const data = await axiosWrapper({
     req: {
       method: 'get',
-      url: `${apiUrl}/builder/api/${websiteid}/content/settings`,
+      url: `${apiUrl}/builder/api/${websiteid}/content/local/settings/singleton:settings`,
       responseType: 'json',
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -90,7 +93,7 @@ const createWebsiteSettings = async ({
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      body: {
+      data: {
         driver: 'local',
         content_id: 'settings',
         location: 'singleton:settings',
@@ -110,13 +113,13 @@ const updateWebsiteSettings = async ({
 }) => {
   const resultData = await axiosWrapper({
     req: {
-      method: 'post',
-      url: `${apiUrl}/builder/api/${websiteid}/content/settings`,
+      method: 'put',
+      url: `${apiUrl}/builder/api/${websiteid}/content/local/settings/singleton:settings`,
       responseType: 'json',
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      body: {
+      data: {
         data,
       },
     },
@@ -139,7 +142,7 @@ const createWebsiteSecret = async ({
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
-      body: data,
+      data,
     },
     message: 'create website secret',
   })
@@ -342,6 +345,11 @@ const App = ({
         websiteid,
         data: connectionData,
       })
+
+      console.log('--------------------------------------------')
+      console.log('--------------------------------------------')
+      console.log('existing settings')
+      console.log(JSON.stringify(websiteSettings, null, 4))
 
       if(websiteSettings) {
         // save the stripe secret id into the website settings
