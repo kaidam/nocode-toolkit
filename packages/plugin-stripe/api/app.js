@@ -346,11 +346,6 @@ const App = ({
         data: connectionData,
       })
 
-      console.log('--------------------------------------------')
-      console.log('--------------------------------------------')
-      console.log('existing settings')
-      console.log(JSON.stringify(websiteSettings, null, 4))
-
       if(websiteSettings) {
         // save the stripe secret id into the website settings
         await updateWebsiteSettings({
