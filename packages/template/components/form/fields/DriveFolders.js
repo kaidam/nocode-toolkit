@@ -160,7 +160,7 @@ const DriveFoldersEditor = ({
               }}
             >
               {
-                sourceFolders.map((folder, i) => {
+                (sourceFolders || []).map((folder, i) => {
                   const isDefault = folder.id == defaultFolderId
                   return (
                     <MenuItem
