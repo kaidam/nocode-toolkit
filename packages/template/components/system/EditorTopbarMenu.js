@@ -102,7 +102,7 @@ const EditorTopbarMenu = ({
           getButton={ getGlobalOptionsButton }
         />
         <div className={ classes.iconContainer }>
-          <Tooltip title={ previewMode ? "Disable Preview" : "Enable Preview" } placement="bottom">
+          <Tooltip title={ previewMode ? "Disable Proof Mode" : "Enable Proof Mode" } placement="bottom">
             <IconButton
               size="small"
               onClick={ togglePreviewMode }

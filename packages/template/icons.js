@@ -89,6 +89,8 @@ import MenuIcon from '@material-ui/icons/Menu'
 import LockIcon from '@material-ui/icons/Lock'
 import WidgetIcon from '@material-ui/icons/Widgets'
 import GuideIcon from '@material-ui/icons/Subject'
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
 
 import UnsplashLogo from './components/icons/UnsplashLogo'
 import GoogleDriveLogo from './components/icons/GoogleDriveLogo'
@@ -179,6 +181,8 @@ const icons = {
   sort: SortIcon,
   home: HomeIcon,
   guide: GuideIcon,
+  previous: KeyboardArrowLeft,
+  next: KeyboardArrowRight,
 }
 
 export default icons
