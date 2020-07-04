@@ -28,6 +28,10 @@ const useStyles = makeStyles(theme => ({
   levelLinks: {
     display: 'flex',
     alignItems: 'center',
+    textDecoration: 'none',
+  },
+  noUnderline: {
+    textDecoration: 'none',
   },
 }))
 
@@ -92,6 +96,7 @@ const BackNextButtons = ({
       <Link
         name={ prevItem.route.name }
         path={ prevItem.route.path }
+        className={ classes.noUnderline }
       >
         <span className={ classes.levelLinks }><PrevIcon fontSize="large" /> { prevItem.name }</span>
       </Link>
@@ -104,6 +109,7 @@ const BackNextButtons = ({
       <Link
         name={ nextItem.route.name }
         path={ nextItem.route.path }
+        className={ classes.noUnderline }
       >
         <span className={ classes.levelLinks }>{ nextItem.name } <NextIcon fontSize="large" /></span>
       </Link>
