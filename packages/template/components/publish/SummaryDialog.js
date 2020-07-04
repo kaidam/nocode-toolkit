@@ -68,7 +68,8 @@ const useStyles = makeStyles(theme => ({
     marginLeft: theme.spacing(1),
   },
   textBlock: {
-    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(5),
+    marginBottom: theme.spacing(5),
     color: '#666',
   },
   urlBlock: {
@@ -140,7 +141,7 @@ const SummaryDialog = ({
   return (
     <Window
       open
-      size="lg"
+      size="sm"
       cancelTitle="Close"
       withCancel
       onCancel={ actions.onClose }
@@ -172,7 +173,7 @@ const SummaryDialog = ({
     >
       <div className={ classes.container }>
         <Grid container>
-          <Grid item xs={ 12 } sm={ 6 }>
+          <Grid item xs={ 12 }>
             <div className={ classes.header }>
               <SuccessIcon
                 className={`${classes.headerIcon} ${colorClassname}`}
@@ -183,8 +184,8 @@ const SummaryDialog = ({
               >
                 {
                   isJobLive ? 
-                    "Your website is now live" : 
-                    "Your website has been built"
+                    "Your Website is Now Published" : 
+                    "Your Website Preview is Ready"
                 }
               </Typography>
             </div>
@@ -204,7 +205,14 @@ const SummaryDialog = ({
                 onClick={ () => window.open(url) }
                 className={ classes.rightButton }
               >
-                <LookIcon />&nbsp;&nbsp;View Website
+                <LookIcon />
+                  {
+                isJobLive ? (
+                  " : View Live Website"
+                ) : (
+                  " : View Website Preview"
+                )
+              }
               </Button>
               <CopyToClipboard
                 text={ url }
@@ -220,94 +228,25 @@ const SummaryDialog = ({
                 </Button>
               </CopyToClipboard>    
             </div>
-            
-          </Grid>
-          <Grid item xs={ 12 } sm={ 6 }>
-            <div className={ classes.content }>
-              
-              <div className={ classes.header }>
-                <LookIcon
-                  className={`${classes.headerIcon}`}
-                />
-                <Typography
-                  variant="h6"
-                >
-                  { isJobLive ? 'Website' : 'Preview' } URL
-                </Typography>
-              </div>
 
-              <div className={ classes.urlBlock }>
-                <Typography className={ classes.link }><a target="_blank" href={ url }>{ url }</a></Typography>
-              </div>
+            <div className={ classes.textBlock }>
+              {
+                isJobLive ? (
+                  <React.Fragment>
+                    <Typography>
+                      Your website is now live!
+                    </Typography>
+                  </React.Fragment>
+                ) : (
+                  <React.Fragment>
+                    <Typography>
+                    Click the "Publish" button below and your build will go live. If you want to publish this build later or switch to a previous build click "History" in the main menu.
+                    </Typography>
+                  </React.Fragment>
+                )
+              }
+            </div>
 
-              <div className={ classes.buttons }>
-                <Button
-                  type="button"
-                  size="small"
-                  variant="contained"
-                  onClick={ () => window.open(url) }
-                  className={ classes.rightButton }
-                >
-                  <LookIcon />&nbsp;&nbsp;View Website
-                </Button>
-                <CopyToClipboard
-                  text={ url }
-                  onCopy={ () => actions.onSetSuccess(`url copied to clipboard`) }
-                >
-                  <Button
-                    type="button"
-                    size="small"
-                    variant="contained"
-                    className={ classes.rightButton }
-                  >
-                    <ClipboardIcon />&nbsp;&nbsp;Copy URL to clipboard
-                  </Button>
-                </CopyToClipboard>    
-              </div>
-
-              <div className={ classes.textBlock }>
-                {
-                  isJobLive ? (
-                    <React.Fragment>
-                      <Typography>
-                        Your website is now live at the address shown above.  You can give this address
-                        to your users so they can see your wonderful creation!
-                      </Typography>
-                    </React.Fragment>
-                  ) : (
-                    <React.Fragment>
-                      <Typography>
-                        This is your preview URL - you can use it to check everything is OK before publishing, 
-                        perhaps send the link to colleagues to check.
-                      </Typography>
-                    </React.Fragment>
-                  )
-                }
-              </div>
-
-              
-
-              <div className={ classes.textBlock }>
-                {
-                  isJobLive ? (
-                    <React.Fragment>
-                      <Typography>
-                        If you have made a mistake - you can publish a previous build by clicking the <strong>"History"</strong>
-                        button below.
-                      </Typography>
-                    </React.Fragment>
-                  ) : (
-                    <React.Fragment>
-                      <Typography>
-                        When you are happy that everything is correct, click the <strong>"Publish"</strong> button below and
-                        your website will be live.  If you want to publish this build later, you can use the <strong>"History"</strong> button to publish any of your builds.
-                      </Typography>
-                    </React.Fragment>
-                  )
-                }
-              </div>
-
-            </div>  
           </Grid>
         </Grid>
         
