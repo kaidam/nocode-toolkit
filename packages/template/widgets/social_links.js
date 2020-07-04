@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react'
+import React from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 
-const styles = {
+const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
     flexDirection: 'row',
@@ -14,25 +15,29 @@ const styles = {
     paddingLeft: '8px',
     paddingRight: '8px',
   },
+  smIcon: {
+    minWidth: '30px',
+    minHeight: '30px',
+  },
   facebook: {
-    color: '#4166B2',
+    fill: '#4166B2',
   },
   twitter: {
-    color: '#1995E0',
+    fill: '#1995E0',
   },
   linkedin: {
-    color: '#0277B5',
+    fill: '#0277B5',
   },
   youtube: {
-    color: '#FF0202',
+    fill: '#FF0202',
   },
   pinterest: {
-    color: '#e60023',
+    fill: '#e60023',
   },
   instagram: {
-    color: '#000000',
+    fill: '#000000',
   },
-}
+}))
 
 const LINKS = [
   'facebook',
@@ -50,16 +55,9 @@ const Render = ({
   cell,
 }) => {
   data = data || {}
-  useEffect(() => {
-    if(hasInjectedCSS) return
-    hasInjectedCSS = true
-    const link = document.createElement("link")
-    link.setAttribute("rel", "stylesheet")
-    link.setAttribute("href", "https://use.fontawesome.com/releases/v5.2.0/css/all.css")
-    link.setAttribute("crossOrigin", "anonymous")
-    document.body.appendChild(link)
-  }, [hasInjectedCSS])
   
+  const classes = useStyles()
+
   const links = LINKS
     .filter(name => data[name] ? true : false)
     .map((name, i) => {
@@ -68,19 +66,17 @@ const Render = ({
       const url = value.match(/^https?:\/\//i) ?
         value :
         `http://${value}`
-
+      
       return (
-        <div style={ styles.item } key={ i }>
+        <div className={ classes.item } key={ i }>
           <a href={ url }>
-            <span style={ styles[name] }>
-              <i className={`fab fa-${name} fa-2x`}></i>
-            </span>
+            <img src={ `images/${ name }.svg` } className={ classes.smIcon } />
           </a>
         </div>
       )
     })
   return (
-    <div style={ styles.container }>
+    <div className={ classes.container }>
       {
         links
       }
