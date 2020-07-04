@@ -240,7 +240,7 @@ const SummaryDialog = ({
                 ) : (
                   <React.Fragment>
                     <Typography>
-                    Click the "Publish" button below and your build will go live. If you want to publish this build later or switch to a previous build click "History" in the main menu.
+                    Click the "Publish" button below and your site will go live. If you want to publish this later or switch to a previous version click "History" in the main menu.
                     </Typography>
                   </React.Fragment>
                 )
