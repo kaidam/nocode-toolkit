@@ -17,6 +17,10 @@ import dialogSelectors from '../../store/selectors/dialog'
 import systemSelectors from '../../store/selectors/system'
 import jobSelectors from '../../store/selectors/job'
 
+import FacebookIcon from '@material-ui/icons/Facebook'
+import TwitterIcon from '@material-ui/icons/Twitter'
+import LinkedInIcon from '@material-ui/icons/LinkedIn'
+
 import Window from '../dialog/Window'
 
 import icons from '../../icons'
@@ -78,8 +82,32 @@ const useStyles = makeStyles(theme => ({
     color: '#666',
   },
   link: {
-    fontSize: '0.9em'
-  }
+    fontSize: '0.9em',
+  },
+  facebook: {
+    fill: '#4166B2',
+    padding: '4px',
+  },
+  twitter: {
+    fill: '#1995E0',
+    padding: '4px',
+  },
+  linkedin: {
+    fill: '#0277B5',
+    padding: '4px',
+  },
+  youtube: {
+    fill: '#FF0202',
+    padding: '4px',
+  },
+  pinterest: {
+    fill: '#e60023',
+    padding: '4px',
+  },
+  instagram: {
+    fill: '#000000',
+    padding: '4px',
+  },
 }))
 
 const SummaryDialog = ({
@@ -226,16 +254,36 @@ const SummaryDialog = ({
                 >
                   <ClipboardIcon />&nbsp;&nbsp;Copy URL to clipboard
                 </Button>
-              </CopyToClipboard>    
+              </CopyToClipboard>
             </div>
-
+            
             <div className={ classes.textBlock }>
               {
                 isJobLive ? (
                   <React.Fragment>
                     <Typography>
-                      Your website is now live!
+                      Your website is now live! Share it with the world.
                     </Typography>
+                    <div className={ classes.socialButtons }>
+                      <a target='_blank' href={ `https://www.facebook.com/sharer.php?u=` + encodeURIComponent(url) }>
+                        <FacebookIcon
+                          className={ classes.facebook }
+                          fontSize="large"
+                        />
+                      </a>
+                      <a target='_blank' href={ `https://twitter.com/intent/tweet?url=` + encodeURIComponent(url) }>
+                        <TwitterIcon
+                          className={ classes.twitter }
+                          fontSize="large"
+                        />
+                      </a>
+                      <a target='_blank' href={ `https://www.linkedin.com/shareArticle/?mini=true&url=` + encodeURIComponent(url) }>
+                        <LinkedInIcon
+                          className={ classes.linkedin }
+                          fontSize="large"
+                        />
+                      </a>
+                    </div>
                   </React.Fragment>
                 ) : (
                   <React.Fragment>
