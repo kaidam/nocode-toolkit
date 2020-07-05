@@ -270,7 +270,7 @@ const SummaryDialog = ({
                           className={ classes.facebook }
                           fontSize="large"
                         />
-                      </a>
+                        </a>
                       <a target='_blank' href={ `https://twitter.com/intent/tweet?url=` + encodeURIComponent(url) }>
                         <TwitterIcon
                           className={ classes.twitter }

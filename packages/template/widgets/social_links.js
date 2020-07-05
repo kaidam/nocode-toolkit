@@ -1,5 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
+import classnames from 'classnames'
+import icons from '../icons'
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -48,6 +50,15 @@ const LINKS = [
   'instagram',
 ]
 
+const IconMap = {
+  facebook: icons.facebook,
+  twitter: icons.twitter,
+  linkedin: icons.linkedin,
+  youtube: icons.youtube,
+  pinterest: icons.pinterest,
+  instagram: icons.instagram,
+}
+
 let hasInjectedCSS = false
 
 const Render = ({
@@ -66,11 +77,13 @@ const Render = ({
       const url = value.match(/^https?:\/\//i) ?
         value :
         `http://${value}`
-      
+      // Icon is now a React class
+      const Icon = IconMap[name]
+      const socialClasses = classnames(classes.smIcon, classes[name])
       return (
         <div className={ classes.item } key={ i }>
           <a href={ url }>
-            <img src={ `images/${ name }.svg` } className={ classes.smIcon } />
+            <Icon className={ socialClasses } />
           </a>
         </div>
       )

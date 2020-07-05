@@ -96,7 +96,12 @@ import UnsplashLogo from './components/icons/UnsplashLogo'
 import GoogleDriveLogo from './components/icons/GoogleDriveLogo'
 import GoogleDocsLogo from './components/icons/GoogleDocsLogo'
 import NocodeLogo from './components/icons/NocodeLogo'
-
+import FacebookIcon from '@material-ui/icons/Facebook'
+import TwitterIcon from '@material-ui/icons/Twitter'
+import LinkedInIcon from '@material-ui/icons/LinkedIn'
+import YouTubeIcon from '@material-ui/icons/YouTube'
+import InstagramIcon from '@material-ui/icons/Instagram'
+import PinterestIcon from '@material-ui/icons/Pinterest'
 
 const icons = {
   add: AddIcon,
@@ -183,6 +188,12 @@ const icons = {
   guide: GuideIcon,
   previous: KeyboardArrowLeft,
   next: KeyboardArrowRight,
+  facebook: FacebookIcon,
+  twitter: TwitterIcon,
+  linkedin: LinkedInIcon,
+  youtube: YouTubeIcon,
+  instagram: InstagramIcon,
+  pinterest: PinterestIcon,
 }
 
 export default icons
