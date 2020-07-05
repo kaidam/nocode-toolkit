@@ -1,7 +1,9 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import classnames from 'classnames'
 import icons from '../icons'
+import settingsSelectors from '@nocode-works/template/store/selectors/settings'
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -10,7 +12,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  item: {
+  icon: {
     display: 'inline-block',
     flex: 1,
     textAlign: 'center',
@@ -42,12 +44,12 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const LINKS = [
-  'facebook',
-  'twitter',
-  'linkedin',
-  'youtube',
-  'pinterest',
-  'instagram',
+  {icon: 'facebook', key: 'facebookUrl'},
+  {icon: 'twitter', key: 'twitterUrl'},
+  {icon: 'linkedin', key: 'linkedinUrl'},
+  {icon: 'youtube', key: 'youtubeUrl'},
+  {icon: 'pinterest', key: 'pinterestUrl'},
+  {icon: 'instagram', key: 'instagramUrl'},
 ]
 
 const IconMap = {
@@ -62,26 +64,25 @@ const IconMap = {
 let hasInjectedCSS = false
 
 const Render = ({
-  data,
-  cell,
 }) => {
-  data = data || {}
   
   const classes = useStyles()
+  
+  const settings = useSelector(settingsSelectors.settings)
 
   const links = LINKS
-    .filter(name => data[name] ? true : false)
-    .map((name, i) => {
-      const value = data[name]
-
+    .filter(item => settings[item.key] ? true : false)
+    .map((item, i) => {
+      const value = settings[item.key]
+      console.log(item)
       const url = value.match(/^https?:\/\//i) ?
         value :
         `http://${value}`
       // Icon is now a React class
-      const Icon = IconMap[name]
-      const socialClasses = classnames(classes.smIcon, classes[name])
+      const Icon = IconMap[item.icon]
+      const socialClasses = classnames(classes.smIcon, classes[item.icon])
       return (
-        <div className={ classes.item } key={ i }>
+        <div className={ classes.icon } key={ i }>
           <a href={ url }>
             <Icon className={ socialClasses } />
           </a>
@@ -101,35 +102,35 @@ const form = {
   id: 'social_links',
   title: 'Social Links',
   initialValues: {
-    facebook: '',
-    twitter: '',
-    linkedin: '',
-    youtube: '',
-    pinterest: '',
-    instagram: '',
+    facebookUrl: '',
+    twitterUrl: '',
+    linkedinUrl: '',
+    youtubeUrl: '',
+    pinterestUrl: '',
+    instagramUrl: '',
   },
   schema: [{
-    id: 'facebook',
+    id: 'facebookUrl',
     title: 'Facebook URL',
     helperText: 'The url of your Facebook profile',
   },{
-    id: 'twitter',
+    id: 'twitterUrl',
     title: 'Twitter URL',
     helperText: 'The url of your Twitter profile',
   },{
-    id: 'linkedin',
+    id: 'linkedinUrl',
     title: 'LinkedIn URL',
     helperText: 'The url of your LinkedIn profile',
   },{
-    id: 'youtube',
+    id: 'youtubeUrl',
     title: 'Youtube URL',
     helperText: 'The url of your Youtube profile',
   },{
-    id: 'pinterest',
+    id: 'pinterestUrl',
     title: 'Pinterest URL',
     helperText: 'The url of your Pinterest profile',
   },{
-    id: 'instagram',
+    id: 'instagramUrl',
     title: 'Instagram URL',
     helperText: 'The url of your Instagram profile',
   }],
