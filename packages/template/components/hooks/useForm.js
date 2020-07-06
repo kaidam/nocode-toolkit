@@ -129,7 +129,7 @@ const useForm = ({
       withSubmit
       submitDisabled={ isValid ? false : true }
       onSubmit={ onSubmit }
-      onCancel={ onCancel }
+      onCancel={ () => onCancel() }
     />
   ), [
     onCancel,

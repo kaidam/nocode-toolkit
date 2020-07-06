@@ -33,7 +33,6 @@ const ContentDialog = ({
 
 }) => {
 
-  
   const formWindow = useSelector(contentSelectors.formWindow)
   const classes = useStyles({
     minHeight: formWindow.minHeight,
