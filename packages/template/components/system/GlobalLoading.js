@@ -23,7 +23,6 @@ const useStyles = makeStyles(theme => createStyles({
     width: '600px',
     height: '300px',
     backgroundColor: '#ffffff',
-    border: '1px solid #e5e5e5',
     boxShadow: 'none',
     borderRadius: 20,
   },
