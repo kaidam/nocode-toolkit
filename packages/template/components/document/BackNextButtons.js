@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import Link from '../widgets/Link'
+import icons from '../../icons'
 
 import contentSelectors from '../../store/selectors/content'
 
@@ -23,8 +24,19 @@ const useStyles = makeStyles(theme => ({
   right: {
     flexGrow: 0,
     textAlign: 'right',
-  }
+  },
+  levelLinks: {
+    display: 'flex',
+    alignItems: 'center',
+    textDecoration: 'none',
+  },
+  noUnderline: {
+    textDecoration: 'none',
+  },
 }))
+
+const PrevIcon = icons.previous
+const NextIcon = icons.next
 
 const BackNextButtons = ({
   node,
@@ -84,8 +96,9 @@ const BackNextButtons = ({
       <Link
         name={ prevItem.route.name }
         path={ prevItem.route.path }
+        className={ classes.noUnderline }
       >
-        &lt;- { prevItem.name }
+        <span className={ classes.levelLinks }><PrevIcon fontSize="large" /> { prevItem.name }</span>
       </Link>
     )
   }
@@ -96,8 +109,9 @@ const BackNextButtons = ({
       <Link
         name={ nextItem.route.name }
         path={ nextItem.route.path }
+        className={ classes.noUnderline }
       >
-        { nextItem.name } -&gt;
+        <span className={ classes.levelLinks }>{ nextItem.name } <NextIcon fontSize="large" /></span>
       </Link>
     )
   }

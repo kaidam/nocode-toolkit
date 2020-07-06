@@ -17,7 +17,7 @@ const useStyles = makeStyles(theme => ({
     borderRadius,
     border: `1px solid ${theme.palette.secondary.main}`,
     backgroundColor: '#fff',
-    boxShadow: dropShadow ? '0px 5px 5px 0px rgba(0,0,0,0.3)' : '',
+    boxShadow: dropShadow ? '0px 5px 5px 0px rgba(0,0,0,0.5)' : '',
     padding,
   }),
 }))
@@ -41,7 +41,7 @@ const NocodeIconButton = ({
     dropShadow,
   })
   title = settingsButton ? `${title ? title + ' : ' : ''}Settings` : title
-  icon = settingsButton ? 'code' : icon
+  icon = settingsButton ? 'settings' : icon
   color = settingsButton ? 'secondary' : color
   const Icon = icons[icon]
   return (
