@@ -100,6 +100,7 @@ import TrendingUpIcon from '@material-ui/icons/TrendingUp'
 import PdfIcon from '@material-ui/icons/PictureAsPdf'
 import AnalyticsIcon from '@material-ui/icons/Equalizer'
 import Attachment from '@material-ui/icons/Attachment'
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
 
 import UnsplashLogo from './components/icons/UnsplashLogo'
 import GoogleDriveLogo from './components/icons/GoogleDriveLogo'
@@ -196,6 +197,7 @@ const icons = {
   account: AccountCircle,
   payments: PaymentsIcon,
   tendingUp: TrendingUpIcon,
+  shopping: ShoppingCartIcon,
   pdf: PdfIcon,
   analytics: AnalyticsIcon,
   sync: SyncIcon,

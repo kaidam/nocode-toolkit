@@ -43,6 +43,11 @@ const websiteData = createSelector(
   }
 )
 
+const websiteMeta = createSelector(
+  websiteData,
+  (data) => data.meta || {}
+)
+
 const websiteList = createSelector(
   websites,
   (websites) => {
@@ -75,6 +80,7 @@ const selectors = {
   config,
   dnsInfo,
   websiteData,
+  websiteMeta,
   websiteList,
   ownedWebsiteList,
   ...networkGroup('website', [

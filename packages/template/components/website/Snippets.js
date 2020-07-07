@@ -173,7 +173,7 @@ const SnippetGroup = ({
         <div className={ classes.addButton }>
           <Button
             size="small"
-            color="secondary"
+            color="primary"
             variant="contained"
             onClick={ onAdd }
           >

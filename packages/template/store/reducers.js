@@ -6,6 +6,7 @@ import { reducer as router } from './modules/router'
 import { reducer as snackbar } from './modules/snackbar'
 import { reducer as search } from './modules/search'
 import { reducer as document } from './modules/document'
+import { reducer as ecommerce } from './modules/ecommerce'
 
 import importPromises from './importer'
 
@@ -35,6 +36,7 @@ const reducers = {
   snackbar,
   search,
   document,
+  ecommerce,
   network: GetReducer('network'),
   system: GetReducer('system'),
   settings: GetReducer('settings'),

@@ -71,6 +71,10 @@ export const section = {
 
 }
 
+export const ecommerce = {
+  purchasedProductId: null,
+}
+
 export const job = {
   list: [],
   publishStatus: {},
@@ -114,6 +118,7 @@ const initialState = {
   website,
   system,
   content,
+  ecommerce,
   drive,
   unsplash,
   job,

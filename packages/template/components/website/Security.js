@@ -191,7 +191,7 @@ const SettingsSecurity = ({
   return (
     <>
       <Grid container spacing={ 4 }>
-        <Grid item xs={ 12 } sm={ 6 }>
+        <Grid item xs={ 12 } sm={ 12 } md={ 6 }>
           <Paper className={ classes.paper }>
             <Grid container spacing={ 0 }>
               <Grid item xs={ 12 }>
@@ -209,7 +209,7 @@ const SettingsSecurity = ({
             </Grid>
           </Paper>
         </Grid>
-        <Grid item xs={ 12 } md={ 6 }>
+        <Grid item xs={ 12 } sm={ 12 } md={ 6 }>
           {
             password_mode == "password" && (
               <Paper className={ classes.paper }>
