@@ -13,11 +13,7 @@ import snackbarActions from './snackbar'
 const prefix = 'website'
 const wrapper = networkWrapper.factory(prefix)
 
-const initialState = {
-  websites: [],
-  config: {},
-  dnsInfo: null,
-}
+import { website as initialState } from '../initialState'
 
 const reducers = {
   setWebsites: (state, action) => {
@@ -171,8 +167,6 @@ const sideEffects = {
     dispatch(snackbarActions.setSuccess(`custom domain deleted`))
     if(onComplete) onComplete()
   }),
-
-
 }
 
 const reducer = CreateReducer({

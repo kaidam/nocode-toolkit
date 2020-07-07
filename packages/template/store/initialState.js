@@ -12,6 +12,12 @@ export const system = {
   dnsInfo: null,
 }
 
+export const website = {
+  websites: [],
+  config: {},
+  dnsInfo: null,
+}
+
 export const ui = {
   loading: false,
   confirmWindow: null,
@@ -105,6 +111,7 @@ const initialState = {
   ui,
   settings,
   dialog,
+  website,
   system,
   content,
   drive,
