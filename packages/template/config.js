@@ -1,5 +1,6 @@
 import systemUtils from './utils/system'
 
+export const API = '/api/v1'
 export const GOOGLE_FULL_DRIVE_SCOPE = 'https://www.googleapis.com/auth/drive'
 export const GOOGLE_LOGIN = '/api/v1/auth/google'
 export const GOOGLE_UPGRADE_LOGIN = systemUtils.isNode ?

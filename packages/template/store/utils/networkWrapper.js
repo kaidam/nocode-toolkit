@@ -27,8 +27,13 @@ const networkWrapper = ({
   // whether to show a snackbar error if an error occurs
   snackbarError = true,
 
+  globalLoading = true,
+
   // auto-trigger uiActions.setLoading before and after
   autoLoading = false,
+
+  // should we actually throw any error to the caller
+  throwErrors = false,
 
 }) => async (dispatch, getState) => {
 
@@ -37,6 +42,10 @@ const networkWrapper = ({
       type: 'ui/setLoading',
       payload: autoLoading,
     })
+  }
+
+  if(globalLoading) {
+    dispatch(networkActions.setGlobalLoading(true))
   }
 
   if(before) {
@@ -52,6 +61,7 @@ const networkWrapper = ({
   dispatch(networkActions.startLoading(networkName))
 
   let result = null
+  let errorToThrow = null
 
   try {
     result = await handler(dispatch, getState)
@@ -67,6 +77,7 @@ const networkWrapper = ({
     if(errorHandler) await errorHandler(dispatch, getState, errorMessage)
     if(snackbarError) dispatch(snackbarActions.setError(errorMessage))
     result = null
+    errorToThrow = error
   }
 
   dispatch(networkActions.stopLoading(networkName))
@@ -80,6 +91,14 @@ const networkWrapper = ({
       type: 'ui/setLoading',
       payload: false,
     })
+  }
+
+  if(globalLoading) {
+    dispatch(networkActions.setGlobalLoading(null))
+  }
+
+  if(throwErrors && errorToThrow) {
+    throw errorToThrow
   }
 
   return result

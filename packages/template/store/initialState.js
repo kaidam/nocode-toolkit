@@ -73,6 +73,7 @@ export const job = {
 }
 
 export const network = {
+  globalLoading: null,
   loading: {},
   errors: {},
 }

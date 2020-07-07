@@ -46,6 +46,7 @@ const reducers = {
   job: GetReducer('job'),
   fileupload: GetReducer('fileupload'),
   layout: GetReducer('layout'),
+  website: GetReducer('website'),
   
   // finder: GetReducer('finder'),
   // content: GetReducer('content'),

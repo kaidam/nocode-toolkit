@@ -13,6 +13,7 @@ const importPromises = globals.isUIActivated() ?
     job: import(/* webpackChunkName: "ui" */ './modules/job'),
     fileupload: import(/* webpackChunkName: "ui" */ './modules/fileupload'),
     layout: import(/* webpackChunkName: "ui" */ './modules/layout'),
+    website: import(/* webpackChunkName: "ui" */ './modules/website'),
     
     // finder: import(/* webpackChunkName: "ui" */ './modules/finder'),
     // content: import(/* webpackChunkName: "ui" */ './modules/content'),

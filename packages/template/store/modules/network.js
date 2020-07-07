@@ -6,6 +6,9 @@ import { network as initialState } from '../initialState'
 const prefix = 'network'
 
 const reducers = {
+  setGlobalLoading: (state, action) => {
+    state.globalLoading = action.payload
+  },
   setLoading: (state, action) => {
     const {
       name,
