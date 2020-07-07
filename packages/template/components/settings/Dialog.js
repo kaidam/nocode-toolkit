@@ -197,7 +197,7 @@ const SettingsDialog = ({
 
 }) => {
 
-  const queryParams = useSelector(routerSelectors.queryParams)
+  const queryParams = useSelector(routerSelectors.params)
 
   const tab = queryParams[QUERY_NAMES.tab]
   const panel = queryParams[QUERY_NAMES.panel]

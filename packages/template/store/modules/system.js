@@ -189,7 +189,7 @@ const sideEffects = {
     }
 
     // check for initial snackbar message
-    const routerParams = routerSelectors.queryParams(getState())
+    const routerParams = routerSelectors.params(getState())
 
     if(routerParams.initialSnackbarMessage) {
       dispatch(snackbarActions.setSuccess(routerParams.initialSnackbarMessage))

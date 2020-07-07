@@ -1,7 +1,7 @@
 // main app router
 import React from 'react'
 import { useSelector } from 'react-redux'
-import routerSelectors from './store/selectors/router'
+import nocodeSelectors from './store/selectors/nocode'
 
 const ErrorPage = ({message}) => (
   <div>{ message }</div>
@@ -11,7 +11,7 @@ const Router = ({
   templates,
   children,
 }) => {
-  const route = useSelector(routerSelectors.route)
+  const route = useSelector(nocodeSelectors.route)
   
   if(!route) {
     return (

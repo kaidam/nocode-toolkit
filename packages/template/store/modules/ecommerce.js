@@ -47,7 +47,7 @@ const sideEffects = {
     const stripe_connect_url = `${document.location.protocol}//${document.location.host}${apiUrl(`/builder/ecommerce/connect_response`)}`
     const data = await handlers.post(`/builder/${websiteId}/ecommerce/connect`, {
       stripe_connect_url,
-      finalize_url: document.location.href.replace(document.location.search, ''),
+      finalize_url: document.location.href,
     })
     document.location = data.url
   }, {

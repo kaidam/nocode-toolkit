@@ -4,7 +4,6 @@ import uiActions from '../../store/modules/ui'
 import uiSelectors from '../../store/selectors/ui'
 import contentSelectors from '../../store/selectors/content'
 import nocodeSelectors from '../../store/selectors/nocode'
-import routerSelectors from '../../store/selectors/router'
 
 const useSectionTree = ({
   section,
@@ -26,7 +25,7 @@ const useSectionTree = ({
 
   const treeSelector = useMemo(contentSelectors.sectionTree, [])
   const tree = useSelector(state => treeSelector(state, section))
-  const ancestors = useSelector(routerSelectors.ancestorsWithRoute)
+  const ancestors = useSelector(nocodeSelectors.ancestorsWithRoute)
   const scrollToCurrentPage = useSelector(uiSelectors.scrollToCurrentPage)
 
   const childrenMap = useMemo(() => {

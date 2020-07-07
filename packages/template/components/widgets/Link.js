@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import utils from '../../utils/route'
 
 import routerActions from '../../store/modules/router'
-import routerSelectors from '../../store/selectors/router'
+import nocodeSelectors from '../../store/selectors/nocode'
 /*
 
   render a link to one of:
@@ -29,7 +29,7 @@ const NocodeLink = ({
   onClick,
   ...other
 }) => {
-  const routeMap = useSelector(routerSelectors.routeNameMap)
+  const routeMap = useSelector(nocodeSelectors.routeNameMap)
   const dispatch = useDispatch()
   const openPage = useCallback((e) => {
     if(url) {

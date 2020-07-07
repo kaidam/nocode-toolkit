@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import routerActions from '../../store/modules/router'
 import nocodeSelectors from '../../store/selectors/nocode'
-import routerSelectors from '../../store/selectors/router'
 import systemSelectors from '../../store/selectors/system'
 import driveActions from '../../store/modules/drive'
 
@@ -41,7 +40,7 @@ const DocumentBody = ({
   const dispatch = useDispatch()
 
   const showUI = useSelector(systemSelectors.showUI)
-  const routePathMap = useSelector(routerSelectors.routePathMap)
+  const routePathMap = useSelector(nocodeSelectors.routePathMap)
   const config = useSelector(nocodeSelectors.config)
   const tokenStatus = useSelector(systemSelectors.tokenStatus)
 

@@ -22,8 +22,8 @@ const sectionTree = () => createSelector(
   nocodeSelectors.nodes,
   nocodeSelectors.annotations,
   nocodeSelectors.locations,
-  routerSelectors.routeMap,
-  routerSelectors.route,
+  nocodeSelectors.routeMap,
+  nocodeSelectors.route,
   (_, name) => name,
   (sections, nodes, annotations, locations, routeMap, currentRoute, name) => {
     const getChildren = ({
@@ -113,8 +113,8 @@ const homeSingletonItem = createSelector(
   nocodeSelectors.nodes,
   nocodeSelectors.singletons,
   systemSelectors.website,
-  routerSelectors.routeNameMap,
-  routerSelectors.route,
+  nocodeSelectors.routeNameMap,
+  nocodeSelectors.route,
   (nodes, singletons, website, routeMap, currentRoute) => {
     const route = routeMap['root']
     const singleton = singletons['home']
@@ -208,7 +208,7 @@ const itemChildren = () => createSelector(
 // be a ghost folder and resolves into the section
 // if that is the case
 const itemRoute = () => createSelector(
-  routerSelectors.routeMap,
+  nocodeSelectors.routeMap,
   nocodeSelectors.locations,
   (_, params) => params,
   (routeMap, locations, {parentId, itemId} = {}) => {
@@ -330,8 +330,8 @@ const flatFormSchema = createSelector(
 )
 
 const document = createSelector(
-  routerSelectors.route,
-  routerSelectors.queryParams,
+  nocodeSelectors.route,
+  routerSelectors.params,
   nocodeSelectors.nodes,
   nocodeSelectors.annotations,
   nocodeSelectors.externals,
@@ -399,9 +399,9 @@ const getAncestors = ({
 }
 
 const routeAncestors = createSelector(
-  routerSelectors.route,
+  nocodeSelectors.route,
   nocodeSelectors.nodes,
-  routerSelectors.routePathMap,
+  nocodeSelectors.routePathMap,
   nocodeSelectors.config,
   (route, nodes, routePathMap, config) => getAncestors({
     route,
@@ -413,9 +413,9 @@ const routeAncestors = createSelector(
 
 // include the home item in the ancestors
 const fullRouteAncestors = createSelector(
-  routerSelectors.route,
+  nocodeSelectors.route,
   nocodeSelectors.nodes,
-  routerSelectors.routePathMap,
+  nocodeSelectors.routePathMap,
   nocodeSelectors.config,
   (route, nodes, routePathMap, config) => {
     const ancestors = getAncestors({
@@ -454,10 +454,10 @@ const routeBaseLocation = createSelector(
 )
 
 const routeChildren = createSelector(
-  routerSelectors.route,
+  nocodeSelectors.route,
   nocodeSelectors.nodes,
   nocodeSelectors.annotations,
-  routerSelectors.routeMap,
+  nocodeSelectors.routeMap,
   (route, nodes, annotations, routeMap) => {
     const item = nodes[route.item]
     const sortedChildIds = childrenUtils.sortChildren({

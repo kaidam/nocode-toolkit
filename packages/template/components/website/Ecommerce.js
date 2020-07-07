@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 
 import websiteSelectors from '../../store/selectors/website'
+import routerSelectors from '../../store/selectors/router'
 import ecommerceSelectors from '../../store/selectors/ecommerce'
 import ecommerceActions from '../../store/modules/ecommerce'
 
@@ -38,6 +39,7 @@ const SettingsEcommerce = ({
   const classes = useStyles()
   const dispatch = useDispatch()
 
+  const params = useSelector(routerSelectors.params)
   const stripeConnectData = useSelector(ecommerceSelectors.stripeConnectData)
 
   const onConnect = useCallback(() => {

@@ -3,7 +3,7 @@ import { createSelector } from 'reselect'
 import routerSelectors from './router'
 
 const dialogParams = createSelector(
-  routerSelectors.queryParams,
+  routerSelectors.params,
   (queryParams) => {
     return Object
       .keys(queryParams)
