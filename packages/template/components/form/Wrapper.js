@@ -8,6 +8,7 @@ const FormWrapper = ({
   initialValues,
   error,
   children = () => {},
+  validate,
   onSubmit,
 }) => {
   const [ showErrors, setShowErrors ] = useState(false)
@@ -20,6 +21,7 @@ const FormWrapper = ({
       initialValues={ useInitialValues }
       validationSchema={ validationSchema }
       validateOnMount
+      validate={ validate }
       onSubmit={ onSubmit }
     >
       {

@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography'
 
 import SimpleTable from '../table/SimpleTable'
 import DeleteConfirm from '../dialog/DeleteConfirm'
-import DomainsAddDialog from './DomainsAddDialog'
+import FormDialog from '../form/Dialog'
 
 import websiteSelectors from '../../store/selectors/website'
 import websiteActions from '../../store/modules/website'
@@ -52,7 +52,40 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(6),
     marginBottom: theme.spacing(6),
   },
+  addUrlForm: {
+    padding: theme.spacing(0),
+  },
+  addUrlText: {
+    marginTop: theme.spacing(2),
+  }
 }))
+
+const DOMAIN_INITIAL_VALUES = {
+  url: '',
+}
+
+const DOMAIN_SCHEMA = [{
+  id: 'url',
+  title: 'Domain',
+  helperText: 'Enter the domain your website will be published to',
+  inputProps: {
+    placeholder: 'mycoolwebsite.com',
+  },
+  validate: {
+    type: 'string',
+    methods: [
+      ['required', 'The domain is required'],
+    ],
+  }
+}]
+
+const validateUrlForm = (values) => {
+  const errors = {}
+  if(!values.url.match(/^(?!:\/\/)([a-zA-Z0-9-_]+\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\.[a-zA-Z]{2,11}?$/igm)){
+    errors.url = `Please enter a valid URL`
+  }
+  return errors
+}
 
 const getSubdomainError = (subdomain, defaultSubdomain) => {
   if(!subdomain.match(/^[\w-]+$/)) return `Only letters, numbers and dashes allowed`
@@ -75,7 +108,9 @@ const SettingsDomains = ({
   const [subdomain, setSubdomain] = useState(defaultSubdomain)
   const [addDialogOpen, setAddDialogOpen] = useState(false)
   const [deleteDialogUrl, setDeleteDialogUrl] = useState(null)
-  const [urls, setUrls] = useState([])
+
+  const ip = dnsInfo ? dnsInfo.address : ''
+  const urls = (website && website.meta ? website.meta.urls : []) || []
   
   const errorText = getSubdomainError(subdomain, defaultSubdomain)
   
@@ -87,7 +122,6 @@ const SettingsDomains = ({
     if(website.meta.subdomain) {
       setSubdomain(website.meta.subdomain || '')
     }
-    setUrls(website.meta.urls || [])
   }, [
     website
   ])
@@ -101,39 +135,28 @@ const SettingsDomains = ({
     website,
   ])
 
-  const onAddUrl = useCallback(({
+  const onAddUrl = useCallback(async ({
     url,
-    onComplete,
   }) => {
-    dispatch(websiteActions.addUrl({
+    const result = await dispatch(websiteActions.addUrl({
       id: website.id,
       url,
-      onComplete,
     }))
+    if(result) setAddDialogOpen(false)
   }, [
     website,
   ])
 
-  const onRemoveUrl = useCallback(({
-    url,
-    onComplete,
-  }) => {
-    dispatch(websiteActions.removeUrl({
+  const onRemoveUrl = useCallback(async () => {
+    const result = await dispatch(websiteActions.removeUrl({
       id: website.id,
-      url,
-      onComplete,
+      url: deleteDialogUrl,
     }))
+    if(result) setDeleteDialogUrl(null)
   }, [
+    deleteDialogUrl,
     website,
   ])
-
-  const onOpenAddDialog = useCallback(() => {
-    setAddDialogOpen(true)
-  }, [])
-
-  const onCloseAddDialog = useCallback(() => {
-    setAddDialogOpen(false)
-  }, [])
 
   const urlFields = [{
     title: 'URL',
@@ -156,7 +179,6 @@ const SettingsDomains = ({
               <Grid item xs={ 12 }>
                 <Typography variant="h6" gutterBottom>Subdomain</Typography>
               </Grid>
-          
               <Grid item xs={ 6 }>
                 <TextField
                   label="Subdomain"
@@ -218,7 +240,7 @@ const SettingsDomains = ({
                   size="small"
                   color="primary"
                   variant="contained"
-                  onClick={ onOpenAddDialog }
+                  onClick={ () => setAddDialogOpen(true) }
                 >
                   Add custom domain
                 </Button>
@@ -229,28 +251,44 @@ const SettingsDomains = ({
       </Grid>
       {
         addDialogOpen && (
-          <DomainsAddDialog
-            dnsInfo={ dnsInfo }
-            onSubmit={ url => {
-              onAddUrl({
-                url,
-                onComplete: onCloseAddDialog
-              })
+          <FormDialog
+            title="Add Domain"
+            size="md"
+            schema={ DOMAIN_SCHEMA }
+            initialValues={ DOMAIN_INITIAL_VALUES }
+            formProps={{
+              validate: validateUrlForm,
             }}
-            onClose={ onCloseAddDialog }
-          />
+            renderProps={{
+              spacing: 0,
+              theme: {
+                root: classes.addUrlForm,
+              }
+            }}
+            withCancel
+            onSubmit={ onAddUrl }
+            onCancel={ () => setAddDialogOpen(false) }
+          >
+            <div className={ classes.addUrlText }>
+              <Typography gutterBottom>
+                You must configure the DNS settings with your domain provider to make this work.
+              </Typography>
+              <Typography gutterBottom>
+                You can create a <strong>CNAME</strong> record that points to <strong>nocode.works</strong>
+              </Typography>
+              <Typography gutterBottom>
+                Or you can create an <strong>A</strong> record that points to <strong>{ ip }</strong>
+              </Typography>
+            </div>
+            
+          </FormDialog>
         )
       }
       {
         deleteDialogUrl && (
           <DeleteConfirm
             title="Remove Domain?"
-            onConfirm={ () => {
-              onRemoveUrl({
-                url: deleteDialogUrl,
-              })
-              setDeleteDialogUrl(null)
-            }}
+            onConfirm={ onRemoveUrl }
             onCancel={ () => setDeleteDialogUrl(null) }
           >
             <Typography>

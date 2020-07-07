@@ -10,8 +10,11 @@ const FormDialog = ({
   initialValues,
   error,
   loading,
+  children,
   onSubmit,
   onCancel,
+  renderProps = {},
+  formProps = {},
   ...windowProps
 }) => {
   return (
@@ -20,6 +23,7 @@ const FormDialog = ({
       initialValues={ initialValues }
       handlers={ handlers }
       onSubmit={ onSubmit }
+      { ...formProps }
     >
       {
         ({
@@ -50,7 +54,9 @@ const FormDialog = ({
                 touched={ touched }
                 showErrors={ showErrors }
                 onSubmit={ onSubmit }
+                { ...renderProps }
               />
+              { children }
             </Window>
           )
         }

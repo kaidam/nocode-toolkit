@@ -35,6 +35,9 @@ const networkWrapper = ({
   // should we actually throw any error to the caller
   throwErrors = false,
 
+  // if given - auto clear the error after this time (ms)
+  removeErrorAfter = 0,
+
 }) => async (dispatch, getState) => {
 
   if(autoLoading) {
@@ -74,6 +77,14 @@ const networkWrapper = ({
       name: networkName,
       value: errorMessage,
     }))
+    if(removeErrorAfter > 0) {
+      setTimeout(() => {
+        dispatch(networkActions.setError({
+          name: networkName,
+          value: '',
+        }))
+      }, removeErrorAfter)
+    }
     if(errorHandler) await errorHandler(dispatch, getState, errorMessage)
     if(snackbarError) dispatch(snackbarActions.setError(errorMessage))
     result = null

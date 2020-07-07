@@ -5,6 +5,7 @@ import networkWrapper from '../utils/networkWrapper'
 
 import {
   handlers,
+  getErrorMessage,
 } from '../utils/api'
 
 import networkActions from './network'
@@ -137,13 +138,12 @@ const sideEffects = {
   addUrl: ({
     id,
     url,
-    onComplete,
   }) => wrapper('addUrl', async (dispatch, getState) => {
 
     try {
       await handlers.post(`/websites/${id}/urls`, {url})
     } catch(e) {
-      const errorMessage = apiUtils.getErrorMessage(e)
+      const errorMessage = getErrorMessage(e)
       if(errorMessage.indexOf('Error: getaddrinfo ENOTFOUND') == 0) {
         throw new Error(`${url} doesn't exist, please retry with a working domain`)
       }
@@ -154,18 +154,17 @@ const sideEffects = {
     
     await dispatch(actions.get(id))
     dispatch(snackbarActions.setSuccess(`custom domain added`))
-    if(onComplete) onComplete()
+    return true
   }),
 
   removeUrl: ({
     id,
     url,
-    onComplete,
   }) => wrapper('removeUrl', async (dispatch, getState) => {
     await handlers.delete(`/websites/${id}/urls/${encodeURIComponent(url)}`)
     await dispatch(actions.get(id))
     dispatch(snackbarActions.setSuccess(`custom domain deleted`))
-    if(onComplete) onComplete()
+    return true
   }),
 }
 

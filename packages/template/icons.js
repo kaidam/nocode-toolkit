@@ -99,6 +99,7 @@ import VisibleIcon from '@material-ui/icons/Visibility'
 import TrendingUpIcon from '@material-ui/icons/TrendingUp'
 import PdfIcon from '@material-ui/icons/PictureAsPdf'
 import AnalyticsIcon from '@material-ui/icons/Equalizer'
+import Attachment from '@material-ui/icons/Attachment'
 
 import UnsplashLogo from './components/icons/UnsplashLogo'
 import GoogleDriveLogo from './components/icons/GoogleDriveLogo'
@@ -129,6 +130,7 @@ const icons = {
   folderopen: FolderOpenIcon,
   drag: UnfoldMoreIcon,
   document: DocumentIcon,
+  snippet: Attachment,
   item: DocumentIcon,
   drive: GoogleDriveLogo,
   docs: GoogleDocsLogo,

@@ -3,15 +3,19 @@ import Promise from 'bluebird'
 import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
 import { fileupload as initialState } from '../initialState'
-import apiUtils from '../utils/api'
+
 import networkWrapper from '../utils/networkWrapper'
-import uiActions from './ui'
+
+import {
+  apiUrl,
+  handlers,
+} from '../utils/api'
+
+import websiteSelectors from '../selectors/website'
 
 const prefix = 'fileupload'
 
 const wrapper = networkWrapper.factory(prefix)
-
-const getUploadUrl = (getState) => apiUtils.websiteUrl(getState, `/storage/upload`)
 
 const resetState = (state) => {
   state.inProgress = false
@@ -121,11 +125,6 @@ const getFileUrlQuery = (file) => {
   }).join('&')
 }
 
-const loaders = {
-  syncFiles: (getState, payload) => axios.post(apiUtils.websiteUrl(getState, `/storage/sync`), payload)
-    .then(apiUtils.process),
-}
-
 const sideEffects = {
   uploadFiles: ({
     group,
@@ -137,8 +136,9 @@ const sideEffects = {
       files,
     }))
 
-    const url = getUploadUrl(getState)
-
+    const websiteId = websiteSelectors.websiteId(getState())
+    const url = apiUrl(`/builder/${websiteId}/storage/upload`)
+    
     const results = await Promise.map(files, async file => apiUploader({
       url,
       file,
@@ -150,27 +150,24 @@ const sideEffects = {
       },
     }))
 
-    await dispatch(actions.reset())
-    return results  
+    return results
+  }, {
+    removeErrorAfter: 5000,
+    after: async (dispatch, getState) => {
+      await dispatch(actions.reset())
+    },
   }),
 
   syncFiles: ({
     driver,
     id,
   }) => wrapper('syncFiles', async (dispatch, getState) => {
-    dispatch(uiActions.setLoading({
-      transparent: true,
-      message: `uploading image`,
-    }))
-    const results = await loaders.syncFiles(getState, {
+    const websiteId = websiteSelectors.websiteId(getState())
+    const results = await handlers.post(`/builder/${websiteId}/storage/sync`, {
       driver,
       id,
     })
     return results  
-  }, {
-    after: async (dispatch, getState, error) => {
-      dispatch(uiActions.setLoading(false))
-    }
   })
 }
 

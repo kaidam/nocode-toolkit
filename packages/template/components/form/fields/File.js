@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid'
 import Button from '@material-ui/core/Button'
 import InputLabel from '@material-ui/core/InputLabel'
 import FormHelperText from '@material-ui/core/FormHelperText'
+import Typography from '@material-ui/core/Typography'
 
 import Actions from '../../../utils/actions'
 import Loading from '../../system/Loading'
@@ -57,6 +58,10 @@ const useStyles = makeStyles(theme => createStyles({
   button: {
     margin: theme.spacing(0.5),
     fontSize: '0.8em',
+  },
+  errorText: {
+    marginTop: theme.spacing(2),
+    color: 'red',
   }
 }))
 
@@ -102,7 +107,7 @@ const ImageField = ({
         group: name,
         files,
       })
-      setFieldValue(name, result[0], file)
+      if(result) setFieldValue(name, result[0], file)
     },
     multiple: false,
   })
@@ -138,7 +143,7 @@ const ImageField = ({
   const buttons = useMemo(() => {
 
     const local = {
-      title: 'Upload',
+      title: 'Choose File',
       help: 'Upload an image from your computer',
       icon: icons.upload,
       handler: onOpenUploader,
@@ -238,24 +243,41 @@ const ImageField = ({
             ) : null
           }
         </Grid>
-        <Grid item xs={12} sm={3}>
         {
-          value && value.url && isImage(value.url) ? 
-            (
-              <img className={ classes.image } src={ value.url } />
-            ) :
-            (
-              <div className={ classes.placeholder }></div>
-            )
+          item.placeholder != 'text' ? (
+            <Grid item xs={12} sm={3}>
+              {
+                value && value.url && isImage(value.url) ? 
+                  (
+                    <img className={ classes.image } src={ value.url } />
+                  ) :
+                  (
+                    <div className={ classes.placeholder }></div>
+                  )
+              }
+            </Grid>
+          ) : null
         }
-        </Grid>
-        <Grid item xs={12} sm={9}>
+        <Grid item xs={12} sm={item.placeholder == 'text' ? 12 : 9}>
           <div className={ classes.buttons }>
             { buttons }
           </div>
-          
+          {
+            value && value.url && item.placeholder == 'text' && (
+              <Typography variant="caption">
+                { value.url }
+              </Typography>
+            )
+          }
         </Grid>
         <Grid item xs={12}>
+          {
+            uploadError && (
+              <Typography className={ classes.errorText }>
+                { uploadError }
+              </Typography>
+            )
+          }
           <div {...getRootProps()}>
             <input {...getInputProps()} />
           </div>

@@ -100,8 +100,8 @@ const SettingsSecurity = ({
 
   const {
     password_mode,
-    password_users,
-    password_rules,
+    password_users = [],
+    password_rules = [],
   } = (website.meta || {})
 
   const onUpdateSecurity = useCallback(meta => {
