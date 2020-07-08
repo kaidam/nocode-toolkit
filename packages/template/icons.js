@@ -180,7 +180,6 @@ const icons = {
   alignRight: AlignRightIcon,
   people: PeopleIcon,
   code: CodeIcon,
-  plugin: PluginIcon,
   domain: DomainIcon,
   help: HelpIcon,
   save: SaveIcon,

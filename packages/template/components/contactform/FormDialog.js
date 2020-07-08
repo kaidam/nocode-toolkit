@@ -6,7 +6,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogActions from '@material-ui/core/DialogActions'
 import Button from '@material-ui/core/Button'
 import MaterialTextField from '@material-ui/core/TextField'
-import FIELDS from '../fields'
+import FIELDS from './fields'
 
 const TextField = ({
   field,

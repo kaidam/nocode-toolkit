@@ -14,9 +14,10 @@ import jobActions from './job'
 import uiActions from './ui'
 import snackbarActions from './snackbar'
 import routerActions from './router'
+import websiteActions from './website'
 import routerSelectors from '../selectors/router'
 import systemSelectors from '../selectors/system'
-import nocodeSelectors from '../selectors/nocode'
+import websiteSelectors from '../selectors/website'
 
 import { system as initialState } from '../initialState'
 
@@ -30,30 +31,17 @@ const wrapper = networkWrapper.factory(prefix, {
   snackbarError: false,
 })
 
-const snackbarWrapper = networkWrapper.factory(prefix, {
-  snackbarError: true,
-})
-
 const reducers = {
   setInitialiseCalled: (state, action) => {
     state.initialiseCalled = true
     state.initialised = true
     globals.setWindowInitialised()
   },
-  setConfig: (state, action) => {
-    state.config = action.payload
-  },
   setUser: (state, action) => {
     state.user = action.payload
   },
   setTokenStatus: (state, action) => {
     state.tokenStatus = action.payload
-  },
-  setWebsite: (state, action) => {
-    state.website = action.payload
-  },
-  setDnsInfo: (state, action) => {
-    state.dnsInfo = action.payload
   },
 }
 
@@ -72,19 +60,10 @@ const loaders = {
     loaders
   
   */
-  config: (getState) => axios.get(apiUtils.websiteUrl(getState, `/config`))
-    .then(apiUtils.process),
-
   user: () => axios.get(apiUtils.apiUrl(`/auth/status`))
     .then(apiUtils.process),
 
   tokenStatus: () => axios.get(apiUtils.apiUrl(`/auth/tokenStatus`))
-    .then(apiUtils.process),
-
-  website: (id) => axios.get(apiUtils.apiUrl(`/websites/${id}`))
-    .then(apiUtils.process),
-
-  dnsInfo: () => axios.get(apiUtils.apiUrl(`/websites/dnsInfo`))
     .then(apiUtils.process),
 
   /*
@@ -92,13 +71,7 @@ const loaders = {
     updaters
   
   */
-  updateWebsiteMeta: (id, data) => axios.put(apiUtils.apiUrl(`/websites/${id}/meta`), data)
-    .then(apiUtils.process),
-
   updateUserMeta: (data) => axios.put(apiUtils.apiUrl(`/auth/update`), data)
-    .then(apiUtils.process),
-
-  saveSecuritySettings: (id, data) => axios.put(apiUtils.apiUrl(`/websites/${id}/security`), data)
     .then(apiUtils.process),
 
   ensureSectionResources: (getState, {
@@ -141,13 +114,15 @@ const sideEffects = {
     // never run this twice
     if(systemSelectors.initialiseCalled(getState())) return
 
+    const websiteId = websiteSelectors.websiteId(getState())
+
     // load everything that is needed initially
     await Promise.all([
-      dispatch(actions.loadConfig()),
+      dispatch(websiteActions.loadConfig(websiteId)),
+      dispatch(websiteActions.get(websiteId)),
+      dispatch(websiteActions.loadDnsInfo()),
       dispatch(actions.loadUser()),
       dispatch(actions.loadTokenStatus()),
-      dispatch(actions.loadWebsite()),
-      dispatch(actions.loadDnsInfo()),
       dispatch(jobActions.getPublishStatus()),
     ])
 
@@ -175,7 +150,7 @@ const sideEffects = {
     if(library.initialise) {
       initialiseResult = await dispatch(library.initialise())
       if(initialiseResult.reload) {
-        dispatch(actions.loadWebsite())
+        dispatch(websiteActions.get(websiteId))
         await dispatch(jobActions.reload())
       }
     }
@@ -222,13 +197,6 @@ const sideEffects = {
     return result
   },
 
-  // merge data into the website meta reccord
-  updateWebsiteMeta: (data) => async (dispatch, getState) => {
-    const website = systemSelectors.website(getState())
-    await loaders.updateWebsiteMeta(website.id, data)
-    await dispatch(actions.loadWebsite())
-  },
-
   // merge data into the user meta reccord
   updateUserMeta: (data) => async (dispatch, getState) => {
     await loaders.updateUserMeta(data)
@@ -250,75 +218,6 @@ const sideEffects = {
     const data = await loaders.tokenStatus(getState)
     dispatch(actions.setTokenStatus(data))
   },
-
-  loadConfig: () => async (dispatch, getState) => {
-    const config = await loaders.config(getState)
-    dispatch(actions.setConfig(config))
-  },
-
-  loadWebsite: () => async (dispatch, getState) => {
-    const config = nocodeSelectors.config(getState())
-    const data = await loaders.website(config.websiteId)
-    data.meta = data.meta || {}
-    dispatch(actions.setWebsite(data))
-    return data
-  },
-
-  loadDnsInfo: () => async (dispatch, getState) => {
-    const data = await loaders.dnsInfo()
-    dispatch(actions.setDnsInfo(data))
-    return data
-  },
-
-  /*
-  
-    domains
-  
-  */
-  setSubdomain: (subdomain) => snackbarWrapper('setSubdomain', async (dispatch, getState) => {
-    const config = nocodeSelectors.config(getState())
-    await loaders.setSubdomain(config.websiteId, subdomain)
-    await dispatch(actions.loadWebsite())
-    dispatch(snackbarActions.setSuccess(`subdomain updated`))
-  }),
-
-  addUrl: ({
-    url,
-    onComplete,
-  }) => snackbarWrapper('addUrl', async (dispatch, getState) => {
-    const config = nocodeSelectors.config(getState())
-    try {
-      await loaders.addUrl(config.websiteId, url)
-    } catch(e) {
-      const errorMessage = apiUtils.getErrorMessage(e)
-      if(errorMessage.indexOf('Error: getaddrinfo ENOTFOUND') == 0) {
-        throw new Error(`${url} doesn't exist, please retry with a working domain`)
-      }
-      else {
-        throw e
-      }
-    }
-    await dispatch(actions.loadWebsite())
-    dispatch(snackbarActions.setSuccess(`custom domain added`))
-    if(onComplete) onComplete()
-  }),
-
-  removeUrl: ({
-    url,
-    onComplete,
-  }) => snackbarWrapper('removeUrl', async (dispatch, getState) => {
-    const config = nocodeSelectors.config(getState())
-    await loaders.removeUrl(config.websiteId, url)
-    await dispatch(actions.loadWebsite())
-    dispatch(snackbarActions.setSuccess(`custom domain deleted`))
-    if(onComplete) onComplete()
-  }),
-
-  saveSecuritySettings: (data) => snackbarWrapper('saveSecuritySettings', async (dispatch, getState) => {
-    const website = systemSelectors.website(getState())
-    await loaders.saveSecuritySettings(website.id, data)
-    await dispatch(actions.loadWebsite())
-  }),
 
   logout: ({
 

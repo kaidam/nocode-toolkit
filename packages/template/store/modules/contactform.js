@@ -4,7 +4,7 @@ import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
 
 import selectors from '../selectors/contactform'
-import fields from '../../components/contactformfields'
+import fields from '../../components/contactform/fields'
 
 import { ecommerce as initialState } from '../initialState'
 

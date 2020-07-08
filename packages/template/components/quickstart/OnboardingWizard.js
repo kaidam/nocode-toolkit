@@ -16,8 +16,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 
 import FocusElementOverlay from '../widgets/FocusElementOverlay'
 
-import systemSelectors from '../../store/selectors/system'
-import systemActions from '../../store/modules/system'
+import websiteSelectors from '../../store/selectors/website'
 
 import OnboardingContext from '../contexts/onboarding'
 
@@ -112,7 +111,7 @@ const OnboardingWizard = ({
   const classes = useStyles()
   const store = useStore()
   const dispatch = useDispatch()
-  const website = useSelector(systemSelectors.website)
+  const website = useSelector(websiteSelectors.websiteData)
 
   const theme = useTheme()
   const isBigScreen = useMediaQuery(theme.breakpoints.up('md'))
@@ -170,7 +169,7 @@ const OnboardingWizard = ({
         if(currentStep && currentStep.cleanup) {
           await currentStep.cleanup(store.dispatch, store.getState)
         }
-        await dispatch(systemActions.updateWebsiteMeta({
+        await dispatch(websiteActions.updateMeta(website.id, {
           onboardingActive: false,
         }))
       }

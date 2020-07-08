@@ -14,17 +14,17 @@ const useWidgets = ({
 
   const widgets = useMemo(() => {
     const plugins = [
-      forms.stripe_payment_button ? {
+      {
         title: 'Payment Button',
         icon: icons.shopping,
-        form: 'stripe_payment_button',
-      } : null,
-      forms.contactform  ? {
+        form: 'ecommerce',
+      },
+      {
         title: 'Contact Form',
         icon: icons.contact,
         form: 'contactform',
-      } : null
-    ].filter(i => i)
+      }
+    ]
 
     const snippetItems = snippets
       .map(snippet => {

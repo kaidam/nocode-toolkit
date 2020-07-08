@@ -39,6 +39,7 @@ const route = createSelector(
   routerName,
   (routes, name) => routes.find(r => r.name == name)
 )
+
 const fullRoute = createSelector(
   route,
   externals,

@@ -109,31 +109,3 @@ const useGlobalOptions = ({
 }
 
 export default useGlobalOptions
-
-/*
-
-  {
-      title: 'Layout',
-      icon: icons.layout,
-      handler: () => onOpenSettingsPanel('layout'),
-    }, 
-    '-',
-    {
-      title: 'Plugins',
-      icon: icons.plugin,
-      handler: () => onOpenSettingsPanel('plugins'),
-    }, {
-      title: 'Snippets',
-      icon: icons.code,
-      handler: () => onOpenSettingsPanel('snippets'),
-    },{
-      title: 'Security',
-      icon: icons.lock,
-      handler: () => onOpenSettingsPanel('security'),
-    },{
-      title: 'Domains',
-      icon: icons.domain,
-      handler: () => onOpenSettingsPanel('domain'),
-    },
-
-*/

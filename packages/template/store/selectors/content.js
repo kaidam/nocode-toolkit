@@ -4,8 +4,8 @@ import childrenUtils from '../../utils/children'
 import documentUtils from '../../utils/document'
 import nocodeSelectors from './nocode'
 import routerSelectors from './router'
-import systemSelectors from './system'
 import settingsSelectors from './settings'
+import websiteSelectors from './website'
 
 const DEFAULT_OBJECT = {}
 const DEFAULT_ARRAY = []
@@ -74,7 +74,7 @@ const section = () => createSelector(
   nocodeSelectors.sections,
   nocodeSelectors.annotations,
   nocodeSelectors.locations,
-  systemSelectors.website,
+  websiteSelectors.websiteData,
   (_, name) => name,
   (nodes, sections, annotations, locations, website, name) => {
     const section = sections[name]
@@ -112,7 +112,7 @@ const section = () => createSelector(
 const homeSingletonItem = createSelector(
   nocodeSelectors.nodes,
   nocodeSelectors.singletons,
-  systemSelectors.website,
+  websiteSelectors.websiteData,
   nocodeSelectors.routeNameMap,
   nocodeSelectors.route,
   (nodes, singletons, website, routeMap, currentRoute) => {

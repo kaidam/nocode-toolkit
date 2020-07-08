@@ -15,10 +15,8 @@ import Panels from './Panels'
 import Tabs from '../widgets/Tabs'
 import Domains from './Domains'
 import Security from './Security'
-import PluginInstall from './PluginInstall'
 import Snippets from './Snippets'
 
-import library from '../../library'
 import icons from '../../icons'
 
 const QUERY_NAMES = {
@@ -48,49 +46,6 @@ const PANELS = [{
       body: renderForm({
         schema: currentTab.schema,
       })
-    }
-  }
-}, {
-  id: 'plugins',
-  title: 'Plugins',
-  icon: icons.plugin,
-  render: ({
-    currentTabId,
-    activePluginMap,
-    renderForm,
-    onChangeTab,
-    onTogglePlugin,
-  }) => {
-    const pluginFormTabs = [{
-      id: 'install',
-      title: 'Activate Plugins',
-    }].concat(
-      library.plugins
-        .filter(plugin => plugin.settings ? true : false)
-        .filter(plugin => activePluginMap[plugin.id] ? true : false)
-        .reduce((all, plugin) => {
-          return all.concat(plugin.settings.tabs)
-        }, [])
-    )
-    const currentTab = pluginFormTabs.find(tab => tab.id == currentTabId) || pluginFormTabs[0]
-    return {
-      header: (
-        <Tabs
-          tabs={ pluginFormTabs }
-          current={ currentTab.id }
-          onChange={ onChangeTab }
-        />
-      ),
-      body: currentTab.id == 'install' ?
-        (
-          <PluginInstall
-            active={ activePluginMap }
-            onToggle={ onTogglePlugin }
-          />
-        ) :
-        renderForm({
-          schema: currentTab.schema,
-        })
     }
   }
 }, {

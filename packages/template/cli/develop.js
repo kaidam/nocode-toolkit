@@ -97,7 +97,6 @@ const Develop = ({
 
   app.all('/builder/api/:id/*', requestProxy)
   app.all('/api/v1/*', requestProxy)
-  app.all('/plugin/*', requestProxy)
 
   PreviewServer({
     app,

@@ -1,7 +1,7 @@
 import Render from '../components/ecommerce/Wrapper'
 
 const form = {
-  id: 'stripe_payment_button',
+  id: 'ecommerce',
   title: 'Payment Button',
   initialValues: {
     name: '',
@@ -68,17 +68,11 @@ const form = {
   }],
 }
 
-const widget = {
+const widget = () => ({
   id: 'ecommerce',
   title: 'Ecommerce Button',
   Render,
   form,
-  // we should not show the payment button if
-  // there is not a connected stripe account
-  isActive: (settings) => {
-    if(!settings || !settings.stripe) return false
-    return settings.stripe.connected ? true : false
-  },
-}
+})
 
 export default widget

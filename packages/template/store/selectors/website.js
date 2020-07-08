@@ -45,7 +45,7 @@ const websiteData = createSelector(
 
 const websiteMeta = createSelector(
   websiteData,
-  (data) => data.meta || {}
+  (data) => data && data.meta ? data.meta : {}
 )
 
 const websiteList = createSelector(

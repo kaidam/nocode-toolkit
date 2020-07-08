@@ -9,7 +9,6 @@ const library = {
   },
   components: {},
   quickstarts: [],
-  plugins: [],
   widgets: [],
   forms: {},
   autoSnackbar: true,

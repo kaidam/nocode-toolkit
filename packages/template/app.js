@@ -3,6 +3,7 @@ import React, { lazy, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import systemSelectors from './store/selectors/system'
+import websiteSelectors from './store/selectors/website'
 import uiSelectors from './store/selectors/ui'
 
 import Suspense from './components/system/Suspense'
@@ -13,7 +14,6 @@ import globals from './utils/globals'
 
 import Router from './router'
 import ThemeContainer from './theme/container'
-import library from './library'
 
 const GlobalLoading = lazy(() => import(/* webpackChunkName: "ui" */ './components/system/GlobalLoading'))
 const QuickstartDialog = lazy(() => import(/* webpackChunkName: "ui" */ './components/quickstart/Dialog'))
@@ -33,7 +33,7 @@ const App = ({
   const initialised = useSelector(systemSelectors.initialised)
   const initialiseError = useSelector(systemSelectors.initialiseError)
   const quickstartWindow = useSelector(uiSelectors.quickstartWindow)
-  const website = useSelector(systemSelectors.website)
+  const website = useSelector(websiteSelectors.websiteData)
 
   // this allows us to customize the loading message
   // as things are initialised
@@ -44,14 +44,6 @@ const App = ({
       if(globals.isUIActivated()) {
         await actions.initialise()  
       }
-      // now the UI is active - we can
-      // initialize each of the plugins
-      const plugins = library.plugins || []
-      plugins.forEach(plugin => {
-        if(plugin.actions && plugin.actions.initialize) {
-          dispatch(plugin.actions.initialize())
-        }
-      })
     }
     handler()
   }, [initialised])

@@ -1,13 +1,12 @@
 import { createSelector } from 'reselect'
 import library from '../../library'
-import nocodeSelectors from './nocode'
+import websiteSelectors from './website'
 
 const DEFAULT_ARRAY = []
 const DEFAULT_OBJECT = []
 
 // values we inject into the default settings
 const DEFAULT_SETTINGS = {
-  activePluginMap: {},
   snippets: [],
 }
 
@@ -19,56 +18,36 @@ const DEFAULT_LIBRARY_SETTINGS = {
 }
 
 const settingsValue = createSelector(
-  nocodeSelectors.nodes,
-  nodes => nodes.settings || DEFAULT_OBJECT,
+  websiteSelectors.websiteMeta,
+  meta => meta.settings || DEFAULT_OBJECT,
 )
 
-const plugins = state => library.plugins
 const libraryWidgets = state => library.widgets
 const libraryForms = state => library.forms
 const librarySettings = state => library.settings || DEFAULT_LIBRARY_SETTINGS
 
 const getTabSchema = (tabs) => tabs.reduce((all, tab) => all.concat(tab.schema), [])
 
-// combine the library settings and plugins tabs into a single flat
-// schema used to make a valiation object for the settings dialog form
 const schema = createSelector(
   librarySettings,
-  plugins,
-  (library, plugins) => {
-    return plugins
-      .filter(plugin => plugin.settings)
-      .reduce((all, plugin) => {
-        return all.concat(getTabSchema(plugin.settings.tabs))
-      }, getTabSchema(library.tabs))
-  }
+  (library) => getTabSchema(library.tabs)
 )
 
 // always use the combined settings so we get some defaults if
 // the website has none
 const settings = createSelector(
   librarySettings,
-  plugins,
   settingsValue,
-  (library, plugins, values) => {
-    const pluginValues =  plugins
-      .filter(plugin => plugin.settings)
-      .reduce((all, plugin) => Object.assign({}, all, plugin.settings.initialValues), {})
-    return Object.assign(DEFAULT_SETTINGS, library.initialValues, pluginValues, values)
+  (library, values) => {
+    return Object.assign(DEFAULT_SETTINGS, library.initialValues, values)
   }
 )
 
 const widgets = createSelector(
   settings,
-  plugins,
   libraryWidgets,
-  (settings, plugins, widgets) => {
-    const all = plugins.reduce((all, plugin) => {
-      return plugin.widgets ?
-        all.concat(plugin.widgets) :
-        all
-    }, widgets)
-    return all.filter(widget => {
+  (settings, widgets) => {
+    return widgets.filter(widget => {
       return widget.isActive ?
         widget.isActive(settings) :
         true
@@ -111,17 +90,6 @@ const widgetTitles = createSelector(
       return all
     }, {})
   }
-)
-
-const activePluginMap = createSelector(
-  settingsValue,
-  data => data.activePluginMap || DEFAULT_OBJECT
-)
-
-const activePlugins = createSelector(
-  activePluginMap,
-  plugins,
-  (activeMap, plugins) => plugins.filter(plugin => activeMap[plugin.id] ? true : false)
 )
 
 const snippets = createSelector(
@@ -167,8 +135,6 @@ const selectors = {
   settings,
   settingsValue,
   schema,
-  activePluginMap,
-  activePlugins,
   librarySettings,
   libraryWidgets,
   widgets,

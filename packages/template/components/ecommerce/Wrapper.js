@@ -5,6 +5,8 @@ import actions from '../../store/modules/ecommerce'
 import Button from './Button'
 import Confirmation from './Confirmation'
 
+import ecommerceSelectors from '../../store/selectors/ecommerce'
+
 const CURRENCY_SYMBOLS = {
   GBP: '£',
   USD: '$',
@@ -43,7 +45,7 @@ const PaymentButtonWrapper = ({
       ...data,
     }))
   }
-  const purchasedProductId = useSelector(state => state.stripe.purchasedProductId)
+  const purchasedProductId = useSelector(ecommerceSelectors.purchasedProductId)
   let confirmWindow = null
   if(purchasedProductId == cell.id) {
     const onClose = () => {

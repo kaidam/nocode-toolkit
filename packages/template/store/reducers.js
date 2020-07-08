@@ -8,6 +8,7 @@ import { reducer as search } from './modules/search'
 import { reducer as document } from './modules/document'
 import { reducer as ecommerce } from './modules/ecommerce'
 import { reducer as contactform } from './modules/contactform'
+import { reducer as website } from './modules/website'
 
 import importPromises from './importer'
 
@@ -39,6 +40,7 @@ const reducers = {
   document,
   ecommerce,
   contactform,
+  website,
   network: GetReducer('network'),
   system: GetReducer('system'),
   settings: GetReducer('settings'),
@@ -50,7 +52,6 @@ const reducers = {
   job: GetReducer('job'),
   fileupload: GetReducer('fileupload'),
   layout: GetReducer('layout'),
-  website: GetReducer('website'),
 }
 
 export default reducers

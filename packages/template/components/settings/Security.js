@@ -21,6 +21,7 @@ import systemSelectors from '../../store/selectors/system'
 import contentActions from '../../store/modules/content'
 import uiActions from '../../store/modules/ui'
 import systemActions from '../../store/modules/system'
+import websiteSelectors from '../../store/selectors/website'
 
 import icons from '../../icons'
 
@@ -89,7 +90,7 @@ const SettingsSecurity = ({
     rules,
   ])
 
-  const website = useSelector(systemSelectors.website)
+  const website = useSelector(websiteSelectors.websiteData)
 
   useEffect(() => {
     const {

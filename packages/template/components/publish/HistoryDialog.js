@@ -11,8 +11,8 @@ import Actions from '../../utils/actions'
 
 import jobActions from '../../store/modules/job'
 import dialogActions from '../../store/modules/dialog'
-import systemSelectors from '../../store/selectors/system'
 import jobSelectors from '../../store/selectors/job'
+import websiteSelectors from '../../store/selectors/website'
 
 import Window from '../dialog/Window'
 import Loading from '../system/Loading'
@@ -91,7 +91,7 @@ const HistoryDialog = ({
 
 }) => {
   const classes = useStyles()
-  const config = useSelector(systemSelectors.config)
+  const config = useSelector(websiteSelectors.config)
   const publishStatus = useSelector(jobSelectors.publishStatus)
   const data = useSelector(jobSelectors.list)
   const loading = useSelector(jobSelectors.loading.loadHistory)

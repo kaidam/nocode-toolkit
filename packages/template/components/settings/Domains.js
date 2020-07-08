@@ -12,8 +12,8 @@ import SimpleTable from '../table/SimpleTable'
 import Actions from '../../utils/actions'
 
 import nocodeSelectors from '../../store/selectors/nocode'
-import systemSelectors from '../../store/selectors/system'
 import systemActions from '../../store/modules/system'
+import websiteSelectors from '../../store/selectors/website'
 
 import DomainsAddDialog from './DomainsAddDialog'
 import DomainsDeleteDialog from './DomainsDeleteDialog'
@@ -64,8 +64,8 @@ const SettingsDomains = ({
   })
 
   const config = useSelector(nocodeSelectors.config)
-  const systemConfig = useSelector(systemSelectors.config)
-  const website = useSelector(systemSelectors.website)
+  const systemConfig = useSelector(websiteSelectors.config)
+  const website = useSelector(websiteSelectors.websiteData)
   
   const defaultSubdomain = `website-${config.websiteId}`
   const [subdomain, setSubdomain] = useState(defaultSubdomain)
