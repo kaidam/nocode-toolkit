@@ -10,17 +10,16 @@ const useWidgets = ({
 } = {}) => {
   
   const forms = useSelector(settingsSelectors.forms)
-  const activePluginMap = useSelector(settingsSelectors.activePluginMap)
   const snippets = useSelector(settingsSelectors.pageSnippets)
 
   const widgets = useMemo(() => {
     const plugins = [
-      forms.stripe_payment_button && activePluginMap.stripe ? {
+      forms.stripe_payment_button ? {
         title: 'Payment Button',
-        icon: icons.image,
+        icon: icons.shopping,
         form: 'stripe_payment_button',
       } : null,
-      forms.contactform  && activePluginMap.contactform ? {
+      forms.contactform  ? {
         title: 'Contact Form',
         icon: icons.contact,
         form: 'contactform',
@@ -97,11 +96,11 @@ const useWidgets = ({
         icon: icons.text,
         items: text,
       },
-      plugins.length > 0 ? {
+      {
         title: 'Plugins',
         icon: icons.plugin,
         items: plugins,
-      } : null,
+      },
       snippetItems.length > 0 ? {
         title: 'Snippets',
         icon: icons.code,
@@ -110,7 +109,6 @@ const useWidgets = ({
     ].filter(i => i)
   }, [
     forms,
-    activePluginMap,
     snippets,
   ])
 

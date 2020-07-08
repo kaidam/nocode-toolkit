@@ -71,6 +71,12 @@ export const section = {
 
 }
 
+export const contactform = {
+  formId: null,
+  values: {},
+  errors: {},
+}
+
 export const ecommerce = {
   purchasedProductId: null,
 }
@@ -118,6 +124,7 @@ const initialState = {
   website,
   system,
   content,
+  contactform,
   ecommerce,
   drive,
   unsplash,

@@ -7,6 +7,7 @@ import { reducer as snackbar } from './modules/snackbar'
 import { reducer as search } from './modules/search'
 import { reducer as document } from './modules/document'
 import { reducer as ecommerce } from './modules/ecommerce'
+import { reducer as contactform } from './modules/contactform'
 
 import importPromises from './importer'
 
@@ -37,6 +38,7 @@ const reducers = {
   search,
   document,
   ecommerce,
+  contactform,
   network: GetReducer('network'),
   system: GetReducer('system'),
   settings: GetReducer('settings'),
@@ -49,13 +51,6 @@ const reducers = {
   fileupload: GetReducer('fileupload'),
   layout: GetReducer('layout'),
   website: GetReducer('website'),
-  
-  // finder: GetReducer('finder'),
-  // content: GetReducer('content'),
-  // job: GetReducer('job'),
-  // fileupload: GetReducer('fileupload'),
-  // document: GetReducer('document'),
-  // section: GetReducer('section'),
 }
 
 export default reducers
