@@ -54,60 +54,61 @@ const sideEffects = {
     globalLoading: false,
   }),
 
-  // // for purchase we create the line item,
-  // // calculate the redirect URL for success
-  // // post to the session endpoint to get our session id
-  // // use the Stripe library to redirect to the session
-  // //
-  // // the redirect URL will trigger the confirmation window
-  // purchase: ({
-  //   id,
-  //   name,
-  //   description,
-  //   price,
-  //   currency,
-  // }) => async (dispatch, getState) => {
-  //   try {
-  //     const apiUrl = selectors.apiUrl(getState())
-  //     const keyData = await axios.get(`${apiUrl}/publicKey`)
-  //       .then(res => res.data)
-  //     const publicKey = keyData.publicKey
-  //     const line_items = [{
-  //       name,
-  //       description,
-  //       quantity: 1,
-  //       amount: price * 100,
-  //       currency: currency.toLowerCase(),
-  //     }]
+  // for purchase we create the line item,
+  // calculate the redirect URL for success
+  // post to the session endpoint to get our session id
+  // use the Stripe library to redirect to the session
+  //
+  // the redirect URL will trigger the confirmation window
+  purchase: ({
+    id,
+    name,
+    description,
+    price,
+    currency,
+  }) => wrapper('purchase', async (dispatch, getState) => {
+    const websiteId = websiteSelectors.websiteId(getState())
+    const { publicKey } = await handlers.get(`/builder/ecommerce/public_key`)
+    const line_items = [{
+      name,
+      description,
+      quantity: 1,
+      amount: price * 100,
+      currency: currency.toLowerCase(),
+    }]
 
-  //     const redirect_query = `?trigger=stripe_success&product_id=${id}`
+    const redirect_query = `?trigger=stripe_success&product_id=${id}`
 
-  //     const success_url = document.location.search ? 
-  //       document.location.href.replace(document.location.search, redirect_query) :
-  //       document.location.href + redirect_query
+    const success_url = document.location.search ? 
+      document.location.href.replace(document.location.search, redirect_query) :
+      document.location.href + redirect_query
 
-  //     const cancel_url = document.location.search ? 
-  //       document.location.href.replace(document.location.search, '') :
-  //       document.location.href
-      
-  //     const session_data = await axios.post(`${apiUrl}/session`, {
-  //       line_items,
-  //       success_url,
-  //       cancel_url,
-  //     })
-  //       .then(res => res.data)
+    const cancel_url = document.location.search ? 
+      document.location.href.replace(document.location.search, '') :
+      document.location.href
+    
+    const session_data = await handlers.post(`/builder/${websiteId}/ecommerce/session`, {
+      line_items,
+      success_url,
+      cancel_url,
+    })
 
-  //     var stripe = Stripe(publicKey)
+    console.log('--------------------------------------------')
+    console.log('--------------------------------------------')
+    console.log(JSON.stringify(session_data, null, 4))
+    console.log(publicKey)
+    return
 
-  //     stripe.redirectToCheckout({
-  //       sessionId: session_data.id
-  //     }).then(function (result) {
-  //       dispatch(snackbarActions.setError('there was an error: ' + result.error.message))
-  //     })
-  //   } catch(e) {
-  //     dispatch(snackbarActions.setError('there was an error: ' + e.toString()))
-  //   }
-  // },
+    var stripe = Stripe(publicKey)
+
+    stripe.redirectToCheckout({
+      sessionId: session_data.id
+    }).then(function (result) {
+      dispatch(snackbarActions.setError('there was an error: ' + result.error.message))
+    })
+  }, {
+    globalLoading: false,
+  }),
 
   // initialize: () => async (dispatch, getState) => {
   //   const params = selectors.router.queryParams(getState())
