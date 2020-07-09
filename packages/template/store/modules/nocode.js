@@ -85,7 +85,12 @@ const sideEffects = {
 
       // this is likely a permissions error
       if(err.response.status == 404) {
-        const documentURL = `https://docs.google.com/document/d/${id}/edit`
+
+        const documentId = id.match(/^drive:.*\.html$/) ?
+          id.replace(/^drive:/, '').replace(/\.html$/, '') :
+          id
+
+        const documentURL = `https://docs.google.com/document/d/${documentId}/edit`
         const openURL = `https://accounts.google.com/ServiceLoginAuth?continue=${encodeURIComponent(documentURL)}`
 
         data = `
