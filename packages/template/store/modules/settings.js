@@ -7,6 +7,7 @@ import jobActions from './job'
 import snackbarActions from './snackbar'
 
 import settingsSelectors from '../selectors/settings'
+import routerActions from '../modules/router'
 
 import networkWrapper from '../utils/networkWrapper'
 
