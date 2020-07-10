@@ -84,7 +84,6 @@ const RULE_SCHEMA = [{
   }
 }]
 
-
 const SettingsSecurity = ({
   
 }) => {
@@ -99,7 +98,7 @@ const SettingsSecurity = ({
   const [ deletingRule, setDeletingRule ] = useState(null)
 
   const {
-    password_mode,
+    password_mode = 'off',
     password_users = [],
     password_rules = [],
   } = (website.meta || {})

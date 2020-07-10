@@ -4,7 +4,7 @@ const path = require('path')
 const archiver = require('archiver')
 const Build = require('./build')
 const loggers = require('./loggers')
-
+const esm = require("esm")(module)
 const Api = require('./api')
 
 // load the template and version data from package.json
@@ -27,6 +27,7 @@ const getTemplateData = async ({
     name,
     version,
     description = '',
+    nocode = {},
   } = packageData
 
   if(!name) {
@@ -37,11 +38,19 @@ const getTemplateData = async ({
     throw new Error(`no version found in your package.json file`)
   }
 
+  let settings = {}
+
+  // convert the settings es6 export into JSON
+  if(nocode.settings) {
+    settings = esm(`${process.cwd()}/${nocode.settings}`)
+  }
+
   return {
     name,
     flags: '',
     version,
     templateMeta: {},
+    settings,
     versionMeta: {
       description,
     },
@@ -135,6 +144,7 @@ const publishTemplate = async ({
   logger,
   data,
 }) => {
+
   const api = Api({
     options,
   })
@@ -150,9 +160,7 @@ const publishTemplate = async ({
     method: 'post',
     url: api.getApiUrl(`/templates/${name}/publish/${version}`),
     headers: api.getAuthHeaders(),
-    data: {
-      versionMeta: data.versionMeta,
-    }
+    data,
   })
     .then(res => res.data)
 
