@@ -17,11 +17,7 @@ const DEFAULT_LIBRARY_SETTINGS = {
   tabs: [],
 }
 
-const settingsValue = createSelector(
-  websiteSelectors.websiteMeta,
-  meta => meta.settings || DEFAULT_OBJECT,
-)
-
+const settingsValue = websiteSelectors.settings
 const libraryWidgets = state => library.widgets
 const libraryForms = state => library.forms
 const librarySettings = state => library.settings || DEFAULT_LIBRARY_SETTINGS

@@ -75,15 +75,31 @@ const ownedWebsiteList = createSelector(
   websites => websites.filter(w => w.collaboration_type == 'owner'),
 )
 
+const settings = createSelector(
+  websiteMeta,
+  meta => meta.settings || DEFAULT_OBJECT,
+)
+
+const settingsSchema = createSelector(
+  template,
+  template => {
+    if(!template || !template.templateVersion || !template.templateVersion.meta || !template.templateVersion.meta.settings) return []
+    return template.templateVersion.meta.settings
+  }
+)
+
 const selectors = {
   websiteId,
   websites,
   config,
+  template,
   dnsInfo,
   websiteData,
   websiteMeta,
   websiteList,
   ownedWebsiteList,
+  settings,
+  settingsSchema,
   ...networkGroup('website', [
     'list',
     'get',

@@ -37,21 +37,15 @@ const FormWrapper = ({
             setShowErrors(true)
             handleSubmit()
           }
-          return (
-            <form>
-              {
-                children({
-                  isValid,
-                  values,
-                  errors,
-                  showErrors,
-                  touched,
-                  onSubmit: submitWrapper,
-                  onSetFieldValue: setFieldValue,
-                })
-              }
-            </form>
-          )
+          return children({
+            isValid,
+            values,
+            errors,
+            showErrors,
+            touched,
+            onSubmit: submitWrapper,
+            onSetFieldValue: setFieldValue,
+          })
         }
       }
     </Formik>

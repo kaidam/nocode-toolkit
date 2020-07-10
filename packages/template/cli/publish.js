@@ -50,7 +50,7 @@ const getTemplateData = async ({
     flags: '',
     version,
     templateMeta: {},
-    settings,
+    settings: settings.default,
     versionMeta: {
       description,
     },
