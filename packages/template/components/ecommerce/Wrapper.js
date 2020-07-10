@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import actions from '../../store/modules/ecommerce'
 
 import Button from './Button'
 import Confirmation from './Confirmation'
 
-import ecommerceSelectors from '../../store/selectors/ecommerce'
+import routerSelectors from '../../store/selectors/router'
+import routerActions from '../../store/modules/router'
 
 const CURRENCY_SYMBOLS = {
   GBP: '£',
@@ -19,8 +20,9 @@ const PaymentButtonWrapper = ({
   cell,
 }) => {
 
-  console.log('--------------------------------------------')
-  console.dir(cell)
+  const dispatch = useDispatch()
+  const [ confirm, setConfirm ] = useState(false)
+  const params = useSelector(routerSelectors.params)
 
   const {
     currency,
@@ -36,39 +38,43 @@ const PaymentButtonWrapper = ({
     document.body.appendChild(script)
   }, [hasInjectedStripeLibrary])
 
-  const dispatch = useDispatch()
-  const currencySymbol = CURRENCY_SYMBOLS[currency]
+  useEffect(() => {
+    if(params.trigger == 'stripe_success' && params.product_id && cell.id) {
+      if(params.product_id == cell.id) {
+        setConfirm(true)
+        dispatch(routerActions.clearQueryParams())
+      }
+    }
+  }, [
+    params,
+    cell,
+  ])
+
   const passContent = Object.assign({}, data, {
-    currencySymbol,
+    currencySymbol: CURRENCY_SYMBOLS[currency],
     buttonTitle,
   })
-  const onClick = () => {
-    dispatch(actions.purchase({
-      id: cell.id,
-      ...data,
-    }))
-  }
-  const purchasedProductId = useSelector(ecommerceSelectors.purchasedProductId)
-  let confirmWindow = null
-  if(purchasedProductId == cell.id) {
-    const onClose = () => {
-      dispatch(actions.closeConfirmationWindow())
-    }
-    confirmWindow =  (
-      <Confirmation
-        content={ passContent }
-        onClose={ onClose }
-      />
-    )
-  }
+
   return (
     <div>
       <Button
         content={ passContent }
         cell={ cell }
-        onClick={ onClick }
+        onClick={ () => {
+          dispatch(actions.purchase({
+            id: cell.id,
+            ...data,
+          }))
+        } }
       />
-      { confirmWindow }
+      {
+        confirm && (
+          <Confirmation
+            content={ passContent }
+            onClose={ () => setConfirm(false) }
+          />
+        )
+      }
     </div>
     
   )

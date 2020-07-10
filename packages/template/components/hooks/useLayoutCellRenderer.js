@@ -1,6 +1,5 @@
 import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { v4 as uuid } from 'uuid'
 
 import Cell from '../layout/Cell'
 
@@ -22,19 +21,6 @@ const useLayoutCellRenderer = ({
   const widgetRenderers = useSelector(settingsSelectors.widgetRenderers)
   const showUI = useSelector(systemSelectors.showUI)
 
-  const useLayout = useMemo(() => {
-    return layout.map(row => {
-      return row.map(cell => {
-        if(cell.id) return cell
-        return Object.assign({}, cell, {
-          id: uuid(),
-        })
-      })
-    })
-  }, [
-    layout,
-  ])
-
   const getCell = ({
     cell,
     rowIndex,
@@ -44,7 +30,7 @@ const useLayoutCellRenderer = ({
       <Cell
         key={ cellIndex }
         cell={ cell }
-        layout={ useLayout }
+        layout={ layout }
         widgetRenderers={ widgetRenderers }
         showUI={ showUI }
         content_id={ content_id }
@@ -57,7 +43,7 @@ const useLayoutCellRenderer = ({
   }
 
   return {
-    layout: useLayout,
+    layout,
     getCell,
   }
 

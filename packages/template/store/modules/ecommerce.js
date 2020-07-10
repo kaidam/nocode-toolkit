@@ -8,9 +8,6 @@ import {
   handlers,
 } from '../utils/api'
 
-import routerActions from './router'
-
-import routerSelectors from '../selectors/router'
 import websiteSelectors from '../selectors/website'
 import snackbarActions from './snackbar'
 import networkActions from './network'
@@ -21,9 +18,7 @@ const prefix = 'ecommerce'
 const wrapper = networkWrapper.factory(prefix)
 
 const reducers = {
-  setPurchasedProductId: (state, action) => {
-    state.purchasedProductId = action.payload
-  },
+  
 }
 
 /*
@@ -107,38 +102,6 @@ const sideEffects = {
     errorHandler: () => dispatch(networkActions.setGlobalLoading(false))
   }),
 
-  // initialize: () => async (dispatch, getState) => {
-  //   const params = selectors.router.queryParams(getState())
-  //   const route = selectors.router.route(getState())
-
-  //   // upon returning from a stripe connect session
-  //   // we want to open the settings window and alert the user
-  //   // their stripe account is now connected
-  //   if(params.trigger == 'stripe_connect') {
-  //     dispatch(routerActions.navigateTo(route.name, {
-  //       dialog_settings_panel: 'plugins',
-  //       dialog_settings_open: 'yes',
-  //       dialog_settings_tab: 'stripe',
-  //     }))
-  //     dispatch(snackbarActions.setSuccess(`Your stripe account is now connected`))
-  //   }
-  //   // once a product is purchased - we want to show a confirmation window
-  //   // the product_id is the row-cell index that a button will
-  //   // identify as it's own and display the confirmation
-  //   // we always redirect back to the same page so expect
-  //   // these indexes to remain constant between clicking the stripe
-  //   // button and returning back to the page
-  //   else if(params.trigger == 'stripe_success') {
-  //     const productId = params.product_id
-  //     dispatch(actions.setPurchasedProductId(productId))
-  //   }
-  // },
-
-  // closeConfirmationWindow: () => async (dispatch, getState) => {
-  //   const route = selectors.router.route(getState())
-  //   dispatch(actions.setPurchasedProductId(null))
-  //   dispatch(routerActions.navigateTo(route.name))
-  // },
 }
 
 const reducer = CreateReducer({

@@ -79,7 +79,7 @@ export const contactform = {
 }
 
 export const ecommerce = {
-  purchasedProductId: null,
+  
 }
 
 export const job = {

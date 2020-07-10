@@ -689,6 +689,8 @@ const sideEffects = {
       await updateChanges()
       return
     }    
+  }, {
+    globalLoading: false,
   }),
 
   waitForForm: ({

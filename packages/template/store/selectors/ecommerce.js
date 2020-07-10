@@ -13,15 +13,12 @@ const NETWORK_NAMES = networkProps('ecommerce', [
   'purchase',
 ])
 
-const purchasedProductId = state => state.ecommerce.purchasedProductId
-
 const stripeConnectData = createSelector(
   websiteSelectors.websiteMeta,
   meta => meta.stripe,
 )
 
 const selectors = {
-  purchasedProductId,
   stripeConnectData,
   errors: props(networkErrors, NETWORK_NAMES),
   loading: props(networkLoading, NETWORK_NAMES),

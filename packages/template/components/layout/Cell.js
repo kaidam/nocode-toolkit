@@ -58,8 +58,6 @@ const Cell = ({
 }) => {
 
   const classes = useStyles(cell.settings || {})
-
-  const id = [rowIndex,cellIndex].join('.')
   const Renderer = widgetRenderers[cell.type] || UnknownTypeRenderer
 
   const content = (
@@ -69,7 +67,7 @@ const Cell = ({
       <Renderer
         data={ cell.data }
         cell={{
-          id,
+          id: cell.id,
           type: cell.type,
           rowIndex,
           cellIndex,
@@ -81,7 +79,7 @@ const Cell = ({
   const renderContent = showUI ? (
     <Suspense>
       <EditableCell
-        id={ id }
+        id={ cell.id }
         cell={ cell }
         layout={ layout }        
         content_id={ content_id }

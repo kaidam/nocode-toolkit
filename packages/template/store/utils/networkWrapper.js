@@ -85,6 +85,7 @@ const networkWrapper = ({
         }))
       }, removeErrorAfter)
     }
+    dispatch(networkActions.setGlobalLoading(null))
     if(errorHandler) await errorHandler(dispatch, getState, errorMessage)
     if(snackbarError) dispatch(snackbarActions.setError(errorMessage))
     result = null

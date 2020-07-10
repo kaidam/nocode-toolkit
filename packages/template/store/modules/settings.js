@@ -31,7 +31,7 @@ const sideEffects = {
   },
 
   closeDialog: () => (dispatch, getState) => {
-    dispatch(dialogActions.close('settings'))
+    dispatch(routerActions.clearQueryParams())
   },
 
   updateSettings: (data, reload = true) => async (dispatch, getState) => {

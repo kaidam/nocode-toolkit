@@ -9,11 +9,7 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogActions from '@material-ui/core/DialogActions'
 import Button from '@material-ui/core/Button'
 
-const useStyles = makeStyles(theme => createStyles({
-  
-}))  
-
-const PaymentConfirmationMaterial = ({
+const Confirmation = ({
   content,
   onClose,
 }) => {
@@ -46,4 +42,4 @@ const PaymentConfirmationMaterial = ({
   )
 }
 
-export default PaymentConfirmationMaterial
+export default Confirmation

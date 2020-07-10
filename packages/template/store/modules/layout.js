@@ -1,6 +1,7 @@
 import axios from 'axios'
 import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
+import { v4 as uuid } from 'uuid'
 
 import networkWrapper from '../utils/networkWrapper'
 import apiUtils from '../utils/api'
@@ -12,6 +13,7 @@ import layoutSelectors from '../selectors/layout'
 import nocodeActions from './nocode'
 import contentActions from './content'
 import snackbarActions from './snackbar'
+import networkActions from './network'
 import uiActions from './ui'
 
 import settingsSelectors from '../selectors/settings'
@@ -136,7 +138,9 @@ const sideEffects = {
     }
     
     if(!values) return
+    dispatch(networkActions.setGlobalLoading(true))
     const itemData = {
+      id: uuid(),
       type: form,
       settings: values.settings,
       data: data || values.data,
@@ -151,6 +155,9 @@ const sideEffects = {
       }
     }))
     await dispatch(snackbarActions.setSuccess(`${widgetTitle} created`))
+    dispatch(networkActions.setGlobalLoading(false))
+  }, {
+    globalLoading: false,
   }),
 
   edit: ({
@@ -182,6 +189,7 @@ const sideEffects = {
       processValues: processCellSettings,
     }))
     if(!values) return
+    dispatch(networkActions.setGlobalLoading(true))
     await dispatch(actions.update({
       content_id,
       layout_id,
@@ -193,6 +201,9 @@ const sideEffects = {
       }
     }))
     await dispatch(snackbarActions.setSuccess(`${widgetTitle} updated`))
+    dispatch(networkActions.setGlobalLoading(false))
+  }, {
+    globalLoading: false,
   }),
 
   delete: ({
@@ -210,6 +221,7 @@ const sideEffects = {
       confirmTitle: `Confirm - Delete ${name}`,
     }))
     if(!confirm) return
+    dispatch(networkActions.setGlobalLoading(true))
     await dispatch(actions.update({
       content_id,
       layout_id,
@@ -220,6 +232,9 @@ const sideEffects = {
       }
     }))
     await dispatch(snackbarActions.setSuccess(`layout updated`))
+    dispatch(networkActions.setGlobalLoading(false))
+  }, {
+    globalLoading: false,
   }),
 
   move: ({
@@ -242,6 +257,8 @@ const sideEffects = {
       }
     }))
     await dispatch(snackbarActions.setSuccess(`layout updated`))
+  }, {
+    globalLoading: false,
   }),
 
   swapRow: ({
@@ -260,6 +277,8 @@ const sideEffects = {
       }
     }))
     await dispatch(snackbarActions.setSuccess(`layout updated`))
+  }, {
+    globalLoading: false,
   }),
 
   getWidget: ({
@@ -319,6 +338,8 @@ const sideEffects = {
       rowIndex,
       autoAdd: config.autoAdd,
     }))
+  }, {
+    globalLoading: false,
   }),
 
 }
