@@ -11,7 +11,8 @@ import routerSelectors from '@nocode-works/template/store/selectors/router'
 const useTabbedForm = ({
   form,
   values,
-  initialTab,
+  buttonAlign,
+  cancelTitle,
   onSubmit,
   onCancel,
 }) => {
@@ -77,7 +78,7 @@ const useTabbedForm = ({
   }) => {
     return (
       <FormRender
-        schema={ currentTab.schema }
+        schema={ currentTab ? currentTab.schema : [] }
         values={ values }
         errors={ errors }
         showErrors={ showErrors }
@@ -96,12 +97,16 @@ const useTabbedForm = ({
   }) => (
     <DialogButtons
       withSubmit
+      cancelTitle={ cancelTitle }
       submitDisabled={ isValid ? false : true }
+      align={ buttonAlign }
       onSubmit={ onSubmit }
       onCancel={ () => onCancel() }
     />
   ), [
+    buttonAlign,
     onCancel,
+    cancelTitle,
   ])
 
   const render = useCallback(renderFn => {

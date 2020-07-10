@@ -2,6 +2,7 @@ import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
 
 import networkWrapper from '../utils/networkWrapper'
+import websiteSelectors from '../selectors/website'
 
 import {
   handlers,
@@ -60,12 +61,22 @@ const sideEffects = {
     dispatch(actions.setWebsite(data))
   }),
 
-  save: (id, data) => wrapper('save', async (dispatch, getState) => {
+  save: (id, settings) => wrapper('save', async (dispatch, getState) => {
+    const settingsSchema = websiteSelectors.settingsSchema(getState())
+    if(!settingsSchema.websiteNameField) throw new Error(`template does not provide a websiteNameField`)
+    const currentData = websiteSelectors.websiteData(getState())
+    const name = settings[settingsSchema.websiteNameField]    
     if(id == 'new') {
-      await handlers.post(`/websites`, data)
+      await handlers.post(`/websites`, {
+        name,
+        settings,
+      })
     }
     else {
-      await handlers.put(`/websites/${id}`, data)
+      if(currentData.name != name) {
+        await handlers.put(`/websites/${id}`, {name})
+      }
+      await dispatch(actions.updateMeta(id, {settings}))
     }
     dispatch(snackbarActions.setSuccess(`website ${ id == 'new' ? 'created' : 'saved' }`))
     return true

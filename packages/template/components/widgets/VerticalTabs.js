@@ -1,4 +1,5 @@
 import React from 'react'
+import { useStore } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import Tooltip from '@material-ui/core/Tooltip'
 import List from '@material-ui/core/List'
@@ -19,6 +20,7 @@ const VerticalTabs = ({
   onChange,
 }) => {
   const classes = useStyles()
+  const store = useStore()
   return (
     <List>
       {
@@ -31,7 +33,10 @@ const VerticalTabs = ({
               key={ tab.id }
               button
               selected={ isSelected }
-              onClick={ () => onChange(tab.id) }
+              onClick={ () => {
+                if(tab.handler) tab.handler(store)
+                else onChange(tab.id)
+              } }
             >
               {
                 Icon && (

@@ -6,7 +6,6 @@ import Paper from '@material-ui/core/Paper'
 import useTabbedForm from '../hooks/useTabbedForm'
 import websiteSelectors from '../../store/selectors/website'
 import websiteActions from '../../store/modules/website'
-import routerActions from '../../store/modules/router'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -16,6 +15,7 @@ const useStyles = makeStyles(theme => ({
   },
   tabs: {
     flexGrow: 0,
+    backgroundColor: '#fff',
     borderBottom: 'solid 1px #ccc',
   },
   form: {
@@ -28,11 +28,14 @@ const useStyles = makeStyles(theme => ({
   },
   buttons: {
     borderTop: 'solid 1px #ccc',
+    backgroundColor: '#fff',
     flexGrow: 0,
   },
 }))
 
 const WebsiteForm = ({
+  cancelTitle,
+  buttonAlign,
   onCancel,
 }) => {
   const classes = useStyles()
@@ -41,10 +44,10 @@ const WebsiteForm = ({
   const settingsSchema = useSelector(websiteSelectors.settingsSchema)
   const website = useSelector(websiteSelectors.websiteData)
   const settings = useSelector(websiteSelectors.settings)
-  
-  const onSave = useCallback(async (payload) => {
+
+  const onSubmit = useCallback(async (payload) => {
     const result = await dispatch(websiteActions.save(websiteId, payload))
-    if(result) dispatch(routerActions.navigateTo('website.list'))
+    if(result) onCancel()
   }, [
     website,
     websiteId,
@@ -55,8 +58,10 @@ const WebsiteForm = ({
   const renderForm = useTabbedForm({
     form: settingsSchema,
     values: settings,
-    onSubmit: (values) => console.log(values),
-    onCancel: () => console.log('cancel'),
+    buttonAlign,
+    cancelTitle,
+    onSubmit,
+    onCancel,
   })
 
   return renderForm(({

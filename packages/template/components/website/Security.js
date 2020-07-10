@@ -194,7 +194,7 @@ const SettingsSecurity = ({
           <Paper className={ classes.paper }>
             <Grid container spacing={ 0 }>
               <Grid item xs={ 12 }>
-                <Typography variant="h6" gutterBottom>Subdomain</Typography>
+                <Typography variant="h6" gutterBottom>Security Mode</Typography>
               </Grid>
               <Grid item xs={ 12 }>
                 <FormControl component="fieldset">

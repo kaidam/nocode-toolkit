@@ -3,12 +3,12 @@ import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 
 const useStyles = makeStyles(theme => ({
-  buttons: {
+  buttons: ({align}) => ({
     padding: theme.spacing(1),
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-  },
+    justifyContent: align == 'left' ? 'flex-start' : 'flex-end',
+  }),
   button: {
     marginLeft: theme.spacing(2),
   },
@@ -17,10 +17,15 @@ const useStyles = makeStyles(theme => ({
 const SettingsPanelButtons = ({
   onSubmit,
   onCancel,
+  align = 'right',
   submitDisabled = false,
   withSubmit = false,
+  cancelTitle = 'Cancel',
+  submitTitle = 'Save'
 }) => {
-  const classes = useStyles()
+  const classes = useStyles({
+    align,
+  })
   return (
     <div className={ classes.buttons }>
       <Button
@@ -29,7 +34,7 @@ const SettingsPanelButtons = ({
         variant="contained"
         onClick={ onCancel }
       >
-        Cancel
+        { cancelTitle }
       </Button>
       {
         withSubmit && (
@@ -41,7 +46,7 @@ const SettingsPanelButtons = ({
             disabled={ submitDisabled }
             onClick={ onSubmit }
           >
-            Save
+            { submitTitle }
           </Button>
         )
       }

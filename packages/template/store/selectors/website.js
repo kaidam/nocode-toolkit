@@ -80,12 +80,17 @@ const settings = createSelector(
   meta => meta.settings || DEFAULT_OBJECT,
 )
 
-const settingsSchema = createSelector(
+const templateMeta = createSelector(
   template,
   template => {
-    if(!template || !template.templateVersion || !template.templateVersion.meta || !template.templateVersion.meta.settings) return []
-    return template.templateVersion.meta.settings
+    if(!template || !template.templateVersion || !template.templateVersion.meta) return {}
+    return template.templateVersion.meta
   }
+)
+
+const settingsSchema = createSelector(
+  templateMeta,
+  templateMeta => templateMeta.settings || {}
 )
 
 const selectors = {
@@ -99,6 +104,7 @@ const selectors = {
   websiteList,
   ownedWebsiteList,
   settings,
+  templateMeta,
   settingsSchema,
   ...networkGroup('website', [
     'list',

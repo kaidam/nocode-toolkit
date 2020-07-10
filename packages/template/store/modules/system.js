@@ -124,6 +124,7 @@ const sideEffects = {
       dispatch(actions.loadUser()),
       dispatch(actions.loadTokenStatus()),
       dispatch(jobActions.getPublishStatus()),
+      dispatch(websiteActions.loadTemplate(websiteId)),
     ])
 
     const tokenStatus = systemSelectors.tokenStatus(getState())
