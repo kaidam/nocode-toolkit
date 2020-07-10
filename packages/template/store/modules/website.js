@@ -76,9 +76,10 @@ const sideEffects = {
       if(currentData.name != name) {
         await handlers.put(`/websites/${id}`, {name})
       }
-      await dispatch(actions.updateMeta(id, {settings}))
+      await handlers.put(`/websites/${id}/meta`, {settings})
+      await dispatch(actions.get(id))
     }
-    dispatch(snackbarActions.setSuccess(`website ${ id == 'new' ? 'created' : 'saved' }`))
+    dispatch(snackbarActions.setSuccess(`settings ${ id == 'new' ? 'created' : 'saved' }`))
     return true
   }),
 

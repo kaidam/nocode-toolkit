@@ -33,6 +33,7 @@ const useStyles = makeStyles(theme => createStyles({
 
 const GlobalLoading = ({
   loading,
+  useLibraryComponent = true,
 }) => {
   const loadingValues = typeof(loading) === 'object' ?
     loading :
@@ -56,7 +57,7 @@ const GlobalLoading = ({
           ) : (
             <Loading
               message={ message }
-              useLibraryComponent
+              useLibraryComponent={ useLibraryComponent }
             >
               {
                 logs.map((log, i) => {

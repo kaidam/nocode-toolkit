@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import systemSelectors from './store/selectors/system'
 import websiteSelectors from './store/selectors/website'
 import uiSelectors from './store/selectors/ui'
+import networkSelectors from './store/selectors/network'
 
 import Suspense from './components/system/Suspense'
 import actionLoader from './store/utils/actionLoader'
@@ -31,6 +32,7 @@ const App = ({
 
   const showUI = useSelector(systemSelectors.showUI)
   const initialised = useSelector(systemSelectors.initialised)
+  const globalLoading = useSelector(networkSelectors.globalLoading)
   const initialiseError = useSelector(systemSelectors.initialiseError)
   const quickstartWindow = useSelector(uiSelectors.quickstartWindow)
   const website = useSelector(websiteSelectors.websiteData)
@@ -92,6 +94,16 @@ const App = ({
       <Router
         templates={ templates }
       />
+      {
+        globalLoading && (
+          <GlobalLoading
+            loading={{
+              transparent: true,
+            }}
+            useLibraryComponent={ false }
+          />
+        )
+      }
     </ThemeContainer>
   )
 

@@ -46,8 +46,7 @@ const WebsiteForm = ({
   const settings = useSelector(websiteSelectors.settings)
 
   const onSubmit = useCallback(async (payload) => {
-    const result = await dispatch(websiteActions.save(websiteId, payload))
-    if(result) onCancel()
+    await dispatch(websiteActions.save(websiteId, payload))
   }, [
     website,
     websiteId,
