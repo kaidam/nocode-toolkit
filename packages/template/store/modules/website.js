@@ -36,6 +36,9 @@ const reducers = {
   deleteWebsite: (state, action) => {
     state.websites = state.websites.filter(w => w.id != action.payload)
   },
+  setTemplate: (state, action) => {
+    state.template = action.payload
+  },
   setConfig: (state, action) => {
     state.config = action.payload
   },
@@ -105,6 +108,13 @@ const sideEffects = {
     if(id == 'new') return
     const data = await handlers.get(`/builder/${id}/config`)
     dispatch(actions.setConfig(data))
+    return true
+  }),
+
+  loadTemplate: (id) => wrapper('loadTemplate', async (dispatch, getState) => {
+    if(id == 'new') return
+    const data = await handlers.get(`/builder/${id}/template`)
+    dispatch(actions.setTemplate(data))
     return true
   }),
 

@@ -15,6 +15,7 @@ export const system = {
 export const website = {
   websites: [],
   config: {},
+  template: {},
   dnsInfo: null,
 }
 
