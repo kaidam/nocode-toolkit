@@ -1,14 +1,21 @@
-import axios from 'axios'
-
 import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
+import networkWrapper from '../utils/networkWrapper'
 
-import selectors from '../selectors/contactform'
+import contactformSelectors from '../selectors/contactform'
+import websiteSelectors from '../selectors/website'
 import fields from '../../components/contactform/fields'
 
-import { ecommerce as initialState } from '../initialState'
+import {
+  handlers,
+} from '../utils/api'
+
+import { contactform as initialState } from '../initialState'
+
+import snackbarActions from './snackbar'
 
 const prefix = 'contactform'
+const wrapper = networkWrapper.factory(prefix)
 
 const reducers = {
   setFormId: (state, action) => {
@@ -38,34 +45,31 @@ const reducers = {
 
 const sideEffects = {
 
-  submit: () => async (dispatch, getState) => {
-    try {
-      dispatch(actions.setErrors({}))
-      const apiUrl = selectors.apiUrl(getState())
-      const values = selectors.values(getState())
-      const errors = fields.reduce((all, field) => {
-        if(!field.validate) return all
-        const error = field.validate(values[field.id])
-        if(error) {
-          all[field.id] = error
-        }
-        return all
-      }, {})
-      dispatch(actions.setErrors(errors))
-      const isValid = selectors.isValid(getState())
-      if(!isValid) {
-        dispatch(snackbarActions.setError(`the form is not valid`))
-        return
+  submit: () => wrapper('submit', async (dispatch, getState) => {
+    dispatch(actions.setErrors({}))
+    const websiteId = websiteSelectors.websiteId(getState())
+    const values = contactformSelectors.values(getState())
+    const errors = fields.reduce((all, field) => {
+      if(!field.validate) return all
+      const error = field.validate(values[field.id])
+      if(error) {
+        all[field.id] = error
       }
-      await axios.post(`${apiUrl}/submit`, values)        
-      dispatch(snackbarActions.setSuccess(`Message sent`))
-      dispatch(actions.setErrors({}))
-      dispatch(actions.setValues({}))
-      dispatch(actions.setFormId(null))
-    } catch(e) {
-      dispatch(snackbarActions.setError('there was an error: ' + e.toString()))
+      return all
+    }, {})
+    dispatch(actions.setErrors(errors))
+    const isValid = contactformSelectors.isValid(getState())
+    if(!isValid) {
+      dispatch(snackbarActions.setError(`the form is not valid`))
+      return
     }
-  },
+
+    await handlers.post(`/builder/${websiteId}/contactform/submit`, values)
+    dispatch(snackbarActions.setSuccess(`Message sent`))
+    dispatch(actions.setErrors({}))
+    dispatch(actions.setValues({}))
+    dispatch(actions.setFormId(null))
+  }),
 
 }
 

@@ -113,6 +113,7 @@ const FormDialog = ({
         <Button
           type="button"
           variant="contained"
+          color="primary"
           onClick={ onSubmit }
         >
           Submit
