@@ -60,6 +60,7 @@ const Window = ({
   noActions = false,
   submitButtonColor = 'primary',
   cancelButtonColor = 'default',
+  disabled = false,
   onCancel,
   onSubmit,
   theme = {},
@@ -136,7 +137,7 @@ const Window = ({
                       type="button"
                       variant="contained"
                       color={ submitButtonColor }
-                      disabled={ loading ? true : false }
+                      disabled={ disabled || loading ? true : false }
                       onClick={ onSubmit }
                     >
                       { submitTitle }

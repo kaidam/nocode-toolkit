@@ -6,6 +6,7 @@ import Form from '../form/Form'
 
 import websiteSelectors from '../../store/selectors/website'
 import websiteActions from '../../store/modules/website'
+import routerActions from '../../store/modules/router'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -43,15 +44,18 @@ const WebsiteForm = ({
   onCancel,
 }) => {
   const classes = useStyles()
-
+  const dispatch = useDispatch()
+  const websiteId = useSelector(websiteSelectors.websiteId)
   const website = useSelector(websiteSelectors.websiteData)
   const loading = useSelector(websiteSelectors.save.loading)
   const error = useSelector(websiteSelectors.save.error)
   
-  const onSave = useCallback((payload) => {
-    dispatch(websiteActions.save(website.id, payload))
+  const onSave = useCallback(async (payload) => {
+    const result = await dispatch(websiteActions.save(websiteId, payload))
+    if(result) dispatch(routerActions.navigateTo('website.list'))
   }, [
     website,
+    websiteId,
   ])
 
   if(!website) return null

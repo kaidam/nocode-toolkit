@@ -52,6 +52,7 @@ const sideEffects = {
   }),
 
   get: (id) => wrapper('get', async (dispatch, getState) => {
+    if(id == 'new') return
     const data = await handlers.get(`/websites/${id}`)
     dispatch(actions.setWebsite(data))
   }),
@@ -64,9 +65,11 @@ const sideEffects = {
       await handlers.put(`/websites/${id}`, data)
     }
     dispatch(snackbarActions.setSuccess(`website ${ id == 'new' ? 'created' : 'saved' }`))
+    return true
   }),
 
   updateMeta: (id, data) => wrapper('updateMeta', async (dispatch, getState) => {
+    if(id == 'new') return
     await handlers.put(`/websites/${id}/meta`, data)
     await dispatch(actions.get(id))
     dispatch(snackbarActions.setSuccess(`settings updated`))
@@ -74,6 +77,7 @@ const sideEffects = {
   }),
 
   delete: (id) => wrapper('delete', async (dispatch, getState) => {
+    if(id == 'new') return
     await handlers.delete(`/websites/${id}`)
     dispatch(snackbarActions.setInfo(`website deleted`))
     await dispatch(actions.deleteWebsite(id))
@@ -81,6 +85,7 @@ const sideEffects = {
   }),
 
   openBuilder: (id) => wrapper('openBuilder', async (dispatch, getState) => {
+    if(id == 'new') return
     dispatch(networkActions.setGlobalLoading(true))
     await handlers.delete(`/websites/${id}/preview`)
     document.location = `/builder/website/${id}`
@@ -89,6 +94,7 @@ const sideEffects = {
   }),
 
   reclaimStorage: (id) => wrapper('reclaimStorage', async (dispatch, getState) => {
+    if(id == 'new') return
     await handlers.delete(`/websites/${id}/builds`)
     dispatch(snackbarActions.setSuccess(`previous builds deleted`))
     dispatch(actions.list())
@@ -114,6 +120,7 @@ const sideEffects = {
   
   */
   updateSecurity: (id, data) => wrapper('updateSecurity', async (dispatch, getState) => {
+    if(id == 'new') return
     await handlers.put(`/websites/${id}/security`, data)
     await dispatch(actions.get(id))
     dispatch(snackbarActions.setSuccess(`settings updated`))
@@ -130,6 +137,7 @@ const sideEffects = {
     id,
     subdomain
   }) => wrapper('setSubdomain', async (dispatch, getState) => {
+    if(id == 'new') return
     await handlers.put(`/websites/${id}/subdomain`, {subdomain})
     await dispatch(actions.get(id))
     dispatch(snackbarActions.setSuccess(`subdomain updated`))
@@ -139,7 +147,7 @@ const sideEffects = {
     id,
     url,
   }) => wrapper('addUrl', async (dispatch, getState) => {
-
+    if(id == 'new') return
     try {
       await handlers.post(`/websites/${id}/urls`, {url})
     } catch(e) {
@@ -161,6 +169,7 @@ const sideEffects = {
     id,
     url,
   }) => wrapper('removeUrl', async (dispatch, getState) => {
+    if(id == 'new') return
     await handlers.delete(`/websites/${id}/urls/${encodeURIComponent(url)}`)
     await dispatch(actions.get(id))
     dispatch(snackbarActions.setSuccess(`custom domain deleted`))

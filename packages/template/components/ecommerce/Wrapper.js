@@ -19,6 +19,9 @@ const PaymentButtonWrapper = ({
   cell,
 }) => {
 
+  console.log('--------------------------------------------')
+  console.dir(cell)
+
   const {
     currency,
     buttonTitle = `Purchase ${data.name}`,

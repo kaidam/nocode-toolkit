@@ -52,6 +52,7 @@ const sideEffects = {
     document.location = data.url
   }, {
     globalLoading: false,
+    errorHandler: () => dispatch(networkActions.setGlobalLoading(false))
   }),
 
   // for purchase we create the line item,
@@ -67,6 +68,7 @@ const sideEffects = {
     price,
     currency,
   }) => wrapper('purchase', async (dispatch, getState) => {
+    dispatch(networkActions.setGlobalLoading(true))
     const websiteId = websiteSelectors.websiteId(getState())
     const { publicKey } = await handlers.get(`/builder/ecommerce/public_key`)
     const line_items = [{
@@ -93,13 +95,7 @@ const sideEffects = {
       cancel_url,
     })
 
-    console.log('--------------------------------------------')
-    console.log('--------------------------------------------')
-    console.log(JSON.stringify(session_data, null, 4))
-    console.log(publicKey)
-    return
-
-    var stripe = Stripe(publicKey)
+    const stripe = Stripe(publicKey)
 
     stripe.redirectToCheckout({
       sessionId: session_data.id
@@ -108,6 +104,7 @@ const sideEffects = {
     })
   }, {
     globalLoading: false,
+    errorHandler: () => dispatch(networkActions.setGlobalLoading(false))
   }),
 
   // initialize: () => async (dispatch, getState) => {

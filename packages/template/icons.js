@@ -12,6 +12,7 @@
 
 import React from 'react'
 
+import WebsiteIcon from '@material-ui/icons/Language'
 import HomeIcon from '@material-ui/icons/Home'
 import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
@@ -119,6 +120,7 @@ const icons = {
   delete: DeleteIcon,
   close: CloseIcon,
   clear: ClearIcon,
+  website: WebsiteIcon,
   settings: SettingsIcon,
   publish: PublishIcon,
   history: HistoryIcon,
