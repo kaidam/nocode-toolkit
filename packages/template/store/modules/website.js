@@ -13,7 +13,9 @@ import networkActions from './network'
 import snackbarActions from './snackbar'
 
 const prefix = 'website'
-const wrapper = networkWrapper.factory(prefix)
+const wrapper = networkWrapper.factory(prefix, {
+  globalLoading: false,
+})
 
 import { website as initialState } from '../initialState'
 
@@ -104,8 +106,6 @@ const sideEffects = {
     dispatch(networkActions.setGlobalLoading(true))
     await handlers.delete(`/websites/${id}/preview`)
     document.location = `/builder/website/${id}`
-  }, {
-    globalLoading: false,
   }),
 
   reclaimStorage: (id) => wrapper('reclaimStorage', async (dispatch, getState) => {

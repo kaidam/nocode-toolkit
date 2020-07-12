@@ -93,6 +93,11 @@ const settingsSchema = createSelector(
   templateMeta => templateMeta.settings || {}
 )
 
+const templateLayouts = createSelector(
+  settingsSchema,
+  settingsSchema => settingsSchema.layout || {}
+)
+
 const selectors = {
   websiteId,
   websites,
@@ -106,6 +111,7 @@ const selectors = {
   settings,
   templateMeta,
   settingsSchema,
+  templateLayouts,
   ...networkGroup('website', [
     'list',
     'get',

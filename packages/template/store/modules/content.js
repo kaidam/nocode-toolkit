@@ -27,7 +27,9 @@ import {
 
 const prefix = 'content'
 
-const wrapper = networkWrapper.factory(prefix)
+const wrapper = networkWrapper.factory(prefix, {
+  globalLoading: false,
+})
 const overwriteMerge = (destinationArray, sourceArray, options) => sourceArray
 
 const reducers = {

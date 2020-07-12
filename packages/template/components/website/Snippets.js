@@ -338,39 +338,3 @@ const SettingsSnippets = ({
 }
 
 export default SettingsSnippets
-
-
-
-/*
-
-      {
-        editSnippet && (
-          <FormDialog
-            title="Add User"
-            size="sm"
-            schema={ USER_SCHEMA }
-            initialValues={ USER_INITIAL_VALUES }
-            withCancel
-            onSubmit={ onAddUser }
-            onCancel={ () => setAddingUser(false) }
-          />
-        )
-      }
-      {
-        deletingUser && (
-          <DeleteConfirm
-            title="Remove User?"
-            onConfirm={ () => {
-              onDeleteUser(deletingUser)
-              setDeletingUser(null)
-            }}
-            onCancel={ () => setDeletingUser(null) }
-          >
-            <Typography>
-              Are you <strong>absolutely sure</strong> you want to delete the { deletingUser } user?
-            </Typography>
-          </DeleteConfirm>
-        )
-      }
-
-*/

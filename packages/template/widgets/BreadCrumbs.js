@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import Link from '../widgets/Link'
+import Link from '../components/widgets/Link'
 
-import contentSelectors from '../../store/selectors/content'
+import contentSelectors from '../store/selectors/content'
 
-const BreadCrumbs = ({
-  activeWidgets,
+const Render = ({
+  
 } = {}) => {
 
   const pathToItem = useSelector(contentSelectors.routeAncestors)
@@ -27,10 +27,6 @@ const BreadCrumbs = ({
           .map((item, i) => {
             if(!item.node) return null
 
-            // if the document title is turned on - let's not render the document
-            // in the breadcrumbs
-            if(activeWidgets.documentTitle && i == useItems.length - 1) return null
-
             return {
               title: item.node.name.replace(/^\w/, st => st.toUpperCase()),
               path: item.route.path,
@@ -42,7 +38,6 @@ const BreadCrumbs = ({
       .filter(i => i)
   }, [
     pathToItem,
-    activeWidgets,
   ])
 
   return (
@@ -73,4 +68,10 @@ const BreadCrumbs = ({
   )
 }
 
-export default BreadCrumbs
+export default {
+  id: 'breadcrumbs',
+  title: 'Breadcrumbs',
+  description: 'Links to parent folders',
+  editable: false,
+  Render,
+}

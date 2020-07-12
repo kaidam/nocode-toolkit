@@ -15,7 +15,9 @@ import networkActions from './network'
 import { ecommerce as initialState } from '../initialState'
 
 const prefix = 'ecommerce'
-const wrapper = networkWrapper.factory(prefix)
+const wrapper = networkWrapper.factory(prefix, {
+  globalLoading: false,
+})
 
 const reducers = {
   

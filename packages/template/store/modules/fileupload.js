@@ -15,7 +15,9 @@ import websiteSelectors from '../selectors/website'
 
 const prefix = 'fileupload'
 
-const wrapper = networkWrapper.factory(prefix)
+const wrapper = networkWrapper.factory(prefix, {
+  globalLoading: false,
+})
 
 const resetState = (state) => {
   state.inProgress = false

@@ -40,11 +40,10 @@ const form = {
   }],
 }
 
-const widget = () => ({
+export default {
   id: 'heading',
   title: 'Heading',
+  description: 'Larger title text',
   Render,
   form,
-})
-
-export default widget
+}

@@ -15,7 +15,9 @@ import { settings as initialState } from '../initialState'
 
 const prefix = 'settings'
 
-const wrapper = networkWrapper.factory(prefix)
+const wrapper = networkWrapper.factory(prefix, {
+  globalLoading: false,
+})
 
 const reducers = {
   

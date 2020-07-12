@@ -88,19 +88,6 @@ const loaders = {
     .then(apiUtils.process),
 
 
-  /*
-  
-    domains
-  
-  */
-  setSubdomain: (id, subdomain) => axios.put(apiUtils.apiUrl(`/websites/${id}/subdomain`), {subdomain})
-    .then(apiUtils.process),
-
-  addUrl: (id, url) => axios.post(apiUtils.apiUrl(`/websites/${id}/urls`), {url})
-    .then(apiUtils.process),
-
-  removeUrl: (id, url) => axios.delete(apiUtils.apiUrl(`/websites/${id}/urls/${encodeURIComponent(url)}`))
-    .then(apiUtils.process),
 }
 
 const sideEffects = {

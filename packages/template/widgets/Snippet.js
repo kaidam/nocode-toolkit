@@ -19,10 +19,9 @@ const Render = ({
   )
 }
 
-const widget = () => ({
+export default {
   id: 'snippet',
   title: 'Snippet',
+  description: 'Render a snippet of code you have added to your website',
   Render,
-})
-
-export default widget
+}

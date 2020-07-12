@@ -40,6 +40,10 @@ export const layout = {
   widgetWindow: null,
 }
 
+export const form = {
+  window: null,
+}
+
 export const content = {
   formWindow: null,
 }

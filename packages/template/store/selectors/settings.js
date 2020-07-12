@@ -1,7 +1,9 @@
 import { createSelector } from 'reselect'
 import library from '../../library'
 import websiteSelectors from './website'
+//import systemWidgets from '../../widgets'
 
+const systemWidgets = {}
 const DEFAULT_ARRAY = []
 const DEFAULT_OBJECT = []
 
@@ -40,14 +42,13 @@ const settings = createSelector(
 )
 
 const widgets = createSelector(
-  settings,
   libraryWidgets,
-  (settings, widgets) => {
-    return widgets.filter(widget => {
-      return widget.isActive ?
-        widget.isActive(settings) :
-        true
-    })
+  (libraryWidgets) => {
+    const allWidgets = Object.assign({}, systemWidgets, libraryWidgets)
+    return Object.keys(allWidgets).reduce((all, id) => {
+      all[id] = allWidgets[id]
+      return all
+    }, {})
   }
 )
 
@@ -61,19 +62,7 @@ const forms = createSelector(
       all[widget.id] = widget.form
       return all
     }, {})
-
     return Object.assign({}, widgetForms, libraryForms)
-  }
-)
-
-// return a map of the widgets from id -> renderer
-const widgetRenderers = createSelector(
-  widgets,
-  (widgets) => {
-    return widgets.reduce((all, widget) => {
-      all[widget.id] = widget.Render
-      return all
-    }, {})
   }
 )
 
@@ -134,8 +123,7 @@ const selectors = {
   librarySettings,
   libraryWidgets,
   widgets,
-  forms,
-  widgetRenderers,
+  forms,  
   widgetTitles,
   snippets,
   pageSnippets,

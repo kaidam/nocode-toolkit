@@ -51,11 +51,10 @@ const form = {
   }],
 }
 
-const widget = () => ({
+export default {
   id: 'video',
   title: 'Video',
+  description: 'Embed a video from YouTube',
   Render,
   form,
-})
-
-export default widget
+}

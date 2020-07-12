@@ -14,7 +14,9 @@ import uiActions from './ui'
 
 const prefix = 'unsplash'
 
-const wrapper = networkWrapper.factory(prefix)
+const wrapper = networkWrapper.factory(prefix, {
+  globalLoading: false,
+})
 
 const reducers = {
   setList: (state, action) => {

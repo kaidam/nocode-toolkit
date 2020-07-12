@@ -5,8 +5,8 @@ import FormRender from '../form/Render'
 import Tabs from '../widgets/Tabs'
 import DialogButtons from '../widgets/DialogButtons'
 
-import routerActions from '@nocode-works/template/store/modules/router'
-import routerSelectors from '@nocode-works/template/store/selectors/router'
+import routerActions from '../../store/modules/router'
+import routerSelectors from '../../store/selectors/router'
 
 const useTabbedForm = ({
   form,

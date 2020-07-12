@@ -72,11 +72,10 @@ const form = {
   }],
 }
 
-const widget = () => ({
+export default {
   id: 'richtext',
   title: 'Rich Text',
+  description: 'A small chunk of formatted text',
   Render,
   form,
-})
-
-export default widget
+}

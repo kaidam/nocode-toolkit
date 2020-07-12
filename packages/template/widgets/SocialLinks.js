@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import classnames from 'classnames'
 import icons from '../icons'
-import settingsSelectors from '@nocode-works/template/store/selectors/settings'
+import settingsSelectors from '../store/selectors/settings'
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -60,8 +60,6 @@ const IconMap = {
   pinterest: icons.pinterest,
   instagram: icons.instagram,
 }
-
-let hasInjectedCSS = false
 
 const Render = ({
 }) => {
@@ -136,11 +134,10 @@ const form = {
   }],
 }
 
-const widget = () => ({
+export default {
   id: 'social_links',
   title: 'Social Links',
+  description: 'Render links to your social media accounts',
   Render,
   form,
-})
-
-export default widget
+}

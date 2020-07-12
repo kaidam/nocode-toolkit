@@ -26,7 +26,9 @@ import {
 
 const prefix = 'layout'
 
-const wrapper = networkWrapper.factory(prefix)
+const wrapper = networkWrapper.factory(prefix, {
+  globalLoading: false,
+})
 
 const reducers = {
   openWidgetWindow: (state, action) => {
@@ -156,20 +158,15 @@ const sideEffects = {
     }))
     await dispatch(snackbarActions.setSuccess(`${widgetTitle} created`))
     dispatch(networkActions.setGlobalLoading(false))
-  }, {
-    globalLoading: false,
   }),
 
   edit: ({
     content_id,
     layout_id,
+    layout,
     rowIndex,
     cellIndex,
   }) => wrapper('edit', async (dispatch, getState) => {
-    const annotations = nocodeSelectors.annotations(getState())
-    const annotation = annotations[content_id] || {}
-    const layout = annotation[layout_id]
-    if(!layout) throw new Error(`no layout found`)
     const cell = layout[rowIndex][cellIndex]
     if(!cell) throw new Error(`no cell found`)
     const storeForms = settingsSelectors.forms(getState())
@@ -202,8 +199,6 @@ const sideEffects = {
     }))
     await dispatch(snackbarActions.setSuccess(`${widgetTitle} updated`))
     dispatch(networkActions.setGlobalLoading(false))
-  }, {
-    globalLoading: false,
   }),
 
   delete: ({
@@ -233,8 +228,6 @@ const sideEffects = {
     }))
     await dispatch(snackbarActions.setSuccess(`layout updated`))
     dispatch(networkActions.setGlobalLoading(false))
-  }, {
-    globalLoading: false,
   }),
 
   move: ({
@@ -257,8 +250,6 @@ const sideEffects = {
       }
     }))
     await dispatch(snackbarActions.setSuccess(`layout updated`))
-  }, {
-    globalLoading: false,
   }),
 
   swapRow: ({
@@ -277,8 +268,6 @@ const sideEffects = {
       }
     }))
     await dispatch(snackbarActions.setSuccess(`layout updated`))
-  }, {
-    globalLoading: false,
   }),
 
   getWidget: ({
@@ -338,8 +327,6 @@ const sideEffects = {
       rowIndex,
       autoAdd: config.autoAdd,
     }))
-  }, {
-    globalLoading: false,
   }),
 
 }

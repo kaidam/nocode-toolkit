@@ -36,6 +36,7 @@ const useCellEditor = ({
   const onEdit = () => actions.onLayoutEdit({
     content_id,
     layout_id,
+    layout,
     rowIndex,
     cellIndex,
   })
@@ -43,6 +44,7 @@ const useCellEditor = ({
   const onDelete = () => actions.onLayoutDelete({
     content_id,
     layout_id,
+    layout,
     rowIndex,
     cellIndex,
   })

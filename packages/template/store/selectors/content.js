@@ -1,5 +1,6 @@
 import { createSelector } from 'reselect'
 import deepmerge from 'deepmerge'
+import { v4 as uuid } from 'uuid'
 import childrenUtils from '../../utils/children'
 import documentUtils from '../../utils/document'
 import nocodeSelectors from './nocode'
@@ -335,7 +336,8 @@ const document = createSelector(
   nocodeSelectors.nodes,
   nocodeSelectors.annotations,
   nocodeSelectors.externals,
-  (route, routeParams, nodes, annotations, externalMap) => {
+  settingsSelectors.settings,
+  (route, routeParams, nodes, annotations, externalMap, settings) => {
     let externalIds = []
     let node = null
 
@@ -366,10 +368,22 @@ const document = createSelector(
       cssImports,
     } = documentUtils.extractImports(externals[0])
 
+    const layoutData = annotation.layout || settings.layout || [[{type: 'documentContent'}]]
+
+    const layout = layoutData.map(row => {
+      return row.map(cell => {
+        if(cell.id) return cell
+        return Object.assign({}, cell, {
+          id: uuid(),
+        })
+      })
+    })
+
     return {
       node: Object.assign({}, node, {route}),
       route,
       annotation,
+      layout,
       html,
       cssImports,
     }

@@ -8,6 +8,7 @@ import Loading from '../system/Loading'
 
 import VerticalTabs from '../widgets/VerticalTabs'
 import WebsiteForm from '../website/Form'
+import WebsiteLayout from '../website/Layout'
 import WebsiteDomains from '../website/Domains'
 import WebsiteSecurity from '../website/Security'
 import WebsiteSnippets from '../website/Snippets'
@@ -79,6 +80,15 @@ const TABS = [{
       buttonAlign={ props.buttonAlign }
       onCancel={ props.onCancel }
     />
+  )
+},{
+  id: 'layout',
+  title: 'Page Layout',
+  icon: icons.layout,
+  render: (props, classes) => (
+    <div className={ classes.container }>
+      <WebsiteLayout />
+    </div>
   )
 },{
   id: 'domains',

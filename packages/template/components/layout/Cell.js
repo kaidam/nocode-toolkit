@@ -1,6 +1,7 @@
 import React, { lazy } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Suspense from '../system/Suspense'
+import widgets from '../../widgets'
 
 const EditableCell = lazy(() => import(/* webpackChunkName: "ui" */ './EditableCell'))
 
@@ -48,7 +49,6 @@ const UnknownTypeRenderer = ({
 const Cell = ({
   cell,
   layout,
-  widgetRenderers,
   simpleMovement,
   showUI,
   content_id,
@@ -58,7 +58,8 @@ const Cell = ({
 }) => {
 
   const classes = useStyles(cell.settings || {})
-  const Renderer = widgetRenderers[cell.type] || UnknownTypeRenderer
+  const widget = widgets[cell.type]
+  const Renderer = widget ? widget.Render : UnknownTypeRenderer
 
   const content = (
     <div

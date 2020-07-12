@@ -141,11 +141,10 @@ const form = {
   }],
 }
 
-const widget = () => ({
+export default {
   id: 'image',
   title: 'Image',
+  description: 'Display an image you upload, from Google drive or from Unplash',
   Render,
   form,
-})
-
-export default widget
+}

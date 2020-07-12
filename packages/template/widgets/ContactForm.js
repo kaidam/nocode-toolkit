@@ -13,11 +13,10 @@ const form = {
   }],
 }
 
-const widget = () => ({
+export default {
   id: 'contactform',
   title: 'Contact Form',
+  description: 'Show a form visitors can use to get in touch',
   Render,
   form,
-})
-
-export default widget
+}

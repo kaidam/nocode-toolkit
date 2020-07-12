@@ -1,10 +1,10 @@
 import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
-import Link from '../widgets/Link'
-import icons from '../../icons'
+import Link from '../components/widgets/Link'
+import icons from '../icons'
 
-import contentSelectors from '../../store/selectors/content'
+import contentSelectors from '../store/selectors/content'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,12 +38,15 @@ const useStyles = makeStyles(theme => ({
 const PrevIcon = icons.previous
 const NextIcon = icons.next
 
-const BackNextButtons = ({
-  node,
+const Render = ({
+
 }) => {
 
   const classes = useStyles()
   const treeSelector = useMemo(contentSelectors.sectionTree, [])
+  const {
+    node,
+  } = useSelector(contentSelectors.document)
   const baseLocation = useSelector(contentSelectors.routeBaseLocation)
   const [ type, id ] = (baseLocation || '').split(':')
   const tree = useSelector(state => {
@@ -131,4 +134,10 @@ const BackNextButtons = ({
   )
 }
 
-export default BackNextButtons
+export default {
+  id: 'backNextButtons',
+  title: 'Back / Next Buttons',
+  description: 'Navigation buttons for the next and previous pages',
+  editable: false,
+  Render,
+}

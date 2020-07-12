@@ -16,8 +16,8 @@ import globals from './utils/globals'
 import Router from './router'
 import ThemeContainer from './theme/container'
 
-const GlobalLoading = lazy(() => import(/* webpackChunkName: "ui" */ './components/system/GlobalLoading'))
-const QuickstartDialog = lazy(() => import(/* webpackChunkName: "ui" */ './components/quickstart/Dialog'))
+import GlobalLoading from './components/system/GlobalLoading'
+
 const OnboardingWizard = lazy(() => import(/* webpackChunkName: "ui" */ './components/quickstart/OnboardingWizard'))
 
 const App = ({
@@ -70,23 +70,17 @@ const App = ({
     </div>
   )
 
+  // we are in the process of getting the system ready so show loading
   if(showUI && !initialised) {
     return (
-      <Suspense>
-        {
-          quickstartWindow ? (
-            <QuickstartDialog />
-          ) : (
-            <GlobalLoading
-              loading={ loading || true }
-            />
-          )
-        }
-      </Suspense>
+      <GlobalLoading
+        loading={ loading || true }
+      />
     )
   }
   
-  const content = (
+  // ok - render the app
+  return (
     <ThemeContainer
       ThemeModule={ ThemeModule }
       processor={ themeProcessor }
@@ -107,18 +101,18 @@ const App = ({
     </ThemeContainer>
   )
 
-  if(showUI && website && website.meta && website.meta.onboardingActive) {
-    return (
-      <Suspense>
-        <OnboardingWizard>
-          { content }
-        </OnboardingWizard>
-      </Suspense>
-    )
-  }
-  else {
-    return content
-  }
+  // if(showUI && website && website.meta && website.meta.onboardingActive) {
+  //   return (
+  //     <Suspense>
+  //       <OnboardingWizard>
+  //         { content }
+  //       </OnboardingWizard>
+  //     </Suspense>
+  //   )
+  // }
+  // else {
+  //   return content
+  // }
 }
 
 export default App

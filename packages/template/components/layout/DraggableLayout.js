@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react'
+import React from 'react'
 import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import Divider from '@material-ui/core/Divider'
@@ -22,6 +22,7 @@ const useStyles = makeStyles(theme => ({
 const LayoutEditor = ({
   content_id,
   layout_id,
+  data,
   simpleMovement,
   divider,
 }) => {
@@ -38,6 +39,7 @@ const LayoutEditor = ({
   } = useLayoutCellRenderer({
     content_id,
     layout_id,
+    data,
     simpleMovement,
   })
 
@@ -53,7 +55,8 @@ const LayoutEditor = ({
     })
   }
 
-  if(!layout || layout.length <= 0) return null
+  const useLayout = data || layout
+  if(!useLayout || useLayout.length <= 0) return null
 
   return (
     <div className={ classes.root }>    
@@ -65,8 +68,7 @@ const LayoutEditor = ({
               ref={provided.innerRef}
             >
               {
-                layout.map((row, i) => {
-
+                useLayout.map((row, i) => {
                   const rowId = row[0].id
 
                   return (

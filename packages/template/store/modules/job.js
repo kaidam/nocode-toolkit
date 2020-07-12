@@ -17,7 +17,9 @@ import jobSelectors from '../selectors/job'
 
 const prefix = 'job'
 
-const wrapper = networkWrapper.factory(prefix)
+const wrapper = networkWrapper.factory(prefix, {
+  globalLoading: false,
+})
 
 const reducers = {
   setData: (state, action) => {

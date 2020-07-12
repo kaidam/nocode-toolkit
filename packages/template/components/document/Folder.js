@@ -5,6 +5,8 @@ import Link from '../widgets/Link'
 import contentSelectors from '../../store/selectors/content'
 import Suspense from '../system/Suspense'
 
+const DefaultFolder = lazy(() => import(/* webpackChunkName: "ui" */ './DefaultFolder'))
+
 const useStyles = makeStyles(theme => ({
   root: {
     
@@ -16,7 +18,6 @@ const useStyles = makeStyles(theme => ({
 
 const Folder = ({
   node,
-  DefaultFolder,
   addContentFilter,
 }) => {
   const classes = useStyles()

@@ -1,5 +1,7 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
+import contentSelectors from '../store/selectors/content'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -15,11 +17,16 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const DocumentInfo = ({
-  node,
+const Render = ({
+  
 }) => {
 
   const classes = useStyles()
+
+  const {
+    node,
+  } = useSelector(contentSelectors.document)
+
   const {
     modifiedTime,
     lastModifyingUser,
@@ -41,4 +48,10 @@ const DocumentInfo = ({
   )
 }
 
-export default DocumentInfo
+export default {
+  id: 'documentInfo',
+  title: 'Document Info',
+  description: 'The author and date of the document',
+  editable: false,
+  Render,
+}

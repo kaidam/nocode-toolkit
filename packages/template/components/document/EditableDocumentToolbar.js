@@ -11,7 +11,7 @@ import useDocumentEditor from '../hooks/useDocumentEditor'
 
 import icons from '../../icons'
 
-import contentSelectors from '@nocode-works/template/store/selectors/content'
+import contentSelectors from '../../store/selectors/content'
 
 const EditIcon = icons.edit
 const AddIcon = icons.add

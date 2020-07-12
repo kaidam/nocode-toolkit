@@ -68,11 +68,10 @@ const form = {
   }],
 }
 
-const widget = () => ({
+export default {
   id: 'ecommerce',
   title: 'Ecommerce Button',
+  description: 'Allow visitors to purchase things from your website',
   Render,
   form,
-})
-
-export default widget
+}

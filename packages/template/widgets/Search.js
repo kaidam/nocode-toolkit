@@ -221,10 +221,9 @@ const Search = ({
   )
 }
 
-const widget = () => ({
+export default {
   id: 'search',
   title: 'Search',
   Render: Search,
-})
-
-export default widget
+  description: 'A search form that will search the content of your website',
+}
