@@ -15,9 +15,7 @@ import { contactform as initialState } from '../initialState'
 import snackbarActions from './snackbar'
 
 const prefix = 'contactform'
-const wrapper = networkWrapper.factory(prefix, {
-  globalLoading: false,
-})
+const wrapper = networkWrapper.factory(prefix)
 
 const reducers = {
   setFormId: (state, action) => {

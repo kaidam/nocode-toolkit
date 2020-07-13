@@ -1,3 +1,6 @@
+import widgets from './widgets'
+import forms from './forms'
+
 const library = {
   settings: {
     initialValues: {},
@@ -9,11 +12,12 @@ const library = {
   },
   components: {},
   quickstarts: [],
-  widgets: [],
-  forms: {},
+  widgets: widgets,
+  forms: forms,
   autoSnackbar: true,
   topbarHeight: 0,
   handlers: {},
   onboardingElements: {},
 }
+
 export default library

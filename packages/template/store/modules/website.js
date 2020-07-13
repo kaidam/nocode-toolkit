@@ -9,13 +9,10 @@ import {
   getErrorMessage,
 } from '../utils/api'
 
-import networkActions from './network'
 import snackbarActions from './snackbar'
 
 const prefix = 'website'
-const wrapper = networkWrapper.factory(prefix, {
-  globalLoading: false,
-})
+const wrapper = networkWrapper.factory(prefix)
 
 import { website as initialState } from '../initialState'
 
@@ -103,9 +100,12 @@ const sideEffects = {
 
   openBuilder: (id) => wrapper('openBuilder', async (dispatch, getState) => {
     if(id == 'new') return
-    dispatch(networkActions.setGlobalLoading(true))
     await handlers.delete(`/websites/${id}/preview`)
     document.location = `/builder/website/${id}`
+  }, {
+    showLoading: true,
+    hideLoading: false,
+    hideLoadingOnError: true,
   }),
 
   reclaimStorage: (id) => wrapper('reclaimStorage', async (dispatch, getState) => {

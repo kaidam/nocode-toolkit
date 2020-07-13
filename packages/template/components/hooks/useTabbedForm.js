@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react'
+import React, { useState, useMemo, useCallback, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import FormWrapper from '../form/Wrapper'
 import FormRender from '../form/Render'
@@ -12,17 +12,14 @@ const useTabbedForm = ({
   form,
   values,
   buttonAlign,
+  // when tabs change - do we update the router params or use internal state?
+  withRouter = true,
   cancelTitle,
   onSubmit,
   onCancel,
 }) => {
 
   const dispatch = useDispatch()
-  const params = useSelector(routerSelectors.params)
-
-  const onChangeTab = useCallback((tab) => {
-    dispatch(routerActions.addQueryParams({tab})) 
-  })
 
   const tabs = useMemo(() => {
     let result = form.tabs || []
@@ -38,6 +35,22 @@ const useTabbedForm = ({
     form,
   ])
 
+  const params = useSelector(routerSelectors.params)
+  const [ currentTabName, setCurrentTabName ] = useState(tabs && tabs.length > 0 ? tabs[0].id : null)
+
+  const currentTabId = withRouter ? params.tab : currentTabName
+
+  const onChangeTab = useCallback((tab) => {
+    if(withRouter) {
+      dispatch(routerActions.addQueryParams({tab})) 
+    }
+    else {
+      setCurrentTabName(tab)
+    }
+  }, [
+    withRouter,
+  ])
+
   const flatSchema = useMemo(() => {
     return tabs.reduce((all, tab) => {
       return all.concat(tab.schema)
@@ -47,10 +60,10 @@ const useTabbedForm = ({
   ])
 
   const currentTab = useMemo(() => {
-    return tabs.find(t => t.id == params.tab) || tabs[0]
+    return tabs.find(t => t.id == currentTabId) || tabs[0]
   }, [
     tabs,
-    params,
+    currentTabName,
   ])
 
   const getTabs = useCallback(({

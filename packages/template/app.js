@@ -16,7 +16,7 @@ import globals from './utils/globals'
 import Router from './router'
 import ThemeContainer from './theme/container'
 
-import GlobalLoading from './components/system/GlobalLoading'
+import Loading from './components/system/Loading'
 
 const OnboardingWizard = lazy(() => import(/* webpackChunkName: "ui" */ './components/quickstart/OnboardingWizard'))
 
@@ -25,21 +25,16 @@ const App = ({
   ThemeModule,
   themeProcessor,
 }) => {
-  const dispatch = useDispatch()
+
   const actions = Actions(useDispatch(), {
     initialise: actionLoader('system', 'initialise'),
   })
 
   const showUI = useSelector(systemSelectors.showUI)
   const initialised = useSelector(systemSelectors.initialised)
-  const globalLoading = useSelector(networkSelectors.globalLoading)
   const initialiseError = useSelector(systemSelectors.initialiseError)
-  const quickstartWindow = useSelector(uiSelectors.quickstartWindow)
-  const website = useSelector(websiteSelectors.websiteData)
-
-  // this allows us to customize the loading message
-  // as things are initialised
-  const loading = useSelector(uiSelectors.loading)
+  // const quickstartWindow = useSelector(uiSelectors.quickstartWindow)
+  // const website = useSelector(websiteSelectors.websiteData)
 
   useEffect(() => {
     const handler = async () => {
@@ -73,9 +68,7 @@ const App = ({
   // we are in the process of getting the system ready so show loading
   if(showUI && !initialised) {
     return (
-      <GlobalLoading
-        loading={ loading || true }
-      />
+      <Loading />
     )
   }
   
@@ -88,16 +81,6 @@ const App = ({
       <Router
         templates={ templates }
       />
-      {
-        globalLoading && (
-          <GlobalLoading
-            loading={{
-              transparent: true,
-            }}
-            useLibraryComponent={ false }
-          />
-        )
-      }
     </ThemeContainer>
   )
 

@@ -62,6 +62,16 @@ const BaseConfig = (options, production) => {
     )
   }
 
+  const templateStatic = path.join(projectFolder, 'node_modules', '@nocode-works', 'template', 'static')
+  if(fs.existsSync(templateStatic)) {
+    config.plugins.push(
+      new CopyWebpackPlugin([{
+        from: templateStatic,
+        to: '',
+      }])
+    )
+  }
+
   /*
   
     if the media folder exists

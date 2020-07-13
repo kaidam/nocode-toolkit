@@ -13,12 +13,12 @@ import layoutSelectors from '../selectors/layout'
 import nocodeActions from './nocode'
 import contentActions from './content'
 import snackbarActions from './snackbar'
-import networkActions from './network'
 import uiActions from './ui'
 
 import settingsSelectors from '../selectors/settings'
 
 import layoutUtils from '../../utils/layout'
+import widgetUtils from '../../utils/widget'
 
 import {
   LAYOUT_CELL_DEFAULTS,
@@ -26,9 +26,7 @@ import {
 
 const prefix = 'layout'
 
-const wrapper = networkWrapper.factory(prefix, {
-  globalLoading: false,
-})
+const wrapper = networkWrapper.factory(prefix)
 
 const reducers = {
   openWidgetWindow: (state, action) => {
@@ -140,7 +138,7 @@ const sideEffects = {
     }
     
     if(!values) return
-    dispatch(networkActions.setGlobalLoading(true))
+    dispatch(uiActions.setLoading(true))
     const itemData = {
       id: uuid(),
       type: form,
@@ -157,7 +155,6 @@ const sideEffects = {
       }
     }))
     await dispatch(snackbarActions.setSuccess(`${widgetTitle} created`))
-    dispatch(networkActions.setGlobalLoading(false))
   }),
 
   edit: ({
@@ -169,24 +166,27 @@ const sideEffects = {
   }) => wrapper('edit', async (dispatch, getState) => {
     const cell = layout[rowIndex][cellIndex]
     if(!cell) throw new Error(`no cell found`)
-    const storeForms = settingsSelectors.forms(getState())
-    const storeForm = storeForms[cell.type]
-    const widgetTitle = storeForm ? storeForm.title : 'Item'
-    const values = await dispatch(contentActions.waitForForm({
-      forms: [storeForm ? cell.type : null, `cell.settings`].filter(i => i),
-      values: {
-        settings: cell.settings,
-        ...cell.data
-      },
-      formWindowConfig: {
-        title: `${widgetTitle} Widget`,
-        size: 'sm',
-        fullHeight: false,
-      },
-      processValues: processCellSettings,
+
+    const {
+      tabs,
+      values,
+    } = widgetUtils.getFormDefinition({
+      type: cell.type,
+      data: cell.data,
+      settings: cell.settings,
+    })
+
+    const results = await dispatch(uiActions.getFormValues({
+      tabs,
+      values,
     }))
-    if(!values) return
-    dispatch(networkActions.setGlobalLoading(true))
+
+    if(!results) {
+      dispatch(uiActions.clearFormWindow())
+      return
+    }
+
+    dispatch(uiActions.setLoading(true))
     await dispatch(actions.update({
       content_id,
       layout_id,
@@ -194,11 +194,14 @@ const sideEffects = {
       params: {
         rowIndex,
         cellIndex,
-        data: Object.assign({}, cell, values),
+        data: widgetUtils.mergeWidgetForm({
+          cell,
+          values: results,
+        })
       }
     }))
-    await dispatch(snackbarActions.setSuccess(`${widgetTitle} updated`))
-    dispatch(networkActions.setGlobalLoading(false))
+    dispatch(uiActions.clearFormWindow())
+    await dispatch(snackbarActions.setSuccess(`widget updated`))
   }),
 
   delete: ({
@@ -216,7 +219,7 @@ const sideEffects = {
       confirmTitle: `Confirm - Delete ${name}`,
     }))
     if(!confirm) return
-    dispatch(networkActions.setGlobalLoading(true))
+    dispatch(uiActions.setLoading(true))
     await dispatch(actions.update({
       content_id,
       layout_id,
@@ -227,7 +230,6 @@ const sideEffects = {
       }
     }))
     await dispatch(snackbarActions.setSuccess(`layout updated`))
-    dispatch(networkActions.setGlobalLoading(false))
   }),
 
   move: ({

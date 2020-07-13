@@ -2,7 +2,6 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 import SnackBar from '../system/Snackbar'
-import GlobalLoading from '../system/GlobalLoading'
 
 import uiSelectors from '../../store/selectors/ui'
 import dialogSelectors from '../../store/selectors/dialog'
@@ -13,6 +12,7 @@ import unsplashSelectors from '../../store/selectors/unsplash'
 
 import ConfirmDialog from './Confirm'
 import ContentDialog from '../content/Dialog'
+import FormWindowDialog from '../ui/FormWindow'
 import AddWidgetDialog from '../layout/AddWidgetDialog'
 import DriveDialog from '../drive/Dialog'
 import DriveUpgradeScopeDialog from '../system/DriveUpgradeRequestModal'
@@ -37,7 +37,6 @@ const DEFAULT_PARAMS = {}
 const DialogLoader = ({
   
 }) => {
-  const loading = useSelector(uiSelectors.loading)
   const confirmWindow = useSelector(uiSelectors.confirmWindow)
   const formWindow = useSelector(contentSelectors.formWindow)
   const widgetWindow = useSelector(layoutSelectors.widgetWindow)
@@ -98,9 +97,7 @@ const DialogLoader = ({
           <SnackBar />
         )
       }
-      <GlobalLoading
-        loading={ loading }
-      />
+      <FormWindowDialog />
     </div>
   )
 }

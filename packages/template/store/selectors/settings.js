@@ -1,7 +1,5 @@
 import { createSelector } from 'reselect'
-import library from '../../library'
 import websiteSelectors from './website'
-//import systemWidgets from '../../widgets'
 
 const systemWidgets = {}
 const DEFAULT_ARRAY = []
@@ -20,9 +18,9 @@ const DEFAULT_LIBRARY_SETTINGS = {
 }
 
 const settingsValue = websiteSelectors.settings
-const libraryWidgets = state => library.widgets
-const libraryForms = state => library.forms
-const librarySettings = state => library.settings || DEFAULT_LIBRARY_SETTINGS
+const libraryWidgets = state => {}
+const libraryForms = state => {}
+const librarySettings = state => DEFAULT_LIBRARY_SETTINGS
 
 const getTabSchema = (tabs) => tabs.reduce((all, tab) => all.concat(tab.schema), [])
 

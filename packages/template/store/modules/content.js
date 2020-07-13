@@ -27,9 +27,7 @@ import {
 
 const prefix = 'content'
 
-const wrapper = networkWrapper.factory(prefix, {
-  globalLoading: false,
-})
+const wrapper = networkWrapper.factory(prefix)
 const overwriteMerge = (destinationArray, sourceArray, options) => sourceArray
 
 const reducers = {
@@ -691,8 +689,6 @@ const sideEffects = {
       await updateChanges()
       return
     }    
-  }, {
-    globalLoading: false,
   }),
 
   waitForForm: ({

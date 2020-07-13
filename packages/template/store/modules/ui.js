@@ -3,6 +3,7 @@ import Promise from 'bluebird'
 import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
 
+import uiActions from './ui'
 import uiSelectors from '../selectors/ui'
 import dialogActions from './dialog'
 
@@ -25,6 +26,26 @@ const reducers = {
     if(state.confirmWindow) {
       state.confirmWindow.accepted = false
     }
+  },
+  openFormWindow: (state, action) => {
+    state.formWindow = action.payload
+  },
+  acceptFormWindow: (state, action) => {
+    if(state.formWindow) {
+      state.formWindow.accepted = true
+      state.formWindow.values = action.payload
+    }
+  },
+  cancelFormWindow: (state, action) => {
+    if(state.formWindow) {
+      state.formWindow.accepted = false
+    }
+  },
+  resetFormWindow: (state, action) => {
+    state.formWindow.accepted = null
+  },
+  clearFormWindow: (state, action) => {
+    state.formWindow = null
   },
   setPreviewMode: (state, action) => {
     state.previewMode = action.payload
@@ -75,7 +96,7 @@ const sideEffects = {
     let open = true
     let confirmed = false
     while(open) {
-      await Promise.delay(100)
+      await Promise.delay(10)
       const currentSettings = selector(getState())
       if(!currentSettings || typeof(currentSettings.accepted) == 'boolean') {
         confirmed = currentSettings ?
@@ -100,6 +121,25 @@ const sideEffects = {
     const results = uiSelectors.quickstartWindow(getState())
     dispatch(actions.setQuickstartWindow(null))
     return results
+  },
+
+  getFormValues: ({
+    tabs,
+    values = {},
+    config = {},
+  }) => async (dispatch, getState) => {
+    dispatch(actions.openFormWindow({
+      tabs,
+      values,
+      config,
+    }))
+    const confirmed = await dispatch(uiActions.waitForWindow(uiSelectors.formWindow))
+    let result = null
+    if(confirmed) {
+      const windowState = uiSelectors.formWindow(getState())
+      result = windowState.values
+    }
+    return result
   },
 }
 

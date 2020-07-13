@@ -10,14 +10,12 @@ import {
 
 import websiteSelectors from '../selectors/website'
 import snackbarActions from './snackbar'
-import networkActions from './network'
+import uiActions from './ui'
 
 import { ecommerce as initialState } from '../initialState'
 
 const prefix = 'ecommerce'
-const wrapper = networkWrapper.factory(prefix, {
-  globalLoading: false,
-})
+const wrapper = networkWrapper.factory(prefix)
 
 const reducers = {
   
@@ -39,7 +37,6 @@ const sideEffects = {
   // request a stripe connect redirect URL from the backend
   // then send the browser off to Stripe
   connect: () => wrapper('connect', async (dispatch, getState) => {
-    dispatch(networkActions.setGlobalLoading(true))
     const websiteId = websiteSelectors.websiteId(getState())
     const stripe_connect_url = `${document.location.protocol}//${document.location.host}${apiUrl(`/builder/ecommerce/connect_response`)}`
     const data = await handlers.post(`/builder/${websiteId}/ecommerce/connect`, {
@@ -48,8 +45,9 @@ const sideEffects = {
     })
     document.location = data.url
   }, {
-    globalLoading: false,
-    errorHandler: () => dispatch(networkActions.setGlobalLoading(false))
+    showLoading: true,
+    hideLoading: false,
+    hideLoadingOnError: true,
   }),
 
   // for purchase we create the line item,
@@ -65,7 +63,7 @@ const sideEffects = {
     price,
     currency,
   }) => wrapper('purchase', async (dispatch, getState) => {
-    dispatch(networkActions.setGlobalLoading(true))
+    dispatch(uiActions.setLoading(true))
     const websiteId = websiteSelectors.websiteId(getState())
     const { publicKey } = await handlers.get(`/builder/ecommerce/public_key`)
     const line_items = [{
@@ -100,8 +98,9 @@ const sideEffects = {
       dispatch(snackbarActions.setError('there was an error: ' + result.error.message))
     })
   }, {
-    globalLoading: false,
-    errorHandler: () => dispatch(networkActions.setGlobalLoading(false))
+    showLoading: true,
+    hideLoading: false,
+    hideLoadingOnError: true,
   }),
 
 }

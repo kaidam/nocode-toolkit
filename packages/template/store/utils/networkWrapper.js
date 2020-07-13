@@ -1,5 +1,6 @@
 import apiUtils from './api'
 
+import uiActions from '../modules/ui'
 import networkActions from '../modules/network'
 import snackbarActions from '../modules/snackbar'
 
@@ -27,10 +28,14 @@ const networkWrapper = ({
   // whether to show a snackbar error if an error occurs
   snackbarError = true,
 
-  globalLoading = true,
+  // auto show loading
+  showLoading = false,
 
-  // auto-trigger uiActions.setLoading before and after
-  autoLoading = false,
+  // auto clear the loading
+  hideLoading = true,
+
+  // auto clear the loading if there is an error
+  hideLoadingOnError = true,
 
   // should we actually throw any error to the caller
   throwErrors = false,
@@ -40,15 +45,8 @@ const networkWrapper = ({
 
 }) => async (dispatch, getState) => {
 
-  if(autoLoading) {
-    dispatch({
-      type: 'ui/setLoading',
-      payload: autoLoading,
-    })
-  }
-
-  if(globalLoading) {
-    dispatch(networkActions.setGlobalLoading(true))
+  if(showLoading) {
+    dispatch(uiActions.setLoading(true))
   }
 
   if(before) {
@@ -85,7 +83,6 @@ const networkWrapper = ({
         }))
       }, removeErrorAfter)
     }
-    dispatch(networkActions.setGlobalLoading(null))
     if(errorHandler) await errorHandler(dispatch, getState, errorMessage)
     if(snackbarError) dispatch(snackbarActions.setError(errorMessage))
     result = null
@@ -98,17 +95,13 @@ const networkWrapper = ({
     await after(dispatch, getState)
   }
 
-  if(autoLoading) {
-    dispatch({
-      type: 'ui/setLoading',
-      payload: false,
-    })
+  if(hideLoading) {
+    dispatch(uiActions.setLoading(null))
   }
-
-  if(globalLoading) {
-    dispatch(networkActions.setGlobalLoading(null))
+  else if(hideLoadingOnError && errorToThrow) {
+    dispatch(uiActions.setLoading(null))
   }
-
+  
   if(throwErrors && errorToThrow) {
     throw errorToThrow
   }

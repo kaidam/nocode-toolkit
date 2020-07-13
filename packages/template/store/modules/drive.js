@@ -15,9 +15,7 @@ import uiActions from './ui'
 
 const prefix = 'drive'
 
-const wrapper = networkWrapper.factory(prefix, {
-  globalLoading: false,
-})
+const wrapper = networkWrapper.factory(prefix)
 
 const reducers = {
   setList: (state, action) => {
