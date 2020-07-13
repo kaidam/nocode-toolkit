@@ -46,6 +46,7 @@ const Loading = ({
 }) => {
   const classes = useStyles()
   const loading = useSelector(uiSelectors.loading)
+
   if(!loading) return null
   const loadingValues = typeof(loading) === 'object' ? loading : {}
   

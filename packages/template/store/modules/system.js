@@ -5,6 +5,10 @@ import Promise from 'bluebird'
 import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
 
+import {
+  handlers,
+} from '../utils/api'
+
 import library from '../../library'
 import globals from '../../utils/globals'
 import networkWrapper from '../utils/networkWrapper'
@@ -92,6 +96,24 @@ const loaders = {
 
 const sideEffects = {
 
+  // load the required data in one api call
+  loadInitialData: () => async (dispatch, getState) => {
+    const websiteId = websiteSelectors.websiteId(getState())
+    const result = await handlers.get(`/websites/${websiteId}/initialData`)
+
+    console.log('--------------------------------------------')
+    console.log('--------------------------------------------')
+    console.dir(result)
+    globals.identifyUser(result.user)
+    dispatch(actions.setUser(result.user))
+    dispatch(actions.setTokenStatus(result.tokenStatus))
+    dispatch(websiteActions.setConfig(result.config))
+    dispatch(websiteActions.setWebsite(result.website))
+    dispatch(websiteActions.setDnsInfo(result.dnsInfo))
+    dispatch(websiteActions.setTemplate(result.dnsInfo))
+    dispatch(jobActions.setPublishStatus(result.publishStatus))    
+  },
+
   /*
   
     initialise
@@ -101,27 +123,20 @@ const sideEffects = {
     // never run this twice
     if(systemSelectors.initialiseCalled(getState())) return
 
+    await dispatch(actions.loadInitialData())
+    
     const websiteId = websiteSelectors.websiteId(getState())
-
-    // load everything that is needed initially
-    await Promise.all([
-      dispatch(websiteActions.loadConfig(websiteId)),
-      dispatch(websiteActions.get(websiteId)),
-      dispatch(websiteActions.loadDnsInfo()),
-      dispatch(actions.loadUser()),
-      dispatch(actions.loadTokenStatus()),
-      dispatch(jobActions.getPublishStatus()),
-      dispatch(websiteActions.loadTemplate(websiteId)),
-    ])
-
     const tokenStatus = systemSelectors.tokenStatus(getState())
 
     // we need to upgrade our scope
     if(tokenStatus && tokenStatus.action == 'login') {
-      const redirect = document.location.host == 'localhost:8000' ?
-        `http://localhost/scope/${tokenStatus.name}` :
-        `${tokenStatus.name}`
-      document.location = redirect
+
+      console.log('--------------------------------------------')
+      console.dir(tokenStatus)
+      // const redirect = document.location.host == 'localhost:8000' ?
+      //   `http://localhost/scope/${tokenStatus.name}` :
+      //   `${tokenStatus.name}`
+      // document.location = redirect
       return
     }
 
@@ -161,6 +176,12 @@ const sideEffects = {
       }))
     }
   }, {
+    showLoading: true,
+    hideLoading: false,
+    hideLoadingOnError: false,
+    loadingProps: {
+      type: 'parrot',
+    },
     errorHandler: async (dispatch, getState, error) => {
       dispatch(uiActions.setLoading({
         error,

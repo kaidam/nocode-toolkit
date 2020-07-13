@@ -37,6 +37,9 @@ const networkWrapper = ({
   // auto clear the loading if there is an error
   hideLoadingOnError = true,
 
+  // what do we send to the loading store
+  loadingProps = true,
+
   // should we actually throw any error to the caller
   throwErrors = false,
 
@@ -46,7 +49,7 @@ const networkWrapper = ({
 }) => async (dispatch, getState) => {
 
   if(showLoading) {
-    dispatch(uiActions.setLoading(true))
+    dispatch(uiActions.setLoading(loadingProps))
   }
 
   if(before) {

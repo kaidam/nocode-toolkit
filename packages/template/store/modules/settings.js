@@ -57,11 +57,6 @@ const sideEffects = {
     await dispatch(jobActions.reload())
     dispatch(dialogActions.close('settings'))
     dispatch(snackbarActions.setSuccess(`settings updated`))
-  }, {
-    autoLoading: {
-      transparent: true,
-      message: 'saving settings',
-    },
   }),
 
   // use to edit things that live in the settings

@@ -1,4 +1,5 @@
 // main app entry
+import Promise from 'bluebird'
 import React, { lazy, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -18,6 +19,7 @@ import ThemeContainer from './theme/container'
 
 import Loading from './components/system/Loading'
 
+const BootLoader = lazy(() => import(/* webpackChunkName: "ui" */ './components/system/BootLoader'))
 const OnboardingWizard = lazy(() => import(/* webpackChunkName: "ui" */ './components/quickstart/OnboardingWizard'))
 
 const App = ({
@@ -26,25 +28,12 @@ const App = ({
   themeProcessor,
 }) => {
 
-  const actions = Actions(useDispatch(), {
-    initialise: actionLoader('system', 'initialise'),
-  })
-
   const showUI = useSelector(systemSelectors.showUI)
   const initialised = useSelector(systemSelectors.initialised)
   const initialiseError = useSelector(systemSelectors.initialiseError)
   // const quickstartWindow = useSelector(uiSelectors.quickstartWindow)
   // const website = useSelector(websiteSelectors.websiteData)
 
-  useEffect(() => {
-    const handler = async () => {
-      if(globals.isUIActivated()) {
-        await actions.initialise()  
-      }
-    }
-    handler()
-  }, [initialised])
-  
   if(initialiseError) return (
     <div
       style={{
@@ -68,21 +57,30 @@ const App = ({
   // we are in the process of getting the system ready so show loading
   if(showUI && !initialised) {
     return (
-      <Loading />
+      <>
+        <Loading />
+        <Suspense>
+          <BootLoader />
+        </Suspense>
+      </>
     )
   }
-  
-  // ok - render the app
+
   return (
-    <ThemeContainer
-      ThemeModule={ ThemeModule }
-      processor={ themeProcessor }
-    >
-      <Router
-        templates={ templates }
-      />
-    </ThemeContainer>
+    <div>Loaded</div>
   )
+ 
+  // // ok - render the app
+  // return (
+  //   <ThemeContainer
+  //     ThemeModule={ ThemeModule }
+  //     processor={ themeProcessor }
+  //   >
+  //     <Router
+  //       templates={ templates }
+  //     />
+  //   </ThemeContainer>
+  // )
 
   // if(showUI && website && website.meta && website.meta.onboardingActive) {
   //   return (

@@ -116,6 +116,7 @@ const sideEffects = {
     if(!previewJobId) return 
     dispatch(uiActions.setLoading({
       message: 'Loading your data...',
+      type: 'parrot',
     }))
     await dispatch(actions.waitForJob({
       id: previewJobId,
@@ -123,6 +124,7 @@ const sideEffects = {
         const logs = jobSelectors.logArray(getState())
         dispatch(uiActions.setLoading({
           message: 'Loading your data...',
+          type: 'parrot',
           logs: logs.slice(Math.max(logs.length - 3, 0)),
         }))
       },
@@ -132,11 +134,12 @@ const sideEffects = {
 
   waitForJobWithLoading: ({
     jobId,
+    type = 'parrot',
     message = 'Loading your data...',
   } = {}) => async (dispatch, getState) => {
     dispatch(uiActions.setLoading({
       message,
-      transparent: true,
+      type,
     }))
     await dispatch(actions.waitForJob({
       id: jobId,
@@ -144,8 +147,8 @@ const sideEffects = {
         const logs = jobSelectors.logArray(getState())
         dispatch(uiActions.setLoading({
           message,
+          type,
           logs: logs.slice(Math.max(logs.length - 3, 0)),
-          transparent: true,
         }))
       },
     }))

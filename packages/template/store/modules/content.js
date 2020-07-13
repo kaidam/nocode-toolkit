@@ -311,7 +311,6 @@ const sideEffects = {
     if(!result) return
 
     dispatch(uiActions.setLoading({
-      transparent: true,
       message: `deleting ${name}`,
     }))
 
@@ -412,7 +411,6 @@ const sideEffects = {
     if(!result) return
 
     dispatch(uiActions.setLoading({
-      transparent: true,
       message: `deleting ${name}`,
     }))
 
@@ -550,7 +548,6 @@ const sideEffects = {
     }))
     if(!newDocument) return
     dispatch(uiActions.setLoading({
-      transparent: true,
       message: `updating homepage`,
     }))
     await loaders.editHomepageSingleton(getState, {
@@ -571,7 +568,6 @@ const sideEffects = {
     content_id,
   } = {}) => wrapper('changeHomepageSetting', async (dispatch, getState) => {
     dispatch(uiActions.setLoading({
-      transparent: true,
       message: `updating homepage`,
     }))
     await loaders.editHomepageSetting(getState, {
@@ -599,7 +595,6 @@ const sideEffects = {
     if(!result) return
 
     dispatch(uiActions.setLoading({
-      transparent: true,
       message: `hiding ${name}`,
     }))
 
@@ -630,7 +625,6 @@ const sideEffects = {
     if(!result) return
 
     dispatch(uiActions.setLoading({
-      transparent: true,
       message: `showing ${name}`,
     }))
 
