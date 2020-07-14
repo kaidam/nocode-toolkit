@@ -66,21 +66,17 @@ const App = ({
     )
   }
 
+  // ok - render the app
   return (
-    <div>Loaded</div>
+    <ThemeContainer
+      ThemeModule={ ThemeModule }
+      processor={ themeProcessor }
+    >
+      <Router
+        templates={ templates }
+      />
+    </ThemeContainer>
   )
- 
-  // // ok - render the app
-  // return (
-  //   <ThemeContainer
-  //     ThemeModule={ ThemeModule }
-  //     processor={ themeProcessor }
-  //   >
-  //     <Router
-  //       templates={ templates }
-  //     />
-  //   </ThemeContainer>
-  // )
 
   // if(showUI && website && website.meta && website.meta.onboardingActive) {
   //   return (

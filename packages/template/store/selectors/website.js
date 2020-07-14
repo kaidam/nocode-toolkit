@@ -3,6 +3,8 @@ import {
   networkGroup,
 } from './utils'
 
+const DEFAULT_OBJECT = {}
+
 const websites = state => state.website.websites
 const config = state => state.website.config
 const template = state => state.website.template

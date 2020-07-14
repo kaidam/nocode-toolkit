@@ -100,10 +100,6 @@ const sideEffects = {
   loadInitialData: () => async (dispatch, getState) => {
     const websiteId = websiteSelectors.websiteId(getState())
     const result = await handlers.get(`/websites/${websiteId}/initialData`)
-
-    console.log('--------------------------------------------')
-    console.log('--------------------------------------------')
-    console.dir(result)
     globals.identifyUser(result.user)
     dispatch(actions.setUser(result.user))
     dispatch(actions.setTokenStatus(result.tokenStatus))
@@ -130,13 +126,10 @@ const sideEffects = {
 
     // we need to upgrade our scope
     if(tokenStatus && tokenStatus.action == 'login') {
-
-      console.log('--------------------------------------------')
-      console.dir(tokenStatus)
-      // const redirect = document.location.host == 'localhost:8000' ?
-      //   `http://localhost/scope/${tokenStatus.name}` :
-      //   `${tokenStatus.name}`
-      // document.location = redirect
+      const redirect = document.location.host == 'localhost:8000' ?
+        `http://localhost/scope/${tokenStatus.name}` :
+        `${tokenStatus.name}`
+      document.location = redirect
       return
     }
 
