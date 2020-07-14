@@ -32,10 +32,13 @@ const networkWrapper = ({
   showLoading = false,
 
   // auto clear the loading
-  hideLoading = true,
+  hideLoading = false,
 
   // auto clear the loading if there is an error
-  hideLoadingOnError = true,
+  hideLoadingOnError = false,
+
+  // means showLoading, hideLoading & hideLoadingOnError = true
+  autoLoading = false,
 
   // what do we send to the loading store
   loadingProps = true,
@@ -48,6 +51,12 @@ const networkWrapper = ({
 
 }) => async (dispatch, getState) => {
 
+  if(autoLoading) {
+    showLoading = true
+    hideLoading = true
+    hideLoadingOnError = true
+  }
+  
   if(showLoading) {
     dispatch(uiActions.setLoading(loadingProps))
   }

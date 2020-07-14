@@ -243,9 +243,6 @@ const Publish = async ({
       version: templateData.version,
       filepath: path.join(options.projectFolder, templateData.nocode.screenshot),
     })
-
-    console.log('--------------------------------------------')
-    console.dir(templateData.screenshot)
   }
 
   await publishTemplate({

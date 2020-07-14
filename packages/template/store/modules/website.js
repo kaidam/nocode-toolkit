@@ -60,25 +60,34 @@ const sideEffects = {
     dispatch(actions.setWebsite(data))
   }),
 
+  create: ({
+    name,
+    template,
+  }) => wrapper('create', async (dispatch, getState) => {
+    const websiteNameField = template.version.meta.settings.websiteNameField
+    const result = await handlers.post(`/websites`, {
+      name,
+      template: template.id,
+      settings: {
+        [websiteNameField]: name,
+      }
+    })
+    return result
+  }, {
+    showLoading: true,
+  }),
+
   save: (id, settings) => wrapper('save', async (dispatch, getState) => {
     const settingsSchema = websiteSelectors.settingsSchema(getState())
     if(!settingsSchema.websiteNameField) throw new Error(`template does not provide a websiteNameField`)
     const currentData = websiteSelectors.websiteData(getState())
     const name = settings[settingsSchema.websiteNameField]    
-    if(id == 'new') {
-      await handlers.post(`/websites`, {
-        name,
-        settings,
-      })
+    if(currentData.name != name) {
+      await handlers.put(`/websites/${id}`, {name})
     }
-    else {
-      if(currentData.name != name) {
-        await handlers.put(`/websites/${id}`, {name})
-      }
-      await handlers.put(`/websites/${id}/meta`, {settings})
-      await dispatch(actions.get(id))
-    }
-    dispatch(snackbarActions.setSuccess(`settings ${ id == 'new' ? 'created' : 'saved' }`))
+    await handlers.put(`/websites/${id}/meta`, {settings})
+    await dispatch(actions.get(id))
+    dispatch(snackbarActions.setSuccess(`settings saved`))
     return true
   }),
 
@@ -104,8 +113,6 @@ const sideEffects = {
     document.location = `/builder/website/${id}`
   }, {
     showLoading: true,
-    hideLoading: false,
-    hideLoadingOnError: true,
   }),
 
   reclaimStorage: (id) => wrapper('reclaimStorage', async (dispatch, getState) => {
