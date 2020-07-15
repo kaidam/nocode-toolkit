@@ -106,7 +106,7 @@ const sideEffects = {
     dispatch(websiteActions.setConfig(result.config))
     dispatch(websiteActions.setWebsite(result.website))
     dispatch(websiteActions.setDnsInfo(result.dnsInfo))
-    dispatch(websiteActions.setTemplate(result.dnsInfo))
+    dispatch(websiteActions.setTemplate(result.template))
     dispatch(jobActions.setPublishStatus(result.publishStatus))    
   },
 

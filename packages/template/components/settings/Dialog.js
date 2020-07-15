@@ -45,6 +45,7 @@ const SettingsDialog = ({
           icon: icons.payments,
           handler: onOpenPlan,
         }] }
+        onAfterFormSubmit={ onCloseWindow }
         onCancel={ onCloseWindow }
       />
     </Window>

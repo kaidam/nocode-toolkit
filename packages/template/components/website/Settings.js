@@ -78,6 +78,7 @@ const TABS = [{
     <WebsiteForm
       cancelTitle={ props.cancelTitle }
       buttonAlign={ props.buttonAlign }
+      onAfterSubmit={ props.extraProps.onAfterFormSubmit }
       onCancel={ props.onCancel }
     />
   )
@@ -147,6 +148,7 @@ const WebsiteSettings = ({
   cancelTitle,
   buttonAlign,
   extraTabs = [],
+  ...extraProps
 }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
@@ -205,6 +207,7 @@ const WebsiteSettings = ({
     buttonAlign,
     cancelTitle,
     onCancel,
+    extraProps,
   }
 
   return (

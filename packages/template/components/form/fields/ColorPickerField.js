@@ -181,7 +181,7 @@ const ColorPickerField = ({
           <div 
             className={ classes.colorTab } 
             style={{
-              backgroundColor: value.color,
+              backgroundColor: value ? value.color : '#fff',
             }}
             onClick={ handleOpen }
           >

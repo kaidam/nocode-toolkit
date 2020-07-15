@@ -75,6 +75,7 @@ const App = ({
       <Router
         templates={ templates }
       />
+      <Loading />
     </ThemeContainer>
   )
 

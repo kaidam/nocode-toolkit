@@ -63,7 +63,7 @@ const useTabbedForm = ({
     return tabs.find(t => t.id == currentTabId) || tabs[0]
   }, [
     tabs,
-    currentTabName,
+    currentTabId,
   ])
 
   const getTabs = useCallback(({

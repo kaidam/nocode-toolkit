@@ -37,6 +37,7 @@ const WebsiteForm = ({
   cancelTitle,
   buttonAlign,
   onCancel,
+  onAfterSubmit,
 }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
@@ -46,10 +47,12 @@ const WebsiteForm = ({
   const settings = useSelector(websiteSelectors.settings)
 
   const onSubmit = useCallback(async (payload) => {
-    await dispatch(websiteActions.save(websiteId, payload))
+    const result = await dispatch(websiteActions.save(websiteId, payload))
+    if(result && onAfterSubmit) onAfterSubmit()
   }, [
     website,
     websiteId,
+    onAfterSubmit,
   ])
 
   if(!website) return null

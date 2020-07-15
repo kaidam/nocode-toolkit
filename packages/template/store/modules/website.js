@@ -89,6 +89,9 @@ const sideEffects = {
     await dispatch(actions.get(id))
     dispatch(snackbarActions.setSuccess(`settings saved`))
     return true
+  }, {
+    showLoading: true,
+    hideLoading: true,
   }),
 
   updateMeta: (id, data) => wrapper('updateMeta', async (dispatch, getState) => {
