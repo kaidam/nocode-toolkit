@@ -110,8 +110,9 @@ const onboardingActive = createSelector(
   (showUI, userMeta, websiteMeta, template) => {
     if(!showUI) return false
     if(!template) return false
+    const templateId = template.template.id
     if(websiteMeta.onboardingActive === false) return false
-    if(userMeta.onboardedTemplates && userMeta.onboardedTemplates[template.id]) return false
+    if(userMeta.onboardedTemplates && userMeta.onboardedTemplates[templateId]) return false
     return true
   },
 )

@@ -73,7 +73,6 @@ const sideEffects = {
 
     await dispatch(actions.loadInitialData())
     
-    const websiteId = websiteSelectors.websiteId(getState())
     const tokenStatus = systemSelectors.tokenStatus(getState())
 
     // we need to upgrade our scope

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useRef, useState, useEffect, useCallback } from 'react'
 import { useSelector, useStore, useDispatch } from 'react-redux'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
@@ -167,6 +167,24 @@ const OnboardingWizard = ({
     setTargetStepIndex(currentStepIndex + 1)
   }
 
+  const finishOnboarding = useCallback(() => {
+    const id = template.template.id
+    dispatch(websiteActions.updateMeta(website.id, {
+      onboardingActive: false,
+    }, {
+      snackbar: false,
+    }))
+    dispatch(systemActions.updateUserMeta({
+      onboardedTemplates: Object.assign({}, onboardedTemplates, {
+        [id]: true,
+      }),
+    }))
+  }, [
+    website,
+    onboardedTemplates,
+    template,
+  ])
+
   useEffect(() => {
     const handler = async () => {
       if(onboardingConfig && targetStepIndex >= onboardingConfig.steps.length) {
@@ -174,9 +192,7 @@ const OnboardingWizard = ({
         if(currentStep && currentStep.cleanup) {
           await currentStep.cleanup(store.dispatch, store.getState)
         }
-        await dispatch(websiteActions.updateMeta(website.id, {
-          onboardingActive: false,
-        }))
+        finishOnboarding()
       }
       else {
         if(currentStep && currentStep.cleanup) {
@@ -202,24 +218,10 @@ const OnboardingWizard = ({
       setTargetStepIndex(0)
     }
     else {
-      console.log('--------------------------------------------')
-      console.dir('done')
-      // dispatch(websiteActions.updateMeta(website.id, {
-      //   onboardingActive: false,
-      // }, {
-      //   snackbar: false,
-      // }))
-      // dispatch(systemActions.updateMeta(user.id, {
-      //   onboardedTemplates: Object.assign({}, onboardedTemplates, {
-      //     [template.id]: true,
-      //   }),
-      // }, {
-      //   snackbar: false,
-      // }))
+      finishOnboarding()
     }
   }, [
     website,
-    onboardedTemplates,
     template,
   ])
 
