@@ -5,10 +5,17 @@ import systemUtils from '../../utils/system'
 import nocodeSelectors from './nocode'
 import networkSelectors from './network'
 
+const DEFAULT_OBJECT = {}
+
 const previewMode = state => state.ui.previewMode
 const user = state => state.system.user
 const tokenStatus = state => state.system.tokenStatus
 const initialiseCalled = state => state.system.initialiseCalled
+
+const userMeta = createSelector(
+  user,
+  user => user && user.meta ? user.meta : DEFAULT_OBJECT
+)
 
 // are we in core UI mode
 // this ignores previewMode so we can still
@@ -50,8 +57,14 @@ const hasFullDriveAccess = createSelector(
   tokenStatus => tokenStatus && tokenStatus.driveLevel >= 2
 )
 
+const onboardedTemplates = createSelector(
+  userMeta,
+  userMeta => userMeta.onboardedTemplates || DEFAULT_OBJECT
+)
+
 const selectors = {
   user,
+  userMeta,
   tokenStatus,
   showCoreUI,
   showUI,
@@ -59,6 +72,7 @@ const selectors = {
   initialiseCalled,
   initialiseError,
   hasFullDriveAccess,
+  onboardedTemplates,
 }
 
 export default selectors

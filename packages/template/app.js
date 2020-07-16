@@ -21,8 +21,8 @@ const App = ({
 
   const showUI = useSelector(systemSelectors.showUI)
   const initialised = useSelector(systemSelectors.initialised)
-  const initialiseError = useSelector(systemSelectors.initialiseError)
-  const website = useSelector(websiteSelectors.websiteData)
+  const initialiseError = useSelector(systemSelectors.initialiseError) 
+  const onboardingActive = useSelector(websiteSelectors.onboardingActive)
 
   if(initialiseError) return (
     <div
@@ -69,7 +69,7 @@ const App = ({
     </ThemeContainer>
   )
 
-  if(showUI && website && website.meta && website.meta.onboardingActive) {
+  if(onboardingActive) {
     return (
       <Suspense>
         <OnboardingWizard>

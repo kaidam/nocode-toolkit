@@ -3,6 +3,8 @@ import {
   networkGroup,
 } from './utils'
 
+import systemSelectors from './system'
+
 const DEFAULT_OBJECT = {}
 
 const websites = state => state.website.websites
@@ -48,7 +50,7 @@ const websiteData = createSelector(
 
 const websiteMeta = createSelector(
   websiteData,
-  (data) => data && data.meta ? data.meta : {}
+  (data) => data && data.meta ? data.meta : DEFAULT_OBJECT
 )
 
 const websiteList = createSelector(
@@ -92,12 +94,26 @@ const templateMeta = createSelector(
 
 const settingsSchema = createSelector(
   templateMeta,
-  templateMeta => templateMeta.settings || {}
+  templateMeta => templateMeta.settings || DEFAULT_OBJECT
 )
 
 const templateLayouts = createSelector(
   settingsSchema,
-  settingsSchema => settingsSchema.layout || {}
+  settingsSchema => settingsSchema.layout || DEFAULT_OBJECT
+)
+
+const onboardingActive = createSelector(
+  systemSelectors.showUI,
+  systemSelectors.userMeta,
+  websiteMeta,
+  template,
+  (showUI, userMeta, websiteMeta, template) => {
+    if(!showUI) return false
+    if(!template) return false
+    if(websiteMeta.onboardingActive === false) return false
+    if(userMeta.onboardedTemplates && userMeta.onboardedTemplates[template.id]) return false
+    return true
+  },
 )
 
 const selectors = {
@@ -114,6 +130,7 @@ const selectors = {
   templateMeta,
   settingsSchema,
   templateLayouts,
+  onboardingActive,
   ...networkGroup('website', [
     'list',
     'get',

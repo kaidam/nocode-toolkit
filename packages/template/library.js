@@ -17,7 +17,9 @@ const library = {
   topbarHeight: 0,
   handlers: {},
   onboardingElements: {},
-  onboarding: [],
+  onboarding: {
+    steps: [],
+  },
 }
 
 export default library

@@ -1,14 +1,16 @@
 import React from 'react'
-
+import { useSelector } from 'react-redux'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import Button from '@material-ui/core/Button'
 
+import websiteSelectors from '../../store/selectors/website'
 import driveUtils from '../../utils/drive'
 
 const FolderInfoDescription = ({
-  store,
+  
 }) => {
-  const folderId = store.getState().system.website.meta.nocodeFolderId
+  const websiteMeta = useSelector(websiteSelectors.websiteMeta)
+  const folderId = websiteMeta.nocodeFolderId
   const openFolderUrl = driveUtils.getEditUrl({
     id: folderId,
     mimeType: 'folder',

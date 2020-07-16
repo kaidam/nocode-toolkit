@@ -17,6 +17,9 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import FocusElementOverlay from '../widgets/FocusElementOverlay'
 
 import websiteSelectors from '../../store/selectors/website'
+import websiteActions from '../../store/modules/website'
+import systemSelectors from '../../store/selectors/system'
+import systemActions from '../../store/modules/system'
 
 import OnboardingContext from '../contexts/onboarding'
 
@@ -110,8 +113,10 @@ const OnboardingWizard = ({
 
   const classes = useStyles()
   const store = useStore()
-  const dispatch = useDispatch()
+  const dispatch = useDispatch()  
   const website = useSelector(websiteSelectors.websiteData)
+  const template = useSelector(websiteSelectors.template)
+  const onboardedTemplates = useSelector(systemSelectors.onboardedTemplates)
 
   const theme = useTheme()
   const isBigScreen = useMediaQuery(theme.breakpoints.up('md'))
@@ -135,7 +140,7 @@ const OnboardingWizard = ({
   const isLastStep = (adjustedCurrentIndex + 1) >= totalSteps
   const stepTitle = `Step ${adjustedCurrentIndex + 1} of ${totalSteps}`
 
-  const focusElement = currentStep ? focusElements.current[currentStep.id] : null
+  const focusElement = currentStep ? focusElements.current[currentStep.element] : null
 
   /*
   
@@ -191,115 +196,124 @@ const OnboardingWizard = ({
 
   useEffect(() => {
     if(!website || !website.meta) return
-    if(library.onboarding && library.onboarding.length > 0) {
+    if(!template) return
+    if(library.onboarding && library.onboarding.steps && library.onboarding.steps.length > 0) {
       setOnboardingConfig(library.onboarding)
       setTargetStepIndex(0)
     }
     else {
-      dispatch(websiteActions.updateMeta(website.id, {
-        onboardingActive: false,
-      }))
+      console.log('--------------------------------------------')
+      console.dir('done')
+      // dispatch(websiteActions.updateMeta(website.id, {
+      //   onboardingActive: false,
+      // }, {
+      //   snackbar: false,
+      // }))
+      // dispatch(systemActions.updateMeta(user.id, {
+      //   onboardedTemplates: Object.assign({}, onboardedTemplates, {
+      //     [template.id]: true,
+      //   }),
+      // }, {
+      //   snackbar: false,
+      // }))
     }
   }, [
     website,
+    onboardedTemplates,
+    template,
   ])
 
   let info = null
 
-  if(currentStep && focusElement && currentStep.id == focusElement.id) {
-    if(targetStepIndex == currentStepIndex && focusElement.ref && focusElement.ref.current) {
-      const padding = typeof(focusElement.padding) === 'number' ?
-        {
-          left: focusElement.padding,
-          right: focusElement.padding,
-          top: focusElement.padding,
-          bottom: focusElement.padding,
-        } :
-        focusElement.padding
+  if(currentStep && targetStepIndex == currentStepIndex) {
+    const padding = focusElement && typeof(focusElement.padding) === 'number' ?
+      {
+        left: focusElement.padding,
+        right: focusElement.padding,
+        top: focusElement.padding,
+        bottom: focusElement.padding,
+      } :
+      (focusElement && focusElement.padding ? focusElement.padding : 0)
 
-      const Description = isBigScreen ?
-        currentStep.description :
-        currentStep.smallDescription
+    const Description = isBigScreen ?
+      currentStep.description :
+      currentStep.smallDescription
 
-      const infoContent = (
-        <>
-          <DialogTitle disableTypography className={classes.title}>
-            <Typography variant="h6">{ currentStep.title }</Typography>
-            <Typography className={classes.stepTitle}>{ stepTitle }</Typography>
-          </DialogTitle>
-          <DialogContent className={ classes.dialogContent }>
-            {
-              typeof(Description) == 'function' ? 
-                <Description store={store} /> :
-                (Description || []).map((row, i) => {
-                  return (
-                    <DialogContentText key={ i }>{ row }</DialogContentText>
-                  )
-                })
-            }
-          </DialogContent>
+    const infoContent = (
+      <>
+        <DialogTitle disableTypography className={classes.title}>
+          <Typography variant="h6">{ currentStep.title }</Typography>
+          <Typography className={classes.stepTitle}>{ stepTitle }</Typography>
+        </DialogTitle>
+        <DialogContent className={ classes.dialogContent }>
           {
-            isLastStep ? (
-              <DialogActions>
-                <Button onClick={ progressOnboarding } color="secondary">
-                  Finish
-                </Button>
-              </DialogActions>
-            ) : (
-              <DialogActions>
-                <Button onClick={ cancelOnboarding }>
-                  Close
-                </Button>
-                <Button onClick={ progressOnboarding } color="secondary">
-                  Next
-                </Button>
-              </DialogActions>
-            )
+            typeof(Description) == 'function' ? 
+              <Description /> :
+              (Description || []).map((row, i) => {
+                return (
+                  <DialogContentText key={ i }>{ row }</DialogContentText>
+                )
+              })
           }
-        </>
-      )
+        </DialogContent>
+        {
+          isLastStep ? (
+            <DialogActions>
+              <Button onClick={ progressOnboarding } color="secondary">
+                Finish
+              </Button>
+            </DialogActions>
+          ) : (
+            <DialogActions>
+              <Button onClick={ cancelOnboarding }>
+                Close
+              </Button>
+              <Button onClick={ progressOnboarding } color="secondary">
+                Next
+              </Button>
+            </DialogActions>
+          )
+        }
+      </>
+    )
 
-      info = (
-        <>
-          <Hidden smDown>
-            <Popper 
-              open
-              anchorEl={ focusElement.ref.current }
-              placement={ currentStep.placement || 'right' }
-              className={ classes.popper }
-              modifiers={{
-                arrow: {
-                  enabled: true,
-                  element: arrowRef,
-                },
-                offset: {
-                  offset: currentStep.offset || '0',
-                }
-              }}
-            >
-              <span className={classes.arrow} ref={setArrowRef} />
-              <Paper className={classes.paper}>
-                { infoContent }
-              </Paper>
-            </Popper>
-            <FocusElementOverlay
-              contentRef={ focusElement.ref }
-              padding={ padding }
-              zIndex={ 1301 }
-              disableClick={ currentStep.disableClick ? true : false }
-            />
-          </Hidden>
-          <Hidden mdUp>
-            <Dialog
-              open
-              onClose={ cancelOnboarding }
-            >
-              { infoContent }
-            </Dialog>
-          </Hidden>
-        </>
-      )
-    }
+    info = isBigScreen && focusElement && focusElement.ref.current ? (
+      <>
+        <Popper 
+          open
+          anchorEl={ focusElement.ref.current }
+          placement={ currentStep.placement || 'right' }
+          className={ classes.popper }
+          modifiers={{
+            arrow: {
+              enabled: true,
+              element: arrowRef,
+            },
+            offset: {
+              offset: currentStep.offset || '0',
+            }
+          }}
+        >
+          <span className={classes.arrow} ref={setArrowRef} />
+          <Paper className={classes.paper}>
+            { infoContent }
+          </Paper>
+        </Popper>
+        <FocusElementOverlay
+          contentRef={ focusElement.ref }
+          padding={ padding }
+          zIndex={ 1301 }
+          disableClick={ currentStep.disableClick ? true : false }
+        />
+      </>
+    ) : (
+      <Dialog
+        open
+        onClose={ cancelOnboarding }
+      >
+        { infoContent }
+      </Dialog>
+    )
   }
 
   return (

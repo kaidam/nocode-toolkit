@@ -119,11 +119,14 @@ const sideEffects = {
     hideLoading: true,
   }),
 
-  updateMeta: (id, data) => wrapper('updateMeta', async (dispatch, getState) => {
+  updateMeta: (id, data, settings = {}) => wrapper('updateMeta', async (dispatch, getState) => {
     if(id == 'new') return
     await handlers.put(`/websites/${id}/meta`, data)
     await dispatch(actions.get(id))
-    dispatch(snackbarActions.setSuccess(`settings updated`))
+    const showSnackbar = settings.snackbar === false ? false : true
+    if(showSnackbar) {
+      dispatch(snackbarActions.setSuccess(`settings updated`))
+    }
     return true
   }),
 
