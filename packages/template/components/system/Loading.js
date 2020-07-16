@@ -35,6 +35,11 @@ const useStyles = makeStyles(theme => createStyles({
   },
   content: {
     textAlign: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  loadingContainer: {
+    margin: 'auto',
   },
   logs: {
     color: '#999'
@@ -67,13 +72,16 @@ const Loading = ({
             />
           ) : (
             <div className={ classes.content }>
-              {
-                type == 'parrot' ? (
-                  <ParrotLoading />
-                ) : (
-                  <CircularLoading />
-                )
-              }
+              <div className={ classes.loadingContainer }>
+                {
+                  type == 'parrot' ? (
+                    <ParrotLoading />
+                  ) : (
+                    <CircularLoading />
+                  )
+                }
+              </div>
+              
               {
                 message && (
                   <Typography
