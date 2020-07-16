@@ -5,17 +5,9 @@ import systemUtils from '../../utils/system'
 import nocodeSelectors from './nocode'
 import networkSelectors from './network'
 
-import {
-  GOOGLE_FULL_DRIVE_SCOPE,
-} from '../../config'
-
 const previewMode = state => state.ui.previewMode
 const user = state => state.system.user
 const tokenStatus = state => state.system.tokenStatus
-const config = state => state.system.config
-const website = state => state.system.website
-const dnsInfo = state => state.system.dnsInfo
-const loading = state => state.system.loading
 const initialiseCalled = state => state.system.initialiseCalled
 
 // are we in core UI mode
@@ -61,10 +53,6 @@ const hasFullDriveAccess = createSelector(
 const selectors = {
   user,
   tokenStatus,
-  config,
-  website,
-  dnsInfo,
-  loading,
   showCoreUI,
   showUI,
   initialised,

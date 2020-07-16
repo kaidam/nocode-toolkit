@@ -17,6 +17,7 @@ import DialogButtons from '../widgets/DialogButtons'
 
 import routerActions from '../../store/modules/router'
 import routerSelectors from '../../store/selectors/router'
+import websiteActions from '../../store/modules/website'
 import websiteSelectors from '../../store/selectors/website'
 import snackbarActions from '../../store/modules/snackbar'
 
@@ -88,7 +89,11 @@ const TABS = [{
   icon: icons.layout,
   render: (props, classes) => (
     <div className={ classes.container }>
-      <WebsiteLayout />
+      <WebsiteLayout
+        layouts={ props.layouts }
+        selected={ props.currentLayout }
+        onSelect={ (layout) => props.onUpdateMeta({layout}) }
+      />
     </div>
   )
 },{
@@ -155,6 +160,8 @@ const WebsiteSettings = ({
   const websiteId = useSelector(websiteSelectors.websiteId)
   const website = useSelector(websiteSelectors.websiteData)
   const params = useSelector(routerSelectors.params)
+  const layouts = useSelector(websiteSelectors.templateLayouts)
+  const websiteMeta = useSelector(websiteSelectors.websiteMeta)
 
   const tabs = TABS.concat(extraTabs)
 
@@ -174,6 +181,12 @@ const WebsiteSettings = ({
   const onChangeTab = useCallback((section) => {
     dispatch(routerActions.addQueryParams({section}))
   })
+
+  const onUpdateMeta = useCallback((values) => {
+    dispatch(websiteActions.updateMeta(websiteId, values))
+  }, [
+    websiteId,
+  ])
 
   if(!website) {
     return (
@@ -208,6 +221,9 @@ const WebsiteSettings = ({
     cancelTitle,
     onCancel,
     extraProps,
+    onUpdateMeta,
+    layouts,
+    currentLayout: websiteMeta.layout,
   }
 
   return (

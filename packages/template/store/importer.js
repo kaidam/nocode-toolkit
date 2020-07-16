@@ -11,6 +11,7 @@ const importPromises = globals.isUIActivated() ?
     drive: import(/* webpackChunkName: "ui" */ './modules/drive'),
     unsplash: import(/* webpackChunkName: "ui" */ './modules/unsplash'),
     job: import(/* webpackChunkName: "ui" */ './modules/job'),
+    publish: import(/* webpackChunkName: "ui" */ './modules/publish'),
     fileupload: import(/* webpackChunkName: "ui" */ './modules/fileupload'),
     layout: import(/* webpackChunkName: "ui" */ './modules/layout'),
   } : 

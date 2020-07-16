@@ -1,6 +1,6 @@
 import React, { useContext, useRef, useState, useCallback, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-
+import Button from '@material-ui/core/Button'
 import OnboardingContext from '../contexts/onboarding'
 import MenuButton from '../widgets/MenuButton'
 
@@ -8,7 +8,10 @@ import Toolbar from '../widgets/Toolbar'
 import FocusElementOverlay from '../widgets/FocusElementOverlay'
 
 import useSectionEditor from '../hooks/useSectionEditor'
-import useIconButton from '../hooks/useIconButton'
+
+import icons from '../../icons'
+const SettingsIcon = icons.settings
+const AddIcon = icons.add
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -17,13 +20,19 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1),
+  },
+  buttons: {
+    flexGrow: 0,
   },
   filler: {
     flexGrow: 1,
   },
   button: {
-    flexGrow: 0,
-    paddingRight: theme.spacing(1),
+    marginTop: theme.spacing(0.5),
+    textTransform: 'none',
+    color: theme.palette.grey[600],
   },
 }))
 
@@ -48,7 +57,8 @@ const TreeToolbar = ({
   })
 
   const {
-    getAllItems,
+    getAddItems,
+    onOpenSettings,
   } = useSectionEditor({
     section,
     content_id: `section:${section}`,
@@ -59,11 +69,20 @@ const TreeToolbar = ({
   const sectionTitle = (section || '')
     .replace(/^(\w)/, (st) => st.toUpperCase())
 
-  const getSettingsButton = useIconButton({
-    title: sectionTitle,
-    useRef: settingsRef,
-    settingsButton: true,
-  })
+  const getAddButton = useCallback((onClick) => {
+    return (
+      <Button
+        ref={ settingsRef }
+        className={ classes.button }
+        size="small"
+        onClick={ onClick }
+      >
+        <AddIcon className={ classes.icon } />&nbsp;&nbsp;Add
+      </Button>
+    )
+  }, [
+    classes
+  ])
 
   useEffect(() => {
     context.setFocusElements({
@@ -78,11 +97,20 @@ const TreeToolbar = ({
   return (
     <Toolbar>
       <div className={ classes.container }>
+        <div className={ classes.buttons }>
+          <Button
+            className={ classes.button }
+            size="small"
+            onClick={ onOpenSettings }
+          >
+            <SettingsIcon className={ classes.icon } />&nbsp;&nbsp;Settings
+          </Button>
+        </div>
         <div className={ classes.filler }></div>
-        <div className={ classes.button }>
+        <div className={ classes.buttons }>
           <MenuButton
-            getButton={ getSettingsButton }
-            getItems={ getAllItems }
+            getButton={ getAddButton }
+            getItems={ getAddItems }
             onOpen={ onOpenMenu }
             onClose={ onCloseMenu }
           />

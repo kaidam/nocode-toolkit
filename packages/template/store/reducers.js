@@ -50,6 +50,7 @@ const reducers = {
   drive: GetReducer('drive'),
   unsplash: GetReducer('unsplash'),
   job: GetReducer('job'),
+  publish: GetReducer('publish'),
   fileupload: GetReducer('fileupload'),
   layout: GetReducer('layout'),
 }

@@ -1,15 +1,8 @@
-import systemUtils from '../utils/system'
-
 export const system = {
   initialiseCalled: false,
   initialised: false,
   user: null,
   tokenStatus: null,
-  config: systemUtils.isNode ? {} : window._uiConfigData || {},
-  website: {
-    meta: {},
-  },
-  dnsInfo: null,
 }
 
 export const website = {
@@ -88,9 +81,12 @@ export const ecommerce = {
 
 export const job = {
   list: [],
-  publishStatus: {},
   id: null,
   data: null,
+}
+
+export const publish = {
+  publishStatus: {},
 }
 
 export const network = {

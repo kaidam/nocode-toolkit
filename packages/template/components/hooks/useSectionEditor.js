@@ -45,6 +45,14 @@ const useSectionEditor = ({
     layouts,
   ])
 
+  const onOpenSettings = useCallback(() => {
+    actions.onEditSection({
+      id: section,
+    })
+  }, [
+    section,
+  ])
+
   const getAddItems = useCallback(() => {
 
     const newDocumentHandler = () => actions.onCreateRemoteContent({
@@ -83,7 +91,6 @@ const useSectionEditor = ({
         icon: icons.drive,
         handler: importContentHandler,
       },
-      '-',
       {
         title: 'Link',
         icon: icons.link,
@@ -117,11 +124,7 @@ const useSectionEditor = ({
       {
         title: 'Settings',
         icon: icons.settings,
-        handler: () => actions.onEditSection({
-          title: `Edit Section`,
-          form: `section`,
-          id: section,
-        })
+        handler: onOpenSettings,
       },
 
 
@@ -129,6 +132,7 @@ const useSectionEditor = ({
   }, [
     section,
     getAddItems,
+    onOpenSettings,
   ])
   
   return {
@@ -136,6 +140,7 @@ const useSectionEditor = ({
     annotation,
     getAddItems,
     getAllItems,
+    onOpenSettings,
   }
 }
 

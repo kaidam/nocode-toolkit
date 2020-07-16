@@ -64,7 +64,7 @@ const sideEffects = {
       return
     }
 
-    await handlers.post(`/builder/${websiteId}/contactform/submit`, values)
+    await handlers.post(`/plugins/contactform/${websiteId}/submit`, values)
     dispatch(snackbarActions.setSuccess(`Message sent`))
     dispatch(actions.setErrors({}))
     dispatch(actions.setValues({}))

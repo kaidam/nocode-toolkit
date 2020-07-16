@@ -1,48 +1,32 @@
-import React, { useCallback, useMemo, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { v4 as uuid } from 'uuid'
 
-import Paper from '@material-ui/core/Paper'
 import Button from '@material-ui/core/Button'
-import IconButton from '@material-ui/core/IconButton'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Tooltip from '@material-ui/core/Tooltip'
 
 import Card from '@material-ui/core/Card'
 import CardActionArea from '@material-ui/core/CardActionArea'
-import CardMedia from '@material-ui/core/CardMedia'
 import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
-
-import FormDialog from '../form/Dialog'
-import DeleteConfirm from '../dialog/DeleteConfirm'
-
-import websiteSelectors from '../../store/selectors/website'
-import websiteActions from '../../store/modules/website'
-import SimpleTable from '../table/SimpleTable'
 
 import widgets from '../../widgets'
 
 import icons from '../../icons'
-
-const DeleteIcon = icons.delete
-const EditIcon = icons.edit
 
 const useStyles = makeStyles(theme => ({
   root: {
     padding: theme.spacing(4),
     paddingTop: theme.spacing(0),
   },
-  card: {
+  card: ({greyBg}) => ({
     marginBottom: theme.spacing(2),
-    backgroundColor: theme.palette.grey[100],
-    backgroundColor: '#fff',
+    backgroundColor: greyBg ? theme.palette.grey[100] : '#fff',
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-  },
+  }),
   header: {
     flexGrow: 0,
   },
@@ -55,12 +39,21 @@ const useStyles = makeStyles(theme => ({
 
   },
   cell: {
-    margin: theme.spacing(1),
-    padding: theme.spacing(1),
+    margin: theme.spacing(0.5),
+    padding: theme.spacing(0.5),
     border: '1px solid #ccc',
     textAlign: 'center',
+    fontSize: '0.8em',
   },
   buttons: {
+    flexGrow: 0,
+    display: 'flex',
+    flexDirection: 'row',
+  },
+  buttonsFiller: {
+    flexGrow: 1,
+  },
+  buttonsContent: {
     flexGrow: 0,
   },
   paper: {
@@ -84,14 +77,14 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const SettingsLayout = ({
-  
+  greyBg,
+  selected,
+  layouts,
+  onSelect,
 }) => {
 
-  const classes = useStyles()
-  const dispatch = useDispatch()
-
-  const layouts = useSelector(websiteSelectors.templateLayouts)
-
+  const classes = useStyles({greyBg})
+  
   return (
     <Grid
       container
@@ -102,6 +95,7 @@ const SettingsLayout = ({
       {
         Object.keys(layouts).map(key => {
           const templateLayout = layouts[key]
+          const useColor = key == selected ? 'secondary' : 'textPrimary'
           return (
             <Grid key={ key } item xs={ 12 } sm={ 6 } md={ 4 } lg={ 3 }>
               <Card
@@ -109,20 +103,20 @@ const SettingsLayout = ({
               >
                 <CardActionArea
                   className={classes.header}
-                  onClick={ () => console.log(key) }
+                  onClick={ () => onSelect(key) }
                 >
                   <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
+                    <Typography gutterBottom variant="h5" component="h2" color={ useColor }>
                       { templateLayout.title }
                     </Typography>
-                    <Typography variant="body2" color="textSecondary" component="p">
+                    <Typography variant="body2" color="textSecondary" component="p" color={ useColor }>
                       { templateLayout.description }
                     </Typography>
                   </CardContent>
                 </CardActionArea>
                 <CardActionArea
                   className={classes.content}
-                  onClick={ () => console.log(key) }
+                  onClick={ () => onSelect(key) }
                 >
                   {
                     templateLayout.layout.map((row, rowIndex) => {
@@ -146,14 +140,25 @@ const SettingsLayout = ({
                   }
                 </CardActionArea>
                 <CardActions className={classes.buttons}>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="small"
-                    onClick={ () => console.log(key) }
-                  >
-                    Choose...
-                  </Button>
+                  <div className={ classes.buttonsFiller }></div>
+                  <div className={ classes.buttonsContent }>
+                    {
+                      key == selected ? (
+                        <Typography gutterBottom variant="body1" color={ useColor }>
+                          selected
+                        </Typography>
+                      ) : (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          size="small"
+                          onClick={ () => onSelect(key) }
+                        >
+                          Choose...
+                        </Button>
+                      )
+                    }
+                  </div>
                 </CardActions>
               </Card>
             </Grid>

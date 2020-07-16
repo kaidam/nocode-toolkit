@@ -38,8 +38,8 @@ const sideEffects = {
   // then send the browser off to Stripe
   connect: () => wrapper('connect', async (dispatch, getState) => {
     const websiteId = websiteSelectors.websiteId(getState())
-    const stripe_connect_url = `${document.location.protocol}//${document.location.host}${apiUrl(`/builder/ecommerce/connect_response`)}`
-    const data = await handlers.post(`/builder/${websiteId}/ecommerce/connect`, {
+    const stripe_connect_url = `${document.location.protocol}//${document.location.host}${apiUrl(`/plugins/ecommerce/connect_response`)}`
+    const data = await handlers.post(`/plugins/ecommerce/${websiteId}/connect`, {
       stripe_connect_url,
       finalize_url: document.location.href,
     })
@@ -65,7 +65,7 @@ const sideEffects = {
   }) => wrapper('purchase', async (dispatch, getState) => {
     dispatch(uiActions.setLoading(true))
     const websiteId = websiteSelectors.websiteId(getState())
-    const { publicKey } = await handlers.get(`/builder/ecommerce/public_key`)
+    const { publicKey } = await handlers.get(`/plugins/ecommerce/public_key`)
     const line_items = [{
       name,
       description,
@@ -84,7 +84,7 @@ const sideEffects = {
       document.location.href.replace(document.location.search, '') :
       document.location.href
     
-    const session_data = await handlers.post(`/builder/${websiteId}/ecommerce/session`, {
+    const session_data = await handlers.post(`/plugins/ecommerce/${websiteId}/session`, {
       line_items,
       success_url,
       cancel_url,

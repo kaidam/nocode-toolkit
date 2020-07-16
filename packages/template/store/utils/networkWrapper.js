@@ -35,7 +35,7 @@ const networkWrapper = ({
   hideLoading = false,
 
   // auto clear the loading if there is an error
-  hideLoadingOnError = false,
+  hideLoadingOnError = true,
 
   // means showLoading, hideLoading & hideLoadingOnError = true
   autoLoading = false,

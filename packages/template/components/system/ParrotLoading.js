@@ -1,4 +1,5 @@
 import React from 'react'
+import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles(theme => {  
@@ -30,16 +31,21 @@ const ParrotLoading = ({
   
 }) => {
   const classes = useStyles()
+  const baseUrl = useSelector(state => {
+    if(!state.nocode) return '/'
+    const config = state.nocode.config || {}
+    return config.baseUrl || '/'
+  })
   return (
     <div className={ classes.root }>
       <div className={ classes.parrot }>
-        <img className={ classes.parrotImage } src="/images/loading/portal-parrot-in.gif" />
+        <img className={ classes.parrotImage } src={`${baseUrl}images/loading/portal-parrot-in.gif`} />
       </div>
       <div className={ classes.nocode }>
-      <img className={ classes.logoImage } src="/images/favicon.png" />
+      <img className={ classes.logoImage } src={`${baseUrl}images/favicon.png`} />
       </div>
       <div className={ classes.parrot }>
-      <img className={ classes.parrotImage } src="/images/loading/portal-parrot-out.gif" />
+      <img className={ classes.parrotImage } src={`${baseUrl}images/loading/portal-parrot-out.gif`} />
       </div>
     </div>
   )

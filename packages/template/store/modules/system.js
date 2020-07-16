@@ -1,7 +1,3 @@
-import axios from 'axios'
-import Promise from 'bluebird'
-// import { v4 as uuidv4 } from 'uuid'
-
 import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
 
@@ -47,51 +43,6 @@ const reducers = {
   setTokenStatus: (state, action) => {
     state.tokenStatus = action.payload
   },
-}
-
-const loaders = {
-
-  /*
-  
-    system
-  
-  */
-  logout: () => axios.post(apiUtils.apiUrl('/auth/logout'))
-  .then(apiUtils.process),
-
-  /*
-  
-    loaders
-  
-  */
-  user: () => axios.get(apiUtils.apiUrl(`/auth/status`))
-    .then(apiUtils.process),
-
-  tokenStatus: () => axios.get(apiUtils.apiUrl(`/auth/tokenStatus`))
-    .then(apiUtils.process),
-
-  /*
-  
-    updaters
-  
-  */
-  updateUserMeta: (data) => axios.put(apiUtils.apiUrl(`/auth/update`), data)
-    .then(apiUtils.process),
-
-  ensureSectionResources: (getState, {
-    driver,
-    resources,
-    quickstart,
-    settings,
-  }) => axios.post(apiUtils.websiteUrl(getState, `/remote/resources`), {
-    driver,
-    resources,
-    quickstart,
-    settings,
-  })
-    .then(apiUtils.process),
-
-
 }
 
 const sideEffects = {
@@ -145,7 +96,7 @@ const sideEffects = {
     let initialiseResult = null
     if(library.initialise) {
       initialiseResult = await dispatch(library.initialise())
-      if(initialiseResult.reload) {
+      if(initialiseResult && initialiseResult.reload) {
         dispatch(websiteActions.get(websiteId))
         await dispatch(jobActions.reload())
       }
@@ -190,7 +141,7 @@ const sideEffects = {
     quickstart,
     settings,
   }) => async (dispatch, getState) => {
-    const result = await loaders.ensureSectionResources(getState, {
+    const result = await handlers.post(`/remote/resources`, {
       driver,
       resources,
       quickstart,
@@ -201,31 +152,26 @@ const sideEffects = {
 
   // merge data into the user meta reccord
   updateUserMeta: (data) => async (dispatch, getState) => {
-    await loaders.updateUserMeta(data)
+    await handlers.put(`/auth/update`, data)
     await dispatch(actions.loadUser())
   },
 
-  /*
-  
-    loaders
-  
-  */
   loadUser: () => async (dispatch, getState) => {
-    const user = await loaders.user(getState)
+    const user = await handlers.get(`/auth/status`)
     globals.identifyUser(user)
     dispatch(actions.setUser(user))
   },
 
   loadTokenStatus: () => async (dispatch, getState) => {
-    const data = await loaders.tokenStatus(getState)
+    const data = await handlers.get(`/auth/tokenStatus`)
     dispatch(actions.setTokenStatus(data))
   },
 
   logout: ({
 
   } = {}) => wrapper('logout', async (dispatch, getState) => {
-    await loaders.logout()
-      document.location = LOGOUT_URL
+    await handlers.post('/auth/logout')
+    document.location = LOGOUT_URL
   }),
 
 }

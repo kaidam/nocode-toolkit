@@ -19,6 +19,8 @@ import nocodeActions from './nocode'
 import snackbarActions from './snackbar'
 import routerActions from './router'
 
+import library from '../../library'
+
 import { content as initialState } from '../initialState'
 import settingsSelectors from '../selectors/settings'
 import {
@@ -429,31 +431,42 @@ const sideEffects = {
   
   */
   editSection: ({
-    title,
-    initialTab,
-    form,
     id,
   }) => wrapper('editSection', async (dispatch, getState) => {
-    const result = await dispatch(actions.waitForForm({
-      forms: [form],
-      values: getSectionFormValues(getState, id),
-      processValues: processSectionFormValues,
-      formWindowConfig: {
-        title,
-        initialTab,
-        size: 'md',
-        fullHeight: false,
-      },
-      onSubmit: async ({
-        annotation,
-      }) => {
-        const result = await loaders.updateSection(getState, id, {annotation})
-        return result
-      }
-    }))
-    if(!result) return
-    await dispatch(jobActions.reload())
-    dispatch(snackbarActions.setSuccess(`section updated`))
+    const sectionForm = library.forms.section
+    if(!sectionForm) throw new Error(`no form found for section`)
+    const annotations = nocodeSelectors.annotations(getState())
+    const values = annotations[`section:${id}`] || {}
+
+    console.log('--------------------------------------------')
+    console.dir({
+      sectionForm,
+      values,
+    })
+    
+
+
+    
+    // const result = await dispatch(actions.waitForForm({
+    //   forms: [form],
+    //   values: getSectionFormValues(getState, id),
+    //   processValues: processSectionFormValues,
+    //   formWindowConfig: {
+    //     title,
+    //     initialTab,
+    //     size: 'md',
+    //     fullHeight: false,
+    //   },
+    //   onSubmit: async ({
+    //     annotation,
+    //   }) => {
+    //     const result = await loaders.updateSection(getState, id, {annotation})
+    //     return result
+    //   }
+    // }))
+    // if(!result) return
+    // await dispatch(jobActions.reload())
+    // dispatch(snackbarActions.setSuccess(`section updated`))
   }),
 
   updateAnnotation: ({
@@ -694,6 +707,7 @@ const sideEffects = {
     onSubmit,
   }) => async (dispatch, getState) => {
     const storeForms = settingsSelectors.forms(getState())
+
     const missingConfig = forms.find(name => storeForms[name] ? false : true)
     if(missingConfig) throw new Error(`no form config found for ${missingConfig}`)
     // merge the initial values from the form array

@@ -1,14 +1,18 @@
 import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
 
+import routerSelectors from '../selectors/router'
+import routerActions from '../modules/router'
 import networkWrapper from '../utils/networkWrapper'
 import websiteSelectors from '../selectors/website'
+import formUtils from '../../components/form/utils'
 
 import {
   handlers,
   getErrorMessage,
 } from '../utils/api'
 
+import jobActions from './job'
 import snackbarActions from './snackbar'
 
 const prefix = 'website'
@@ -63,16 +67,37 @@ const sideEffects = {
   create: ({
     name,
     template,
+    layout,
   }) => wrapper('create', async (dispatch, getState) => {
-    const websiteNameField = template.version.meta.settings.websiteNameField
-    const result = await handlers.post(`/websites`, {
+    const {
+      websiteNameField,
+      initialResources,
+    } = template.version.meta.settings
+    const tabs = template.version.meta.settings.tabs || []
+    const flatSchema = tabs.reduce((all, tab) => all.concat(tab.schema), [])
+    const settings = formUtils.getInitialValues(flatSchema, {
+      [websiteNameField]: name,
+    })
+    const {
+      website,
+      job,
+    } = await handlers.post(`/websites`, {
       name,
       template: template.id,
-      settings: {
-        [websiteNameField]: name,
-      }
+      meta: {
+        settings,
+        layout
+      },
+      initialResources,
     })
-    return result
+    if(job) {
+      await dispatch(jobActions.waitForJobWithLoading({
+        website: website.id,
+        jobId: job.id,
+        message: 'Setting up your website for the first time...',
+      }))
+    }
+    document.location = `/builder/website/${website.id}`
   }, {
     showLoading: true,
   }),
@@ -112,7 +137,7 @@ const sideEffects = {
 
   openBuilder: (id) => wrapper('openBuilder', async (dispatch, getState) => {
     if(id == 'new') return
-    await handlers.delete(`/websites/${id}/preview`)
+    await handlers.delete(`/builder/${id}/preview`)
     document.location = `/builder/website/${id}`
   }, {
     showLoading: true,
@@ -128,14 +153,14 @@ const sideEffects = {
 
   loadConfig: (id) => wrapper('loadConfig', async (dispatch, getState) => {
     if(id == 'new') return
-    const data = await handlers.get(`/builder/${id}/config`)
+    const data = await handlers.get(`/websites/${id}/config`)
     dispatch(actions.setConfig(data))
     return true
   }),
 
   loadTemplate: (id) => wrapper('loadTemplate', async (dispatch, getState) => {
     if(id == 'new') return
-    const data = await handlers.get(`/builder/${id}/template`)
+    const data = await handlers.get(`/websites/${id}/template`)
     dispatch(actions.setTemplate(data))
     return true
   }),
