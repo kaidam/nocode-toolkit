@@ -11,7 +11,6 @@ import layoutActions from '../../store/modules/layout'
 
 const useDocumentEditor = ({
   node,
-  layouts,
   addContentParams = {},
 }) => {
 
@@ -31,11 +30,10 @@ const useDocumentEditor = ({
   const onAddWidget = useCallback(() => {
     actions.onAddWidget({
       content_id: node.id,
-      layouts,
+      layouts: [],
     })
   }, [
     node,
-    layouts,
   ])
 
   const onOpenDrive = useCallback(() => {

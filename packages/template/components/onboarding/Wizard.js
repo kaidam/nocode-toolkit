@@ -191,9 +191,15 @@ const OnboardingWizard = ({
 
   useEffect(() => {
     if(!website || !website.meta) return
-    const config = library.onboarding[website.meta.quickstart] || library.onboarding.default
-    setOnboardingConfig(config)
-    setTargetStepIndex(0)
+    if(library.onboarding && library.onboarding.length > 0) {
+      setOnboardingConfig(library.onboarding)
+      setTargetStepIndex(0)
+    }
+    else {
+      dispatch(websiteActions.updateMeta(website.id, {
+        onboardingActive: false,
+      }))
+    }
   }, [
     website,
   ])

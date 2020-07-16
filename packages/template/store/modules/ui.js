@@ -56,14 +56,6 @@ const reducers = {
   setScrollToCurrentPage: (state, action) => {
     state.scrollToCurrentPage = action.payload
   },
-  setQuickstartWindow: (state, action) => {
-    state.quickstartWindow = action.payload
-  },
-  acceptQuickstartWindow: (state, action) => {
-    state.quickstartWindow = Object.assign({}, action.payload, {
-      accepted: true,
-    })
-  },
   setSettingsOpen: (state, action) => {
     state.settingsOpen = action.payload
   },
@@ -113,14 +105,6 @@ const sideEffects = {
     const chatlio = globals.getTracker('chatlio')
     if(!chatlio) return
     chatlio.open()
-  },
-
-  getQuickstartConfig: (windowConfig = {}) => async (dispatch, getState) => {
-    dispatch(actions.setQuickstartWindow(windowConfig))
-    await dispatch(actions.waitForWindow(uiSelectors.quickstartWindow))
-    const results = uiSelectors.quickstartWindow(getState())
-    dispatch(actions.setQuickstartWindow(null))
-    return results
   },
 
   getFormValues: ({

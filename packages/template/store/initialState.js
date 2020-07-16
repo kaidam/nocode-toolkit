@@ -17,7 +17,6 @@ export const ui = {
   confirmWindow: null,
   previewMode: false,
   scrollToCurrentPage: true,
-  quickstartWindow: null,
   settingsOpen: false,
 }
 
@@ -129,6 +128,7 @@ const initialState = {
   drive,
   unsplash,
   job,
+  publish,
   document,
   section,
   fileupload,

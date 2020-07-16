@@ -11,13 +11,13 @@ const library = {
     pages: {},
   },
   components: {},
-  quickstarts: [],
   widgets: widgets,
   forms: forms,
   autoSnackbar: true,
   topbarHeight: 0,
   handlers: {},
   onboardingElements: {},
+  onboarding: [],
 }
 
 export default library

@@ -11,6 +11,7 @@ import networkWrapper from '../utils/networkWrapper'
 import apiUtils from '../utils/api'
 
 import jobActions from './job'
+import publishActions from './publish'
 import uiActions from './ui'
 import snackbarActions from './snackbar'
 import routerActions from './router'
@@ -58,7 +59,7 @@ const sideEffects = {
     dispatch(websiteActions.setWebsite(result.website))
     dispatch(websiteActions.setDnsInfo(result.dnsInfo))
     dispatch(websiteActions.setTemplate(result.template))
-    dispatch(jobActions.setPublishStatus(result.publishStatus))    
+    dispatch(publishActions.setPublishStatus(result.publishStatus))    
   },
 
   /*
@@ -87,28 +88,9 @@ const sideEffects = {
     // if we have a preview job, let's wait for it
     await dispatch(jobActions.waitForPreviewJob())
 
-    // if we have initialise function registered then
-    // call it - this is registered by the template
-    // and used to perform initial setup of linked resources
-    // the initialise function has the option of calling
-    // setInitialiseCalled
-
-    let initialiseResult = null
-    if(library.initialise) {
-      initialiseResult = await dispatch(library.initialise())
-      if(initialiseResult && initialiseResult.reload) {
-        dispatch(websiteActions.get(websiteId))
-        await dispatch(jobActions.reload())
-      }
-    }
-
     // now activate the UI
     dispatch(uiActions.setLoading(false))
     dispatch(actions.setInitialiseCalled())
-
-    if(initialiseResult && initialiseResult.redirect) {
-      dispatch(routerActions.navigateTo(initialiseResult.redirect))
-    }
 
     // check for initial snackbar message
     const routerParams = routerSelectors.params(getState())
@@ -132,23 +114,6 @@ const sideEffects = {
       }))
     }
   }),
-
-  // called by a template if it wants to create
-  // folders for each of it's sections on the users drive
-  ensureSectionResources: ({
-    driver,
-    resources,
-    quickstart,
-    settings,
-  }) => async (dispatch, getState) => {
-    const result = await handlers.post(`/remote/resources`, {
-      driver,
-      resources,
-      quickstart,
-      settings,
-    })
-    return result
-  },
 
   // merge data into the user meta reccord
   updateUserMeta: (data) => async (dispatch, getState) => {

@@ -70,7 +70,7 @@ const Develop = ({
   const getPreviewData = async (rebuild) => {
     const res = await axios({
       method: 'get',
-      url: api.getUrl('/previewData'),
+      url: api.getApiUrl(`/builder/${options.websiteId}/preview`),
       headers: api.getAuthHeaders(),
       params: {
         rebuild: rebuild || '',
@@ -85,7 +85,7 @@ const Develop = ({
   // we need to intercept this so we can
   //  * set baseUrl
   //  * set publishDisabled
-  app.get('/builder/api/:id/previewData', async (req, res, next) => {
+  app.get('/api/v1/builder/:id/preview', async (req, res, next) => {
     try {
       const nocodeData = await getPreviewData(req.query.rebuild)
       res.json(nocodeData)

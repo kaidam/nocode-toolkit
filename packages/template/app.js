@@ -1,26 +1,17 @@
-// main app entry
-import Promise from 'bluebird'
-import React, { lazy, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { lazy } from 'react'
+import { useSelector } from 'react-redux'
 
 import systemSelectors from './store/selectors/system'
 import websiteSelectors from './store/selectors/website'
-import uiSelectors from './store/selectors/ui'
-import networkSelectors from './store/selectors/network'
 
 import Suspense from './components/system/Suspense'
-import actionLoader from './store/utils/actionLoader'
-
-import Actions from './utils/actions'
-import globals from './utils/globals'
-
 import Router from './router'
 import ThemeContainer from './theme/container'
 
 import Loading from './components/system/Loading'
 
 const BootLoader = lazy(() => import(/* webpackChunkName: "ui" */ './components/system/BootLoader'))
-const OnboardingWizard = lazy(() => import(/* webpackChunkName: "ui" */ './components/quickstart/OnboardingWizard'))
+const OnboardingWizard = lazy(() => import(/* webpackChunkName: "ui" */ './components/onboarding/Wizard'))
 
 const App = ({
   templates,
@@ -31,8 +22,7 @@ const App = ({
   const showUI = useSelector(systemSelectors.showUI)
   const initialised = useSelector(systemSelectors.initialised)
   const initialiseError = useSelector(systemSelectors.initialiseError)
-  // const quickstartWindow = useSelector(uiSelectors.quickstartWindow)
-  // const website = useSelector(websiteSelectors.websiteData)
+  const website = useSelector(websiteSelectors.websiteData)
 
   if(initialiseError) return (
     <div
@@ -67,7 +57,7 @@ const App = ({
   }
 
   // ok - render the app
-  return (
+  const content = (
     <ThemeContainer
       ThemeModule={ ThemeModule }
       processor={ themeProcessor }
@@ -79,18 +69,18 @@ const App = ({
     </ThemeContainer>
   )
 
-  // if(showUI && website && website.meta && website.meta.onboardingActive) {
-  //   return (
-  //     <Suspense>
-  //       <OnboardingWizard>
-  //         { content }
-  //       </OnboardingWizard>
-  //     </Suspense>
-  //   )
-  // }
-  // else {
-  //   return content
-  // }
+  if(showUI && website && website.meta && website.meta.onboardingActive) {
+    return (
+      <Suspense>
+        <OnboardingWizard>
+          { content }
+        </OnboardingWizard>
+      </Suspense>
+    )
+  }
+  else {
+    return content
+  }
 }
 
 export default App

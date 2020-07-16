@@ -26,7 +26,7 @@ const getTabSchema = (tabs) => tabs.reduce((all, tab) => all.concat(tab.schema),
 
 const schema = createSelector(
   librarySettings,
-  (library) => getTabSchema(library.tabs)
+  (librarySettings) => getTabSchema(librarySettings.tabs)
 )
 
 // always use the combined settings so we get some defaults if
@@ -34,8 +34,8 @@ const schema = createSelector(
 const settings = createSelector(
   librarySettings,
   settingsValue,
-  (library, values) => {
-    return Object.assign(DEFAULT_SETTINGS, library.initialValues, values)
+  (librarySettings, values) => {
+    return Object.assign(DEFAULT_SETTINGS, librarySettings.initialValues, values)
   }
 )
 
