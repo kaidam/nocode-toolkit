@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux'
 import settingsSelectors from '../store/selectors/settings'
 import HTML from '../components/widgets/HTML'
 
+import icons from '../icons'
+
 const Render = ({
   data,
 }) => {
@@ -24,4 +26,10 @@ export default {
   title: 'Snippet',
   description: 'Render a snippet of code you have added to your website',
   Render,
+  locations: ['document', 'section'],
+  group: 'Content',
+  icon: icons.code,
+  // we explode the actual page snippets
+  // into an array of these options
+  hidden: true,
 }

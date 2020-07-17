@@ -2,8 +2,8 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import classnames from 'classnames'
-import icons from '../icons'
 import settingsSelectors from '../store/selectors/settings'
+import icons from '../icons'
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -140,4 +140,7 @@ export default {
   description: 'Render links to your social media accounts',
   Render,
   form,
+  locations: ['document', 'section'],
+  group: 'Content',
+  icon: icons.people,
 }

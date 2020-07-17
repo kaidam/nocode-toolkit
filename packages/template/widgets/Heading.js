@@ -1,6 +1,7 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
+import icons from '../icons'
 
 const useStyles = makeStyles(theme => ({
   heading: {
@@ -45,5 +46,8 @@ export default {
   title: 'Heading',
   description: 'Larger title text',
   Render,
+  locations: ['document', 'section'],
+  group: 'Content',
   form,
+  icon: icons.title,
 }

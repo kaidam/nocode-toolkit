@@ -130,6 +130,13 @@ const sideEffects = {
     return true
   }),
 
+  updateMetaWithLoading: (id, data, settings = {}) => wrapper('updateMeta', async (dispatch, getState) => {
+    const result = await dispatch(actions.updateMeta(id, data, settings))
+    return result
+  }, {
+    autoLoading: true,
+  }),
+
   delete: (id) => wrapper('delete', async (dispatch, getState) => {
     if(id == 'new') return
     await handlers.delete(`/websites/${id}`)

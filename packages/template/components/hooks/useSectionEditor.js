@@ -14,7 +14,6 @@ const useSectionEditor = ({
   section,
   content_id,
   layout_id,
-  layouts,
   withWidgets,
 }) => {
 
@@ -36,14 +35,13 @@ const useSectionEditor = ({
 
   const onAddWidget = useCallback(() => {
     actions.onWidgetAdd({
+      location: 'section',
       content_id,
       layout_id,
-      layouts,
     })
   }, [
     content_id,
     layout_id,
-    layouts,
   ])
 
   const onOpenSettings = useCallback(() => {

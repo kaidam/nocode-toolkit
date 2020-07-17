@@ -6,7 +6,6 @@ import SnackBar from '../system/Snackbar'
 import uiSelectors from '../../store/selectors/ui'
 import dialogSelectors from '../../store/selectors/dialog'
 import contentSelectors from '../../store/selectors/content'
-import layoutSelectors from '../../store/selectors/layout'
 import driveSelectors from '../../store/selectors/drive'
 import unsplashSelectors from '../../store/selectors/unsplash'
 
@@ -39,7 +38,6 @@ const DialogLoader = ({
 }) => {
   const confirmWindow = useSelector(uiSelectors.confirmWindow)
   const formWindow = useSelector(contentSelectors.formWindow)
-  const widgetWindow = useSelector(layoutSelectors.widgetWindow)
   const driveWindow = useSelector(driveSelectors.window)
   const driveUpgradeWindow = useSelector(driveSelectors.upgradeWindow)
   const unsplashWindow = useSelector(unsplashSelectors.window)
@@ -73,11 +71,6 @@ const DialogLoader = ({
         ) 
       }
       {
-        widgetWindow && (
-          <AddWidgetDialog />
-        ) 
-      }
-      {
         driveWindow && (
           <DriveDialog />
         )
@@ -97,6 +90,7 @@ const DialogLoader = ({
           <SnackBar />
         )
       }
+      <AddWidgetDialog />
       <FormWindowDialog />
     </div>
   )

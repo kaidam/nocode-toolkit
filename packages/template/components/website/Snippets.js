@@ -12,6 +12,7 @@ import Typography from '@material-ui/core/Typography'
 import FormDialog from '../form/Dialog'
 import DeleteConfirm from '../dialog/DeleteConfirm'
 
+import settingsSelectors from '../../store/selectors/settings'
 import websiteSelectors from '../../store/selectors/website'
 import websiteActions from '../../store/modules/website'
 import SimpleTable from '../table/SimpleTable'
@@ -222,13 +223,10 @@ const SettingsSnippets = ({
   const [ editSnippet, setEditSnippet ] = useState(false)
   const [ deleteSnippet, setDeleteSnippet ] = useState(false)
   
-  const {
-    snippets = [],
-  } = (website.meta || {})
-
-  const pageSnippets = snippets.filter(snippet => snippet.type == 'page')
-  const globalSnippets = snippets.filter(snippet => snippet.type == 'global')
-  const fileSnippets = snippets.filter(snippet => snippet.type == 'file')
+  const snippets = useSelector(settingsSelectors.snippets)
+  const pageSnippets = useSelector(settingsSelectors.pageSnippets)
+  const globalSnippets = useSelector(settingsSelectors.globalSnippets)
+  const fileSnippets = useSelector(settingsSelectors.fileSnippets)
 
   const onSaveSnippet = useCallback(async (data) => {
     const newSnippet = Object.assign({}, editSnippet, {data})
@@ -240,7 +238,7 @@ const SettingsSnippets = ({
       newSnippet.id = uuid()
       newSnippets = snippets.concat([newSnippet])
     }
-    const result = await dispatch(websiteActions.updateMeta(website.id, {
+    const result = await dispatch(websiteActions.updateMetaWithLoading(website.id, {
       snippets: newSnippets,
     }))
     if(result) setEditSnippet(null)

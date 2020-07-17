@@ -1,4 +1,5 @@
 import Render from '../components/contactform/Wrapper'
+import icons from '../icons'
 
 const form = {
   id: 'contactform',
@@ -18,5 +19,8 @@ export default {
   title: 'Contact Form',
   description: 'Show a form visitors can use to get in touch',
   Render,
+  locations: ['document', 'section'],
+  group: 'Plugins',
   form,
+  icon: icons.contact,
 }

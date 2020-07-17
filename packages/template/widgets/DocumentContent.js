@@ -9,6 +9,8 @@ import driveUtils from '../utils/drive'
 import contentSelectors from '../store/selectors/content'
 import documentActions from '../store/modules/document'
 
+import icons from '../icons'
+
 const DefaultHome = lazy(() => import(/* webpackChunkName: "ui" */ '../components/document/DefaultHome'))
 
 const Render = ({
@@ -54,5 +56,10 @@ export default {
   title: 'Document Content',
   description: 'The content of the document',
   editable: false,
+  locations: ['document'],
+  group: 'Content',
   Render,
+  icon: icons.documentContent,
+  // this is always rendered and can't be added
+  hidden: true,
 }

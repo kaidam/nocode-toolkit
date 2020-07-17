@@ -10,6 +10,8 @@ import systemSelectors from '../store/selectors/system'
 import searchActions from '../store/modules/search'
 import routerActions from '../store/modules/router'
 
+import icons from '../icons'
+
 const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
@@ -226,4 +228,8 @@ export default {
   title: 'Search',
   Render: Search,
   description: 'A search form that will search the content of your website',
+  locations: ['document', 'section'],
+  group: 'Plugins',
+  icon: icons.search,
+  editable: false,
 }

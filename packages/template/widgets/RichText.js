@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-
+import icons from '../icons'
 
 const useStyles = makeStyles(theme => {
   return {
@@ -77,5 +77,8 @@ export default {
   title: 'Rich Text',
   description: 'A small chunk of formatted text',
   Render,
+  locations: ['document'],
+  group: 'Content',
   form,
+  icon: icons.text,
 }

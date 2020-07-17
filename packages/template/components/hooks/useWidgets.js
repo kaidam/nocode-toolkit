@@ -3,113 +3,64 @@ import { useSelector } from 'react-redux'
 
 import settingsSelectors from '../../store/selectors/settings'
 
+import library from '../../library'
 import icons from '../../icons'
 
 const useWidgets = ({
-  
+  location = 'unknown',
 } = {}) => {
-  
-  const forms = useSelector(settingsSelectors.forms)
   const snippets = useSelector(settingsSelectors.pageSnippets)
 
   const widgets = useMemo(() => {
-    const plugins = [
-      {
-        title: 'Payment Button',
-        icon: icons.shopping,
-        form: 'ecommerce',
-      },
-      {
-        title: 'Contact Form',
-        icon: icons.contact,
-        form: 'contactform',
-      }
-    ]
-
-    const snippetItems = snippets
-      .map(snippet => {
+    // filter by hidden
+    // append snippets
+    // filter by location
+    const allWidgets = Object
+      .keys(library.widgets)
+      .map(id => library.widgets[id])
+      .filter(widget => widget.hidden ? false : true)
+      .concat(snippets.map(snippet => {
         return {
-          title: snippet.name,
+          id: 'snippet',
+          title: snippet.data.name,
+          description: `Render the ${snippet.data.name} snippet`,
+          locations: ['document', 'section'],
+          group: 'Snippets',
           icon: icons.code,
-          form: 'snippet',
+          editable: false,
           data: {
             id: snippet.id
           },
-          config: {
-            autoAdd: true,
-          },
         }
-      })
+      }))
+      .filter(widget => widget.locations.indexOf(location) >= 0)
 
-    const media = [
-      {
-        title: 'Image',
-        icon: icons.image,
-        form: 'image',
-      },
-      {
-        title: 'Youtube Video',
-        icon: icons.video,
-        form: 'video',
-      },
-      {
-        title: 'Social Links',
-        icon: icons.people,
-        form: 'social_links',
-      },
-    ]
+    const groupedWidgetsMap = allWidgets
+      .reduce((all, widget) => {
+        const group = all[widget.group] || {
+          title: widget.group,
+          items: [],
+        }
+        group.items.push(widget)
+        all[widget.group] = group
+        return all
+      }, {})
 
-    const text = [
-      {
-        title: 'Heading',
-        icon: icons.title,
-        form: 'heading',
-      },
-      {
-        title: 'Text Block',
-        icon: icons.text,
-        form: 'richtext',
-      },
-      {
-        title: 'Search',
-        icon: icons.search,
-        form: 'search',
-        config: {
-          autoAdd: true,
-        },
-      },
-      {
-        title: 'HTML',
-        icon: icons.code,
-        form: 'html',
-      },
-    ]
+    const groupedWidgets = Object.values(groupedWidgetsMap)
+    groupedWidgets.sort((a, b) => {
+      if(a.title > b.title) return 1
+      else if(b.title > a.title) return -1
+      else return 0
+    })
 
-    return [
-      {
-        title: 'Media',
-        icon: icons.image,
-        items: media,
-      },
-      {
-        title: 'Text',
-        icon: icons.text,
-        items: text,
-      },
-      {
-        title: 'Plugins',
-        icon: icons.plugin,
-        items: plugins,
-      },
-      snippetItems.length > 0 ? {
-        title: 'Snippets',
-        icon: icons.code,
-        items: snippetItems,
-      } : null,
-    ].filter(i => i)
+    return {
+      allWidgets,
+      groupedWidgets,
+    }
+
   }, [
-    forms,
     snippets,
+    location,
   ])
 
   return widgets

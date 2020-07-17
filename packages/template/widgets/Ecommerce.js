@@ -1,4 +1,5 @@
 import Render from '../components/ecommerce/Wrapper'
+import icons from '../icons'
 
 const form = {
   id: 'ecommerce',
@@ -73,5 +74,8 @@ export default {
   title: 'Ecommerce Button',
   description: 'Allow visitors to purchase things from your website',
   Render,
+  locations: ['document', 'section'],
+  group: 'Plugins',
   form,
+  icon: icons.shopping,
 }

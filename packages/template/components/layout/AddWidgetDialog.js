@@ -1,10 +1,7 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import Select from '@material-ui/core/Select'
-import FormControl from '@material-ui/core/FormControl'
-import MenuItem from '@material-ui/core/MenuItem'
 import Avatar from '@material-ui/core/Avatar'
 import Divider from '@material-ui/core/Divider'
 
@@ -60,35 +57,25 @@ const AddWidgetDialog = ({
 }) => {
 
   const classes = useStyles()
-  const [ targetLayout, setTargetLayout ] = useState(null)
-
+  
   const actions = Actions(useDispatch(), {
     onCancel: layoutActions.cancelWidgetWindow,
     onSubmit: layoutActions.acceptWidgetWindow,
   })
 
-  const onSetTargetLayout = useCallback((e) => {
-    setTargetLayout(e.target.value)
-  })
-
   const widgetWindow = useSelector(layoutSelectors.widgetWindow)
-  const widgets = useWidgets()
 
   const {
-    layouts,
-    layout_id,
-  } = widgetWindow
+    location,
+  } = (widgetWindow || {})
 
-  useEffect(() => {
-    if(layout_id) {
-      setTargetLayout(layout_id)
-    }
-    else if(layouts && layouts.length > 0) {
-      setTargetLayout(layouts[0].id)
-    }
-  }, [
-    layouts,
-  ])
+  const {
+    groupedWidgets,
+  } = useWidgets({
+    location,
+  })
+
+  if(!widgetWindow) return null
 
   return (
     <Window
@@ -100,35 +87,6 @@ const AddWidgetDialog = ({
               Add Widget
             </Typography>
           </div>
-          <div className={ classes.layoutSelect }>
-            
-            {
-              layouts && layouts.length > 0 && (
-                <>
-                  add to:&nbsp;&nbsp;
-                  <FormControl component="fieldset" className={ classes.select }>
-                    <Select
-                      value={ targetLayout }
-                      onChange={ onSetTargetLayout }
-                    >
-                      {
-                        layouts.map((layout, i) => {
-                          return (
-                            <MenuItem
-                              key={ i }
-                              value={ layout.id }
-                            >
-                              { layout.title || layout.id }
-                            </MenuItem>
-                          )
-                        })
-                      }
-                    </Select>
-                  </FormControl>
-                </>
-              )
-            }
-          </div>
         </div>
       )}
       fullHeight
@@ -139,7 +97,7 @@ const AddWidgetDialog = ({
     >
       <Grid container spacing={ 2 }>
         {
-          widgets.map((group, i) => {
+          groupedWidgets.map((group, i) => {
             return (
               <React.Fragment key={ `group-${i}` }>
                 <Grid item xs={ 12 }>
@@ -151,18 +109,15 @@ const AddWidgetDialog = ({
                   </Typography>
                 </Grid>
                 {
-                  group.items.map((item, j) => {
-
-                    const CardIcon = item.icon
+                  group.items.map((widget, j) => {
+                    const CardIcon = widget.icon
                     return (
                       <Grid item xs={ 12 } sm={ 3 } key={ `item-${j}-${i}` }>
                         <Card
                           className={ classes.card }
                           onClick={ () => actions.onSubmit({
-                            form: item.form,
-                            data: item.data,
-                            config: item.config,
-                            targetLayout,
+                            id: widget.id,
+                            data: widget.data,
                           }) }
                         >
                           <CardHeader
@@ -171,14 +126,14 @@ const AddWidgetDialog = ({
                                 <CardIcon />
                               </Avatar>
                             }
-                            title={ item.title }
+                            title={ widget.title }
                           />
                         </Card>
                       </Grid>
                     )
                   })
                 }{
-                  i < widgets.length - 1 ? (
+                  i < groupedWidgets.length - 1 ? (
                     <Grid item xs={ 12 }>
                       <Divider />
                     </Grid>

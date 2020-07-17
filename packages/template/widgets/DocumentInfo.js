@@ -3,6 +3,8 @@ import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import contentSelectors from '../store/selectors/content'
 
+import icons from '../icons'
+
 const useStyles = makeStyles(theme => ({
   root: {
     color:'#999',
@@ -53,5 +55,8 @@ export default {
   title: 'Document Info',
   description: 'The author and date of the document',
   editable: false,
+  locations: ['document'],
+  group: 'Navigation',
   Render,
+  icon: icons.documentInfo,
 }

@@ -4,6 +4,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import contentSelectors from '../store/selectors/content'
 import Typography from '@material-ui/core/Typography'
 
+import icons from '../icons'
+
 const useStyles = makeStyles(theme => ({
   heading: {
     fontWeight: 'bold',
@@ -34,5 +36,8 @@ export default {
   title: 'Document Title',
   description: 'The title of the document',
   editable: false,
+  locations: ['document'],
+  group: 'Navigation',
   Render,
+  icon: icons.documentTitle,
 }

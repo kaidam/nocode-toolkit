@@ -269,12 +269,12 @@ const sideEffects = {
   }),
 
   getWidget: ({
-    layouts,
+    location,
     layout_id,
   }) => async (dispatch, getState) => {
     dispatch(actions.openWidgetWindow({
       open: true,
-      layouts,
+      location,
       layout_id,
     }))
     let result = null
@@ -298,13 +298,13 @@ const sideEffects = {
   // describe the layouts that can be added to
   // if length > 1 a select will be shown
   addWidget: ({
+    location = 'document',
     content_id,
-    layouts,
     layout_id,
     rowIndex = -1,
   }) => wrapper('addWidget', async (dispatch, getState) => {
     const result = await dispatch(actions.getWidget({
-      layouts,
+      location,
       layout_id,
     }))
 

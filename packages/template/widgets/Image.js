@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from '../components/widgets/Link'
+import icons from '../icons'
 
 const SIZES = {
   small: '50%',
@@ -146,5 +147,8 @@ export default {
   title: 'Image',
   description: 'Display an image you upload, from Google drive or from Unplash',
   Render,
+  locations: ['document'],
+  group: 'Content',
   form,
+  icon: icons.image,
 }

@@ -80,7 +80,7 @@ import HelpIcon from '@material-ui/icons/LiveHelp'
 import SaveIcon from '@material-ui/icons/Save'
 import Dashboard from '@material-ui/icons/Dashboard'
 import InfoIcon from '@material-ui/icons/Info'
-import BackNextIcon from '@material-ui/icons/SyncAlt'
+//import BackNextIcon from '@material-ui/icons/SyncAlt'
 import SearchIcon from '@material-ui/icons/Search'
 import BuildIcon from '@material-ui/icons/Build'
 import ClipboardIcon from '@material-ui/icons/FileCopy'
@@ -102,7 +102,7 @@ import PdfIcon from '@material-ui/icons/PictureAsPdf'
 import AnalyticsIcon from '@material-ui/icons/Equalizer'
 import Attachment from '@material-ui/icons/Attachment'
 import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
-
+import HTMLIcon from '@material-ui/icons/MenuOpen'
 import UnsplashLogo from './components/icons/UnsplashLogo'
 import GoogleDriveLogo from './components/icons/GoogleDriveLogo'
 import GoogleDocsLogo from './components/icons/GoogleDocsLogo'
@@ -113,6 +113,11 @@ import LinkedInIcon from '@material-ui/icons/LinkedIn'
 import YouTubeIcon from '@material-ui/icons/YouTube'
 import InstagramIcon from '@material-ui/icons/Instagram'
 import PinterestIcon from '@material-ui/icons/Pinterest'
+import BackNextIcon from '@material-ui/icons/CompareArrows'
+import DocumentContentIcon from '@material-ui/icons/Description'
+import DocumentHeaderIcon from '@material-ui/icons/HorizontalSplit'
+import LinearScaleIcon from '@material-ui/icons/LinearScale'
+import PowerInputIcon from '@material-ui/icons/PowerInput'
 
 const icons = {
   add: AddIcon,
@@ -171,6 +176,7 @@ const icons = {
   look: LookIcon,
   move: MoveIcon,
   movevert: MoveVertIcon,
+  html: HTMLIcon,
   payment: PaymentIcon,
   contact: ContactIcon,
   addPanelTop: AddPanelTop,
@@ -216,6 +222,11 @@ const icons = {
   youtube: YouTubeIcon,
   instagram: InstagramIcon,
   pinterest: PinterestIcon,
+  documentContent: DocumentContentIcon,
+  documentHeader: DocumentHeaderIcon,
+  breadcrumbs: LinearScaleIcon,
+  documentTitle: PowerInputIcon,
+  documentInfo: InfoIcon,
 }
 
 export default icons

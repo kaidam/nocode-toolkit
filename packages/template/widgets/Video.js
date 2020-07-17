@@ -1,5 +1,6 @@
 import React from 'react'
 import YouTube from 'react-youtube-embed'
+import icons from '../icons'
 
 const youtubeId = (url) => {
   if(!url) return null
@@ -57,4 +58,7 @@ export default {
   description: 'Embed a video from YouTube',
   Render,
   form,
+  locations: ['document'],
+  group: 'Content',
+  icon: icons.video,
 }

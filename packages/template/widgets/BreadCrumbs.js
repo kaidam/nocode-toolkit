@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import Link from '../components/widgets/Link'
 
 import contentSelectors from '../store/selectors/content'
+import icons from '../icons'
 
 const Render = ({
   
@@ -73,5 +74,8 @@ export default {
   title: 'Breadcrumbs',
   description: 'Links to parent folders',
   editable: false,
+  locations: ['document'],
+  group: 'Navigation',
   Render,
+  icon: icons.breadcrumbs,
 }

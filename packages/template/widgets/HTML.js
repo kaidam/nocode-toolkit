@@ -1,5 +1,6 @@
 import React from 'react'
 import HTML from '../components/widgets/HTML'
+import icons from '../icons'
 
 const Render = ({
   data,
@@ -30,5 +31,8 @@ export default {
   title: 'HTML',
   description: 'Insert raw HTML',
   Render,
+  locations: ['document', 'section'],
+  group: 'Content',
   form,
+  icon: icons.html,
 }

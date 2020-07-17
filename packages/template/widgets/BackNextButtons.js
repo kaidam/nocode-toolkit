@@ -139,5 +139,8 @@ export default {
   title: 'Back / Next Buttons',
   description: 'Navigation buttons for the next and previous pages',
   editable: false,
+  locations: ['document'],
+  group: 'Navigation',
   Render,
+  icon: icons.backnext,
 }

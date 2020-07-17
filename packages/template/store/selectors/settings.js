@@ -76,18 +76,23 @@ const widgetTitles = createSelector(
 )
 
 const snippets = createSelector(
-  settings,
-  (settings) => settings.snippets || DEFAULT_ARRAY,
+  websiteSelectors.websiteMeta,
+  (meta) => meta.snippets || DEFAULT_ARRAY,
 )
 
 const pageSnippets = createSelector(
   snippets,
-  (snippets) => snippets.filter(snippet => !snippet.global)
+  (snippets) => snippets.filter(snippet => snippet.type == 'page')
 )
 
 const globalSnippets = createSelector(
   snippets,
-  (snippets) => snippets.filter(snippet => snippet.global)
+  (snippets) => snippets.filter(snippet => snippet.type == 'global')
+)
+
+const fileSnippets = createSelector(
+  snippets,
+  (snippets) => snippets.filter(snippet => snippet.type == 'file')
 )
 
 const headSnippetCode = createSelector(
@@ -126,6 +131,7 @@ const selectors = {
   snippets,
   pageSnippets,
   globalSnippets,
+  fileSnippets,
   headSnippetCode,
   beforeBodySnippetCode,
   afterBodySnippetCode,
