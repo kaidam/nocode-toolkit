@@ -7,6 +7,8 @@ import icons from '../../icons'
 
 import useMoveMenu from './useMoveMenu'
 
+import library from '../../library'
+
 const AddIcon = icons.add
 const EditIcon = icons.edit
 const DeleteIcon = icons.delete
@@ -60,19 +62,23 @@ const useCellEditor = ({
 
   const getMenuItems = useCallback(() => {
     const moveItems = getMoveMenuItems()
-    return [{
-      title: 'Edit',
-      icon: EditIcon,
-      handler: onEdit,
-    }, moveItems.length > 0 ? {
-      title: 'Move',
-      icon: MoveIcon,
-      items: moveItems,
-    } : null, {
-      title: 'Delete',
-      icon: DeleteIcon,
-      handler: onDelete,
-    }].filter(i => i)
+    return [
+      {
+        title: 'Edit',
+        icon: EditIcon,
+        handler: onEdit,
+      },
+      moveItems.length > 0 ? {
+        title: 'Move',
+        icon: MoveIcon,
+        items: moveItems,
+      } : null, 
+      {
+        title: 'Delete',
+        icon: DeleteIcon,
+        handler: onDelete,
+      }
+    ].filter(i => i)
   }, [
     getMoveMenuItems,
   ])

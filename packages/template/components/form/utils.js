@@ -1,5 +1,5 @@
 import fields, { defaultValues } from './fields'
-import dotty from 'dotty'
+import dotProp from 'dot-prop'
 
 const flattenSchema = (schema) => {
   return schema.reduce((all, row) => {
@@ -21,21 +21,26 @@ const getComponent = (component) => {
 
 const getInitialValues = (schema, initialValues) => {
   const flatSchema = flattenSchema(schema)
-  return flatSchema.reduce((all, field) => {
-    const existing = dotty.get(all, field.id)
+  let values = {}
+  flatSchema.forEach(field => {
+    const existing = dotProp.get(initialValues, field.id)
     const component = field.component || 'text'
     const hasValue = typeof(existing) !== 'undefined'
-    if(field.default) {
-      dotty.put(all, field.id, field.default)
+    let useValue = existing
+    if(!hasValue) {
+      if(field.list) {
+        useValue = []
+      }
+      else if (typeof(field.default) !== 'undefined') {
+        useValue = field.default
+      }
+      else if(typeof(component) === 'string' && defaultValues[component]) {
+        useValue = defaultValues[component]
+      }
     }
-    else if(!hasValue && field.list) {
-      dotty.put(all, field.id, [])
-    }
-    else if(!hasValue && typeof(component) === 'string') {
-      dotty.put(all, field.id, defaultValues[component])
-    }
-    return all
-  }, Object.assign({}, initialValues))
+    dotProp.set(values, field.id, useValue)
+  })
+  return values
 }
 
 const utils = {

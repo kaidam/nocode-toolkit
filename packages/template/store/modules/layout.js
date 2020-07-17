@@ -145,12 +145,10 @@ const sideEffects = {
   }) => wrapper('edit', async (dispatch, getState) => {
     const cell = layout[rowIndex][cellIndex]
     if(!cell) throw new Error(`no cell found`)
-
     const widget = library.widgets[cell.type]
     if(!widget) throw new Error(`widget ${cell.type} not found`)
-
     const results = await dispatch(uiActions.getFormValues({
-      tabs: widget.form.concat(library.forms['cell.settings'].tabs),
+      tabs: (widget.form || []).concat(library.forms['cell.settings'].tabs),
       values: cell.data,
       config: {
         size: 'sm',
