@@ -96,43 +96,41 @@ const Render = ({
   )
 }
 
-const form = {
+const form = [{
   id: 'social_links',
   title: 'Social Links',
-  initialValues: {
-    facebook: '',
-    twitter: '',
-    linkedin: '',
-    youtube: '',
-    pinterest: '',
-    instagram: '',
-  },
   schema: [{
     id: 'facebook',
     title: 'Facebook URL',
     helperText: 'The url of your Facebook profile',
+    default: '',
   },{
     id: 'twitter',
     title: 'Twitter URL',
     helperText: 'The url of your Twitter profile',
+    default: '',
   },{
     id: 'linkedin',
     title: 'LinkedIn URL',
     helperText: 'The url of your LinkedIn profile',
+    default: '',
   },{
     id: 'youtube',
     title: 'Youtube URL',
     helperText: 'The url of your Youtube profile',
+    default: '',
   },{
     id: 'pinterest',
     title: 'Pinterest URL',
     helperText: 'The url of your Pinterest profile',
+    default: '',
   },{
     id: 'instagram',
     title: 'Instagram URL',
     helperText: 'The url of your Instagram profile',
+    default: '',
   }],
-}
+}]
 
 export default {
   id: 'social_links',

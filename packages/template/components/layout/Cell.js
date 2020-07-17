@@ -56,8 +56,8 @@ const Cell = ({
   rowIndex,
   cellIndex,
 }) => {
-
-  const classes = useStyles(cell.settings || {})
+  const settings = cell && cell.data && cell.data.settings ? cell.data.settings : {}
+  const classes = useStyles(settings)
   const widget = widgets[cell.type]
   const Renderer = widget ? widget.Render : UnknownTypeRenderer
 

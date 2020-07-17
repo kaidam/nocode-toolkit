@@ -32,4 +32,5 @@ export default {
   // we explode the actual page snippets
   // into an array of these options
   hidden: true,
+  editable: false,
 }

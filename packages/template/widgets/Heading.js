@@ -28,18 +28,16 @@ const Render = ({
   )
 }
 
-const form = {
+const form = [{
   id: 'heading',
   title: 'Heading',
-  initialValues: {
-    title: '',
-  },
   schema: [{
     id: 'title',
     title: 'title',
     helperText: 'Enter the text for the title',
+    default: '',
   }],
-}
+}]
 
 export default {
   id: 'heading',

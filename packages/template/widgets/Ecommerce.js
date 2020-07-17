@@ -1,19 +1,14 @@
 import Render from '../components/ecommerce/Wrapper'
 import icons from '../icons'
 
-const form = {
+const form = [{
   id: 'ecommerce',
   title: 'Payment Button',
-  initialValues: {
-    name: '',
-    price: 0,
-    currency: '',
-    description: '',
-  },
   schema: [{
     id: 'name',
     title: 'Product Name',
     helperText: 'Enter the name of the product',
+    default: '',
     validate: {
       type: 'string',
       methods: [
@@ -27,6 +22,7 @@ const form = {
     inputProps: {
       type: 'number',
     },
+    default: 0,
     validate: {
       type: 'number',
       methods: [
@@ -38,6 +34,7 @@ const form = {
     title: 'Currency',
     helperText: 'Enter the currency',
     component: 'select',
+    default: '',
     options: [{
       title: 'GBP (£)',
       value: 'GBP',
@@ -54,10 +51,12 @@ const form = {
   }],{
     id: 'buttonTitle',
     title: 'Button Title',
+    default: '',
     helperText: 'Enter the title of the purchase button',
   },{
     id: 'description',
     title: 'Description',
+    default: '',
     helperText: 'Enter a description for the product',
     component: 'textarea',
     validate: {
@@ -67,7 +66,7 @@ const form = {
       ],
     }
   }],
-}
+}]
 
 export default {
   id: 'ecommerce',

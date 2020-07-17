@@ -39,7 +39,7 @@ const sideEffects = {
       tabs: sectionForm.tabs,
       values,
       config: {
-        showLoading: true,  
+        showLoading: true,
       }
     }))
     if(!results) return

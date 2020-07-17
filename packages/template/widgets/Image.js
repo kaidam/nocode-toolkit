@@ -109,23 +109,21 @@ const Render = ({
   )
 }
 
-const form = {
+const form = [{
   id: 'image',
   title: 'Image',
-  initialValues: {
-    image: null,
-    size: 'default',
-  },
   schema: [{
     id: 'image',
     title: 'Image',
     helperText: 'Upload an image',
     component: 'image',
+    default: null,
   },{
     id: 'size',
     title: 'Size',
     helperText: 'How large should the image be displayed',
     component: 'select',
+    default: 'default',
     options: [{
       title: 'Fit',
       value: 'default',
@@ -140,7 +138,7 @@ const form = {
       value: 'small',
     }]
   }],
-}
+}]
 
 export default {
   id: 'image',

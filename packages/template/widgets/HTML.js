@@ -12,19 +12,17 @@ const Render = ({
   )
 }
 
-const form = {
+const form = [{
   id: 'html',
   title: 'HTML',
-  initialValues: {
-    html: '',
-  },
   schema: [{
     id: 'html',
     noTitle: true,
     component: 'textarea',
     rows: 5,
+    default: '',
   }],
-}
+}]
 
 export default {
   id: 'html',

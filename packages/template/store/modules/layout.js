@@ -18,7 +18,8 @@ import uiActions from './ui'
 import settingsSelectors from '../selectors/settings'
 
 import layoutUtils from '../../utils/layout'
-import widgetUtils from '../../utils/widget'
+
+import library from '../../library'
 
 const prefix = 'layout'
 
@@ -83,74 +84,56 @@ const sideEffects = {
       [layout_id]: layout,
     })
 
-    dispatch(nocodeActions.setItem({
-      type: 'annotation',
+    await dispatch(contentActions.updateAnnotation({
       id: content_id,
       data: newAnnotation,
     }))
-
-    try {
-      await loaders.updateAnnotation(getState, content_id, newAnnotation)
-    } catch(e) {
-      dispatch(nocodeActions.setItem({
-        type: 'annotation',
-        id: content_id,
-        data: annotation,
-      }))
-    }
   },
 
   // appends a new widget to the last row of a layout
   add: ({
     content_id,
     layout_id,
-    form,
+    type,
     data,
     rowIndex = -1,
-    autoAdd = false,
   }) => wrapper('add', async (dispatch, getState) => {
-    const storeForms = settingsSelectors.forms(getState())
-    const storeForm = storeForms[form]
-    const widgetTitle = storeForm ? storeForm.title : 'Item'
-
-    let values = null
-
-    if(autoAdd) {
-      values = {
-        data,
-        settings: {},
-      }
-    }
-    else {
-      values = await dispatch(contentActions.waitForForm({
-        forms: [storeForm ? form : null, `cell.settings`].filter(i => i),
-        processValues: processCellSettings,
-        formWindowConfig: {
-          title: `${widgetTitle} Widget`,
+    const widget = library.widgets[type]
+    if(!widget) throw new Error(`widget ${type} not found`)
+    const canEdit = (widget === false || !widget.form) ? false : true
+    if(canEdit) {
+      const newData = await dispatch(uiActions.getFormValues({
+        tabs: widget.form.concat(library.forms['cell.settings'].tabs),
+        values: {},
+        config: {
           size: 'sm',
           fullHeight: false,
+          showLoading: true,
         }
       }))
+      if(!newData) return
+      data = newData
     }
-    
-    if(!values) return
+    const useData = Object.assign({}, {
+      settings: {},
+    }, data)
     dispatch(uiActions.setLoading(true))
-    const itemData = {
-      id: uuid(),
-      type: form,
-      settings: values.settings,
-      data: data || values.data,
-    }
     await dispatch(actions.update({
       content_id,
       layout_id,
       handler: 'insertRow',
       params: {
         rowIndex,
-        data: itemData,
+        data: {
+          id: uuid(),
+          type: widget.id,
+          data: useData,
+        },
       }
     }))
-    await dispatch(snackbarActions.setSuccess(`${widgetTitle} created`))
+    await dispatch(snackbarActions.setSuccess(`${widget.title} created`))
+  }, {
+    hideLoading: true,
   }),
 
   edit: ({
@@ -163,25 +146,20 @@ const sideEffects = {
     const cell = layout[rowIndex][cellIndex]
     if(!cell) throw new Error(`no cell found`)
 
-    const {
-      tabs,
-      values,
-    } = widgetUtils.getFormDefinition({
-      type: cell.type,
-      data: cell.data,
-      settings: cell.settings,
-    })
+    const widget = library.widgets[cell.type]
+    if(!widget) throw new Error(`widget ${cell.type} not found`)
 
     const results = await dispatch(uiActions.getFormValues({
-      tabs,
-      values,
+      tabs: widget.form.concat(library.forms['cell.settings'].tabs),
+      values: cell.data,
+      config: {
+        size: 'sm',
+        fullHeight: false,
+        showLoading: true,
+      }
     }))
 
-    if(!results) {
-      dispatch(uiActions.clearFormWindow())
-      return
-    }
-
+    if(!results) return
     dispatch(uiActions.setLoading(true))
     await dispatch(actions.update({
       content_id,
@@ -190,14 +168,16 @@ const sideEffects = {
       params: {
         rowIndex,
         cellIndex,
-        data: widgetUtils.mergeWidgetForm({
-          cell,
-          values: results,
-        })
+        data: {
+          id: cell.id,
+          type: cell.type,
+          data: results,
+        },
       }
     }))
-    dispatch(uiActions.clearFormWindow())
-    await dispatch(snackbarActions.setSuccess(`widget updated`))
+    await dispatch(snackbarActions.setSuccess(`${widget.title} updated`))
+  }, {
+    hideLoading: true,
   }),
 
   delete: ({
@@ -226,6 +206,8 @@ const sideEffects = {
       }
     }))
     await dispatch(snackbarActions.setSuccess(`layout updated`))
+  }, {
+    hideLoading: true,
   }),
 
   move: ({
@@ -311,19 +293,16 @@ const sideEffects = {
     if(!result) return null
 
     const {
-      form,
+      type,
       data,
-      config = {},
-      targetLayout,
     } = result
 
     dispatch(actions.add({
       content_id,
-      layout_id: targetLayout,
-      form,
+      layout_id,
+      type,
       data,
       rowIndex,
-      autoAdd: config.autoAdd,
     }))
   }),
 

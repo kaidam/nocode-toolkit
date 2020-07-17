@@ -27,20 +27,18 @@ const Render = ({
   )
 }
 
-const form = {
+const form = [{
   id: 'richtext',
   title: 'Text',
-  initialValues: {
-    text: '',
-    style: 'body1',
-  },
   schema: [{
     id: 'text',
     rows: 5,
     component: 'textarea',
+    default: '',
   }, {
     id: 'style',
     component: 'select',
+    default: 'body1',
     options: [{
       title: 'Larger Body Text',
       value: 'body1',
@@ -70,7 +68,7 @@ const form = {
       value: 'h6',
     }]
   }],
-}
+}]
 
 export default {
   id: 'richtext',

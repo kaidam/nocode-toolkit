@@ -1,18 +1,16 @@
 import Render from '../components/contactform/Wrapper'
 import icons from '../icons'
 
-const form = {
+const form = [{
   id: 'contactform',
   title: 'Contact Form',
-  initialValues: {
-    buttonTitle: '',
-  },
   schema: [{
     id: 'buttonTitle',
     title: 'Button Title',
+    default: '',
     helperText: 'The title of the contact form button',
   }],
-}
+}]
 
 export default {
   id: 'contactform',

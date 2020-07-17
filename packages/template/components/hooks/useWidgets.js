@@ -7,7 +7,7 @@ import library from '../../library'
 import icons from '../../icons'
 
 const useWidgets = ({
-  location = 'unknown',
+  location,
 } = {}) => {
   const snippets = useSelector(settingsSelectors.pageSnippets)
 
@@ -33,7 +33,7 @@ const useWidgets = ({
           },
         }
       }))
-      .filter(widget => widget.locations.indexOf(location) >= 0)
+      .filter(widget => location && widget.locations.indexOf(location) >= 0)
 
     const groupedWidgetsMap = allWidgets
       .reduce((all, widget) => {

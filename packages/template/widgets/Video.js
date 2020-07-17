@@ -32,16 +32,14 @@ const Render = ({
   )
 }
 
-const form = {
+const form = [{
   id: 'video',
   title: 'Video',
-  initialValues: {
-    url: '',
-  },
   schema: [{
     id: 'url',
     title: 'URL',
     helperText: 'Enter the url of the youtube video - e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    default: '',
     validate: {
       type: 'string',
       methods: [
@@ -50,7 +48,7 @@ const form = {
       ],
     }
   }],
-}
+}]
 
 export default {
   id: 'video',

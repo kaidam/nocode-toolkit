@@ -116,8 +116,8 @@ const AddWidgetDialog = ({
                         <Card
                           className={ classes.card }
                           onClick={ () => actions.onSubmit({
-                            id: widget.id,
-                            data: widget.data,
+                            type: widget.id,
+                            data: widget.data || {},
                           }) }
                         >
                           <CardHeader
