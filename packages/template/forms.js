@@ -85,6 +85,11 @@ const forms = {
   },
   'drive.folder': {
     processFormValues: valueInjector({mimeType: 'folder'}),
+    tabFilter: (tab, values) => {
+      const exists = values && values.id
+      if(tab.id == 'actions' || tab.id == 'sorting') return exists
+      return true
+    },
     tabs: [{
       id: 'settings',
       title: 'Settings',
@@ -124,6 +129,11 @@ const forms = {
   },
   'drive.document': {
     processFormValues: valueInjector({mimeType: 'document'}),
+    tabFilter: (tab, values) => {
+      const exists = values && values.id
+      if(tab.id == 'actions') return exists
+      return true
+    },
     tabs: [{
       id: 'settings',
       title: 'Settings',
@@ -152,29 +162,33 @@ const forms = {
     }]
   },
   'link': {
-    schema: [{
-      id: 'name',
-      title: 'Name',
-      helperText: 'Enter the name of the link',
-      default: '',
-      validate: {
-        type: 'string',
-        methods: [
-          ['required', 'The name is required'],
-        ],
-      }
-    }, {
-      id: 'url',
-      title: 'URL',
-      helperText: 'Enter the url of the link',
-      default: '',
-      validate: {
-        type: 'string',
-        methods: [
-          ['required', 'The url is required'],
-          ['matches', '^(code:|https?:\/\/)', 'Must be a valid url - e.g. http://google.com'],
-        ],
-      }
+    tabs: [{
+      id: 'details',
+      title: 'Link Details',
+      schema: [{
+        id: 'name',
+        title: 'Name',
+        helperText: 'Enter the name of the link',
+        default: '',
+        validate: {
+          type: 'string',
+          methods: [
+            ['required', 'The name is required'],
+          ],
+        }
+      }, {
+        id: 'url',
+        title: 'URL',
+        helperText: 'Enter the url of the link',
+        default: '',
+        validate: {
+          type: 'string',
+          methods: [
+            ['required', 'The url is required'],
+            ['matches', '^(code:|https?:\/\/)', 'Must be a valid url - e.g. http://google.com'],
+          ],
+        }
+      }],
     }],
   },
 }

@@ -7,6 +7,7 @@ import formActions from '../../store/modules/form'
 import layoutActions from '../../store/modules/layout'
 
 import icons from '../../icons'
+import library from '../../library'
 
 import useSectionSelector from './useSectionSelector'
 
@@ -21,6 +22,8 @@ const useSectionEditor = ({
     onCreateRemoteContent: contentActions.createRemoteContent,
     onCreateLocalContent: contentActions.createLocalContent,
     onAddRemoteContent: contentActions.addRemoteContent,
+
+    onCreateContent: formActions.createContent,
     onEditSection: formActions.editSection,
     onWidgetAdd: layoutActions.addWidget,
   })
@@ -54,17 +57,24 @@ const useSectionEditor = ({
 
   const getAddItems = useCallback(() => {
 
-    const newDocumentHandler = () => actions.onCreateRemoteContent({
+    const newDocumentHandler = () => actions.onCreateContent({
       title: 'Create Document',
       driver: 'drive',
       form: 'drive.document',
       parentId: addTargetFolderId,
     })
 
-    const newFolderHandler = () => actions.onCreateRemoteContent({
+    const newFolderHandler = () => actions.onCreateContent({
       title: 'Create Folder',
       driver: 'drive',
       form: 'drive.folder',
+      parentId: addTargetFolderId,
+    })
+
+    const newLinkHandler = () => actions.onCreateContent({
+      title: 'Create Link',
+      driver: 'local',
+      form: 'link',
       parentId: addTargetFolderId,
     })
 
@@ -93,11 +103,7 @@ const useSectionEditor = ({
       {
         title: 'Link',
         icon: icons.link,
-        handler: () => actions.onCreateLocalContent({
-          title: 'Create Link',
-          form: 'link',
-          location: `section:${section}`,
-        })
+        handler: newLinkHandler,
       },
       withWidgets ? {
         title: 'Widget',

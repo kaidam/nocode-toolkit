@@ -40,6 +40,8 @@ const sideEffects = {
       values,
       config: {
         showLoading: true,
+        size: 'md',
+        fullHeight: false,
       }
     }))
     if(!results) return
@@ -48,6 +50,35 @@ const sideEffects = {
       data: results.annotation,
       snackbarMessage: 'section updated',
     }))
+  }, {
+    hideLoading: true,
+  }),
+
+  createContent: ({
+    title,
+    driver,
+    form,
+    parentId,
+  }) => wrapper('createContent', async (dispatch, getState) => {
+    const formInfo = library.forms[form]
+    if(!formInfo) throw new Error(`no form found ${form}`)
+    const tabs = (formInfo.tabs || []).filter(tab => {
+      if(!formInfo.tabFilter) return true
+      return formInfo.tabFilter(tab, {})
+    })
+    const results = await dispatch(uiActions.getFormValues({
+      tabs,
+      values: {},
+      config: {
+        showLoading: true,
+        size: 'sm',
+        fullHeight: false,
+      }
+    }))
+    if(!results) return
+    console.log('--------------------------------------------')
+    console.log('--------------------------------------------')
+    console.dir(results)
   }, {
     hideLoading: true,
   }),
