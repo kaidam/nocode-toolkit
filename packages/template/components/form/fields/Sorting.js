@@ -92,11 +92,10 @@ const SortingEditorDragDropEditor = ({
   value,
   onChange,
 }) => {
-
   const classes = useStyles()
   const itemChildrenSelector = useMemo(contentSelectors.itemChildren, [])
   const children = useSelector(state => itemChildrenSelector(state, id))
-  const getTitle = useCallback((item, i) => `${i + 1}. ${item.name}`, [])
+  const getTitle = useCallback((item, i) => item.name, [])
   const items = useMemo(() => {
     return childrenUtils
       .sortById({

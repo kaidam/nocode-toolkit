@@ -138,6 +138,7 @@ const sideEffects = {
             dispatch(snackbarActions.setError(errorMessage))
             dispatch(actions.resetFormWindow())
             dispatch(actions.setLoading(false))
+            result = null
           }
         }
       }

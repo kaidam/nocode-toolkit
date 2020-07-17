@@ -4,6 +4,7 @@ import icons from '../../icons'
 
 import Actions from '../../utils/actions'
 import contentActions from '../../store/modules/content'
+import formActions from '../../store/modules/form'
 import nocodeSelectors from '../../store/selectors/nocode'
 import settingsSelectors from '../../store/selectors/settings'
 import driveUtils from '../../utils/drive'
@@ -24,11 +25,15 @@ const useItemEditor = ({
     onCreateRemoteContent: contentActions.createRemoteContent,
     onEditRemoteContent: contentActions.editRemoteContent,
     onEditLocalContent: contentActions.editLocalContent,
+    
     onRemoveRemoteContent: contentActions.removeRemoteContent,
     onDeleteRemoteContent: contentActions.deleteRemoteContent,
     onDeleteLocalContent: contentActions.deleteLocalContent,
     onHideContent: contentActions.hideContent,
     onChangeHomepageSingleton: contentActions.changeHomepageSingleton,
+
+    onEditContent: formActions.editContent,
+    onDeleteContent: formActions.deleteContent,
   })
 
   const locations = useSelector(nocodeSelectors.locations)
@@ -71,11 +76,11 @@ const useItemEditor = ({
       const settingsItem = {
         title: 'Settings',
         icon: icons.settings,
-        handler: () => actions.onEditRemoteContent({
+        handler: () => actions.onEditContent({
           title: `Edit ${(node.type || 'folder').replace(/^\w/, st => st.toUpperCase())}`,
           driver: 'drive',
           form: `drive.${node.type || 'folder'}`,
-          id: node.id,
+          content_id: node.id,
         })
       }
 
@@ -131,19 +136,19 @@ const useItemEditor = ({
       items = [{
         title: 'Edit',
         icon: icons.edit,
-        handler: () => actions.onEditLocalContent({
+        handler: () => actions.onEditContent({
           title: `Edit ${(node.type || '').replace(/^\w/, st => st.toUpperCase())}`,
           driver: node.driver,
           form: node.type,
-          id: node.id,
-          location: node.location,
+          content_id: node.id,
         })
       }, {
         title: 'Delete',
         icon: icons.delete,
-        handler: () => actions.onDeleteLocalContent({
-          id: node.id,
-          name: node.name,
+        handler: () => actions.onDeleteContent({
+          title: node.name,
+          driver: node.driver,
+          content_id: node.id,
         }),
       }]
     }

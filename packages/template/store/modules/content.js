@@ -760,7 +760,7 @@ const sideEffects = {
       id,
       data: annotationUpdate,
     }))
-    await handlers.put(`/content/${websiteId}/annotation/${id}`, annotationUpdate)
+    await handlers.put(`/annotation/${websiteId}/${id}`, annotationUpdate)
     if(reload) {
       await dispatch(jobActions.reload())
     }

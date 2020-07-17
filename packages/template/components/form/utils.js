@@ -40,6 +40,13 @@ const getInitialValues = (schema, initialValues) => {
     }
     dotProp.set(values, field.id, useValue)
   })
+
+  // include anything else at the top level (but not nested)
+  Object.keys(initialValues).forEach(key => {
+    if(typeof(values[key]) == 'undefined') {
+      values[key] = initialValues[key]
+    }
+  })
   return values
 }
 
