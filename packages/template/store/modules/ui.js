@@ -6,6 +6,8 @@ import CreateActions from '../utils/createActions'
 import uiActions from './ui'
 import uiSelectors from '../selectors/ui'
 import dialogActions from './dialog'
+import snackbarActions from './snackbar'
+import apiUtils from '../utils/api'
 
 import { ui as initialState } from '../initialState'
 
@@ -111,17 +113,37 @@ const sideEffects = {
     tabs,
     values = {},
     config = {},
+    onSubmit,
   }) => async (dispatch, getState) => {
     dispatch(actions.openFormWindow({
       tabs,
       values,
       config,
     }))
-    const confirmed = await dispatch(uiActions.waitForWindow(uiSelectors.formWindow))
+
+    let hasSubmitted = false
     let result = null
-    if(confirmed) {
-      const windowState = uiSelectors.formWindow(getState())
-      result = windowState.values
+
+    while(!hasSubmitted) {
+      const confirmed = await dispatch(uiActions.waitForWindow(uiSelectors.formWindow))
+      if(confirmed) {
+        const windowState = uiSelectors.formWindow(getState())
+        result = windowState.values
+        if(onSubmit) {
+          try {
+            result = await onSubmit(result)
+            hasSubmitted = true
+          } catch(e) {
+            const errorMessage = apiUtils.getErrorMessage(e)
+            dispatch(snackbarActions.setError(errorMessage))
+            dispatch(actions.resetFormWindow())
+            dispatch(actions.setLoading(false))
+          }
+        }
+      }
+      else {
+        hasSubmitted = true
+      }
     }
     dispatch(actions.clearFormWindow())
     return result

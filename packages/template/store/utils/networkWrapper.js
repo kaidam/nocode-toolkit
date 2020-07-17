@@ -19,6 +19,9 @@ const networkWrapper = ({
   // a function to handle any errors that were caught - normally a snackbar messaage
   errorHandler,
 
+  // a function to run if we were succesful
+  successHandler,
+
   // function to run before anything else
   before,
 
@@ -78,6 +81,9 @@ const networkWrapper = ({
 
   try {
     result = await handler(dispatch, getState)
+    if(successHandler) {
+      await successHandler(dispatch, getState)
+    }
   } catch(error) {
     const errorMessage = apiUtils.getErrorMessage(error)
     console.error(`Network request failure`)

@@ -7,6 +7,7 @@ import {
 } from '../utils/api'
 
 import nocodeSelectors from '../selectors/nocode'
+import websiteSelectors from '../selectors/website'
 import uiActions from './ui'
 import contentActions from './content'
 import library from '../../library'
@@ -35,20 +36,19 @@ const sideEffects = {
       id: sectionId,
       annotation,
     }
-    const results = await dispatch(uiActions.getFormValues({
+    await dispatch(uiActions.getFormValues({
       tabs: sectionForm.tabs,
       values,
       config: {
         showLoading: true,
         size: 'md',
         fullHeight: false,
-      }
-    }))
-    if(!results) return
-    await dispatch(contentActions.updateAnnotation({
-      id: sectionId,
-      data: results.annotation,
-      snackbarMessage: 'section updated',
+      },
+      onSubmit: (data) => dispatch(contentActions.updateAnnotation({
+        id: sectionId,
+        data: data.annotation,
+        snackbarMessage: 'section updated',
+      }))
     }))
   }, {
     hideLoading: true,
@@ -58,27 +58,33 @@ const sideEffects = {
     title,
     driver,
     form,
+    section,
     parentId,
   }) => wrapper('createContent', async (dispatch, getState) => {
+    const websiteId = websiteSelectors.websiteId(getState())
     const formInfo = library.forms[form]
     if(!formInfo) throw new Error(`no form found ${form}`)
     const tabs = (formInfo.tabs || []).filter(tab => {
       if(!formInfo.tabFilter) return true
       return formInfo.tabFilter(tab, {})
     })
-    const results = await dispatch(uiActions.getFormValues({
+    await dispatch(uiActions.getFormValues({
       tabs,
       values: {},
       config: {
+        title,
         showLoading: true,
         size: 'sm',
         fullHeight: false,
-      }
+      },
+      onSubmit: (data) => handlers.post(`/content/${websiteId}`, {
+        driver,
+        type: form,
+        section,
+        parentId,
+        data,
+      })
     }))
-    if(!results) return
-    console.log('--------------------------------------------')
-    console.log('--------------------------------------------')
-    console.dir(results)
   }, {
     hideLoading: true,
   }),

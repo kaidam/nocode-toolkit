@@ -48,21 +48,6 @@ const reducers = {
   },
 }
 
-const loaders = {
-  updateAnnotation: (getState, id, payload) => axios.put(apiUtils.websiteUrl(getState, `/annotation/${id}`), payload)
-    .then(apiUtils.process),
-}
-
-const processCellSettings = (values) => {
-  const data = Object.assign({}, values)
-  const settings = data.settings
-  delete(data.settings)
-  return {
-    data,
-    settings,
-  }
-}
-
 const sideEffects = {
 
   update: ({

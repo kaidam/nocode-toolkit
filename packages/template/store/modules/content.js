@@ -737,6 +737,13 @@ const sideEffects = {
     return result
   },
 
+
+
+
+
+
+
+  
   updateAnnotation: ({
     id,
     data,

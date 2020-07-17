@@ -75,7 +75,7 @@ const useSectionEditor = ({
       title: 'Create Link',
       driver: 'local',
       form: 'link',
-      parentId: addTargetFolderId,
+      section,
     })
 
     const importContentHandler = () => actions.onAddRemoteContent({
