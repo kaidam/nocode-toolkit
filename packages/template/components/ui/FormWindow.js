@@ -48,9 +48,11 @@ const FormWindowDialog = ({
 
   const tabs = formWindow ? formWindow.tabs : []
   const values = formWindow ? formWindow.values : {}
+  const config = formWindow ? formWindow.config : {}
 
   const renderForm = useTabbedForm({
     form: {tabs},
+    config,
     values,
     withRouter: false,
     onSubmit: (values) => dispatch(uiActions.acceptFormWindow(values)),
@@ -64,6 +66,7 @@ const FormWindowDialog = ({
     getForm,
     getButtons,
     hasTabs,
+    onCancel,
   }) => {
     return (
       <Window
@@ -73,7 +76,7 @@ const FormWindowDialog = ({
         noActions
         size="md"
         fullHeight
-        onCancel={ () => console.log('cancels') }
+        onCancel={ onCancel }
       >
         <div className={ classes.root }>
           {

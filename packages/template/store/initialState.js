@@ -18,6 +18,7 @@ export const ui = {
   previewMode: false,
   scrollToCurrentPage: true,
   settingsOpen: false,
+  formWindow: null,
 }
 
 export const settings = {
@@ -33,7 +34,7 @@ export const layout = {
 }
 
 export const form = {
-  window: null,
+  
 }
 
 export const content = {
@@ -123,6 +124,7 @@ const initialState = {
   website,
   system,
   content,
+  form,
   contactform,
   ecommerce,
   drive,

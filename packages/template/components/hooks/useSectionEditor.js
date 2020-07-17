@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 
 import Actions from '../../utils/actions'
 import contentActions from '../../store/modules/content'
+import formActions from '../../store/modules/form'
 import layoutActions from '../../store/modules/layout'
 
 import icons from '../../icons'
@@ -21,7 +22,7 @@ const useSectionEditor = ({
     onCreateRemoteContent: contentActions.createRemoteContent,
     onCreateLocalContent: contentActions.createLocalContent,
     onAddRemoteContent: contentActions.addRemoteContent,
-    onEditSection: contentActions.editSection,
+    onEditSection: formActions.editSection,
     onWidgetAdd: layoutActions.addWidget,
   })
 

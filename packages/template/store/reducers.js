@@ -47,6 +47,7 @@ const reducers = {
   dialog: GetReducer('dialog'),
   ui: GetReducer('ui'),
   content: GetReducer('content'),
+  form: GetReducer('form'),
   drive: GetReducer('drive'),
   unsplash: GetReducer('unsplash'),
   job: GetReducer('job'),

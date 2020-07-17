@@ -123,6 +123,7 @@ const sideEffects = {
       const windowState = uiSelectors.formWindow(getState())
       result = windowState.values
     }
+    dispatch(actions.clearFormWindow())
     return result
   },
 }

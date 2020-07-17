@@ -20,10 +20,6 @@ import settingsSelectors from '../selectors/settings'
 import layoutUtils from '../../utils/layout'
 import widgetUtils from '../../utils/widget'
 
-import {
-  LAYOUT_CELL_DEFAULTS,
-} from '../../config'
-
 const prefix = 'layout'
 
 const wrapper = networkWrapper.factory(prefix)
@@ -122,7 +118,7 @@ const sideEffects = {
     if(autoAdd) {
       values = {
         data,
-        settings: LAYOUT_CELL_DEFAULTS.settings,
+        settings: {},
       }
     }
     else {

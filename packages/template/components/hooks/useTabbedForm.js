@@ -1,16 +1,18 @@
-import React, { useState, useMemo, useCallback, useEffect } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import FormWrapper from '../form/Wrapper'
 import FormRender from '../form/Render'
 import Tabs from '../widgets/Tabs'
 import DialogButtons from '../widgets/DialogButtons'
 
+import uiActions from '../../store/modules/ui'
 import routerActions from '../../store/modules/router'
 import routerSelectors from '../../store/selectors/router'
 
 const useTabbedForm = ({
   form,
   values,
+  config = {},
   buttonAlign,
   // when tabs change - do we update the router params or use internal state?
   withRouter = true,
@@ -39,6 +41,18 @@ const useTabbedForm = ({
   const [ currentTabName, setCurrentTabName ] = useState(tabs && tabs.length > 0 ? tabs[0].id : null)
 
   const currentTabId = withRouter ? params.tab : currentTabName
+
+  const onSubmitWrapper = useCallback((values) => {
+    if(config.showLoading) {
+      dispatch(uiActions.setLoading(config.showLoading || true))
+    }
+    setTimeout(() => {
+      onSubmit(values)
+    }, 1)
+  }, [
+    config,
+    onSubmit,
+  ])
 
   const onChangeTab = useCallback((tab) => {
     if(withRouter) {
@@ -127,14 +141,16 @@ const useTabbedForm = ({
       <FormWrapper
         schema={ flatSchema }
         initialValues={ values }
-        onSubmit={ onSubmit }
+        onSubmit={ onSubmitWrapper }
       >
         {
           (formProps) => renderFn({
+            ...formProps,
             getTabs: () => getTabs(formProps),
             getForm: () => getForm(formProps),
             getButtons: () => getButtons(formProps),
             hasTabs: tabs.length > 1,
+            onCancel,
           })
         }
       </FormWrapper>
@@ -142,7 +158,7 @@ const useTabbedForm = ({
   }, [
     flatSchema,
     values,
-    onSubmit,
+    onSubmitWrapper,
     getTabs,
     getForm,
     getButtons,

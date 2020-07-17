@@ -150,7 +150,7 @@ const sideEffects = {
   } = {}) => async (dispatch, getState) => {
     const websiteId = websiteSelectors.websiteId(getState())
     const previewData = await handlers.get(`/builder/${websiteId}/preview`, null, {
-      params: {reload: 'yes'}
+      params: {rebuild: 'yes'}
     })
     const jobId = previewData.config.previewJobId
     if(jobId) {

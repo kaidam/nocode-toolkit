@@ -66,9 +66,6 @@ const TreeToolbar = ({
     withWidgets: true,
   })
 
-  const sectionTitle = (section || '')
-    .replace(/^(\w)/, (st) => st.toUpperCase())
-
   const getAddButton = useCallback((onClick) => {
     return (
       <Button

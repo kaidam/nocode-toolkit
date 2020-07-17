@@ -1,25 +1,8 @@
 const valueInjector = (inject = {}) => (values = {}) => Object.assign({}, values, inject)
 
-import {
-  LAYOUT_CELL_DEFAULTS,
-} from './config'
-
 const forms = {
   'section': {
-    initialValues: {
-      annotation: {
-        sorting: {},
-      },
-    },
     tabs: [{
-      id: 'sourceFolders',
-      title: 'Drive Folders',
-      schema: [{
-        title: 'Drive Folders',
-        helperText: 'Manage the drive folders loaded into this section',
-        component: 'driveFolders',
-      }],
-    }, {
       id: 'sorting',
       title: 'Sorting',
       schema: [{
@@ -27,6 +10,7 @@ const forms = {
         title: 'Sorting',
         helperText: 'How are children items sorted inside this folder?',
         component: 'sorting',
+        default: {},
       }],
     }, {
       id: 'hidden',
@@ -35,12 +19,21 @@ const forms = {
         title: 'Hidden Items',
         helperText: 'Manage the hidden items in this section',
         component: 'hiddenItems',
+        default: null,
+      }],
+    },{
+      id: 'sourceFolders',
+      title: 'Drive Folders',
+      schema: [{
+        title: 'Drive Folders',
+        helperText: 'Manage the drive folders loaded into this section',
+        component: 'driveFolders',
+        default: null,
       }],
     }],
   },
   // this will be merged into other cell forms
   'cell.settings': {
-    initialValues: LAYOUT_CELL_DEFAULTS,
     tabs: [{
       id: 'settings',
       title: 'Settings',
@@ -50,6 +43,7 @@ const forms = {
           title: 'Horizontal Align',
           helperText: 'The horizontal alignment of content in this cell',
           component: 'select',
+          default: 'left',
           options: [{
             title: 'Left',
             value: 'left',
@@ -65,6 +59,7 @@ const forms = {
           title: 'Vertical Align',
           helperText: 'The vertical alignment of content in this cell',
           component: 'select',
+          default: 'center',
           options: [{
             title: 'Top',
             value: 'top',
@@ -80,6 +75,7 @@ const forms = {
           id: 'settings.padding',
           title: 'Padding',
           helperText: 'The padding in pixels for this cell',
+          default: 8,
           inputProps: {
             type: 'number',
           },
@@ -88,21 +84,7 @@ const forms = {
     }],
   },
   'drive.folder': {
-    initialValues: {
-      name: '',
-      annotation: {
-        sorting: {},
-      },
-    },
     processFormValues: valueInjector({mimeType: 'folder'}),
-    tabFilter: ({
-      tabs,
-      values,
-    }) => {
-      return values.id ?
-        tabs :
-        tabs.filter(tab => tab.id == 'settings')
-    },
     tabs: [{
       id: 'settings',
       title: 'Settings',
@@ -111,6 +93,7 @@ const forms = {
         id: 'name',
         title: 'Name',
         helperText: 'Enter the name of the folder',
+        default: '',
         validate: {
           type: 'string',
           methods: [
@@ -126,6 +109,7 @@ const forms = {
         title: 'Sorting',
         helperText: 'How are children items sorted inside this folder?',
         component: 'sorting',
+        default: {},
       }],
     },{
       id: 'actions',
@@ -139,18 +123,7 @@ const forms = {
     }]
   },
   'drive.document': {
-    initialValues: {
-      name: '',
-    },
     processFormValues: valueInjector({mimeType: 'document'}),
-    tabFilter: ({
-      tabs,
-      values,
-    }) => {
-      return values.id ?
-        tabs :
-        tabs.filter(tab => tab.id == 'settings')
-    },
     tabs: [{
       id: 'settings',
       title: 'Settings',
@@ -159,6 +132,7 @@ const forms = {
         id: 'name',
         title: 'Name',
         helperText: 'Enter the name of the document',
+        default: '',
         validate: {
           type: 'string',
           methods: [
@@ -178,15 +152,11 @@ const forms = {
     }]
   },
   'link': {
-    initialValues: {
-      name: '',
-      url: '',
-      noRoute: true,
-    },
     schema: [{
       id: 'name',
       title: 'Name',
       helperText: 'Enter the name of the link',
+      default: '',
       validate: {
         type: 'string',
         methods: [
@@ -197,6 +167,7 @@ const forms = {
       id: 'url',
       title: 'URL',
       helperText: 'Enter the url of the link',
+      default: '',
       validate: {
         type: 'string',
         methods: [

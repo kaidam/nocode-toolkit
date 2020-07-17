@@ -7,8 +7,9 @@ import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
 
 import networkWrapper from '../utils/networkWrapper'
-import apiUtils from '../utils/api'
+import apiUtils, { handlers } from '../utils/api'
 
+import websiteSelectors from '../selectors/website'
 import contentSelectors from '../selectors/content'
 import nocodeSelectors from '../selectors/nocode'
 
@@ -469,31 +470,6 @@ const sideEffects = {
     // dispatch(snackbarActions.setSuccess(`section updated`))
   }),
 
-  updateAnnotation: ({
-    id,
-    data,
-    snackbarMessage,
-    reload = true,
-  }) => wrapper('updateAnnotation', async (dispatch, getState) => {
-    const annotations = nocodeSelectors.annotations(getState())
-    const annotationUpdate = deepmerge(annotations[id] || {}, data, {
-      arrayMerge: overwriteMerge,
-    })
-    dispatch(nocodeActions.setItem({
-      type: 'annotation',
-      id,
-      data: annotationUpdate,
-    }))
-    const result = await loaders.updateAnnotation(getState, id, annotationUpdate)
-    if(!result) return
-    if(reload) {
-      await dispatch(jobActions.reload())
-    }
-    if(snackbarMessage) {
-      dispatch(snackbarActions.setSuccess(snackbarMessage))
-    }
-  }),
-
   editNode: ({
     title,
     form,
@@ -760,6 +736,31 @@ const sideEffects = {
     dispatch(actions.clearFormWindow())
     return result
   },
+
+  updateAnnotation: ({
+    id,
+    data,
+    snackbarMessage,
+    reload = false,
+  }) => wrapper('updateAnnotation', async (dispatch, getState) => {
+    const websiteId = websiteSelectors.websiteId(getState())
+    const annotations = nocodeSelectors.annotations(getState())
+    const annotationUpdate = deepmerge(annotations[id] || {}, data, {
+      arrayMerge: overwriteMerge,
+    })
+    dispatch(nocodeActions.setItem({
+      type: 'annotation',
+      id,
+      data: annotationUpdate,
+    }))
+    await handlers.put(`/content/${websiteId}/annotation/${id}`, annotationUpdate)
+    if(reload) {
+      await dispatch(jobActions.reload())
+    }
+    if(snackbarMessage) {
+      dispatch(snackbarActions.setSuccess(snackbarMessage))
+    }
+  }),
 
 }
 
