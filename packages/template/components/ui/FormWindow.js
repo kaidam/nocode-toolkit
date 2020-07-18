@@ -74,6 +74,7 @@ const FormWindowDialog = ({
         compact
         noScroll
         noActions
+        title={ config.title }
         size={ config.size || "md" }
         fullHeight={ typeof(config.fullHeight) == 'boolean' ? config.fullHeight : true }
         onCancel={ onCancel }
