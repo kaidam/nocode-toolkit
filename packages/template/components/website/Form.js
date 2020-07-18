@@ -36,6 +36,7 @@ const useStyles = makeStyles(theme => ({
 const WebsiteForm = ({
   cancelTitle,
   buttonAlign,
+  withRouter,
   onCancel,
   onAfterSubmit,
 }) => {
@@ -61,6 +62,7 @@ const WebsiteForm = ({
     form: settingsSchema,
     values: settings,
     buttonAlign,
+    withRouter,
     cancelTitle,
     onSubmit,
     onCancel,

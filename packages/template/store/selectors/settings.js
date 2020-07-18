@@ -17,6 +17,7 @@ const DEFAULT_LIBRARY_SETTINGS = {
   tabs: [],
 }
 
+const windowOpen = state => state.settings.windowOpen
 const settingsValue = websiteSelectors.settings
 const libraryWidgets = state => {}
 const libraryForms = state => {}
@@ -120,6 +121,7 @@ const afterBodySnippetCode = createSelector(
 )
 
 const selectors = {
+  windowOpen,
   settings,
   settingsValue,
   schema,

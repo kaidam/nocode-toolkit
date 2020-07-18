@@ -7,8 +7,6 @@ import jobActions from './job'
 import snackbarActions from './snackbar'
 
 import settingsSelectors from '../selectors/settings'
-import routerActions from '../modules/router'
-
 import networkWrapper from '../utils/networkWrapper'
 
 import { settings as initialState } from '../initialState'
@@ -18,21 +16,19 @@ const prefix = 'settings'
 const wrapper = networkWrapper.factory(prefix)
 
 const reducers = {
-  
-}
-
-const loaders = {
-  
+  setWindowOpen: (state, action) => {
+    state.windowOpen = action.payload
+  }
 }
 
 const sideEffects = {
 
   openDialog: (params = {}) => (dispatch, getState) => {
-    dispatch(dialogActions.open('settings', params))
+    dispatch(actions.setWindowOpen(true))
   },
 
   closeDialog: () => (dispatch, getState) => {
-    dispatch(routerActions.clearQueryParams())
+    dispatch(actions.setWindowOpen(false))
   },
 
   updateSettings: (data, reload = true) => async (dispatch, getState) => {

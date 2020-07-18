@@ -5,6 +5,7 @@ import Window from '../dialog/Window'
 import WebsiteSettingsRender from '../website/Settings'
 
 import websiteSelectors from '../../store/selectors/website'
+import settingsSelectors from '../../store/selectors/settings'
 import settingsActions from '../../store/modules/settings'
 
 import icons from '../../icons'
@@ -15,6 +16,7 @@ const SettingsDialog = ({
 
   const dispatch = useDispatch()
   const websiteId = useSelector(websiteSelectors.websiteId)
+  const windowOpen = useSelector(settingsSelectors.windowOpen)
   const onCloseWindow = useCallback(() => {
     dispatch(settingsActions.closeDialog())
   }, [])
@@ -28,7 +30,7 @@ const SettingsDialog = ({
 
   return (
     <Window
-      open
+      open={ windowOpen ? true : false }
       compact
       noScroll
       noActions
@@ -45,6 +47,7 @@ const SettingsDialog = ({
           icon: icons.payments,
           handler: onOpenPlan,
         }] }
+        withRouter={ false }
         onAfterFormSubmit={ onCloseWindow }
         onCancel={ onCloseWindow }
       />

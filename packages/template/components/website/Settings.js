@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
@@ -77,6 +77,7 @@ const TABS = [{
   icon: icons.settings,
   render: (props, classes) => (
     <WebsiteForm
+      withRouter={ props.withRouter }
       cancelTitle={ props.cancelTitle }
       buttonAlign={ props.buttonAlign }
       onAfterSubmit={ props.extraProps.onAfterFormSubmit }
@@ -153,6 +154,7 @@ const WebsiteSettings = ({
   cancelTitle,
   buttonAlign,
   extraTabs = [],
+  withRouter = false,
   ...extraProps
 }) => {
   const classes = useStyles()
@@ -165,7 +167,9 @@ const WebsiteSettings = ({
 
   const tabs = TABS.concat(extraTabs)
 
-  const tab = params.section || tabs[0].id
+  const initialTab = withRouter ? (params.section || tabs[0].id) : tabs[0].id
+  const [ tab, setTab ] = useState(initialTab)
+
   const isOwner = website && website.id != 'new' && website.collaboration_type == 'owner'
 
   useEffect(() => {
@@ -179,8 +183,13 @@ const WebsiteSettings = ({
   ])
 
   const onChangeTab = useCallback((section) => {
-    dispatch(routerActions.addQueryParams({section}))
-  })
+    if(withRouter) {
+      dispatch(routerActions.addQueryParams({section}))
+    }
+    setTab(section)
+  }, [
+    withRouter,
+  ])
 
   const onUpdateMeta = useCallback((values) => {
     dispatch(websiteActions.updateMeta(websiteId, values))
@@ -224,6 +233,7 @@ const WebsiteSettings = ({
     onUpdateMeta,
     layouts,
     currentLayout: websiteMeta.layout,
+    withRouter,
   }
 
   return (

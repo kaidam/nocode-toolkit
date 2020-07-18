@@ -22,7 +22,7 @@ export const ui = {
 }
 
 export const settings = {
-  dnsInfo: null,
+  windowOpen: false,
 }
 
 export const dialog = {

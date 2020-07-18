@@ -24,7 +24,6 @@ import HelpDialog from '../system/HelpDialog'
 import library from '../../library'
 
 const dialogs = {
-  settings: SettingsDialog,
   publish: PublishDialog,
   publishSummary: PublishSummaryDialog,
   publishHistory: PublishHistoryDialog,
@@ -90,6 +89,7 @@ const DialogLoader = ({
           <SnackBar />
         )
       }
+      <SettingsDialog />
       <AddWidgetDialog />
       <FormWindowDialog />
     </div>

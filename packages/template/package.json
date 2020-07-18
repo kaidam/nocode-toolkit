@@ -52,6 +52,7 @@
     "router5-plugin-browser": "^8.0.0",
     "router5-transition-path": "^8.0.0",
     "uuid": "^7.0.2",
+    "xregexp": "^4.3.0",
     "yargs": "^15.0.2",
     "yup": "^0.28.3"
   },
