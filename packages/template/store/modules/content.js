@@ -569,65 +569,7 @@ const sideEffects = {
     dispatch(snackbarActions.setSuccess(`homepage updated`))
   }),
 
-  hideContent: ({
-    id,
-    name,
-  }) => wrapper('hideContent', async (dispatch, getState) => {
-    const result = await dispatch(uiActions.waitForConfirmation({
-      title: `Hide ${name}?`,
-      message: `
-        <p>Hiding ${name} will <strong>not</strong> delete the item but it won't show up on the website.</p>
-        <p>You can always show the item again by opening the section settings.</p>
-      `,
-      confirmTitle: `Confirm - Hide ${name}`,
-    }))
-    if(!result) return
-
-    dispatch(uiActions.setLoading({
-      message: `hiding ${name}`,
-    }))
-
-    const annotations = nocodeSelectors.annotations(getState())
-    await loaders.updateAnnotation(getState, id, Object.assign({}, annotations[id] || {}, {
-      hidden: true,
-    }))
-    await dispatch(jobActions.reload())
-    dispatch(snackbarActions.setSuccess(`${name} hidden`))
-  }, {
-    after: async (dispatch, getState, error) => {
-      dispatch(uiActions.setLoading(false))
-    }
-  }),
-
-  showContent: ({
-    id,
-    name,
-  }) => wrapper('showContent', async (dispatch, getState) => {
-    const result = await dispatch(uiActions.waitForConfirmation({
-      title: `Show ${name}?`,
-      message: `
-        <p>Showing ${name} will make it show up on the website.</p>
-        <p>You can always hide the item again by opening the item options in the tree.</p>
-      `,
-      confirmTitle: `Confirm - Show ${name}`,
-    }))
-    if(!result) return
-
-    dispatch(uiActions.setLoading({
-      message: `showing ${name}`,
-    }))
-
-    const annotations = nocodeSelectors.annotations(getState())
-    const annotation = Object.assign({}, annotations[id])
-    delete(annotation.hidden)
-    await loaders.updateAnnotation(getState, id, annotation)
-    await dispatch(jobActions.reload())
-    dispatch(snackbarActions.setSuccess(`${name} shown`))
-  }, {
-    after: async (dispatch, getState, error) => {
-      dispatch(uiActions.setLoading(false))
-    }
-  }),
+  
 
   
 
@@ -774,6 +716,64 @@ const sideEffects = {
       await updateChanges()
       return
     }    
+  }),
+
+  hideContent: ({
+    id,
+    name,
+  }) => wrapper('hideContent', async (dispatch, getState) => {
+    const result = await dispatch(uiActions.waitForConfirmation({
+      title: `Hide ${name}?`,
+      message: `
+        <p>Hiding ${name} will <strong>not</strong> delete the item but it won't show up on the website.</p>
+        <p>You can always show the item again by opening the section settings.</p>
+      `,
+      confirmTitle: `Confirm - Hide ${name}`,
+    }))
+    if(!result) return
+    dispatch(uiActions.setLoading({
+      message: `hiding ${name}`,
+    }))
+    await dispatch(actions.updateAnnotation({
+      id,
+      data: {
+        hidden: true,
+      },
+      reload: true,
+      snackbarMessage: `${name} hidden`,
+    }))
+  }, {
+    hideLoading: true,
+  }),
+
+  showContent: ({
+    id,
+    name,
+  }) => wrapper('showContent', async (dispatch, getState) => {
+    const result = await dispatch(uiActions.waitForConfirmation({
+      title: `Show ${name}?`,
+      message: `
+        <p>Showing ${name} will make it show up on the website.</p>
+        <p>You can always hide the item again by opening the item options in the tree.</p>
+      `,
+      confirmTitle: `Confirm - Show ${name}`,
+    }))
+    if(!result) return
+
+    dispatch(uiActions.setLoading({
+      message: `showing ${name}`,
+    }))
+
+    await dispatch(actions.updateAnnotation({
+      id,
+      data: {
+        hidden: false,
+      },
+      reload: true,
+      snackbarMessage: `${name} hidden`,
+    }))
+  }, {
+    hideLoading: true,
   }),
 
 }

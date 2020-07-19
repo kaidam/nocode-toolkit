@@ -96,7 +96,6 @@ const sideEffects = {
   }),
 
   editContent: ({
-    title,
     driver,
     form,
     content_id,
@@ -121,7 +120,6 @@ const sideEffects = {
       tabs,
       values: useValues,
       config: {
-        title,
         showLoading: true,
         size: 'sm',
         fullHeight: false,

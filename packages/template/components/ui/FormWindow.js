@@ -55,6 +55,7 @@ const FormWindowDialog = ({
     config,
     values,
     withRouter: false,
+    cancelTitle: 'Close',
     onSubmit: (values) => dispatch(uiActions.acceptFormWindow(values)),
     onCancel: () => dispatch(uiActions.cancelFormWindow()),
   })
