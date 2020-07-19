@@ -776,6 +776,30 @@ const sideEffects = {
     hideLoading: true,
   }),
 
+  // update the website setting homepage
+  // this means they can assign homepage status to any of the items
+  // regardless of where they live
+  changeHomepage: ({
+    content_id,
+  } = {}) => wrapper('changeHomepage', async (dispatch, getState) => {
+    
+    // update the homepage meta setting
+    await handlers.put(`/websites/${id}/meta`, {
+      homepage: content_id,
+    })
+
+    // re-calculate the routes
+    await handlers.put(`/preview/${id}/recalculate`)
+
+    // don't hang around on the route that might change
+    await dispatch(routerActions.navigateTo('root'))
+    await dispatch(jobActions.reload())
+    dispatch(snackbarActions.setSuccess(`homepage updated`))
+    dispatch(uiActions.cancelFormWindow())
+  }, {
+    autoLoading: true,
+  }),
+
 }
 
 const reducer = CreateReducer({
