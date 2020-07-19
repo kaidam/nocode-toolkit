@@ -53,6 +53,11 @@ const websiteMeta = createSelector(
   (data) => data && data.meta ? data.meta : DEFAULT_OBJECT
 )
 
+const homepage = createSelector(
+  websiteMeta,
+  (meta) => meta.homepage,
+)
+
 const websiteList = createSelector(
   websites,
   (websites) => {
@@ -125,6 +130,7 @@ const selectors = {
   dnsInfo,
   websiteData,
   websiteMeta,
+  homepage,
   websiteList,
   ownedWebsiteList,
   settings,

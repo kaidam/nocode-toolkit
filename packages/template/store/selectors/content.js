@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect'
-import deepmerge from 'deepmerge'
 import { v4 as uuid } from 'uuid'
 import childrenUtils from '../../utils/children'
 import documentUtils from '../../utils/document'
@@ -7,16 +6,6 @@ import nocodeSelectors from './nocode'
 import routerSelectors from './router'
 import settingsSelectors from './settings'
 import websiteSelectors from './website'
-
-const DEFAULT_OBJECT = {}
-const DEFAULT_ARRAY = []
-
-const formWindow = state => state.content.formWindow
-
-const settings = createSelector(
-  nocodeSelectors.nodes,
-  nodes => nodes.settings || DEFAULT_OBJECT,
-)
 
 const sectionTree = () => createSelector(
   nocodeSelectors.sections,
@@ -105,30 +94,6 @@ const section = () => createSelector(
       addTargetFolderId,
       sourceFolders,
     }
-  },
-)
-
-// this returns the singleton item
-// if there is one
-const homeSingletonItem = createSelector(
-  nocodeSelectors.nodes,
-  nocodeSelectors.singletons,
-  websiteSelectors.websiteData,
-  nocodeSelectors.routeNameMap,
-  nocodeSelectors.route,
-  (nodes, singletons, website, routeMap, currentRoute) => {
-    const route = routeMap['root']
-    const singleton = singletons['home']
-    if(!route || !singleton) return null
-    const node = nodes[singleton.item]
-    if(!node) return null
-    return Object.assign({}, node, {
-      isSingletonHome: true,
-      name: 'Home',
-      route,
-      currentPage: currentRoute.item == node.id,
-      children: [],
-    })
   },
 )
 
@@ -234,100 +199,6 @@ const itemRoute = () => createSelector(
 
     return routeMap[routeId]
   },
-)
-
-const form = createSelector(
-  settingsSelectors.forms,
-  formWindow,
-  (storeForms, formWindow) => {
-    const formNames = formWindow.forms || []
-   
-    const initialValues = deepmerge.all(
-      formNames.map(name => {
-        const formConfig = storeForms[name]
-        return formConfig.initialValues
-      }).concat([formWindow.values])  
-    )
-
-    // if we want tabs - reduce the form names into their respective schema tabs
-    const tabs = formWindow.singlePage ? null : formNames.reduce((all, name) => {
-      const formConfig = storeForms[name]
-      if(formConfig.tabs) {
-        return all.concat(formConfig.tabs)
-      }
-      else if(formConfig.schema) {
-        return all.concat([{
-          id: formConfig.id,
-          title: formConfig.title,
-          schema: formConfig.schema,
-          handers: formConfig.handers,
-        }])
-      }
-      else {
-        return all
-      }
-    }, [])
-
-    // if we want single page - reduce the form names into a long list
-    const schema = formWindow.singlePage ? formNames.reduce((all, name) => {
-      const formConfig = storeForms[name]
-      if(formConfig.tabs) {
-        return all
-          .concat(formConfig.tabs.reduce((all, tab) => {
-            return all
-              .concat(tab.noTitle ? [] : [tab.title])
-              .concat(tab.schema)
-          }, []))
-      }
-      else if(formConfig.schema) {
-        return all
-          .concat([
-            formConfig.title
-          ])
-          .concat(formConfig.schema)
-      }
-      else {
-        return all
-      }
-    }, []) : null
-
-    const otherProps = formNames.reduce((all, name) => {
-      const formConfig = storeForms[name]
-      const ret = Object.assign({}, all, formConfig)
-      delete(ret.tabs)
-      delete(ret.schema)
-      delete(ret.initialValues)
-      return ret
-    }, {})
-
-    return {
-      tabs,
-      schema,
-      initialValues,
-      ...otherProps
-    }
-  }
-)
-
-const formValues = createSelector(
-  formWindow,
-  (formWindow) => {
-    if(!formWindow) return DEFAULT_OBJECT
-    return formWindow.values || DEFAULT_OBJECT
-  }
-)
-
-// flatten the current (potentially tabbed) schema into a single list
-// this is used for the validation
-const flatFormSchema = createSelector(
-  form,
-  (form) => {
-    if(!form) return DEFAULT_ARRAY
-    const tabSchema = (form.tabs || []).reduce((all, tab) => {
-      return all.concat(tab.schema)
-    }, [])
-    return (form.schema || []).concat(tabSchema)
-  }
 )
 
 const document = createSelector(
@@ -491,17 +362,11 @@ const routeChildren = createSelector(
 )
 
 const selectors = {
-  formWindow,
-  settings,
   sectionTree,
-  homeSingletonItem,
   sectionHiddenItems,
   section,
   itemRoute,
   itemChildren,
-  form,
-  formValues,
-  flatFormSchema,
   document,
   routeAncestors,
   fullRouteAncestors,

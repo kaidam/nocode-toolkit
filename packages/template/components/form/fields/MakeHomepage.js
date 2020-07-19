@@ -6,8 +6,7 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 
 import contentActions from '../../../store/modules/content'
-import contentSelectors from '../../../store/selectors/content'
-import settingsSelectors from '../../../store/selectors/settings'
+import websiteSelectors from '../../../store/selectors/website'
 
 import icons from '../../../icons'
 
@@ -20,16 +19,15 @@ const MakeHomepage = ({
 
   const dispatch = useDispatch()
 
-  const singletonHome = useSelector(contentSelectors.homeSingletonItem)
-  const settings = useSelector(settingsSelectors.settings)
-
+  const homepage = useSelector(websiteSelectors.homepage)
+  
   const setHomepage = () => {
-    dispatch(contentActions.changeHomepageSetting({
+    dispatch(contentActions.changeHomepage({
       content_id: values.id,
     }))
   }
 
-  const isHomepage = settings && settings.homepage == values.id
+  const isHomepage = homepage && homepage == values.id
 
   if(singletonHome) {
     return (
