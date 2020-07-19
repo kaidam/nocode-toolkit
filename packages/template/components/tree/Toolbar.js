@@ -34,6 +34,9 @@ const useStyles = makeStyles(theme => ({
     textTransform: 'none',
     color: theme.palette.grey[600],
   },
+  icon: {
+    fontSize: '16px',
+  },
 }))
 
 const TreeToolbar = ({
