@@ -629,50 +629,7 @@ const sideEffects = {
     }
   }),
 
-  reloadExternalContent: ({
-    driver,
-    id,
-  }) => wrapper('reloadExternalContent', async (dispatch, getState) => {
-
-    const nodes = nocodeSelectors.nodes(getState())
-    const node = nodes[id]
-
-    if(!node) return
-
-    // called when we see a new document version coming through
-    const updateChanges = async () => {
-      const {
-        reloadPreview,
-        reloadDocument,
-      } = await loaders.reloadExternalContent(getState, driver, id)
-
-      // the name has changed so we need to do a full rebuild
-      if(reloadPreview) {
-        await dispatch(jobActions.reload())
-      }
-      // otherwise just reload the external
-      else if (reloadDocument) {
-        await dispatch(nocodeActions.loadExternal(`${driver}:${id}.html`))
-      }
-    }
-
-    const newItem1 = await loaders.getRemoteContent(getState, driver, id)
-
-    if(newItem1.version != node.version) {
-      await updateChanges()
-      return
-    }
-
-    // wait for 5 seconds for eventual consistency
-    await Promise.delay(GOOGLE_DOUBLE_BUBBLE_RELOAD_DELAY)
-
-    const newItem2 = await loaders.getRemoteContent(getState, driver, id)
-
-    if(newItem2.version != node.version) {
-      await updateChanges()
-      return
-    }    
-  }),
+  
 
   waitForForm: ({
     forms,
@@ -767,6 +724,56 @@ const sideEffects = {
     if(snackbarMessage) {
       dispatch(snackbarActions.setSuccess(snackbarMessage))
     }
+  }),
+  
+
+  reloadExternalContent: ({
+    driver,
+    id,
+  }) => wrapper('reloadExternalContent', async (dispatch, getState) => {
+
+    const websiteId = websiteSelectors.websiteId(getState())
+    const nodes = nocodeSelectors.nodes(getState())
+    const node = nodes[id]
+
+    if(!node) return
+
+    const getRemoteContent = () => handlers.get(`/remote/${websiteId}/item/${driver}/${id}`)
+    const reloadExternalContent = () => handlers.get(`/remote/${websiteId}/updated/${driver}/${id}`)
+
+    // called when we see a new document version coming through
+    const updateChanges = async () => {
+      const {
+        reloadPreview,
+        reloadDocument,
+      } = await reloadExternalContent()
+
+      // the name has changed so we need to do a full rebuild
+      if(reloadPreview) {
+        await dispatch(jobActions.reload())
+      }
+      // otherwise just reload the external
+      else if (reloadDocument) {
+        await dispatch(nocodeActions.loadExternal(`${driver}:${id}.html`))
+      }
+    }
+
+    const newItem1 = await getRemoteContent()
+
+    if(newItem1.version != node.version) {
+      await updateChanges()
+      return
+    }
+
+    // wait for 5 seconds for eventual consistency
+    await Promise.delay(GOOGLE_DOUBLE_BUBBLE_RELOAD_DELAY)
+
+    const newItem2 = await getRemoteContent()
+
+    if(newItem2.version != node.version) {
+      await updateChanges()
+      return
+    }    
   }),
 
 }
