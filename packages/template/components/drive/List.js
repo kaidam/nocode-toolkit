@@ -114,7 +114,7 @@ const FinderList = ({
                   const canAdd = !addFilter || addFilter.indexOf(type) >= 0
                   const canOpen = type == 'folder'
 
-                  const proxyThumbnailUrl = apiUtils.googleProxyUrl(store.getState, thumbnail)
+                  const proxyThumbnailUrl = apiUtils.googleProxyUrl(thumbnail)
 
                   return (
                     <TableRow

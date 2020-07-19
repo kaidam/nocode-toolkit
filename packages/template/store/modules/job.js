@@ -137,7 +137,7 @@ const sideEffects = {
   // and get the frontend redux store into line
   reload: () => async (dispatch, getState) => {
     const websiteId = websiteSelectors.websiteId(getState())
-    const previewData = await handlers.get(`/builder/${websiteId}/preview`)
+    const previewData = await handlers.get(`/preview/${websiteId}`)
     window._nocodeRebuildCount = (window._nocodeRebuildCount || 0) + 1
     window._nocodeData = previewData
     window._reloadNocodeApp()
@@ -149,7 +149,7 @@ const sideEffects = {
     beforeReload,
   } = {}) => async (dispatch, getState) => {
     const websiteId = websiteSelectors.websiteId(getState())
-    const previewData = await handlers.get(`/builder/${websiteId}/preview`, null, {
+    const previewData = await handlers.get(`/preview/${websiteId}`, null, {
       params: {rebuild: 'yes'}
     })
     const jobId = previewData.config.previewJobId
