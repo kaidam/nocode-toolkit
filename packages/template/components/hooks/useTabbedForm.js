@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react'
+import React, { useState, useMemo, useCallback, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import FormWrapper from '../form/Wrapper'
 import FormRender from '../form/Render'
@@ -14,6 +14,7 @@ const useTabbedForm = ({
   values,
   config = {},
   buttonAlign,
+  open = false,
   // when tabs change - do we update the router params or use internal state?
   withRouter = true,
   cancelTitle,
@@ -52,6 +53,12 @@ const useTabbedForm = ({
   }, [
     config,
     onSubmit,
+  ])
+
+  useEffect(() => {
+    if(!open) setCurrentTabName(tabs && tabs.length > 0 ? tabs[0].id : null)
+  }, [
+    open,
   ])
 
   const onChangeTab = useCallback((tab) => {

@@ -54,6 +54,7 @@ const FormWindowDialog = ({
     form: {tabs},
     config,
     values,
+    open: formWindow ? true : false,
     withRouter: false,
     cancelTitle: 'Close',
     onSubmit: (values) => dispatch(uiActions.acceptFormWindow(values)),

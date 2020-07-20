@@ -141,7 +141,6 @@ const sideEffects = {
         showLoading: true,
       }
     }))
-
     if(!results) return
     dispatch(uiActions.setLoading(true))
     await dispatch(actions.update({

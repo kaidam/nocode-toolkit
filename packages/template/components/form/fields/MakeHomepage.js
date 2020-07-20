@@ -29,47 +29,33 @@ const MakeHomepage = ({
 
   const isHomepage = homepage && homepage == values.id
 
-  if(singletonHome) {
-    return (
-      <Grid container spacing={ 2 }>
-        <Grid item xs={ 12 } sm={ 12 }>
-          <Typography>
-            Your website is using a fixed homepage.
-          </Typography>
-          <Typography>
-            You can change which document is used for the homepage by
-            clicking on the "Home" link and selecting the option to
-            "Change Homepage"
-          </Typography>
-        </Grid>
+  return (
+    <Grid container spacing={ 2 }>
+      {
+        !isHomepage && (
+          <Grid item xs={ 12 } sm={ 12 }>
+            <Button
+              variant="contained"
+              color="default"
+              disabled={ isHomepage }
+              onClick={ setHomepage }
+            >
+              Make this the homepage&nbsp;&nbsp;&nbsp;<HomeIcon />
+            </Button>
+          </Grid>
+        )
+      }
+      <Grid item xs={ 12 } sm={ 12 }>
+        <Typography>
+          {
+            isHomepage ?
+              `This page is currently set as the homepage.` :
+              item.helperText
+          }
+        </Typography>
       </Grid>
-    )
-  }
-  else {
-    return (
-      <Grid container spacing={ 2 }>
-        <Grid item xs={ 12 } sm={ 12 }>
-          <Button
-            variant="contained"
-            color="default"
-            disabled={ isHomepage }
-            onClick={ setHomepage }
-          >
-            Make this the homepage&nbsp;&nbsp;&nbsp;<HomeIcon />
-          </Button>
-        </Grid>
-        <Grid item xs={ 12 } sm={ 12 }>
-          <Typography>
-            {
-              isHomepage ?
-                `This page is currently set as the homepage.` :
-                item.helperText
-            }
-          </Typography>
-        </Grid>
-      </Grid>
-    )
-  }
+    </Grid>
+  )
 }
 
 export default MakeHomepage

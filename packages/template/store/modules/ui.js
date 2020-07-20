@@ -141,6 +141,9 @@ const sideEffects = {
             result = null
           }
         }
+        else {
+          hasSubmitted = true
+        }
       }
       else {
         hasSubmitted = true
