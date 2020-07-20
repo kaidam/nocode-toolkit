@@ -156,6 +156,7 @@ const uploadScreenshot = async ({
   const data = await new Promise(async (resolve, reject) => {
     try {
       if(!fs.existsSync(filepath)) throw new Error(`screenshot ${filepath} not found`)
+      console.log(api.getApiUrl(`/templates/${name}/screenshot/${version}`))
       const filename = path.basename(filepath)
       const result = await axios({
         method: 'post',

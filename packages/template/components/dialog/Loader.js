@@ -2,11 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 import SnackBar from '../system/Snackbar'
-
-import uiSelectors from '../../store/selectors/ui'
 import dialogSelectors from '../../store/selectors/dialog'
-import driveSelectors from '../../store/selectors/drive'
-import unsplashSelectors from '../../store/selectors/unsplash'
 
 import ConfirmDialog from './Confirm'
 import FormWindowDialog from '../ui/FormWindow'
@@ -33,9 +29,7 @@ const DEFAULT_PARAMS = {}
 const DialogLoader = ({
   
 }) => {
-  const confirmWindow = useSelector(uiSelectors.confirmWindow)
-  const driveUpgradeWindow = useSelector(driveSelectors.upgradeWindow)
-  const unsplashWindow = useSelector(unsplashSelectors.window)
+  
   const dialogParams = useSelector(dialogSelectors.dialogParams)
 
   return (
@@ -55,30 +49,18 @@ const DialogLoader = ({
             )
           })
       }
-      {
-        confirmWindow && (
-          <ConfirmDialog />
-        )
-      }
-      {
-        driveUpgradeWindow && (
-          <DriveUpgradeScopeDialog />
-        )
-      }
-      {
-        unsplashWindow && (
-          <UnsplashDialog />
-        )
-      }
+      <DriveUpgradeScopeDialog />
+      <ConfirmDialog />
+      <DriveDialog />
+      <SettingsDialog />
+      <AddWidgetDialog />
+      <FormWindowDialog />
+      <UnsplashDialog />
       {
         library.autoSnackbar && (
           <SnackBar />
         )
       }
-      <DriveDialog />
-      <SettingsDialog />
-      <AddWidgetDialog />
-      <FormWindowDialog />
     </div>
   )
 }
