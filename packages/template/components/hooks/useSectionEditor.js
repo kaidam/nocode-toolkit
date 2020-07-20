@@ -19,11 +19,8 @@ const useSectionEditor = ({
 }) => {
 
   const actions = Actions(useDispatch(), {
-    onCreateRemoteContent: contentActions.createRemoteContent,
-    onCreateLocalContent: contentActions.createLocalContent,
-    onAddRemoteContent: contentActions.addRemoteContent,
-
     onCreateContent: formActions.createContent,
+    onImportContent: contentActions.importContent,
     onEditSection: formActions.editSection,
     onWidgetAdd: layoutActions.addWidget,
   })
@@ -78,7 +75,7 @@ const useSectionEditor = ({
       section,
     })
 
-    const importContentHandler = () => actions.onAddRemoteContent({
+    const importContentHandler = () => actions.onImportContent({
       section,
       listFilter: 'folder,document',
       addFilter: 'folder,document',

@@ -159,7 +159,7 @@ const sideEffects = {
         hidden: false,
       },
       reload: true,
-      snackbarMessage: `${name} hidden`,
+      snackbarMessage: `${name} is now visible`,
     }))
   }, {
     hideLoading: true,
@@ -205,6 +205,7 @@ const sideEffects = {
     await handlers.post(`/section/${websiteId}/${section}/folder`, {
       id: result.id,
     })
+    await dispatch(routerActions.navigateTo('root'))
     await dispatch(jobActions.rebuild())
     dispatch(snackbarActions.setSuccess(`section folder added`))
   }, {
@@ -226,8 +227,50 @@ const sideEffects = {
       message: `removing folder`,
     }))
     await handlers.delete(`/section/${websiteId}/${section}/folder/${id}`)
+    await dispatch(routerActions.navigateTo('root'))
     await dispatch(jobActions.rebuild())
     dispatch(snackbarActions.setSuccess(`section folder removed`))
+  }, {
+    hideLoading: true,
+  }),
+
+  importContent: ({
+    section,
+    listFilter,
+    addFilter,
+  }) => wrapper('importContent', async (dispatch, getState) => {
+    const websiteId = websiteSelectors.websiteId(getState())
+    const result = await dispatch(driveActions.getDriveItem({
+      listFilter,
+      addFilter,
+    }))
+    if(!result) return
+    await handlers.post(`/section/${websiteId}/${section}/import`, result)
+    await dispatch(jobActions.rebuild())
+    dispatch(snackbarActions.setSuccess(`content added`))
+  }),
+
+  removeSectionContent: ({
+    title,
+    section,
+    content_id,
+  }) => wrapper('removeSectionContent', async (dispatch, getState) => {
+    const websiteId = websiteSelectors.websiteId(getState())
+    const result = await dispatch(uiActions.waitForConfirmation({
+      title: `Remove ${title}?`,
+      message: `
+        <p>Are you sure you want to remove this content - this will <strong>NOT</strong> delete the content.</p>
+      `,
+      confirmTitle: `Confirm - Remove ${title}`,
+    }))
+    if(!result) return
+    dispatch(uiActions.setLoading({
+      message: `removing ${name}`,
+    }))
+    await handlers.delete(`/section/${websiteId}/${section}/import/${content_id}`)
+    await dispatch(routerActions.navigateTo('root'))
+    await dispatch(jobActions.rebuild())
+    dispatch(snackbarActions.setSuccess(`content removed`))
   }, {
     hideLoading: true,
   }),

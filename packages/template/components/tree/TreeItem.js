@@ -80,7 +80,7 @@ const TreeItem = ({
 }) => {
 
   const settings = useSelector(settingsSelectors.settings)
-  const folderPages = settings.folderPages === 'yes'
+  const folderPages = settings.folderPages === true
 
   const [ isHovered, setIsHovered ] = useState(false)
   const [ isMenuOpen, setIsMenuOpen ] = useState(false)

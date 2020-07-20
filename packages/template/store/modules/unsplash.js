@@ -1,11 +1,8 @@
-import axios from 'axios'
-
 import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
 
 import networkWrapper from '../utils/networkWrapper'
-import apiUtils from '../utils/api'
-import itemUtils from '../../utils/item'
+import { handlers } from '../utils/api'
 
 import { drive as initialState } from '../initialState'
 
@@ -45,21 +42,6 @@ const reducers = {
   },
 }
 
-const loaders = {
-
-  getList: (getState, {
-    page,
-    search,
-  } = {}) => axios.get(apiUtils.websiteUrl(getState, `/remote/unsplash/list/root`), {
-    params: {
-      page,
-      search,
-    }
-  })
-    .then(apiUtils.process),
-
-}
-
 const sideEffects = {
 
   // get a list of content from a remote driver under parent
@@ -68,9 +50,12 @@ const sideEffects = {
     search,
     page,
   } = {}) => wrapper('getList', async (dispatch, getState) => {
-    const items = await loaders.getList(getState, {
-      page,
-      search,
+    const websiteId = websiteSelectors.websiteId(getState())
+    const items = await handlers.get(`/remote/${websiteId}/unsplash/list/root`, null, {
+      params: {
+        page,
+        search,
+      }
     })
     dispatch(actions.setList(items))
     dispatch(actions.setSearchActive(search ? true : false))

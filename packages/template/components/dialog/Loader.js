@@ -34,7 +34,6 @@ const DialogLoader = ({
   
 }) => {
   const confirmWindow = useSelector(uiSelectors.confirmWindow)
-  const driveWindow = useSelector(driveSelectors.window)
   const driveUpgradeWindow = useSelector(driveSelectors.upgradeWindow)
   const unsplashWindow = useSelector(unsplashSelectors.window)
   const dialogParams = useSelector(dialogSelectors.dialogParams)
@@ -62,11 +61,6 @@ const DialogLoader = ({
         )
       }
       {
-        driveWindow && (
-          <DriveDialog />
-        )
-      }
-      {
         driveUpgradeWindow && (
           <DriveUpgradeScopeDialog />
         )
@@ -81,6 +75,7 @@ const DialogLoader = ({
           <SnackBar />
         )
       }
+      <DriveDialog />
       <SettingsDialog />
       <AddWidgetDialog />
       <FormWindowDialog />

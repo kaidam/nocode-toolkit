@@ -22,18 +22,11 @@ const useItemEditor = ({
   let outerNode = node
 
   const actions = Actions(useDispatch(), {
-    onCreateRemoteContent: contentActions.createRemoteContent,
-    onEditRemoteContent: contentActions.editRemoteContent,
-    onEditLocalContent: contentActions.editLocalContent,
-    
-    onRemoveRemoteContent: contentActions.removeRemoteContent,
-    onDeleteRemoteContent: contentActions.deleteRemoteContent,
-    onDeleteLocalContent: contentActions.deleteLocalContent,
-    onHideContent: contentActions.hideContent,
-    onChangeHomepageSingleton: contentActions.changeHomepageSingleton,
-
+    onCreateContent: formActions.createContent,
     onEditContent: formActions.editContent,
     onDeleteContent: formActions.deleteContent,
+    onRemoveSectionContent: contentActions.removeSectionContent,
+    onHideContent: contentActions.hideContent,
   })
 
   const locations = useSelector(nocodeSelectors.locations)
@@ -56,13 +49,13 @@ const useItemEditor = ({
 
     if(node.driver == 'drive') {
       const removeItem = isSectionContent ? {
-        title: 'Hide',
+        title: 'Remove',
         icon: icons.clear,
-        handler: () => actions.onRemoveRemoteContent({
-          id: node.id,
-          name: node.name,
+        handler: () => actions.onRemoveSectionContent({
+          title: node.name,
           driver: 'drive',
-          location: node.route.location,
+          section: node.route.location.split(':')[1],
+          content_id: node.id,
         })
       } : {
         title: 'Hide',
@@ -88,21 +81,21 @@ const useItemEditor = ({
       if(node.type == 'folder') {
         items = [
           {
-            title: 'Add Content',
+            title: 'Create Content',
             icon: icons.add,
             items: [{
-              title: 'Google Document',
+              title: 'Create Document',
               icon: icons.docs,
-              handler: () => actions.onCreateRemoteContent({
+              handler: () => actions.onCreateContent({
                 title: 'Create Document',
                 driver: 'drive',
                 form: 'drive.document',
                 parentId: node.id,
               })
             },{
-              title: 'Google Folder',
+              title: 'Create Folder',
               icon: icons.folder,
-              handler: () => actions.onCreateRemoteContent({
+              handler: () => actions.onCreateContent({
                 title: 'Create Folder',
                 driver: 'drive',
                 form: 'drive.folder',

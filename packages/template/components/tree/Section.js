@@ -17,8 +17,6 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    overflowY: 'auto',
-    overflowX: 'hidden',
   },
   header: {
     flexGrow: 0,
@@ -28,6 +26,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
+    overflowY: 'auto',
+    overflowX: 'hidden',
   },
   widgets: {
     flexGrow: 0,

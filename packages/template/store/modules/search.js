@@ -18,18 +18,6 @@ const reducers = {
   }
 }
 
-const loaders = {
-  search: ({
-    query,
-  }) => axios.get(`/search`, {
-    params: {
-      query,
-    }
-  })
-  .then(apiUtils.process),
-
-}
-
 const sideEffects = {
 
   search: ({
@@ -47,9 +35,12 @@ const sideEffects = {
       return
     }
     dispatch(actions.setLoading(true))
-    const results = await loaders.search({
-      query,
+    const results = await axios.get(`/search`, {
+      params: {
+        query,
+      }
     })
+      .then(apiUtils.process)
     dispatch(actions.setResults(results))
     dispatch(actions.setLoading(false))
   },

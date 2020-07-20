@@ -41,6 +41,10 @@ const useStyles = makeStyles(theme => ({
     borderTop: 'solid 1px #ccc',
     backgroundColor: '#fff',
   },
+  title: {
+    paddingTop: theme.spacing(1),
+    paddingLeft: theme.spacing(1),
+  }
 }))
 
 const FormWindowDialog = ({
@@ -82,7 +86,7 @@ const FormWindowDialog = ({
       <div className={ classes.tabs }>
         {
           config.title && (
-            <Typography variant="h6" gutterBottom>
+            <Typography variant="h6" gutterBottom className={ classes.title }>
               { config.title }
             </Typography>
           )
