@@ -172,13 +172,14 @@ const sideEffects = {
     content_id,
   } = {}) => wrapper('changeHomepage', async (dispatch, getState) => {
     
+    const websiteId = websiteSelectors.websiteId(getState())
     // update the homepage meta setting
-    await handlers.put(`/websites/${id}/meta`, {
+    await handlers.put(`/websites/${websiteId}/meta`, {
       homepage: content_id,
     })
 
     // re-calculate the routes
-    await handlers.put(`/preview/${id}/recalculate`)
+    await handlers.put(`/preview/${websiteId}/recalculate`)
 
     // don't hang around on the route that might change
     await dispatch(routerActions.navigateTo('root'))
