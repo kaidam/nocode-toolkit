@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSelector, useDispatch } from 'react-redux'
 import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
 
 import Window from '../dialog/Window'
 
@@ -15,8 +16,13 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
   },
+  windowTitle: {
+    padding: 0,
+  },
+  windowActions: {
+    padding: 0,
+  },
   tabs: {
-    flexGrow: 0,
     backgroundColor: '#fff',
     borderBottom: 'solid 1px #ccc',
   },
@@ -29,12 +35,11 @@ const useStyles = makeStyles(theme => ({
   paper: {
     padding: theme.spacing(2),
     backgroundColor: '#fff',
-    
   },
   buttons: {
+    width: '100%',
     borderTop: 'solid 1px #ccc',
     backgroundColor: '#fff',
-    flexGrow: 0,
   },
 }))
 
@@ -63,6 +68,8 @@ const FormWindowDialog = ({
 
   if(!formWindow) return null
 
+  
+
   return renderForm(({
     getTabs,
     getForm,
@@ -70,33 +77,47 @@ const FormWindowDialog = ({
     hasTabs,
     onCancel,
   }) => {
+
+    const title = config.title || hasTabs ? (
+      <div className={ classes.tabs }>
+        {
+          config.title && (
+            <Typography variant="h6" gutterBottom>
+              { config.title }
+            </Typography>
+          )
+        }
+        {
+          hasTabs && getTabs()
+        }
+      </div>
+    ) : null
+
+    const buttons = (
+      <div className={ classes.buttons }>
+        { getButtons() }
+      </div>
+    )
+
     return (
       <Window
         open
         compact
-        noScroll
         noActions
-        title={ config.title }
+        theme={{
+          header: classes.windowTitle,
+          actions: classes.windowActions,
+        }}
+        title={ title }
         size={ config.size || "md" }
         fullHeight={ typeof(config.fullHeight) == 'boolean' ? config.fullHeight : true }
+        actions={ buttons }
         onCancel={ onCancel }
-      >
-        <div className={ classes.root }>
-          {
-            hasTabs && (
-              <div className={ classes.tabs }>
-                { getTabs() }
-              </div>
-            )
-          }
-          <div className={ classes.form }>
-            <Paper className={ classes.paper }>
-              { getForm() }
-            </Paper>
-          </div>
-          <div className={ classes.buttons }>
-            { getButtons() }
-          </div>
+      > 
+        <div className={ classes.form }>
+          <Paper className={ classes.paper }>
+            { getForm() }
+          </Paper>
         </div>
       </Window>
     )

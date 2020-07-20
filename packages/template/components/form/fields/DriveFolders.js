@@ -149,7 +149,7 @@ const DriveFoldersEditor = ({
 
         <Grid item xs={ 12 }>
           <Typography variant="subtitle1" gutterBottom>
-            <strong>Source Folders</strong>
+            <strong>Drive Folders</strong>
           </Typography>
           <Typography variant="caption" gutterBottom>
             The following folders will add their content to this section:
@@ -178,7 +178,7 @@ const DriveFoldersEditor = ({
               })
             }}
           >
-            Add Source Folder
+            Add Drive Folder
           </Button>
         </Grid>
 

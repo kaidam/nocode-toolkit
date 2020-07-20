@@ -195,7 +195,7 @@ const sideEffects = {
   }) => wrapper('addManagedFolder', async (dispatch, getState) => {
     const websiteId = websiteSelectors.websiteId(getState())
     const result = await dispatch(driveActions.getDriveItem({
-      listFilter: 'folder',
+      listFilter: 'folder,document',
       addFilter: 'folder',
     }))
     if(!result) return
