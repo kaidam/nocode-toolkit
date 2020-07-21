@@ -14,7 +14,7 @@ const AddIcon = icons.add
 const useStyles = makeStyles(theme => ({
   root: {
     fontFamily: 'Roboto',
-    padding: theme.spacing(1),
+    //padding: theme.spacing(1),
   },
   title: {
     margin: '0px',

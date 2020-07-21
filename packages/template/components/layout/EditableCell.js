@@ -38,12 +38,12 @@ const useStyles = makeStyles(theme => {
       width: '100%',
       height: '100%',
     },
-    settingsButtonContainer: {
+    settingsButtonContainer: ({hoverData}) => ({
       position: 'absolute',
       right: 0,
-      top: 0,
+      top: hoverData ? (hoverData.height/2 - 20) : 0,
       padding: theme.spacing(1),
-    },
+    }),
     settingsIcon: {
       color: theme.palette.grey[600],
     },
@@ -60,18 +60,21 @@ const EditableCell = ({
   children,
 }) => {
 
-  const [ isHovered, setIsHovered ] = useState(false)
+  const [ hoverData, setHoverData ] = useState(null)
   const [ isMenuOpen, setIsMenuOpen ] = useState(false)
   const [ anchorPosition, setAnchorPosition ] = useState(null)
 
   const contentRef = useRef(null)
 
-  const onHover = useCallback(() => {
-    setIsHovered(true)
+  const onHover = useCallback((e) => {
+    setHoverData({
+      width: e.target.clientWidth,
+      height: e.target.clientHeight,
+    })
   })
 
   const onLeave = useCallback(() => {
-    setIsHovered(false)
+    setHoverData(null)
   })
 
   const onOpenMenu = useCallback(() => {
@@ -80,12 +83,13 @@ const EditableCell = ({
 
   const onCloseMenu = useCallback(() => {
     setIsMenuOpen(false)
-    setIsHovered(false)
+    setHoverData(null)
     setAnchorPosition(null)
   })
 
   const classes = useStyles({
     open: isMenuOpen,
+    hoverData,
   })
 
   const {
@@ -152,7 +156,7 @@ const EditableCell = ({
             )
           }
           {
-            (isHovered || isMenuOpen) && (!isTouchscreen()) && (
+            (hoverData || isMenuOpen) && (!isTouchscreen()) && (
               <div className={ classes.settingsButtonContainer }>
                 {
                   getSettingsButton(onClick)

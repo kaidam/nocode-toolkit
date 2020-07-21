@@ -52,6 +52,7 @@ const LayoutEditor = ({
       layout_id,
       sourceIndex,
       targetIndex,
+      data,
     })
   }
 

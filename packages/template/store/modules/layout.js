@@ -52,6 +52,7 @@ const sideEffects = {
   update: ({
     content_id,
     layout_id,
+    data,
     handler,
     params,
   }) => async (dispatch, getState) => {
@@ -60,8 +61,10 @@ const sideEffects = {
     const annotations = nocodeSelectors.annotations(getState())
     const annotation = annotations[content_id] || {}
 
+    const layoutData = data || annotation[layout_id] || []
+
     const layout = handlerFn({
-      layout: annotation[layout_id] || [],
+      layout: layoutData,
       params
     })
     const newAnnotation = Object.assign({}, annotation, {
@@ -259,12 +262,14 @@ const sideEffects = {
   swapRow: ({
     content_id,
     layout_id,
+    data,
     sourceIndex,
     targetIndex,
   }) => wrapper('swapRow', async (dispatch, getState) => {
     await dispatch(actions.update({
       content_id,
       layout_id,
+      data,
       handler: 'swapRow',
       params: {
         sourceIndex,

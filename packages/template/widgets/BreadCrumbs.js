@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
 import Link from '../components/widgets/Link'
 
@@ -9,38 +9,10 @@ const Render = ({
   
 } = {}) => {
 
-  const pathToItem = useSelector(contentSelectors.routeAncestors)
-  const breadcrumbs = useMemo(() => {
-    const useItems = pathToItem.filter(item => item.route.location == 'singleton:home' ? false : true)
-    const hasHome = useItems.find(item => item.route.path == '/')
+  const breadcrumbs = useSelector(contentSelectors.breadcrumbs)
 
-    const base = hasHome ? [] : [{
-      title: 'Home',
-      path: '/',
-      name: 'root',
-      isLink: true,
-    }]
-
-    return base
-      .concat(
-        useItems
-          .filter(item => item.node)
-          .map((item, i) => {
-            if(!item.node) return null
-
-            return {
-              title: item.node.name.replace(/^\w/, st => st.toUpperCase()),
-              path: item.route.path,
-              name: item.route.name,
-              isLink: i < useItems.length - 1,
-            }
-          })
-      )
-      .filter(i => i)
-  }, [
-    pathToItem,
-  ])
-
+  if(breadcrumbs.length <= 0) return null
+  
   return (
     <div>
       {

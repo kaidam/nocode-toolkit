@@ -8,6 +8,11 @@ import settingsSelectors from './settings'
 import websiteSelectors from './website'
 
 const DEFAULT_LAYOUT = [[{type: 'documentContent'}]]
+const DEFAULT_CELL_SETTINGS = {
+  horizontal_align: 'left',
+  vertical_align: 'top',
+  padding: 8,
+}
 
 const sectionTree = () => createSelector(
   nocodeSelectors.sections,
@@ -243,24 +248,38 @@ const document = createSelector(
       cssImports,
     } = documentUtils.extractImports(externals[0])
 
-    const websiteLayoutId = websiteMeta.layout
-    const websiteLayout = templateLayouts
+    let layoutData = DEFAULT_LAYOUT
+    const templateLayout = websiteMeta.layout && templateLayouts[websiteMeta.layout] ?
+      templateLayouts[websiteMeta.layout].layout :
+      null
 
-    console.log('--------------------------------------------')
-    console.dir(templateLayouts)
+    // this page has an overriden layout
+    if(annotation.layout) {
+      layoutData = annotation.layout
+    }
+    // otherwise pick the layout from the settings
+    else if(templateLayout) {
+      layoutData = templateLayout
+    }
 
-    const layoutData = DEFAULT_LAYOUT
+    layoutData = layoutData.filter(row => row)
 
-    // const layoutData = annotation.layout || settings.layout || DEFAULT_LAYOUT
+    if(layoutData.length <= 0) {
+      layoutData = templateLayout || DEFAULT_LAYOUT
+    }
 
-    const layout = layoutData.map(row => {
-      return row.map(cell => {
-        if(cell.id) return cell
-        return Object.assign({}, cell, {
-          id: uuid(),
+    const layout = layoutData
+      .map(row => {
+        return row.map(cell => {
+          const data = Object.assign({}, {
+            settings: DEFAULT_CELL_SETTINGS,
+          }, cell.data)
+          const processedCell = Object.assign({}, cell)
+          if(!processedCell.id) processedCell.id = uuid()
+          processedCell.data = data
+          return processedCell
         })
       })
-    })
 
     return {
       node: Object.assign({}, node, {route}),
@@ -373,6 +392,36 @@ const routeChildren = createSelector(
   },
 )
 
+const breadcrumbs = createSelector(
+  nocodeSelectors.route,
+  routeAncestors,
+  (route, ancestors) => {
+
+    // remove the home link and current page
+    const useItems = ancestors
+      .filter(item => item.route.location == 'singleton:home' ? false : true)
+      .filter(item => item.route.path != '/')
+      .filter(item => item.route.name != route.name)
+      .filter(item => item.node)
+
+    if(useItems.length <= 0) return []
+
+    return [{
+      title: 'Home',
+      path: '/',
+      name: 'root',
+      isLink: true,
+    }].concat(
+      useItems.map(item => ({
+        title: item.node.name.replace(/^\w/, st => st.toUpperCase()),
+        path: item.route.path,
+        name: item.route.name,
+        isLink: true,
+      }))
+    )
+  },
+)
+
 const selectors = {
   sectionTree,
   sectionHiddenItems,
@@ -384,6 +433,7 @@ const selectors = {
   fullRouteAncestors,
   routeBaseLocation,
   routeChildren,
+  breadcrumbs,
 }
 
 export default selectors

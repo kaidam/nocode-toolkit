@@ -13,6 +13,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     width: '100%',
     paddingTop: theme.spacing(2),
+    borderTop: '1px solid #e5e5e5',
   },
   left: {
     flexGrow: 0,

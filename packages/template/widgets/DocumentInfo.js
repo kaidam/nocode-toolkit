@@ -7,6 +7,7 @@ import icons from '../icons'
 
 const useStyles = makeStyles(theme => ({
   root: {
+    width: '100%',
     color:'#999',
     paddingTop: '5px',
     paddingBottom: '5px',
