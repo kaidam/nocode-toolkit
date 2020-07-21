@@ -3,7 +3,6 @@ import websiteSelectors from './website'
 
 const systemWidgets = {}
 const DEFAULT_ARRAY = []
-const DEFAULT_OBJECT = []
 
 // values we inject into the default settings
 const DEFAULT_SETTINGS = {

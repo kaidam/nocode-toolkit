@@ -1,6 +1,5 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import icons from '../../icons'
 
 import FocusElement from '../widgets/FocusElement'
 import Actions from '../../utils/actions'

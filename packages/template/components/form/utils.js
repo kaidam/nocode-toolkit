@@ -9,6 +9,12 @@ const flattenSchema = (schema) => {
   }, [])
 }
 
+const flattenTabs = (tabs) => {
+  return tabs.reduce((all, tab) => {
+    return all.concat(flattenSchema(tab.schema))
+  }, [])
+}
+
 const getComponent = (component) => {
   let Component = typeof(component) === 'string' ?
       fields[component] :
@@ -52,6 +58,7 @@ const getInitialValues = (schema, initialValues) => {
 
 const utils = {
   flattenSchema,
+  flattenTabs,
   getComponent,
   getInitialValues,
 }

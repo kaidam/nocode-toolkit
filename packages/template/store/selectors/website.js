@@ -6,6 +6,7 @@ import {
 import systemSelectors from './system'
 
 const DEFAULT_OBJECT = {}
+const DEFALT_ARRAY = []
 
 const websites = state => state.website.websites
 const config = state => state.website.config
@@ -102,6 +103,11 @@ const settingsSchema = createSelector(
   templateMeta => templateMeta.settings || DEFAULT_OBJECT
 )
 
+const settingsTabs = createSelector(
+  settingsSchema,
+  settingsSchema => settingsSchema.tabs || DEFALT_ARRAY
+)
+
 const templateLayouts = createSelector(
   settingsSchema,
   settingsSchema => settingsSchema.layout || DEFAULT_OBJECT
@@ -136,6 +142,7 @@ const selectors = {
   settings,
   templateMeta,
   settingsSchema,
+  settingsTabs,
   templateLayouts,
   onboardingActive,
   ...networkGroup('website', [

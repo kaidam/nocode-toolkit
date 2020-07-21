@@ -1,23 +1,22 @@
-import axios from 'axios'
 import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
 import { v4 as uuid } from 'uuid'
 
 import networkWrapper from '../utils/networkWrapper'
-import apiUtils from '../utils/api'
 
 import { layout as initialState } from '../initialState'
 
 import nocodeSelectors from '../selectors/nocode'
 import layoutSelectors from '../selectors/layout'
-import nocodeActions from './nocode'
 import contentActions from './content'
 import snackbarActions from './snackbar'
 import uiActions from './ui'
-
+import websiteSelectors from '../selectors/website'
 import settingsSelectors from '../selectors/settings'
+import websiteActions from './website'
 
 import layoutUtils from '../../utils/layout'
+import widgetUtils from '../../utils/widget'
 
 import library from '../../library'
 
@@ -83,12 +82,16 @@ const sideEffects = {
     data,
     rowIndex = -1,
   }) => wrapper('add', async (dispatch, getState) => {
+    const websiteId = websiteSelectors.websiteId(getState())
+    const settings = settingsSelectors.settings(getState())
     const widget = library.widgets[type]
     if(!widget) throw new Error(`widget ${type} not found`)
-    const canEdit = (widget === false || !widget.form) ? false : true
-    if(canEdit) {
+    if(widgetUtils.canEdit(widget)) {
       const newData = await dispatch(uiActions.getFormValues({
-        tabs: widget.form.concat(library.forms['cell.settings'].tabs),
+        tabs: widgetUtils.getFormTabs({
+          widget,
+          settingsTabs: websiteSelectors.settingsTabs(getState()),
+        }),
         values: {},
         config: {
           size: 'sm',
@@ -97,7 +100,20 @@ const sideEffects = {
         }
       }))
       if(!newData) return
-      data = newData
+      const settingsUpdate = widgetUtils.getWebsiteSettingsValue({
+        widget,
+        data: newData,
+        settings,
+      })
+      data = widgetUtils.getCellDataValue({
+        widget,
+        data: newData,
+      })
+      if(settingsUpdate) {
+        await dispatch(websiteActions.updateMeta(websiteId, {settings: settingsUpdate}, {
+          snackbar: false,
+        }))
+      }
     }
     const useData = Object.assign({}, {
       settings: {},
@@ -128,13 +144,22 @@ const sideEffects = {
     rowIndex,
     cellIndex,
   }) => wrapper('edit', async (dispatch, getState) => {
+    const websiteId = websiteSelectors.websiteId(getState())
+    const settings = settingsSelectors.settings(getState())
     const cell = layout[rowIndex][cellIndex]
     if(!cell) throw new Error(`no cell found`)
     const widget = library.widgets[cell.type]
     if(!widget) throw new Error(`widget ${cell.type} not found`)
     const results = await dispatch(uiActions.getFormValues({
-      tabs: (widget.form || []).concat(library.forms['cell.settings'].tabs),
-      values: cell.data,
+      tabs: widgetUtils.getFormTabs({
+        widget,
+        settingsTabs: websiteSelectors.settingsTabs(getState()),
+      }),
+      values: widgetUtils.getFormData({
+        widget,
+        settings,
+        cell,
+      }),
       config: {
         size: 'sm',
         fullHeight: false,
@@ -143,6 +168,20 @@ const sideEffects = {
     }))
     if(!results) return
     dispatch(uiActions.setLoading(true))
+    const settingsUpdate = widgetUtils.getWebsiteSettingsValue({
+      widget,
+      data: results,
+      settings,
+    })
+    const cellUpdate = widgetUtils.getCellDataValue({
+      widget,
+      data: results,
+    })
+    if(settingsUpdate) {
+      await dispatch(websiteActions.updateMeta(websiteId, {settings: settingsUpdate}, {
+        snackbar: false,
+      }))
+    }
     await dispatch(actions.update({
       content_id,
       layout_id,
@@ -153,7 +192,7 @@ const sideEffects = {
         data: {
           id: cell.id,
           type: cell.type,
-          data: results,
+          data: cellUpdate,
         },
       }
     }))
