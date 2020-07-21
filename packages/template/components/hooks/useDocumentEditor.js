@@ -1,12 +1,9 @@
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import Actions from '../../utils/actions'
 import driveUtils from '../../utils/drive'
-import itemUtils from '../../utils/item'
 import icons from '../../icons'
 
-import nocodeSelectors from '../../store/selectors/nocode'
-import contentActions from '../../store/modules/content'
 import layoutActions from '../../store/modules/layout'
 import formActions from '../../store/modules/form'
 
@@ -15,18 +12,11 @@ const useDocumentEditor = ({
 }) => {
 
   const actions = Actions(useDispatch(), {
-    onCreateRemoteContent: contentActions.createRemoteContent,
-    onEditRemoteContent: contentActions.editRemoteContent,
-    onHideContent: contentActions.hideContent,
-    onRemoveRemoteContent: contentActions.removeRemoteContent,
-    onAddWidget: layoutActions.addWidget,
-
     onCreateContent: formActions.createContent,
     onEditContent: formActions.editContent,
+    onEditLayout: layoutActions.openLayoutWindow,
   })
 
-  const locations = useSelector(nocodeSelectors.locations)
-  const isSectionContent = itemUtils.isSectionContent(node, locations)
   const openUrl = driveUtils.getItemUrl(node)
   const isFolder = driveUtils.isFolder(node)
 
@@ -43,26 +33,6 @@ const useDocumentEditor = ({
     window.open(openUrl)
   }, [
     openUrl,
-  ])
-
-  const onRemove = useCallback(() => {
-    if(isSectionContent) {
-      actions.onRemoveRemoteContent({
-        id: node.id,
-        name: node.name,
-        driver: 'drive',
-        location: node.route.location,
-      })
-    }
-    else {
-      actions.onHideContent({
-        id: node.id,
-        name: node.name,
-      })
-    }
-  }, [
-    isSectionContent,
-    node,
   ])
 
   const onOpenSettings = useCallback(() => {
@@ -110,10 +80,10 @@ const useDocumentEditor = ({
   return {
     isFolder,
     onOpenDrive,
-    onRemove,
     onOpenSettings,
     getAddMenu,
     onAddWidget,
+    onEditLayout: actions.onEditLayout,
   }
 }
 

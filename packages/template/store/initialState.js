@@ -31,6 +31,7 @@ export const dialog = {
 
 export const layout = {
   widgetWindow: null,
+  layoutWindow: null,
 }
 
 export const form = {

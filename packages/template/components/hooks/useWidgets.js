@@ -17,11 +17,16 @@ const useWidgets = ({
     // filter by location
     const allWidgets = Object
       .keys(library.widgets)
-      .map(id => library.widgets[id])
+      .map(id => {
+        return Object.assign({}, library.widgets[id], {
+          globalId: id,
+        })
+      })
       .filter(widget => widget.hidden ? false : true)
       .concat(snippets.map(snippet => {
         return {
           id: 'snippet',
+          globalId: `snippet-${snippet.id}`,
           title: snippet.data.name,
           description: `Render the ${snippet.data.name} snippet`,
           locations: ['document', 'section'],

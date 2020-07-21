@@ -45,6 +45,12 @@ const reducers = {
   clearWidgetWindow: (state, action) => {
     state.widgetWindow = null
   },
+  openLayoutWindow: (state, action) => {
+    state.layoutWindow = true
+  },
+  closeLayoutWindow: (state, action) => {
+    state.layoutWindow = null
+  },
 }
 
 const sideEffects = {

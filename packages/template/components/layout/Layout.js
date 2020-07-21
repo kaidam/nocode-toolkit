@@ -5,9 +5,6 @@ import Divider from '@material-ui/core/Divider'
 import useLayoutCellRenderer from '../hooks/useLayoutCellRenderer'
 
 const useStyles = makeStyles(theme => ({
-  root: {
-
-  },
   row: {
     display: 'flex',
     flexDirection: 'row',
@@ -40,13 +37,14 @@ const Layout = ({
   if(!layout || layout.length <= 0) return null
 
   return (
-    <div className={ classes.root }>    
+    <>
       {
         layout.map((row, i) => {
+          const cell = row[0]
           return (
             <div
               className={ classes.row }
-              key={ i }
+              key={ cell.id }
             >
               {
                 row.map((cell, j) => {
@@ -66,7 +64,7 @@ const Layout = ({
           <Divider />
         )
       }
-    </div>
+    </>
   )
 }
 

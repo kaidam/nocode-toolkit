@@ -4,13 +4,7 @@ import { useSelector } from 'react-redux'
 
 import contentSelectors from '../../store/selectors/content'
 import settingsSelectors from '../../store/selectors/settings'
-import systemSelectors from '../../store/selectors/system'
-import websiteSelectors from '../../store/selectors/website'
-
-import Suspense from '../system/Suspense'
 import Layout from '../layout/Layout'
-
-const DraggableLayout = lazy(() => import(/* webpackChunkName: "ui" */ '../layout/DraggableLayout'))
 
 const useStyles = makeStyles(theme => ({
   container: ({

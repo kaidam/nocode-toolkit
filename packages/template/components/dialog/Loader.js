@@ -8,6 +8,7 @@ import DriveDialog from '../drive/Dialog'
 import DriveUpgradeScopeDialog from '../system/DriveUpgradeRequestModal'
 import UnsplashDialog from '../unsplash/Dialog'
 import SettingsDialog from '../settings/Dialog'
+import LayoutDialog from '../layout/EditLayoutDialog'
 import PublishDialog from '../publish/PublishDialog'
 import PublishSummaryDialog from '../publish/SummaryDialog'
 import PublishHistoryDialog from '../publish/HistoryDialog'
@@ -26,6 +27,7 @@ const DialogLoader = ({
       <ConfirmDialog />
       <DriveDialog />
       <SettingsDialog />
+      <LayoutDialog />
       <AddWidgetDialog />
       <FormWindowDialog />
       <UnsplashDialog />

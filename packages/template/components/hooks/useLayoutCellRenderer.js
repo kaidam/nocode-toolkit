@@ -27,7 +27,7 @@ const useLayoutCellRenderer = ({
   }) => {
     return (
       <Cell
-        key={ cellIndex }
+        key={ cell.id }
         cell={ cell }
         layout={ layout }
         showUI={ showUI }
