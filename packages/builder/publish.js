@@ -21,6 +21,7 @@ const Publish = async ({
   options,
   logger,
   plugins,
+  processInitialState,
   pluginConfig,
   onProgress,
   concurrency,
@@ -226,7 +227,11 @@ const Publish = async ({
         bodyHtml,
       } = renderResults
 
-      const initialState = data.processInitialState(store.getState())
+      let initialState = data.processInitialState(store.getState())
+
+      if(processInitialState) {
+        initialState = await processInitialState(initialState)
+      }
 
       routeHtml = HTML({
         buildInfo,

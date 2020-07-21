@@ -11,6 +11,7 @@ import green from '@material-ui/core/colors/green'
 import blue from '@material-ui/core/colors/blue'
 
 import jobActions from '../../store/modules/job'
+import publishActions from '../../store/modules/publish'
 import dialogActions from '../../store/modules/dialog'
 import snackbarActions from '../../store/modules/snackbar'
 import dialogSelectors from '../../store/selectors/dialog'
@@ -131,10 +132,10 @@ const SummaryDialog = ({
 
   const actions = Actions(useDispatch(), {
     onClose: dialogActions.closeAll,
-    onViewLogs: jobActions.viewLogs,
-    onDeploy: jobActions.deploy,
-    onOpenHistory: jobActions.openHistory,
-    onLoadPublished: jobActions.loadPublished,
+    onViewLogs: publishActions.viewLogs,
+    onDeploy: publishActions.deploy,
+    onOpenHistory: publishActions.openHistory,
+    onLoadPublished: publishActions.loadPublished,
     onSetSuccess: snackbarActions.setSuccess,
   })
 

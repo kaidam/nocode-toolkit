@@ -52,7 +52,7 @@ const sideEffects = {
 
   loadPublished: (id) => wrapper('loadPublished', async (dispatch, getState) => {
     await Promise.all([
-      dispatch(actions.jobActions(id)),
+      dispatch(jobActions.loadJob(id)),
       dispatch(actions.getPublishStatus()),
     ])
   }),
@@ -85,7 +85,7 @@ const sideEffects = {
         id,
       } = await handlers.post(`/publish/${websiteId}`, {})
       dispatch(dialogActions.open('publish', {}))
-      const job = await dispatch(actions.waitForJob({
+      const job = await dispatch(jobActions.waitForJob({
         id,
       }))
       // the publish job has told us we will need to upgrade

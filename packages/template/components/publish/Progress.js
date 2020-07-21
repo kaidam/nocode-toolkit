@@ -6,7 +6,7 @@ import StepLabel from '@material-ui/core/StepLabel'
 import StepContent from '@material-ui/core/StepContent'
 import Typography from '@material-ui/core/Typography'
 import LinearProgress from '@material-ui/core/LinearProgress'
-import Loading from '../system/Loading'
+import Loading from '../system/CircularLoading'
 
 const PublishProgressTextContent = ({
   stepData,
@@ -58,7 +58,7 @@ const PublishProgress = ({
 
   if(!progress || !progress.stepOrder) {
     return (
-      <Loading />
+      <Loading color="primary" />
     )
   }
 

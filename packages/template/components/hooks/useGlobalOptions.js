@@ -60,7 +60,7 @@ const useGlobalOptions = ({
   const getMenuItems = useCallback(() => {
     return [{
       id: 'build',
-      title: 'Build Website',
+      title: 'Build Preview',
       icon: icons.send,
       iconColor: 'secondary',
       handler: actions.onPublish,
@@ -70,17 +70,17 @@ const useGlobalOptions = ({
       icon: icons.settings,
       handler: () => onOpenSettingsPanel('general'),
     },{
-      title: `${previewMode ? 'Disable' : 'Enable'} Preview`,
-      icon: previewMode ? icons.hide : icons.look,
-      handler: previewMode ? onDisablePreview : onEnablePreview,
-    },{
       title: 'Re-Sync Drive',
       icon: icons.refresh,
       handler: actions.onRebuild,
+    },{
+      title: `${previewMode ? 'Disable' : 'Enable'} Proof Mode`,
+      icon: previewMode ? icons.hide : icons.look,
+      handler: previewMode ? onDisablePreview : onEnablePreview,
     },
     '-',
     {
-      title: 'History',
+      title: 'Publish History',
       icon: icons.history,
       handler: actions.onViewHistory,
     }, {
