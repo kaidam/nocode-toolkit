@@ -43,9 +43,6 @@ const DefaultHome = ({
     node: {
       id: sectionData ? sectionData.defaultFolderId : '',
     },
-    addContentParams: {
-      homepage: true,
-    }
   })
 
   const {

@@ -20,6 +20,7 @@ const Render = ({
   const {
     node,
   } = useSelector(contentSelectors.document)
+  if(node.route && node.route.path == '/') return null
   const title = (node.name || '').replace(/^(\w)/, st => st.toUpperCase())
   return (
     <Typography 

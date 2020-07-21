@@ -2,6 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import contentSelectors from '../store/selectors/content'
+import driveUtils from '../utils/drive'
 
 import icons from '../icons'
 
@@ -30,12 +31,16 @@ const Render = ({
     node,
   } = useSelector(contentSelectors.document)
 
+  const isFolder = driveUtils.isFolder(node)
+
   const {
     modifiedTime,
     lastModifyingUser,
   } = node
 
   if(!modifiedTime && !lastModifyingUser) return null
+  if(isFolder) return null
+  if(node.route && node.route.path == '/') return null
 
   return (
     <div className={ classes.root }>

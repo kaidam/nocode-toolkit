@@ -92,7 +92,7 @@ const FolderLayout = ({
                       { name }
                     </Typography>
                     <div className={ classes.info }>
-                      Updated <span className={ classes.bold }>{ new Date(modifiedTime).toLocaleString() }</span> by <span className={ classes.bold }>{ lastModifyingUser }</span>
+                      Updated <span className={ classes.bold }>{ new Date(modifiedTime).toLocaleString() }</span> { lastModifyingUser && (<>by <span className={ classes.bold }>{ lastModifyingUser }</span></>) }
                     </div>
                   </Link>
                 </div>

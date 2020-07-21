@@ -8,10 +8,10 @@ import icons from '../../icons'
 import nocodeSelectors from '../../store/selectors/nocode'
 import contentActions from '../../store/modules/content'
 import layoutActions from '../../store/modules/layout'
+import formActions from '../../store/modules/form'
 
 const useDocumentEditor = ({
   node,
-  addContentParams = {},
 }) => {
 
   const actions = Actions(useDispatch(), {
@@ -20,6 +20,9 @@ const useDocumentEditor = ({
     onHideContent: contentActions.hideContent,
     onRemoveRemoteContent: contentActions.removeRemoteContent,
     onAddWidget: layoutActions.addWidget,
+
+    onCreateContent: formActions.createContent,
+    onEditContent: formActions.editContent,
   })
 
   const locations = useSelector(nocodeSelectors.locations)
@@ -63,11 +66,11 @@ const useDocumentEditor = ({
   ])
 
   const onOpenSettings = useCallback(() => {
-    actions.onEditRemoteContent({
-      title: `${(node.type || 'folder').replace(/^\w/, st => st.toUpperCase())} Settings`,
+    actions.onEditContent({
+      title: `Edit ${(node.type || 'folder').replace(/^\w/, st => st.toUpperCase())}`,
       driver: 'drive',
       form: `drive.${node.type || 'folder'}`,
-      id: node.id,
+      content_id: node.id,
     })
   }, [
     node,
@@ -81,31 +84,24 @@ const useDocumentEditor = ({
       id: 'document',
       title: 'Google Document',
       icon: icons.docs,
-      handler: () => actions.onCreateRemoteContent({
+      handler: () => actions.onCreateContent({
         title: 'Create Document',
         driver: 'drive',
         form: 'drive.document',
         parentId: node.id,
-        params: addContentParams,
       })
     },{
       id: 'folder',
       title: 'Google Folder',
       icon: icons.folder,
-      handler: () => actions.onCreateRemoteContent({
+      handler: () => actions.onCreateContent({
         title: 'Create Folder',
         driver: 'drive',
         form: 'drive.folder',
         parentId: node.id,
-        params: addContentParams,
       })
-    },{
-      title: 'Widget',
-      icon: icons.widget,
-      handler: onAddWidget,
     }]
   }, [
-    addContentParams,
     node,
     isFolder,
     onAddWidget,

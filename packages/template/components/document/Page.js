@@ -42,8 +42,7 @@ const useStyles = makeStyles(theme => ({
 const DocumentPage = ({
 
 } = {}) => {
-  
-  const showUI = useSelector(systemSelectors.showUI)
+
   const settings = useSelector(settingsSelectors.settings)
 
   const {
@@ -59,24 +58,11 @@ const DocumentPage = ({
   return (
     <div className="document-container">
       <div className={ classes.container }>
-        {
-          showUI ? (
-            <Suspense
-              Component={ DraggableLayout }
-              props={{
-                content_id: node.id,
-                layout_id: 'layout',
-                data: layout,
-              }}
-            />
-          ) : (
-            <Layout
-              content_id={ node.id }
-              layout_id={ 'layout' }
-              data={ layout }
-            />
-          )
-        }
+        <Layout
+          content_id={ node.id }
+          layout_id={ 'layout' }
+          data={ layout }
+        />
       </div>
     </div>
   )
