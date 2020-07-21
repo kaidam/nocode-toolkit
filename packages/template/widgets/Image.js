@@ -145,7 +145,7 @@ export default {
   title: 'Image',
   description: 'Display an image you upload, from Google drive or from Unplash',
   Render,
-  locations: ['document', 'section'],
+  locations: ['document'],
   group: 'Content',
   form,
   icon: icons.image,
