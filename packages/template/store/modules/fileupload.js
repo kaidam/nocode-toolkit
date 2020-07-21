@@ -137,7 +137,7 @@ const sideEffects = {
     }))
 
     const websiteId = websiteSelectors.websiteId(getState())
-    const url = apiUrl(`/builder/${websiteId}/storage/upload`)
+    const url = apiUrl(`/storage/${websiteId}/upload`)
     
     const results = await Promise.map(files, async file => apiUploader({
       url,
@@ -163,7 +163,7 @@ const sideEffects = {
     id,
   }) => wrapper('syncFiles', async (dispatch, getState) => {
     const websiteId = websiteSelectors.websiteId(getState())
-    const results = await handlers.post(`/builder/${websiteId}/storage/sync`, {
+    const results = await handlers.post(`/storage/${websiteId}/sync`, {
       driver,
       id,
     })
