@@ -7,6 +7,8 @@ import routerSelectors from './router'
 import settingsSelectors from './settings'
 import websiteSelectors from './website'
 
+const DEFAULT_LAYOUT = [[{type: 'documentContent'}]]
+
 const sectionTree = () => createSelector(
   nocodeSelectors.sections,
   nocodeSelectors.nodes,
@@ -208,7 +210,9 @@ const document = createSelector(
   nocodeSelectors.annotations,
   nocodeSelectors.externals,
   settingsSelectors.settings,
-  (route, routeParams, nodes, annotations, externalMap, settings) => {
+  websiteSelectors.websiteMeta,
+  websiteSelectors.templateLayouts,
+  (route, routeParams, nodes, annotations, externalMap, settings, websiteMeta, templateLayouts) => {
     let externalIds = []
     let node = null
 
@@ -239,7 +243,15 @@ const document = createSelector(
       cssImports,
     } = documentUtils.extractImports(externals[0])
 
-    const layoutData = annotation.layout || settings.layout || [[{type: 'documentContent'}]]
+    const websiteLayoutId = websiteMeta.layout
+    const websiteLayout = templateLayouts
+
+    console.log('--------------------------------------------')
+    console.dir(templateLayouts)
+
+    const layoutData = DEFAULT_LAYOUT
+
+    // const layoutData = annotation.layout || settings.layout || DEFAULT_LAYOUT
 
     const layout = layoutData.map(row => {
       return row.map(cell => {

@@ -39,12 +39,12 @@ const loadJob = ({
 })
   .then(res => res.data)
 
-const loadWebsite = ({
+const loadInitialState = ({
   api,
   websiteId,
 }) => axios({
   method: 'get',
-  url: api.getUrl(`/websites/${websiteId}`),
+  url: api.getUrl(`/websites/${websiteId}/initialState`),
   headers: api.getAuthHeaders(),
 })
   .then(res => res.data)
@@ -160,7 +160,7 @@ const publishWebsite = async ({
     options,
   })
 
-  const websiteData = await loadWebsite({
+  const initialState = await loadInitialState({
     api,
     websiteId: options.websiteId,
   })
@@ -170,11 +170,7 @@ const publishWebsite = async ({
       debugBuild: options.debugBuild,
       cacheId: options.cacheId,
     }),
-    initialState: {
-      website: {
-        websites: [websiteData]
-      },
-    },
+    initialState,
     plugins: () => [
       (context) => {
         context.data = collection

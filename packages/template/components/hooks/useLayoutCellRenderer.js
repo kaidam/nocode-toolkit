@@ -10,6 +10,7 @@ const DEFAULT_LAYOUT = []
 const useLayoutCellRenderer = ({
   content_id,
   layout_id,
+  default_layout_id,
   data,
   simpleMovement,
 }) => {
