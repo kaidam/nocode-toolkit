@@ -56,11 +56,11 @@ const JobDialog = ({
   const logs = useSelector(jobSelectors.logs)
   const canCloseWindow = useSelector(jobSelectors.canCloseWindow)
 
+  const isOpen = dialogParams && dialogParams.name == 'publish' ? true : false
+
   // if we have an id param - it means we are viewing
   // this page from the publish history page
-  const {
-    id,
-  } = (dialogParams.publish || {})
+  const id = dialogParams ? dialogParams.id : null
 
   useEffect(() => {
     if(!id) return
@@ -71,7 +71,7 @@ const JobDialog = ({
 
   return (
     <Window
-      open
+      open={ isOpen }
       fullHeight
       size="lg"
       noScroll

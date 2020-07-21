@@ -7,6 +7,7 @@ import systemActions from '../../store/modules/system'
 import dialogActions from '../../store/modules/dialog'
 import uiActions from '../../store/modules/ui'
 import jobActions from '../../store/modules/job'
+import publishActions from '../../store/modules/publish'
 import uiSelectors from '../../store/selectors/ui'
 import icons from '../../icons'
 
@@ -38,8 +39,8 @@ const useGlobalOptions = ({
     onOpenSettings: settingsActions.openDialog,
     onSetPreviewMode: uiActions.setPreviewMode,
     onRebuild: () => jobActions.rebuild({withSnackbar:true}),
-    onPublish: jobActions.publish,
-    onViewHistory: jobActions.openHistory,
+    onPublish: publishActions.publish,
+    onViewHistory: publishActions.openHistory,
     onLogout: systemActions.logout,
     onViewHelp: () => dialogActions.open('help'),
   })

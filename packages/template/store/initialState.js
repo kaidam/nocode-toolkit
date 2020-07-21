@@ -26,7 +26,7 @@ export const settings = {
 }
 
 export const dialog = {
-  
+  window: null,
 }
 
 export const layout = {

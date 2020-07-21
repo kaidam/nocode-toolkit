@@ -119,6 +119,7 @@ const SummaryDialog = ({
   const config = useSelector(websiteSelectors.config)
   const publishStatus = useSelector(jobSelectors.publishStatus)
   const job = useSelector(jobSelectors.data)
+  const isOpen = dialogParams && dialogParams.name == 'publishSummary' ? true : false
 
   const isJobLive = (
     job &&
@@ -126,9 +127,7 @@ const SummaryDialog = ({
     publishStatus.job == job.jobid
   )
 
-  const {
-    id,
-  } = (dialogParams.publishSummary || {})
+  const id = dialogParams ? dialogParams.id : null
 
   const actions = Actions(useDispatch(), {
     onClose: dialogActions.closeAll,
@@ -141,11 +140,14 @@ const SummaryDialog = ({
 
   useEffect(() => {
     if(!id) return
+    if(!isOpen) return
     actions.onLoadPublished(id)
   }, [
     id,
+    isOpen,
   ])
 
+  if(!isOpen) return null
   if(!job || !job.result) return null
 
   let url = ''

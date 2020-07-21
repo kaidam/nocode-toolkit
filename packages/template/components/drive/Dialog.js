@@ -80,6 +80,7 @@ const DriveDialog = ({
     listFilter,
     size = 'md',
   } = (driveWindow || {})
+  const isOpen = driveWindow ? true : false
   const loading = useSelector(driveSelectors.loading.getList)
   const ancestorsLoading = useSelector(driveSelectors.loading.getAncestors)
 
@@ -118,6 +119,7 @@ const DriveDialog = ({
   ])
 
   useEffect(() => {
+    if(!isOpen) return
     actions.onGetList({
       parent,
       filter: listFilter,
@@ -128,11 +130,12 @@ const DriveDialog = ({
   }, [
     parent,
     listFilter,
+    isOpen,
   ])
 
   return (
     <Window
-      open={ driveWindow ? true : false }
+      open={ isOpen }
       fullHeight
       compact
       noScroll
