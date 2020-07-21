@@ -59,24 +59,27 @@ const EditLayoutDialog = ({
   } = useSelector(contentSelectors.document)
 
   const actions = Actions(useDispatch(), {
-    onCancel: layoutActions.closeLayoutWindow,
+    onLayoutSwapRow: layoutActions.swapRow,
   })
 
   const layoutWindow = useSelector(layoutSelectors.layoutWindow)
 
   const onDragEnd = result => {
-    console.log('--------------------------------------------')
-    console.log(result)
-    // if (!result.destination) return
-    // const sourceIndex = result.source.index
-    // const targetIndex = result.destination.index
-    // actions.onLayoutSwapRow({
-    //   content_id,
-    //   layout_id,
-    //   sourceIndex,
-    //   targetIndex,
-    //   data,
-    // })
+    if (!result.destination || !result.source) return
+
+    // normal drag to re-order
+    if(result.destination.droppableId == result.source.droppableId && result.destination.droppableId != 'dragWidgets') {
+      const sourceIndex = result.source.index
+      const targetIndex = result.destination.index
+      actions.onLayoutSwapRow({
+        content_id: node.id,
+        layout_id: 'layout',
+        sourceIndex,
+        targetIndex,
+        data: layout,
+      })
+    }
+    
   }
 
   if(!layoutWindow) return null

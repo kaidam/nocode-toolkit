@@ -93,6 +93,7 @@ const EditableCell = ({
   })
 
   const {
+    widget,
     onEdit,
     getMenuItems,
   } = useCellEditor({
@@ -150,7 +151,7 @@ const EditableCell = ({
         >
           {
             !isMenuOpen && (
-              <Tooltip title="Click to Edit" placement="top" arrow>
+              <Tooltip title={widget.title} placement="top" arrow>
                 <div className={ classes.tooltipContent }></div>
               </Tooltip>
             )

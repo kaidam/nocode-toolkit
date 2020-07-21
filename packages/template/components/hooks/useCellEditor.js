@@ -9,7 +9,6 @@ import useMoveMenu from './useMoveMenu'
 
 import library from '../../library'
 
-const AddIcon = icons.add
 const EditIcon = icons.edit
 const DeleteIcon = icons.delete
 const MoveIcon = icons.move
@@ -83,11 +82,15 @@ const useCellEditor = ({
     getMoveMenuItems,
   ])
 
+  const cell = layout[rowIndex][cellIndex]
+  const widget = library.widgets[cell.type]
+
   return {
     onEdit,
     onDelete,
     getMoveMenuItems,
     getMenuItems,
+    widget,
   }
 }
 
