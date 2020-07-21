@@ -88,6 +88,7 @@ const TABS = [{
   id: 'layout',
   title: 'Page Layout',
   icon: icons.layout,
+  footer: true,
   render: (props, classes) => (
     <div className={ classes.container }>
       <WebsiteLayout
