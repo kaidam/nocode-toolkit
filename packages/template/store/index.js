@@ -2,6 +2,7 @@ import { applyMiddleware, createStore, compose, combineReducers } from 'redux'
 import thunk from 'redux-thunk'
 import { reduxPlugin } from 'redux-router5'
 import isNode from 'detect-node'
+import deepmerge from 'deepmerge'
 
 import Data from '../utils/data'
 
@@ -17,13 +18,14 @@ const Store = ({
   globals = {},
   errorLog,
   setRouteResult,
+  initialState = {},
 } = {}) => {
 
   let currentRouter = null
 
   const getInitialState = () => {
     const data = Data(globals)
-    return data.getInitialState(data)
+    return deepmerge(data.getInitialState(data), initialState)
   }
 
   const getRoutes = () => {

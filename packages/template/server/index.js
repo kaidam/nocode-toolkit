@@ -14,6 +14,7 @@ const Server = ({
   const handler = async ({
     route,
     globals,
+    initialState,
     errorLog,
     appProps = {},
     // a function that returns extra HTML we need to include in the page
@@ -34,6 +35,7 @@ const Server = ({
       reducers,
       globals,
       errorLog,
+      initialState,
       // allow the router to override the type of result we get back from the server
       setRouteResult: result => routeResult = result,
     })

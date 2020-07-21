@@ -170,9 +170,10 @@ const publishWebsite = async ({
       debugBuild: options.debugBuild,
       cacheId: options.cacheId,
     }),
-    processInitialState: (state) => {
-      state.website.websites = [websiteData]
-      return state
+    initialState: {
+      website: {
+        websites: [websiteData]
+      },
     },
     plugins: () => [
       (context) => {
