@@ -62,6 +62,7 @@ const DocumentPage = ({
           content_id={ node.id }
           layout_id={ 'layout' }
           data={ layout }
+          editable={ false }
         />
       </div>
     </div>

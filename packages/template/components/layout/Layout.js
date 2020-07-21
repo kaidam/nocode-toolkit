@@ -21,6 +21,7 @@ const Layout = ({
   data,
   simpleMovement,
   divider,
+  editable = true,
 }) => {
 
   const classes = useStyles()
@@ -33,6 +34,7 @@ const Layout = ({
     layout_id,
     data,
     simpleMovement,
+    editable,
   })
 
   if(!layout || layout.length <= 0) return null

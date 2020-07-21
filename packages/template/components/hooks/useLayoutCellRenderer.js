@@ -12,6 +12,7 @@ const useLayoutCellRenderer = ({
   layout_id,
   data,
   simpleMovement,
+  editable,
 }) => {
 
   const annotations = useSelector(nocodeSelectors.annotations)
@@ -35,6 +36,7 @@ const useLayoutCellRenderer = ({
         simpleMovement={ simpleMovement }
         rowIndex={ rowIndex }
         cellIndex={ cellIndex }
+        editable={ editable }
       />
     )
   }

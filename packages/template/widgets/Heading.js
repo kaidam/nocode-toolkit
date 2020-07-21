@@ -18,6 +18,9 @@ const Render = ({
   const title = data ?
     data.title :
     ''
+
+  if(!title) return null
+  
   return (
     <Typography 
       variant="h5" 

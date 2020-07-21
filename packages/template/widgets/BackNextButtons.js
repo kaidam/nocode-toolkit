@@ -75,6 +75,7 @@ const Render = ({
     const list = []
     const addChildrenToList = (children) => {
       children
+        .filter(item => item.type != 'link')
         .forEach(item => {
           list.push(item.id)
           if(item.children) addChildrenToList(item.children)
@@ -85,6 +86,8 @@ const Render = ({
   }, [
     tree,
   ])
+
+  if(node.route && node.route.path == '/') return null
   
   const currentIndex = sectionIds.indexOf(node.id)
 

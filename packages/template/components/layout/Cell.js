@@ -35,6 +35,10 @@ const useStyles = makeStyles(theme => ({
       alignItems: vAlign,
     }
   },
+  defaultContent: {
+    color: theme.palette.grey[600],
+    fontSize: '0.8em'
+  }
 }))
 
 const UnknownTypeRenderer = ({
@@ -56,6 +60,7 @@ const Cell = ({
   layout_id,
   rowIndex,
   cellIndex,
+  editable,
 }) => {
 
   const settings = cell && cell.data && cell.data.settings ? cell.data.settings : {}
@@ -63,23 +68,31 @@ const Cell = ({
   const widget = widgets[cell.type]
   const Renderer = widget ? widget.Render : UnknownTypeRenderer
 
-  const content = (
+  let renderedContent = Renderer({
+    data: cell.data,
+    cell: {
+      id: cell.id,
+      type: cell.type,
+      rowIndex,
+      cellIndex,
+    }
+  })
+
+  if(!renderedContent && editable) {
+    renderedContent = (
+      <span className={ classes.defaultContent }>{ widget.title }...</span>
+    )
+  }
+
+  const content = renderedContent && (
     <div
       className={ classes.cell }
     >
-      <Renderer
-        data={ cell.data }
-        cell={{
-          id: cell.id,
-          type: cell.type,
-          rowIndex,
-          cellIndex,
-        }}
-      />
+      { renderedContent }
     </div>
   )
 
-  const renderContent = showUI ? (
+  const renderContent = showUI && editable ? (
     <Suspense>
       <EditableCell
         id={ cell.id }

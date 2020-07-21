@@ -25,6 +25,7 @@ const LayoutEditor = ({
   data,
   simpleMovement,
   divider,
+  editable = true,
 }) => {
 
   const actions = Actions(useDispatch(), {
@@ -41,6 +42,7 @@ const LayoutEditor = ({
     layout_id,
     data,
     simpleMovement,
+    editable,
   })
 
   const onDragEnd = result => {
