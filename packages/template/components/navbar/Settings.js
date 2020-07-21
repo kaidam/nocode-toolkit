@@ -1,6 +1,7 @@
 import React, { useCallback, useState, useRef, useContext, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import Divider from '@material-ui/core/Divider'
+import Button from '@material-ui/core/Button'
+import Hidden from '@material-ui/core/Hidden'
 
 import MenuButton from '../widgets/MenuButton'
 
@@ -9,23 +10,39 @@ import OnboardingContext from '../contexts/onboarding'
 import useSectionEditor from '../hooks/useSectionEditor'
 import useIconButton from '../hooks/useIconButton'
 
+import icons from '../../icons'
+const SettingsIcon = icons.settings
+const AddIcon = icons.add
+
 const useStyles = makeStyles(theme => ({
-  sectionEditorRoot: ({vertical}) => ({
+  bigroot: ({vertical, contrast}) => ({
     height: '100%',
     display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    textAlign: 'right',
+    paddingRight: theme.spacing(2),
+    marginRight: theme.spacing(2),
+    borderRight: `1px dotted ${contrast ? theme.palette.primary.contrastText : theme.palette.grey[600]}`,
   }),
-  divider: ({contrast}) => ({
-    marginLeft: theme.spacing(contrast ? 2 : 2),
-    marginRight: theme.spacing(contrast ? 2 : 0),
-    backgroundColor: contrast ? theme.palette.primary.contrastText : '',
-  }),
-  settingsIcon: ({contrast}) => ({
+  button: ({contrast}) => ({
+    //marginTop: theme.spacing(0.5),
+    textTransform: 'none',
     color: contrast ?
       theme.palette.primary.contrastText :
-      theme.palette.text.main,
+      theme.palette.grey[600],
   }),
+  smallSettingsButton: ({contrast}) => ({
+    //marginTop: theme.spacing(0.5),
+    minWidth: 0,
+    textTransform: 'none',
+    color: contrast ?
+      theme.palette.primary.contrastText :
+      theme.palette.primary.main,
+  }),
+  icon: {
+    fontSize: '16px',
+  },
 }))
 
 const NavbarSettings = ({
@@ -45,13 +62,13 @@ const NavbarSettings = ({
     setIsMenuOpen(true)
   })
 
-  const settingsRef = useRef(null)
-
   const onCloseMenu = useCallback(() => {
     setIsMenuOpen(false)
   })
 
   const {    
+    getAddItems,
+    onOpenSettings,
     getAllItems,
   } = useSectionEditor({
     section,
@@ -59,30 +76,78 @@ const NavbarSettings = ({
     layout_id: 'widgets',
   })
   
-  const sectionTitle = (section || '')
-    .replace(/^(\w)/, (st) => st.toUpperCase())
+  const getAddButton = useCallback((onClick) => {
+    return (
+      <Button
+        className={ classes.button }
+        size="small"
+        onClick={ onClick }
+      >
+        <AddIcon className={ classes.icon } />&nbsp;&nbsp;Add
+      </Button>
+    )
+  }, [
+    classes
+  ])
 
-  const getSettingsButton = useIconButton({
-    title: sectionTitle,
-    useRef: settingsRef,
-    settingsButton: true,
-  })
-
-  useEffect(() => {
-    if(!small) {
-      context.setFocusElements({
-        [`sectionSettings_${section}`]: {
-          id: `sectionSettings_${section}`,
-          ref: settingsRef,
-          padding: 10,
-        },
-      })
-    }
-  }, [])
+  const getSettingsButton = useCallback((onClick) => {
+    return (
+      <Button
+        className={ classes.smallSettingsButton }
+        size="small"
+        onClick={ onClick }
+      >
+        <SettingsIcon className={ classes.icon } />
+      </Button>
+    )
+  }, [
+    classes
+  ])
 
   return (
-    <div className={ classes.sectionEditorRoot }>
-      <MenuButton
+    <>
+      <Hidden smDown implementation="css">
+        <div className={ classes.bigroot }>
+          <Button
+            className={ classes.button }
+            size="small"
+            onClick={ onOpenSettings }
+          >
+            <SettingsIcon className={ classes.icon } />&nbsp;&nbsp;Settings
+          </Button>
+          <MenuButton
+            getButton={ getAddButton }
+            getItems={ getAddItems }
+            onOpen={ onOpenMenu }
+            onClose={ onCloseMenu }
+          />
+        </div>
+      </Hidden>
+      <Hidden mdUp implementation="css">
+        <MenuButton
+          getButton={ getSettingsButton }
+          getItems={ getAllItems }
+          onOpen={ onOpenMenu }
+          onClose={ onCloseMenu }
+        />
+      </Hidden>
+      {
+        isMenuOpen && (
+          <FocusElementOverlay
+            contentRef={ focusRef }
+            padding={ 0 }
+            adjustTopbar={ false }
+          />
+        )
+      }
+    </>
+  )
+}
+
+export default NavbarSettings
+
+
+/* <MenuButton
         getButton={ getSettingsButton }
         getItems={ getAllItems }
         anchorOrigin={{
@@ -95,22 +160,4 @@ const NavbarSettings = ({
         }}
         onOpen={ onOpenMenu }
         onClose={ onCloseMenu }
-      />
-      <Divider
-        orientation="vertical"
-        className={ classes.divider }
-      />
-      {
-        isMenuOpen && (
-          <FocusElementOverlay
-            contentRef={ focusRef }
-            padding={ 0 }
-            adjustTopbar={ false }
-          />
-        )
-      }
-    </div>
-  )
-}
-
-export default NavbarSettings
+      /> */
