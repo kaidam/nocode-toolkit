@@ -125,7 +125,7 @@ const sideEffects = {
     await dispatch(actions.get(id))
     const showSnackbar = settings.snackbar === false ? false : true
     if(showSnackbar) {
-      dispatch(snackbarActions.setSuccess(`settings updated`))
+      dispatch(snackbarActions.setSuccess(settings.snackbarTitle || `settings updated`))
     }
     return true
   }),

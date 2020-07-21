@@ -8,13 +8,17 @@ import {
 
 import nocodeSelectors from '../selectors/nocode'
 import websiteSelectors from '../selectors/website'
+import settingsSelectors from '../selectors/settings'
 import uiActions from './ui'
 import contentActions from './content'
 import jobActions from './job'
 import snackbarActions from './snackbar'
+import websiteActions from './website'
 import library from '../../library'
 
 import { form as initialState } from '../initialState'
+
+import widgetUtils from '../../utils/widget'
 
 const prefix = 'form'
 
@@ -154,6 +158,40 @@ const sideEffects = {
     await handlers.delete(`/content/${websiteId}/${driver}/${content_id}`)
     await dispatch(jobActions.reload())
     dispatch(snackbarActions.setSuccess(`content deleted`))
+  }, {
+    hideLoading: true,
+  }),
+
+  editSettingsGroup: ({
+    title,
+    group,
+  }) => wrapper('editSettingsGroup', async (dispatch, getState) => {
+    const websiteId = websiteSelectors.websiteId(getState())
+    const settings = settingsSelectors.settings(getState())
+    await dispatch(uiActions.getFormValues({
+      tabs: widgetUtils.filterSettingsTabs({
+        settingsTabs: websiteSelectors.settingsTabs(getState()),
+        title,
+        group,
+      }),
+      values: settings,
+      config: {
+        title,
+        showLoading: true,
+        size: 'md',
+        fullHeight: false,
+      },
+      onSubmit: async (data) => {
+        const settingsUpdate = widgetUtils.mergeSettings({
+          settings,
+          data,
+        })
+        await dispatch(websiteActions.updateMeta(websiteId, {settings: settingsUpdate}, {
+          snackbar: true,
+          snackbarTitle: `${title} updated`,
+        }))
+      }
+    }))
   }, {
     hideLoading: true,
   }),

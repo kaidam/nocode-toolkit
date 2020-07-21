@@ -35,7 +35,7 @@ const settings = createSelector(
   librarySettings,
   settingsValue,
   (librarySettings, values) => {
-    return Object.assign(DEFAULT_SETTINGS, librarySettings.initialValues, values)
+    return Object.assign({}, DEFAULT_SETTINGS, librarySettings.initialValues, values)
   }
 )
 

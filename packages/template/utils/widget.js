@@ -9,6 +9,20 @@ const canEdit = (widget) => {
   return false
 }
 
+const filterSettingsTabs = ({
+  settingsTabs,
+  title = 'Data',
+  group,
+}) => {
+  const flatSchema = formUtils.flattenTabs(settingsTabs)
+  const filteredSchema = flatSchema.filter(item => item.groups && item.groups.indexOf(group) >= 0 ? true : false)
+  return [{
+    id: 'data',
+    title,
+    schema: filteredSchema,
+  }]
+}
+
 const getFormTabs = ({
   widget,
   settingsTabs,
@@ -17,13 +31,10 @@ const getFormTabs = ({
 
   // this widget works with global settings data
   if(widget.settingsGroup) {
-    const flatSchema = formUtils.flattenTabs(settingsTabs)
-    const filteredSchema = flatSchema.filter(item => item.groups && item.groups.indexOf(widget.settingsGroup) >= 0 ? true : false)
-    baseTabs = [{
-      id: 'data',
-      title: widget.title,
-      schema: filteredSchema,
-    }]
+    baseTabs = filterSettingsTabs({
+      settingsTabs,
+      group: widget.settingsGroup,
+    })
   }
   else if(widget.form) {
     baseTabs = widget.form || []
@@ -38,13 +49,18 @@ const getFormData = ({
 }) => {
   if(widget.settingsGroup) {
     return Object.assign({}, settings, {
-      settings: cell.data.settings,
+      settings: cell ? (cell.data.settings || {}) : {},
     })
   }
   else {
-    return cell.data
+    return cell ? cell.data : {}
   }
 }
+
+const mergeSettings = ({
+  data,
+  settings,
+}) => deepmerge(JSON.parse(JSON.stringify(settings)), data)
 
 const getWebsiteSettingsValue = ({
   widget,
@@ -69,10 +85,12 @@ const getCellDataValue = ({
 
 const utils = {
   canEdit,
+  filterSettingsTabs,
   getFormTabs,
   getFormData,
   getWebsiteSettingsValue,
   getCellDataValue,
+  mergeSettings,
 }
 
 export default utils

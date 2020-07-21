@@ -2,12 +2,11 @@ import React, { lazy } from 'react'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import Suspense from '@nocode-works/template/components/system/Suspense'
-import settingsSelectors from '@nocode-works/template/store/selectors/settings'
-import systemSelectors from '@nocode-works/template/store/selectors/system'
-import utils from '../utils'
+import Suspense from '../system/Suspense'
+import settingsSelectors from '../../store/selectors/settings'
+import systemSelectors from '../../store/selectors/system'
 
-const EditableSettings = lazy(() => import(/* webpackChunkName: "ui" */ '@nocode-works/template/components/settings/EditableSettings'))
+const EditableSettings = lazy(() => import(/* webpackChunkName: "ui" */ '../settings/EditableSettings'))
 
 const useStyles = makeStyles(theme => {  
   return {
@@ -31,6 +30,12 @@ const useStyles = makeStyles(theme => {
   }
 })
 
+const autoCopyrightMessage = ({
+  company_name,
+}) => {
+  return `© ${new Date().getFullYear()} ${company_name}`
+}
+
 const Copyright = ({
   
 }) => {
@@ -50,7 +55,7 @@ const Copyright = ({
     value = 'copyright message disabled'
   }
   else if(copyright_mode == 'auto' || !copyright_mode) {
-    value = utils.autoCopyrightMessage({
+    value = autoCopyrightMessage({
       company_name,
     })
   }
@@ -74,8 +79,8 @@ const Copyright = ({
   return showUI ? (
     <Suspense>
       <EditableSettings
-        title="Edit Copyright"
-        form="copyright"
+        title="Copyright"
+        group="copyright"
       >
         { content }
       </EditableSettings>

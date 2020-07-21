@@ -92,7 +92,10 @@ const sideEffects = {
           widget,
           settingsTabs: websiteSelectors.settingsTabs(getState()),
         }),
-        values: {},
+        values: widgetUtils.getFormData({
+          widget,
+          settings,
+        }),
         config: {
           size: 'sm',
           fullHeight: false,

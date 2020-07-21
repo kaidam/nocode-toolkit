@@ -44,12 +44,12 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const LINKS = [
-  {icon: 'facebook', key: 'facebookUrl'},
-  {icon: 'twitter', key: 'twitterUrl'},
-  {icon: 'linkedin', key: 'linkedinUrl'},
-  {icon: 'youtube', key: 'youtubeUrl'},
-  {icon: 'pinterest', key: 'pinterestUrl'},
-  {icon: 'instagram', key: 'instagramUrl'},
+  {icon: 'facebook', key: 'facebook'},
+  {icon: 'twitter', key: 'twitter'},
+  {icon: 'linkedin', key: 'linkedin'},
+  {icon: 'youtube', key: 'youtube'},
+  {icon: 'pinterest', key: 'pinterest'},
+  {icon: 'instagram', key: 'instagram'},
 ]
 
 const IconMap = {
@@ -68,11 +68,12 @@ const Render = ({
   
   const settings = useSelector(settingsSelectors.settings)
 
+  const data = settings.social_links || {}
+
   const links = LINKS
-    .filter(item => settings[item.key] ? true : false)
+    .filter(item => data[item.key] ? true : false)
     .map((item, i) => {
-      const value = settings[item.key]
-      console.log(item)
+      const value = data[item.key]
       const url = value.match(/^https?:\/\//i) ?
         value :
         `http://${value}`

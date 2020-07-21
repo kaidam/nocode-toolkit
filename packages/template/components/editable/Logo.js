@@ -77,8 +77,8 @@ const Logo = ({
   return showUI ? (
     <Suspense>
       <EditableSettings
-        title="Edit Logo"
-        form="logo"
+        title="Logo"
+        group="logo"
       >
         { content }
       </EditableSettings>
