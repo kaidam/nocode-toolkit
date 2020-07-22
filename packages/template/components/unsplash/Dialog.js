@@ -34,6 +34,7 @@ const useStyles = makeStyles(theme => createStyles({
   content: {
     flexGrow: 1,
     overflowY: 'auto',
+    padding: theme.spacing(4),
   },
   windowContent: {
     padding: ['0px', '!important'],
@@ -53,7 +54,9 @@ const UnsplashDialog = ({
 
   const classes = useStyles()
   const [ search, setSearch ] = useState('')
+  const [ searchSize, setSearchSize ] = useState('landscape')
   const [ submitSearch, setSubmitSearch ] = useState('')
+  const [ submitSearchSize, setSubmitSearchSize ] = useState('landscape')
   const [ page, setPage ] = useState(1)
 
   const items = useSelector(unsplashSelectors.list)
@@ -78,8 +81,10 @@ const UnsplashDialog = ({
   const onSubmitSearch = useCallback(() => {
     setPage(1)
     setSubmitSearch(search)
+    setSubmitSearchSize(searchSize)
   }, [
     search,
+    searchSize,
   ])
 
   const movePage = useCallback((direction) => {
@@ -94,11 +99,13 @@ const UnsplashDialog = ({
     if(isOpen) {
       actions.onGetList({
         search: submitSearch,
+        size: submitSearchSize,
         page,
       })
     }
   }, [
     submitSearch,
+    submitSearchSize,
     page,
     isOpen,
   ])
@@ -143,7 +150,9 @@ const UnsplashDialog = ({
         <div className={ classes.header }>
           <Header
             search={ search }
-            onChange={ setSearch }
+            size={ searchSize }
+            onUpdateSearch={ setSearch }
+            onUpdateSize={ setSearchSize }
             onSubmit={ onSubmitSearch }
           />
         </div>

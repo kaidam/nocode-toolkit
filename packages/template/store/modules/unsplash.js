@@ -49,12 +49,14 @@ const sideEffects = {
   // the listFilter controls what we want to see (e.g. folder,document)
   getList: ({
     search,
+    size,
     page,
   } = {}) => wrapper('getList', async (dispatch, getState) => {
     const websiteId = websiteSelectors.websiteId(getState())
     const items = await handlers.get(`/remote/${websiteId}/unsplash/list/root`, null, {
       params: {
         page,
+        size,
         search,
       }
     })

@@ -1,7 +1,10 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useCallback } from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
+import Radio from '@material-ui/core/Radio'
+import RadioGroup from '@material-ui/core/RadioGroup'
+import FormControlLabel from '@material-ui/core/FormControlLabel'
 
 const useStyles = makeStyles(theme => createStyles({
   root: {
@@ -15,12 +18,23 @@ const useStyles = makeStyles(theme => createStyles({
     fontSize: '1.4em',
     textAlign: 'center',
   },
-  searchContainer: {
+  toolbarContainer: {
     flexGrow: 1,
-    marginRight: theme.spacing(2),
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  searchContainer: {
+    width: '300px',
+    marginRight: theme.spacing(1),
+  },
+  sizeContainer: {
+    width: '420px',
+    marginRight: theme.spacing(1),
+  },
+  buttonContainer: {
+    width: '200px',
+    marginRight: theme.spacing(1),
   },
   search: {
     marginBottom: theme.spacing(2),
@@ -32,15 +46,21 @@ const useStyles = makeStyles(theme => createStyles({
 
 const UnsplashHeader = ({
   search,
-  onChange,
+  size,
+  onUpdateSearch,
+  onUpdateSize,
   onSubmit,
 }) => {
 
   const classes = useStyles()
 
   const onUpdateSearchHandler = useCallback((ev) => {
-    onChange(ev.target.value)
-  }, [onChange])
+    onUpdateSearch(ev.target.value)
+  }, [onUpdateSearch])
+
+  const onUpdateSizeHandler = useCallback((ev) => {
+    onUpdateSize(ev.target.value)
+  }, [onUpdateSize])
 
   const onKeyPressHandler = useCallback((ev) => {
     if(ev.key == 'Enter') onSubmit()
@@ -57,26 +77,40 @@ const UnsplashHeader = ({
           href="https://unsplash.com/?utm_source=nocode&utm_medium=referral"
         >Unsplash</a>
       </div>
-      <div className={ classes.searchContainer }>
-        <TextField
-          fullWidth
-          id='search'
-          name='search'
-          label='Search'
-          helperText='Search for content'
-          value={ search }
-          onChange={ onUpdateSearchHandler }
-          onKeyPress={ onKeyPressHandler }
-        />
-        <Button
-          className={ classes.searchButton }
-          variant="contained"
-          size="small"
-          onClick={ onSubmit }
-        >
-          Search
-        </Button>
+      <div className={ classes.toolbarContainer }>
+        <div className={ classes.searchContainer }>
+          <TextField
+            fullWidth
+            id='search'
+            name='search'
+            label='Search'
+            helperText='Search for content'
+            value={ search }
+            onChange={ onUpdateSearchHandler }
+            onKeyPress={ onKeyPressHandler }
+          />
+        </div>
+        <div className={ classes.sizeContainer }>
+          <RadioGroup row value={ size } onChange={ onUpdateSizeHandler }>
+            <FormControlLabel value="landscape" control={<Radio />} label="Landscape" />
+            <FormControlLabel value="portrait" control={<Radio />} label="Portrait" />
+            <FormControlLabel value="sqaure" control={<Radio />} label="Square" />
+            <FormControlLabel value="any" control={<Radio />} label="Any" />
+          </RadioGroup>
+        </div>
+        <div className={ classes.buttonContainer }>
+          <Button
+            className={ classes.searchButton }
+            variant="contained"
+            size="small"
+            onClick={ onSubmit }
+          >
+            Search
+          </Button>
+        </div>
+        
       </div>
+      
     </div>
   )
 }

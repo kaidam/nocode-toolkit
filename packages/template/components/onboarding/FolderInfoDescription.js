@@ -24,6 +24,9 @@ const FolderInfoDescription = ({
         To help you get setup, we have created a folder in your drive for this website.
       </DialogContentText>
       <DialogContentText>
+        Feel free to rename or move this folder to somewhere else on your drive.
+      </DialogContentText>
+      <DialogContentText>
         <Button
           color="primary"
           variant="outlined"

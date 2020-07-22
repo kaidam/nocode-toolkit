@@ -182,7 +182,7 @@ const EditLayoutDialog = ({
                   variant="contained"
                   onClick={ actions.onSaveLayout }
                 >
-                  Save Layout
+                  Export As Layout
                 </Button>
               </div>
             </div>

@@ -148,7 +148,7 @@ const sideEffects = {
 
   openBuilder: (id) => wrapper('openBuilder', async (dispatch, getState) => {
     if(id == 'new') return
-    await handlers.delete(`/builder/${id}/preview`)
+    await handlers.delete(`/preview/${id}`)
     document.location = `/builder/website/${id}`
   }, {
     showLoading: true,
