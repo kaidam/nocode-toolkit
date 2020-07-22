@@ -14,7 +14,7 @@ import icons from '../icons'
 const DefaultHome = lazy(() => import(/* webpackChunkName: "ui" */ '../components/document/DefaultHome'))
 
 const Render = ({
-  
+  cellProps = {},
 }) => {
 
   const dispatch = useDispatch()
@@ -55,11 +55,16 @@ export default {
   id: 'documentContent',
   title: 'Document Content',
   description: 'The content of the document',
-  editable: false,
   locations: ['document'],
   group: 'Content',
   Render,
   icon: icons.documentContent,
+  // there is no initial data to gather
+  editable: false,
   // this is always rendered and can't be added
   hidden: true,
+  // this cannot be deleted
+  deletable: false,
+  // this will not render normal contents when in editable mode
+  editablePlaceHolder: `Document content will render here...`,
 }

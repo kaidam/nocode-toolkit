@@ -36,9 +36,12 @@ const useStyles = makeStyles(theme => ({
     }
   },
   defaultContent: {
+    fontSize: '0.8em',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
     color: theme.palette.grey[600],
-    fontSize: '0.8em'
-  }
+  },
 }))
 
 const UnknownTypeRenderer = ({
@@ -55,6 +58,7 @@ const Cell = ({
   cell,
   layout,
   simpleMovement,
+  simpleEditor,
   showUI,
   content_id,
   layout_id,
@@ -75,22 +79,30 @@ const Cell = ({
       type: cell.type,
       rowIndex,
       cellIndex,
-    }
+    },
   })
 
-  if(!renderedContent && editable) {
-    renderedContent = (
-      <span className={ classes.defaultContent }>{ widget.title }...</span>
-    )
+  if(editable) {
+    if(!renderedContent || widget.editablePlaceHolder) {
+      renderedContent = (
+        <span className={ classes.defaultContent }>
+          {
+            widget.editablePlaceHolder || `no content found`
+          }
+        </span>
+      )
+    }
   }
 
-  const content = renderedContent && (
+  // only wrap the content if the cell rendered something
+  // otherwise we can use the fact content is null to display placeholders
+  const content = renderedContent ? (
     <div
       className={ classes.cell }
     >
       { renderedContent }
     </div>
-  )
+  ) : null
 
   const renderContent = showUI && editable ? (
     <Suspense>
@@ -100,6 +112,7 @@ const Cell = ({
         layout={ layout }        
         content_id={ content_id }
         simpleMovement={ simpleMovement }
+        simpleEditor={ simpleEditor }
         layout_id={ layout_id }
         rowIndex={ rowIndex }
         cellIndex={ cellIndex }

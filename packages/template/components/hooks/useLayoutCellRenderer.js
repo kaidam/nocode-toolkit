@@ -12,6 +12,7 @@ const useLayoutCellRenderer = ({
   layout_id,
   data,
   simpleMovement,
+  simpleEditor,
   editable,
 }) => {
 
@@ -34,6 +35,7 @@ const useLayoutCellRenderer = ({
         content_id={ content_id }
         layout_id={ layout_id }
         simpleMovement={ simpleMovement }
+        simpleEditor={ simpleEditor }
         rowIndex={ rowIndex }
         cellIndex={ cellIndex }
         editable={ editable }

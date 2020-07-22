@@ -47,6 +47,32 @@ const useStyles = makeStyles(theme => {
     settingsIcon: {
       color: theme.palette.grey[600],
     },
+    contentContainer: ({simpleEditor}) => ({
+      padding: simpleEditor ? 0 : theme.spacing(0.5),
+    }),
+    headerContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      marginTop: theme.spacing(0.5),
+      marginBottom: theme.spacing(0.5),
+    },
+    header: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    headerIcon: {
+      fontSize: '1em',
+      color: theme.palette.primary.main,
+    },
+    headerText: {
+      fontSize: '0.7em',
+      color: theme.palette.primary.main,
+    },
+    content: ({simpleEditor}) => ({
+      border: simpleEditor ? '' : `1px solid #e5e5e5`,
+      boxShadow: simpleEditor ? '' : `1px 1px 2px 0px rgba(0,0,0,0.3)`
+    })
   }
 })
 
@@ -55,6 +81,7 @@ const EditableCell = ({
   content_id,
   layout_id,
   simpleMovement,
+  simpleEditor,
   rowIndex,
   cellIndex,
   children,
@@ -90,6 +117,7 @@ const EditableCell = ({
   const classes = useStyles({
     open: isMenuOpen,
     hoverData,
+    simpleEditor,
   })
 
   const {
@@ -135,6 +163,21 @@ const EditableCell = ({
     }
   }
 
+  const WidgetIcon = widget.icon
+
+  const renderContent = simpleEditor ? children : (
+    <>
+      <div className={ classes.headerContainer }>
+        <div className={ classes.header }>
+          <WidgetIcon className={ classes.headerIcon }/>&nbsp;&nbsp;<span className={ classes.headerText }>{ widget.title }</span>
+        </div>
+      </div>
+      <div className={ classes.content }>
+        { children }
+      </div>
+    </>
+  )
+
   return (
     <>
       <div
@@ -142,8 +185,8 @@ const EditableCell = ({
         onMouseEnter={ onHover }
         onMouseLeave={ onLeave }
       >
-        <div className="content" ref={ contentRef }>
-          { children }
+        <div className={`content ${classes.contentContainer}`} ref={ contentRef }>
+          { renderContent }
         </div>
         <div
           className={ classes.clicker }

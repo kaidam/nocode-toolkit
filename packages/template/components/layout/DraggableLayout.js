@@ -21,6 +21,7 @@ const LayoutEditor = ({
   layout_id,
   data,
   simpleMovement,
+  simpleEditor,
   divider,
   editable = true,
   withContext = true,
@@ -40,6 +41,7 @@ const LayoutEditor = ({
     layout_id,
     data,
     simpleMovement,
+    simpleEditor,
     editable,
   })
 
@@ -60,7 +62,7 @@ const LayoutEditor = ({
   if(!useLayout || useLayout.length <= 0) return null
 
   const droppable = (
-    <Droppable droppableId="droppable">
+    <Droppable droppableId={`layout-${content_id}`}>
       {(provided, snapshot) => (
         <div
           {...provided.droppableProps}

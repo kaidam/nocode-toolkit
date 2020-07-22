@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
+import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
 import { DragDropContext } from 'react-beautiful-dnd'
 
@@ -30,16 +31,26 @@ const useStyles = makeStyles(theme => ({
     marginTop: theme.spacing(4),
     marginBottom: theme.spacing(4),
     width: '100%',
-    maxWidth: '800px',
+    maxWidth: '624px',
     minWidth: '400px',
   },
   sidebar: {
     flexGrow: 0,
-    width: '300px',
-    borderLeft: `1px solid #999`,
+    width: '360px',
+    borderLeft: `1px solid #ccc`,
+    backgroundColor: '#ffffff',
+    display: 'flex',
+    flexDirection: 'column',
   },
-  sidebarPaper: {
-    height: '100%',
+  sidebarContent: {
+    flexGrow: 1,
+    overflowY: 'auto',
+  },
+  sidebarFooter: {
+    flexGrow: 0,
+    textAlign: 'right',
+    padding: theme.spacing(1),
+    borderTop: `1px solid #ccc`,
   },
   layout: {
     padding: theme.spacing(2),
@@ -60,6 +71,7 @@ const EditLayoutDialog = ({
 
   const actions = Actions(useDispatch(), {
     onLayoutSwapRow: layoutActions.swapRow,
+    onClose: layoutActions.closeLayoutWindow,
   })
 
   const layoutWindow = useSelector(layoutSelectors.layoutWindow)
@@ -68,7 +80,7 @@ const EditLayoutDialog = ({
     if (!result.destination || !result.source) return
 
     // normal drag to re-order
-    if(result.destination.droppableId == result.source.droppableId && result.destination.droppableId != 'dragWidgets') {
+    if(result.destination.droppableId == result.source.droppableId && result.destination.droppableId == 'layout') {
       const sourceIndex = result.source.index
       const targetIndex = result.destination.index
       actions.onLayoutSwapRow({
@@ -92,6 +104,7 @@ const EditLayoutDialog = ({
       noScroll
       noActions
       size="lg"
+      onCancel={ actions.onClose }
     >
       <DragDropContext onDragEnd={ onDragEnd }>
         <div className={ classes.root }>
@@ -108,7 +121,17 @@ const EditLayoutDialog = ({
             </div>
           </div>
           <div className={ classes.sidebar }>
-            <DraggableWidgets />
+            <div className={ classes.sidebarContent }>
+              <DraggableWidgets />
+            </div>
+            <div className={ classes.sidebarFooter }>
+              <Button
+                variant="contained"
+                onClick={ actions.onClose }
+              >
+                Close
+              </Button>
+            </div>
           </div>
         </div>
       </DragDropContext>
