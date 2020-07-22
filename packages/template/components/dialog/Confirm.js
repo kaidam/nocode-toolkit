@@ -26,7 +26,7 @@ const ConfirmWindow = ({
 
   return (
     <Window
-      open
+      open={ confirmWindow ? true : false }
       size="sm"
       title={ title }
       withCancel={ showCancel }

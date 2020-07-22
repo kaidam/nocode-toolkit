@@ -153,7 +153,8 @@ const FormWrapperRow = ({
 
 const FormRender = ({
   schema,
-  spacing = 2,
+  spacing = 3,
+  theme = {},
   error,
   values,
   errors,
@@ -193,10 +194,10 @@ const FormRender = ({
     schema
  
   return (
-    <div className={ classes.root }>
+    <div className={ classnames(classes.root, theme.root) }>
       <Grid
         container
-        spacing={ 3 }
+        spacing={ spacing }
         className={classnames({
           [classes.fullHeight]: fullHeight,
         })}

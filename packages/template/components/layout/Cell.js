@@ -1,6 +1,7 @@
 import React, { lazy } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Suspense from '../system/Suspense'
+import widgets from '../../widgets'
 
 const EditableCell = lazy(() => import(/* webpackChunkName: "ui" */ './EditableCell'))
 
@@ -26,12 +27,20 @@ const useStyles = makeStyles(theme => ({
 
     return {
       padding: padding,
+      width: '100%',
       height: '100%',
       display: 'flex',
-      minHeight: '45px',
+      //minHeight: '45px',
       justifyContent: hAlign,
       alignItems: vAlign,
     }
+  },
+  defaultContent: {
+    fontSize: '0.8em',
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    color: theme.palette.grey[600],
   },
 }))
 
@@ -48,44 +57,62 @@ const UnknownTypeRenderer = ({
 const Cell = ({
   cell,
   layout,
-  widgetRenderers,
   simpleMovement,
+  simpleEditor,
   showUI,
   content_id,
   layout_id,
   rowIndex,
   cellIndex,
+  editable,
 }) => {
 
-  const classes = useStyles(cell.settings || {})
+  const settings = cell && cell.data && cell.data.settings ? cell.data.settings : {}
+  const classes = useStyles(settings)
+  const widget = widgets[cell.type]
+  const Renderer = widget ? widget.Render : UnknownTypeRenderer
 
-  const id = [rowIndex,cellIndex].join('.')
-  const Renderer = widgetRenderers[cell.type] || UnknownTypeRenderer
+  let renderedContent = Renderer({
+    data: cell.data,
+    cell: {
+      id: cell.id,
+      type: cell.type,
+      rowIndex,
+      cellIndex,
+    },
+  })
 
-  const content = (
+  if(editable) {
+    if(!renderedContent || widget.editablePlaceHolder) {
+      renderedContent = (
+        <span className={ classes.defaultContent }>
+          {
+            widget.editablePlaceHolder || `no content found`
+          }
+        </span>
+      )
+    }
+  }
+
+  // only wrap the content if the cell rendered something
+  // otherwise we can use the fact content is null to display placeholders
+  const content = renderedContent ? (
     <div
       className={ classes.cell }
     >
-      <Renderer
-        data={ cell.data }
-        cell={{
-          id,
-          type: cell.type,
-          rowIndex,
-          cellIndex,
-        }}
-      />
+      { renderedContent }
     </div>
-  )
+  ) : null
 
-  const renderContent = showUI ? (
+  const renderContent = showUI && editable ? (
     <Suspense>
       <EditableCell
-        id={ id }
+        id={ cell.id }
         cell={ cell }
         layout={ layout }        
         content_id={ content_id }
         simpleMovement={ simpleMovement }
+        simpleEditor={ simpleEditor }
         layout_id={ layout_id }
         rowIndex={ rowIndex }
         cellIndex={ cellIndex }

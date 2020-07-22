@@ -173,9 +173,7 @@ const NavBarItem = ({
 
   // folders can be treated as documents
   // if we don't want a sub-menu
-  const isFolder = library.handlers.isFolder ?
-    library.handlers.isFolder(node) :
-    node.type == 'folder'
+  const isFolder = node.type == 'folder'
 
   const onOpenItem = () => {
     if(node.type == 'link') {

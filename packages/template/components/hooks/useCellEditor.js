@@ -7,7 +7,8 @@ import icons from '../../icons'
 
 import useMoveMenu from './useMoveMenu'
 
-const AddIcon = icons.add
+import library from '../../library'
+
 const EditIcon = icons.edit
 const DeleteIcon = icons.delete
 const MoveIcon = icons.move
@@ -18,9 +19,9 @@ const MoveIcon = icons.move
 
 */
 const useCellEditor = ({
-  layout,
   content_id,
   layout_id,
+  layout_data,
   simpleMovement = false,
   rowIndex,
   cellIndex,
@@ -36,6 +37,7 @@ const useCellEditor = ({
   const onEdit = () => actions.onLayoutEdit({
     content_id,
     layout_id,
+    layout_data,
     rowIndex,
     cellIndex,
   })
@@ -43,43 +45,58 @@ const useCellEditor = ({
   const onDelete = () => actions.onLayoutDelete({
     content_id,
     layout_id,
+    layout_data,
     rowIndex,
     cellIndex,
   })
 
   const getMoveMenuItems = useMoveMenu({
-    layout,
     content_id,
     layout_id,
+    layout_data,
     simpleMovement,
     rowIndex,
     cellIndex,
   })
 
+  const cell = layout_data[rowIndex][cellIndex]
+  const widget = library.widgets[cell.type]
+
   const getMenuItems = useCallback(() => {
     const moveItems = getMoveMenuItems()
-    return [{
-      title: 'Edit',
-      icon: EditIcon,
-      handler: onEdit,
-    }, moveItems.length > 0 ? {
-      title: 'Move',
-      icon: MoveIcon,
-      items: moveItems,
-    } : null, {
-      title: 'Delete',
-      icon: DeleteIcon,
-      handler: onDelete,
-    }].filter(i => i)
+    let deletable = true
+    if(typeof(widget.deletable) === 'boolean') deletable = widget.deletable
+    return [
+      {
+        title: 'Edit',
+        icon: EditIcon,
+        handler: onEdit,
+      },
+      moveItems.length > 0 ? {
+        title: 'Move',
+        icon: MoveIcon,
+        items: moveItems,
+      } : null, 
+      deletable ? {
+        title: 'Delete',
+        icon: DeleteIcon,
+        handler: onDelete,
+      } : null,
+    ].filter(i => i)
   }, [
     getMoveMenuItems,
+    cell,
+    widget,
   ])
+
+  
 
   return {
     onEdit,
     onDelete,
     getMoveMenuItems,
     getMenuItems,
+    widget,
   }
 }
 

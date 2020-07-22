@@ -57,10 +57,13 @@ const UnsplashDialog = ({
   const [ page, setPage ] = useState(1)
 
   const items = useSelector(unsplashSelectors.list)
+
+  const windowProps = useSelector(unsplashSelectors.window)
   const {
     size = 'lg',
-  } = useSelector(unsplashSelectors.window)
+  } = (windowProps || {})
   const loading = useSelector(unsplashSelectors.loading.getList)
+  const isOpen = windowProps ? true : false
 
   const actions = Actions(useDispatch(), {
     onGetList: unsplashActions.getList,
@@ -88,13 +91,16 @@ const UnsplashDialog = ({
   ])
 
   useEffect(() => {
-    actions.onGetList({
-      search: submitSearch,
-      page,
-    })
+    if(isOpen) {
+      actions.onGetList({
+        search: submitSearch,
+        page,
+      })
+    }
   }, [
     submitSearch,
     page,
+    isOpen,
   ])
 
   const leftButtons = useMemo(() => {
@@ -124,7 +130,7 @@ const UnsplashDialog = ({
 
   return (
     <Window
-      open
+      open={ isOpen }
       fullHeight
       compact
       noScroll

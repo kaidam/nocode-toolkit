@@ -3,25 +3,27 @@ import { useDispatch } from 'react-redux'
 
 import Actions from '../../utils/actions'
 import contentActions from '../../store/modules/content'
+import formActions from '../../store/modules/form'
 import layoutActions from '../../store/modules/layout'
 
 import icons from '../../icons'
+import library from '../../library'
 
 import useSectionSelector from './useSectionSelector'
+
+const DEFAULT_ARRAY = []
 
 const useSectionEditor = ({
   section,
   content_id,
   layout_id,
-  layouts,
   withWidgets,
 }) => {
 
   const actions = Actions(useDispatch(), {
-    onCreateRemoteContent: contentActions.createRemoteContent,
-    onCreateLocalContent: contentActions.createLocalContent,
-    onAddRemoteContent: contentActions.addRemoteContent,
-    onEditSection: contentActions.editSection,
+    onCreateContent: formActions.createContent,
+    onImportContent: contentActions.importContent,
+    onEditSection: formActions.editSection,
     onWidgetAdd: layoutActions.addWidget,
   })
 
@@ -33,35 +35,55 @@ const useSectionEditor = ({
     section,
   })
 
+  const layout_data = annotation && annotation[layout_id] ?
+    annotation[layout_id] :
+    DEFAULT_ARRAY
+
   const onAddWidget = useCallback(() => {
     actions.onWidgetAdd({
+      location: 'section',
       content_id,
       layout_id,
-      layouts,
+      layout_data,
     })
   }, [
     content_id,
     layout_id,
-    layouts,
+    layout_data,
+  ])
+
+  const onOpenSettings = useCallback(() => {
+    actions.onEditSection({
+      id: section,
+    })
+  }, [
+    section,
   ])
 
   const getAddItems = useCallback(() => {
 
-    const newDocumentHandler = () => actions.onCreateRemoteContent({
+    const newDocumentHandler = () => actions.onCreateContent({
       title: 'Create Document',
       driver: 'drive',
       form: 'drive.document',
       parentId: addTargetFolderId,
     })
 
-    const newFolderHandler = () => actions.onCreateRemoteContent({
+    const newFolderHandler = () => actions.onCreateContent({
       title: 'Create Folder',
       driver: 'drive',
       form: 'drive.folder',
       parentId: addTargetFolderId,
     })
 
-    const importContentHandler = () => actions.onAddRemoteContent({
+    const newLinkHandler = () => actions.onCreateContent({
+      title: 'Create Link',
+      driver: 'local',
+      form: 'link',
+      section,
+    })
+
+    const importContentHandler = () => actions.onImportContent({
       section,
       listFilter: 'folder,document',
       addFilter: 'folder,document',
@@ -83,15 +105,10 @@ const useSectionEditor = ({
         icon: icons.drive,
         handler: importContentHandler,
       },
-      '-',
       {
         title: 'Link',
         icon: icons.link,
-        handler: () => actions.onCreateLocalContent({
-          title: 'Create Link',
-          form: 'link',
-          location: `section:${section}`,
-        })
+        handler: newLinkHandler,
       },
       withWidgets ? {
         title: 'Widget',
@@ -117,11 +134,7 @@ const useSectionEditor = ({
       {
         title: 'Settings',
         icon: icons.settings,
-        handler: () => actions.onEditSection({
-          title: `Edit Section`,
-          form: `section`,
-          id: section,
-        })
+        handler: onOpenSettings,
       },
 
 
@@ -129,6 +142,7 @@ const useSectionEditor = ({
   }, [
     section,
     getAddItems,
+    onOpenSettings,
   ])
   
   return {
@@ -136,6 +150,7 @@ const useSectionEditor = ({
     annotation,
     getAddItems,
     getAllItems,
+    onOpenSettings,
   }
 }
 

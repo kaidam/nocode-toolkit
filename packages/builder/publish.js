@@ -21,6 +21,7 @@ const Publish = async ({
   options,
   logger,
   plugins,
+  initialState = {},
   pluginConfig,
   onProgress,
   concurrency,
@@ -209,6 +210,7 @@ const Publish = async ({
       renderResults = await server({
         route: utils.processPath(baseUrl, route),
         globals,
+        initialState,
         errorLog: (err) => {
           routerError = err
         },
@@ -226,13 +228,11 @@ const Publish = async ({
         bodyHtml,
       } = renderResults
 
-      const initialState = data.processInitialState(store.getState())
-
       routeHtml = HTML({
         buildInfo,
         hash: buildInfo.hash,
         cacheId,
-        initialState,
+        initialState: data.processInitialState(store.getState()),
         helmet,
         injectedHTML,
         bodyHtml,

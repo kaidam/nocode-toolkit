@@ -80,18 +80,30 @@ const TreeItem = ({
 }) => {
 
   const settings = useSelector(settingsSelectors.settings)
-  const folderPages = settings.folderPages === 'yes'
+  const folderPages = settings.folderPages === true
 
-  const [ isHovered, setIsHovered ] = useState(false)
+  const [ isHovered, setIsHovered ] = useState(null)
   const [ isMenuOpen, setIsMenuOpen ] = useState(false)
 
-  const onHover = useCallback(() => {
-    setIsHovered(true)
-  })
+  const onLeave = () => {
+    if(isHovered) clearInterval(isHovered)
+    setIsHovered(null)
+  }
 
-  const onLeave = useCallback(() => {
-    setIsHovered(false)
-  })
+  const onHover = (e) => {
+    if(isHovered) clearInterval(isHovered)
+    e.persist()
+    const parentElement = e.target.parentElement
+    if(parentElement) {
+      const intervalId = setInterval(() => {
+        if(!parentElement.querySelector(':hover')) {
+          clearInterval(intervalId)
+          setIsHovered(null)
+        }
+      }, 100)
+      setIsHovered(intervalId)
+    }
+  }
 
   const onOpenMenu = useCallback(() => {
     setIsMenuOpen(true)
@@ -99,12 +111,14 @@ const TreeItem = ({
 
   const onCloseMenu = useCallback(() => {
     setIsMenuOpen(false)
-    setIsHovered(false)
-  })
+    onLeave()
+  }, [
+    onLeave,
+  ])
 
   const classes = useStyles({
     depth,
-    isHovered,
+    isHovered: isHovered ? true : false,
     active: node.currentPage,
   })
 

@@ -49,10 +49,9 @@ const Develop = ({
 
   const requestProxy = async (req, res, next) => {
     try {
-      const targetUrl = api.getUrl(req.originalUrl, 'raw')
       const apiRes = await axios({
         method: req.method,
-        url: targetUrl,
+        url: req.originalUrl,
         headers: Object.assign({}, req.headers, api.getAuthHeaders()),
         data: req,
         responseType: 'stream',
@@ -61,16 +60,21 @@ const Develop = ({
       res.set(apiRes.headers)
       apiRes.data.pipe(res)
     } catch(err) {
-      res.status(err.response.status)
-      err.response.data.pipe(res)
+      if(err.response) {
+        res.status(err.response.status)
+        err.response.data.pipe(res)
+      }
+      else {
+        res.status(500)
+        res.end(err.toString())
+      }
     }
-    
   }
 
   const getPreviewData = async (rebuild) => {
     const res = await axios({
       method: 'get',
-      url: api.getUrl('/previewData'),
+      url: api.getApiUrl(`/preview/${options.websiteId}`),
       headers: api.getAuthHeaders(),
       params: {
         rebuild: rebuild || '',
@@ -85,7 +89,7 @@ const Develop = ({
   // we need to intercept this so we can
   //  * set baseUrl
   //  * set publishDisabled
-  app.get('/builder/api/:id/previewData', async (req, res, next) => {
+  app.get('/api/v1/preview/:id', async (req, res, next) => {
     try {
       const nocodeData = await getPreviewData(req.query.rebuild)
       res.json(nocodeData)
@@ -97,7 +101,6 @@ const Develop = ({
 
   app.all('/builder/api/:id/*', requestProxy)
   app.all('/api/v1/*', requestProxy)
-  app.all('/plugin/*', requestProxy)
 
   PreviewServer({
     app,
@@ -121,7 +124,7 @@ const Develop = ({
     }) => {
       const res = await axios({
         method: 'get',
-        url: api.getUrl(`/remote/external/${filename}`),
+        url: api.getUrl(`/remote/${options.websiteId}/external/${filename}`),
         headers: api.getAuthHeaders(),
       })
       return res.data

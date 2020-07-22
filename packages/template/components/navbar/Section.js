@@ -2,6 +2,7 @@ import React, { lazy, useRef } from 'react'
 import classnames from 'classnames'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
+import Divider from '@material-ui/core/Divider'
 
 import systemSelectors from '../../store/selectors/system'
 
@@ -16,19 +17,20 @@ const useStyles = makeStyles(theme => ({
   }) => ({
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    // justifyContent: 'flex-end',
+    alignItems: 'center',
   }),
   content: ({
     vertical,
   }) => ({
-    overflowY: 'auto',
-    overflowX: 'hidden',
-    flexGrow: 1,
+    // overflowY: 'auto',
+    // overflowX: 'hidden',
+    // flexGrow: 1,
   }),
-  editorContainer: ({
+  editor: ({
     vertical,
   }) => ({
-    flexGrow: 1,
+    //flexGrow: 1,
   }),
 }))
 
@@ -44,6 +46,7 @@ const NavBarSection = ({
   const classes = useStyles({
     vertical,
     align,
+    contrast,
   })
   const showUI = useSelector(systemSelectors.showUI)
   const rootClassname = classnames(classes.root, className)

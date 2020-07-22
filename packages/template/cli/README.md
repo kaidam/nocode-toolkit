@@ -1,3 +1,3 @@
 # @nocode-works/template
 
-CLI utilities for developing a nocode template
+UI components for developing a nocode template

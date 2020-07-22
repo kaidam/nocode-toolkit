@@ -1,7 +1,7 @@
 import React, { lazy, useRef } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useSelector } from 'react-redux'
-
+import Divider from '@material-ui/core/Divider'
 import systemSelectors from '../../store/selectors/system'
 
 import Suspense from '../system/Suspense'
@@ -17,8 +17,6 @@ const useStyles = makeStyles(theme => ({
     height: '100%',
     display: 'flex',
     flexDirection: 'column',
-    overflowY: 'auto',
-    overflowX: 'hidden',
   },
   header: {
     flexGrow: 0,
@@ -28,6 +26,8 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
+    overflowY: 'auto',
+    overflowX: 'hidden',
   },
   widgets: {
     flexGrow: 0,
@@ -45,7 +45,7 @@ const TreeSection = ({
 }) => {
   const classes = useStyles()
   const showUI = useSelector(systemSelectors.showUI)
-  
+
   const containerRef = useRef()
   const focusRef = useRef()
 
@@ -53,6 +53,7 @@ const TreeSection = ({
     content_id: `section:${section}`,
     layout_id: 'widgets',
     simpleMovement: true,
+    simpleEditor: true,
     divider: true,
   }
 

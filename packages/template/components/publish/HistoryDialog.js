@@ -10,9 +10,11 @@ import blue from '@material-ui/core/colors/blue'
 import Actions from '../../utils/actions'
 
 import jobActions from '../../store/modules/job'
+import publishActions from '../../store/modules/publish'
 import dialogActions from '../../store/modules/dialog'
-import systemSelectors from '../../store/selectors/system'
 import jobSelectors from '../../store/selectors/job'
+import websiteSelectors from '../../store/selectors/website'
+import dialogSelectors from '../../store/selectors/dialog'
 
 import Window from '../dialog/Window'
 import Loading from '../system/Loading'
@@ -91,23 +93,28 @@ const HistoryDialog = ({
 
 }) => {
   const classes = useStyles()
-  const config = useSelector(systemSelectors.config)
+  const dialogParams = useSelector(dialogSelectors.dialogParams)
+  const config = useSelector(websiteSelectors.config)
   const publishStatus = useSelector(jobSelectors.publishStatus)
   const data = useSelector(jobSelectors.list)
   const loading = useSelector(jobSelectors.loading.loadHistory)
+  const isOpen = dialogParams && dialogParams.name == 'publishHistory' ? true : false
 
   const actions = Actions(useDispatch(), {
     onClose: dialogActions.closeAll,
-    onViewLogs: jobActions.viewLogs,
-    onPublish: jobActions.publish,
+    onViewLogs: publishActions.viewLogs,
+    onPublish: publishActions.publish,
     onRebuild: jobActions.rebuild,
-    onDeploy: jobActions.deploy,
-    onLoadHistory: jobActions.loadHistory,
+    onDeploy: publishActions.deploy,
+    onLoadHistory: publishActions.loadHistory,
   })
 
   useEffect(() => {
+    if(!isOpen) return
     actions.onLoadHistory()
-  }, [])
+  }, [
+    isOpen,
+  ])
 
   const renderPublishUrl = (url, children) => {
     return (
@@ -231,7 +238,7 @@ const HistoryDialog = ({
 
   return (
     <Window
-      open
+      open={ isOpen }
       size="lg"
       fullHeight
       cancelTitle="Close"

@@ -1,25 +1,8 @@
 const valueInjector = (inject = {}) => (values = {}) => Object.assign({}, values, inject)
 
-import {
-  LAYOUT_CELL_DEFAULTS,
-} from './config'
-
 const forms = {
   'section': {
-    initialValues: {
-      annotation: {
-        sorting: {},
-      },
-    },
     tabs: [{
-      id: 'sourceFolders',
-      title: 'Drive Folders',
-      schema: [{
-        title: 'Drive Folders',
-        helperText: 'Manage the drive folders loaded into this section',
-        component: 'driveFolders',
-      }],
-    }, {
       id: 'sorting',
       title: 'Sorting',
       schema: [{
@@ -27,6 +10,7 @@ const forms = {
         title: 'Sorting',
         helperText: 'How are children items sorted inside this folder?',
         component: 'sorting',
+        default: {},
       }],
     }, {
       id: 'hidden',
@@ -35,12 +19,21 @@ const forms = {
         title: 'Hidden Items',
         helperText: 'Manage the hidden items in this section',
         component: 'hiddenItems',
+        default: null,
+      }],
+    },{
+      id: 'sourceFolders',
+      title: 'Drive Folders',
+      schema: [{
+        title: 'Drive Folders',
+        helperText: 'Manage the drive folders loaded into this section',
+        component: 'driveFolders',
+        default: null,
       }],
     }],
   },
   // this will be merged into other cell forms
   'cell.settings': {
-    initialValues: LAYOUT_CELL_DEFAULTS,
     tabs: [{
       id: 'settings',
       title: 'Settings',
@@ -50,6 +43,7 @@ const forms = {
           title: 'Horizontal Align',
           helperText: 'The horizontal alignment of content in this cell',
           component: 'select',
+          default: 'left',
           options: [{
             title: 'Left',
             value: 'left',
@@ -65,6 +59,7 @@ const forms = {
           title: 'Vertical Align',
           helperText: 'The vertical alignment of content in this cell',
           component: 'select',
+          default: 'center',
           options: [{
             title: 'Top',
             value: 'top',
@@ -80,6 +75,7 @@ const forms = {
           id: 'settings.padding',
           title: 'Padding',
           helperText: 'The padding in pixels for this cell',
+          default: 8,
           inputProps: {
             type: 'number',
           },
@@ -88,20 +84,11 @@ const forms = {
     }],
   },
   'drive.folder': {
-    initialValues: {
-      name: '',
-      annotation: {
-        sorting: {},
-      },
-    },
     processFormValues: valueInjector({mimeType: 'folder'}),
-    tabFilter: ({
-      tabs,
-      values,
-    }) => {
-      return values.id ?
-        tabs :
-        tabs.filter(tab => tab.id == 'settings')
+    tabFilter: (tab, values) => {
+      const exists = values && values.id
+      if(tab.id == 'actions' || tab.id == 'sorting') return exists
+      return true
     },
     tabs: [{
       id: 'settings',
@@ -111,6 +98,7 @@ const forms = {
         id: 'name',
         title: 'Name',
         helperText: 'Enter the name of the folder',
+        default: '',
         validate: {
           type: 'string',
           methods: [
@@ -126,6 +114,7 @@ const forms = {
         title: 'Sorting',
         helperText: 'How are children items sorted inside this folder?',
         component: 'sorting',
+        default: {},
       }],
     },{
       id: 'actions',
@@ -139,17 +128,11 @@ const forms = {
     }]
   },
   'drive.document': {
-    initialValues: {
-      name: '',
-    },
     processFormValues: valueInjector({mimeType: 'document'}),
-    tabFilter: ({
-      tabs,
-      values,
-    }) => {
-      return values.id ?
-        tabs :
-        tabs.filter(tab => tab.id == 'settings')
+    tabFilter: (tab, values) => {
+      const exists = values && values.id
+      if(tab.id == 'actions') return exists
+      return true
     },
     tabs: [{
       id: 'settings',
@@ -159,6 +142,7 @@ const forms = {
         id: 'name',
         title: 'Name',
         helperText: 'Enter the name of the document',
+        default: '',
         validate: {
           type: 'string',
           methods: [
@@ -178,78 +162,33 @@ const forms = {
     }]
   },
   'link': {
-    initialValues: {
-      name: '',
-      url: '',
-      noRoute: true,
-    },
-    schema: [{
-      id: 'name',
-      title: 'Name',
-      helperText: 'Enter the name of the link',
-      validate: {
-        type: 'string',
-        methods: [
-          ['required', 'The name is required'],
-        ],
-      }
-    }, {
-      id: 'url',
-      title: 'URL',
-      helperText: 'Enter the url of the link',
-      validate: {
-        type: 'string',
-        methods: [
-          ['required', 'The url is required'],
-          ['matches', '^(code:|https?:\/\/)', 'Must be a valid url - e.g. http://google.com'],
-        ],
-      }
-    }],
-  },
-  'security.user': {
-    initialValues: {
-      username: '',
-      password: '',
-    },
-    schema: [{
-      id: 'username',
-      title: 'Username',
-      helperText: 'Enter the username for this user',
-      validate: {
-        type: 'string',
-        methods: [
-          ['required', 'The name is required'],
-        ],
-      }
-    }, {
-      id: 'password',
-      title: 'Password',
-      helperText: 'Enter the password for this user',
-      inputProps: {
-        type: 'password',
-      },
-      validate: {
-        type: 'string',
-        methods: [
-          ['required', 'The password is required'],
-        ],
-      }
-    }],
-  },
-  'security.rule': {
-    initialValues: {
-      rule: '',
-    },
-    schema: [{
-      id: 'rule',
-      title: 'Match email',
-      helperText: 'Enter a portion or an entire email address to grant access',
-      validate: {
-        type: 'string',
-        methods: [
-          ['required', 'The rule is required'],
-        ],
-      }
+    tabs: [{
+      id: 'details',
+      title: 'Link Details',
+      schema: [{
+        id: 'name',
+        title: 'Name',
+        helperText: 'Enter the name of the link',
+        default: '',
+        validate: {
+          type: 'string',
+          methods: [
+            ['required', 'The name is required'],
+          ],
+        }
+      }, {
+        id: 'url',
+        title: 'URL',
+        helperText: 'Enter the url of the link',
+        default: '',
+        validate: {
+          type: 'string',
+          methods: [
+            ['required', 'The url is required'],
+            ['matches', '^(code:|https?:\/\/)', 'Must be a valid url - e.g. http://google.com'],
+          ],
+        }
+      }],
     }],
   },
 }

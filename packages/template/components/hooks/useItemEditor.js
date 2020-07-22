@@ -4,6 +4,7 @@ import icons from '../../icons'
 
 import Actions from '../../utils/actions'
 import contentActions from '../../store/modules/content'
+import formActions from '../../store/modules/form'
 import nocodeSelectors from '../../store/selectors/nocode'
 import settingsSelectors from '../../store/selectors/settings'
 import driveUtils from '../../utils/drive'
@@ -21,14 +22,11 @@ const useItemEditor = ({
   let outerNode = node
 
   const actions = Actions(useDispatch(), {
-    onCreateRemoteContent: contentActions.createRemoteContent,
-    onEditRemoteContent: contentActions.editRemoteContent,
-    onEditLocalContent: contentActions.editLocalContent,
-    onRemoveRemoteContent: contentActions.removeRemoteContent,
-    onDeleteRemoteContent: contentActions.deleteRemoteContent,
-    onDeleteLocalContent: contentActions.deleteLocalContent,
+    onCreateContent: formActions.createContent,
+    onEditContent: formActions.editContent,
+    onDeleteContent: formActions.deleteContent,
+    onRemoveSectionContent: contentActions.removeSectionContent,
     onHideContent: contentActions.hideContent,
-    onChangeHomepageSingleton: contentActions.changeHomepageSingleton,
   })
 
   const locations = useSelector(nocodeSelectors.locations)
@@ -51,13 +49,13 @@ const useItemEditor = ({
 
     if(node.driver == 'drive') {
       const removeItem = isSectionContent ? {
-        title: 'Hide',
+        title: 'Remove',
         icon: icons.clear,
-        handler: () => actions.onRemoveRemoteContent({
-          id: node.id,
-          name: node.name,
+        handler: () => actions.onRemoveSectionContent({
+          title: node.name,
           driver: 'drive',
-          location: node.route.location,
+          section: node.route.location.split(':')[1],
+          content_id: node.id,
         })
       } : {
         title: 'Hide',
@@ -71,11 +69,11 @@ const useItemEditor = ({
       const settingsItem = {
         title: 'Settings',
         icon: icons.settings,
-        handler: () => actions.onEditRemoteContent({
+        handler: () => actions.onEditContent({
           title: `Edit ${(node.type || 'folder').replace(/^\w/, st => st.toUpperCase())}`,
           driver: 'drive',
           form: `drive.${node.type || 'folder'}`,
-          id: node.id,
+          content_id: node.id,
         })
       }
 
@@ -83,21 +81,21 @@ const useItemEditor = ({
       if(node.type == 'folder') {
         items = [
           {
-            title: 'Add Content',
+            title: 'Create Content',
             icon: icons.add,
             items: [{
-              title: 'Google Document',
+              title: 'Create Document',
               icon: icons.docs,
-              handler: () => actions.onCreateRemoteContent({
+              handler: () => actions.onCreateContent({
                 title: 'Create Document',
                 driver: 'drive',
                 form: 'drive.document',
                 parentId: node.id,
               })
             },{
-              title: 'Google Folder',
+              title: 'Create Folder',
               icon: icons.folder,
-              handler: () => actions.onCreateRemoteContent({
+              handler: () => actions.onCreateContent({
                 title: 'Create Folder',
                 driver: 'drive',
                 form: 'drive.folder',
@@ -131,19 +129,19 @@ const useItemEditor = ({
       items = [{
         title: 'Edit',
         icon: icons.edit,
-        handler: () => actions.onEditLocalContent({
+        handler: () => actions.onEditContent({
           title: `Edit ${(node.type || '').replace(/^\w/, st => st.toUpperCase())}`,
           driver: node.driver,
           form: node.type,
-          id: node.id,
-          location: node.location,
+          content_id: node.id,
         })
       }, {
         title: 'Delete',
         icon: icons.delete,
-        handler: () => actions.onDeleteLocalContent({
-          id: node.id,
-          name: node.name,
+        handler: () => actions.onDeleteContent({
+          title: node.name,
+          driver: node.driver,
+          content_id: node.id,
         }),
       }]
     }

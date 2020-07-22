@@ -5,18 +5,17 @@ import systemUtils from '../../utils/system'
 import nocodeSelectors from './nocode'
 import networkSelectors from './network'
 
-import {
-  GOOGLE_FULL_DRIVE_SCOPE,
-} from '../../config'
+const DEFAULT_OBJECT = {}
 
 const previewMode = state => state.ui.previewMode
 const user = state => state.system.user
 const tokenStatus = state => state.system.tokenStatus
-const config = state => state.system.config
-const website = state => state.system.website
-const dnsInfo = state => state.system.dnsInfo
-const loading = state => state.system.loading
 const initialiseCalled = state => state.system.initialiseCalled
+
+const userMeta = createSelector(
+  user,
+  user => user && user.meta ? user.meta : DEFAULT_OBJECT
+)
 
 // are we in core UI mode
 // this ignores previewMode so we can still
@@ -58,19 +57,22 @@ const hasFullDriveAccess = createSelector(
   tokenStatus => tokenStatus && tokenStatus.driveLevel >= 2
 )
 
+const onboardedTemplates = createSelector(
+  userMeta,
+  userMeta => userMeta.onboardedTemplates || DEFAULT_OBJECT
+)
+
 const selectors = {
   user,
+  userMeta,
   tokenStatus,
-  config,
-  website,
-  dnsInfo,
-  loading,
   showCoreUI,
   showUI,
   initialised,
   initialiseCalled,
   initialiseError,
   hasFullDriveAccess,
+  onboardedTemplates,
 }
 
 export default selectors

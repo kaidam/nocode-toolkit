@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Tooltip from '@material-ui/core/Tooltip'
 
 import FocusElementOverlay from '../widgets/FocusElementOverlay'
+import WidgetSummary from '../widgets/WidgetSummary'
 
 import colorUtils from '../../utils/color'
 import eventUtils from '../../utils/events'
@@ -38,15 +39,41 @@ const useStyles = makeStyles(theme => {
       width: '100%',
       height: '100%',
     },
-    settingsButtonContainer: {
+    settingsButtonContainer: ({hoverData}) => ({
       position: 'absolute',
       right: 0,
-      top: 0,
+      top: hoverData ? (hoverData.height/2 - 20) : 0,
       padding: theme.spacing(1),
-    },
+    }),
     settingsIcon: {
       color: theme.palette.grey[600],
     },
+    contentContainer: ({simpleEditor}) => ({
+      padding: simpleEditor ? 0 : theme.spacing(0.5),
+    }),
+    headerContainer: {
+      display: 'flex',
+      flexDirection: 'row',
+      marginTop: theme.spacing(0.5),
+      marginBottom: theme.spacing(0.5),
+    },
+    header: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    headerIcon: {
+      fontSize: '1em',
+      color: theme.palette.grey[600],
+    },
+    headerText: {
+      fontSize: '0.7em',
+      color: theme.palette.grey[600],
+    },
+    content: ({simpleEditor}) => ({
+      border: simpleEditor ? '' : `1px dashed #ccc`,
+      //boxShadow: simpleEditor ? '' : `1px 1px 2px 0px rgba(0,0,0,0.3)`
+    })
   }
 })
 
@@ -55,23 +82,27 @@ const EditableCell = ({
   content_id,
   layout_id,
   simpleMovement,
+  simpleEditor,
   rowIndex,
   cellIndex,
   children,
 }) => {
 
-  const [ isHovered, setIsHovered ] = useState(false)
+  const [ hoverData, setHoverData ] = useState(null)
   const [ isMenuOpen, setIsMenuOpen ] = useState(false)
   const [ anchorPosition, setAnchorPosition ] = useState(null)
 
   const contentRef = useRef(null)
 
-  const onHover = useCallback(() => {
-    setIsHovered(true)
+  const onHover = useCallback((e) => {
+    setHoverData({
+      width: e.target.clientWidth,
+      height: e.target.clientHeight,
+    })
   })
 
   const onLeave = useCallback(() => {
-    setIsHovered(false)
+    setHoverData(null)
   })
 
   const onOpenMenu = useCallback(() => {
@@ -80,21 +111,24 @@ const EditableCell = ({
 
   const onCloseMenu = useCallback(() => {
     setIsMenuOpen(false)
-    setIsHovered(false)
+    setHoverData(null)
     setAnchorPosition(null)
   })
 
   const classes = useStyles({
     open: isMenuOpen,
+    hoverData,
+    simpleEditor,
   })
 
   const {
+    widget,
     onEdit,
     getMenuItems,
   } = useCellEditor({
-    layout,
     content_id,
     layout_id,
+    layout_data: layout,
     simpleMovement,
     rowIndex,
     cellIndex,
@@ -130,6 +164,19 @@ const EditableCell = ({
     }
   }
 
+  const renderContent = simpleEditor ? children : (
+    <>
+      <div className={ classes.headerContainer }>
+        <WidgetSummary
+          widget={ widget }
+        />
+      </div>
+      <div className={ classes.content }>
+        { children }
+      </div>
+    </>
+  )
+
   return (
     <>
       <div
@@ -137,8 +184,8 @@ const EditableCell = ({
         onMouseEnter={ onHover }
         onMouseLeave={ onLeave }
       >
-        <div className="content" ref={ contentRef }>
-          { children }
+        <div className={`content ${classes.contentContainer}`} ref={ contentRef }>
+          { renderContent }
         </div>
         <div
           className={ classes.clicker }
@@ -146,13 +193,13 @@ const EditableCell = ({
         >
           {
             !isMenuOpen && (
-              <Tooltip title="Click to Edit" placement="top" arrow>
+              <Tooltip title={widget.title} placement="top" arrow>
                 <div className={ classes.tooltipContent }></div>
               </Tooltip>
             )
           }
           {
-            (isHovered || isMenuOpen) && (!isTouchscreen()) && (
+            (hoverData || isMenuOpen) && (!isTouchscreen()) && (
               <div className={ classes.settingsButtonContainer }>
                 {
                   getSettingsButton(onClick)

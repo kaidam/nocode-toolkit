@@ -30,6 +30,12 @@ const Data = (globals) => {
     const items = data.items || {}
     return items.redirects || {}
   }
+
+  const getWebsites = () => {
+    const items = data.items || {}
+    const system = items.system || {}
+    return system.website ? [system.website] : []
+  }
   
   const getInjectedInitialState = () => ({
     nocode: {
@@ -37,6 +43,11 @@ const Data = (globals) => {
       items: getItems(),
       routes: getRoutes(),
       config: getConfig(),
+    },
+    website: {
+      websites: getWebsites(),
+      config: {},
+      dnsInfo: null,
     }
   })
 
@@ -83,12 +94,6 @@ const Data = (globals) => {
     
     const allRoutes = baseRoutes
       .concat(redirectRoutes)
-      .concat([
-        {
-          name: '_external_loader',
-          path: '/_external_loader/:id',
-        }
-      ])
 
     // prevent double route injection
     const foundNames = {}

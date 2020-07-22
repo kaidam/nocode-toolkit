@@ -8,19 +8,13 @@ const importPromises = globals.isUIActivated() ?
     dialog: import(/* webpackChunkName: "ui" */ './modules/dialog'),
     ui: import(/* webpackChunkName: "ui" */ './modules/ui'),
     content: import(/* webpackChunkName: "ui" */ './modules/content'),
+    form: import(/* webpackChunkName: "ui" */ './modules/form'),
     drive: import(/* webpackChunkName: "ui" */ './modules/drive'),
     unsplash: import(/* webpackChunkName: "ui" */ './modules/unsplash'),
     job: import(/* webpackChunkName: "ui" */ './modules/job'),
+    publish: import(/* webpackChunkName: "ui" */ './modules/publish'),
     fileupload: import(/* webpackChunkName: "ui" */ './modules/fileupload'),
     layout: import(/* webpackChunkName: "ui" */ './modules/layout'),
-    
-    // finder: import(/* webpackChunkName: "ui" */ './modules/finder'),
-    // content: import(/* webpackChunkName: "ui" */ './modules/content'),
-    // job: import(/* webpackChunkName: "ui" */ './modules/job'),
-    // fileupload: import(/* webpackChunkName: "ui" */ './modules/fileupload'),
-    
-    // document: import(/* webpackChunkName: "ui" */ './modules/document'),
-    // section: import(/* webpackChunkName: "ui" */ './modules/section'),
   } : 
   {}
 

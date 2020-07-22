@@ -1,12 +1,11 @@
 import React, { useMemo, useCallback } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import InputLabel from '@material-ui/core/InputLabel'
 import Select from '@material-ui/core/Select'
-import Paper from '@material-ui/core/Paper'
 import FormControl from '@material-ui/core/FormControl'
 import MenuItem from '@material-ui/core/MenuItem'
 
@@ -149,6 +148,41 @@ const DriveFoldersEditor = ({
       <Grid container spacing={ 3 } alignItems="center">
 
         <Grid item xs={ 12 }>
+          <Typography variant="subtitle1" gutterBottom>
+            <strong>Drive Folders</strong>
+          </Typography>
+          <Typography variant="caption" gutterBottom>
+            The following folders will add their content to this section:
+          </Typography>
+        </Grid>
+
+        <Grid item xs={ 12 }>
+          <SimpleTable
+            hideHeader
+            data={ tableData }
+            fields={ FIELDS }
+            getActions={ getActions }
+          />
+        </Grid>
+        
+        
+
+        <Grid item xs={ 12 }>
+          <Button
+            size="small"
+            variant="outlined"
+            color="secondary"
+            onClick={ () => {
+              actions.onAddFolder({
+                section,
+              })
+            }}
+          >
+            Add Drive Folder
+          </Button>
+        </Grid>
+
+        <Grid item xs={ 12 }>
           <FormControl component="fieldset" className={ classes.select }>
             <InputLabel htmlFor="choose-folder">Newly created content will be added to:</InputLabel>
             <Select
@@ -174,42 +208,6 @@ const DriveFoldersEditor = ({
               }
             </Select>
           </FormControl>
-        </Grid>
-
-        
-        
-        <Grid item xs={ 12 }>
-          <Paper>
-            <SimpleTable
-              hideHeader
-              data={ tableData }
-              fields={ FIELDS }
-              getActions={ getActions }
-            />
-          </Paper>
-        </Grid>
-        
-        
-
-        <Grid item xs={ 12 }>
-          <Button
-            size="small"
-            variant="outlined"
-            color="secondary"
-            onClick={ () => {
-              actions.onAddFolder({
-                section,
-              })
-            }}
-          >
-            Add Source Folder
-          </Button>
-        </Grid>
-
-        <Grid item xs={ 12 }>
-          <Typography variant="caption">
-            The content in all source folders will be merged into the {sectionTitle} section.
-          </Typography>
         </Grid>
         
         

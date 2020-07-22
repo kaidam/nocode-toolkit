@@ -1,61 +1,29 @@
-// main app entry
-import React, { lazy, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { lazy } from 'react'
+import { useSelector } from 'react-redux'
 
 import systemSelectors from './store/selectors/system'
-import uiSelectors from './store/selectors/ui'
+import websiteSelectors from './store/selectors/website'
 
 import Suspense from './components/system/Suspense'
-import actionLoader from './store/utils/actionLoader'
-
-import Actions from './utils/actions'
-import globals from './utils/globals'
-
 import Router from './router'
 import ThemeContainer from './theme/container'
-import library from './library'
 
-const GlobalLoading = lazy(() => import(/* webpackChunkName: "ui" */ './components/system/GlobalLoading'))
-const QuickstartDialog = lazy(() => import(/* webpackChunkName: "ui" */ './components/quickstart/Dialog'))
-const OnboardingWizard = lazy(() => import(/* webpackChunkName: "ui" */ './components/quickstart/OnboardingWizard'))
+import Loading from './components/system/Loading'
+
+const BootLoader = lazy(() => import(/* webpackChunkName: "ui" */ './components/system/BootLoader'))
+const OnboardingWizard = lazy(() => import(/* webpackChunkName: "ui" */ './components/onboarding/Wizard'))
 
 const App = ({
   templates,
   ThemeModule,
   themeProcessor,
 }) => {
-  const dispatch = useDispatch()
-  const actions = Actions(useDispatch(), {
-    initialise: actionLoader('system', 'initialise'),
-  })
 
   const showUI = useSelector(systemSelectors.showUI)
   const initialised = useSelector(systemSelectors.initialised)
-  const initialiseError = useSelector(systemSelectors.initialiseError)
-  const quickstartWindow = useSelector(uiSelectors.quickstartWindow)
-  const website = useSelector(systemSelectors.website)
+  const initialiseError = useSelector(systemSelectors.initialiseError) 
+  const onboardingActive = useSelector(websiteSelectors.onboardingActive)
 
-  // this allows us to customize the loading message
-  // as things are initialised
-  const loading = useSelector(uiSelectors.loading)
-
-  useEffect(() => {
-    const handler = async () => {
-      if(globals.isUIActivated()) {
-        await actions.initialise()  
-      }
-      // now the UI is active - we can
-      // initialize each of the plugins
-      const plugins = library.plugins || []
-      plugins.forEach(plugin => {
-        if(plugin.actions && plugin.actions.initialize) {
-          dispatch(plugin.actions.initialize())
-        }
-      })
-    }
-    handler()
-  }, [initialised])
-  
   if(initialiseError) return (
     <div
       style={{
@@ -76,22 +44,19 @@ const App = ({
     </div>
   )
 
+  // we are in the process of getting the system ready so show loading
   if(showUI && !initialised) {
     return (
-      <Suspense>
-        {
-          quickstartWindow ? (
-            <QuickstartDialog />
-          ) : (
-            <GlobalLoading
-              loading={ loading || true }
-            />
-          )
-        }
-      </Suspense>
+      <>
+        <Loading />
+        <Suspense>
+          <BootLoader />
+        </Suspense>
+      </>
     )
   }
-  
+
+  // ok - render the app
   const content = (
     <ThemeContainer
       ThemeModule={ ThemeModule }
@@ -100,10 +65,11 @@ const App = ({
       <Router
         templates={ templates }
       />
+      <Loading />
     </ThemeContainer>
   )
 
-  if(showUI && website && website.meta && website.meta.onboardingActive) {
+  if(onboardingActive) {
     return (
       <Suspense>
         <OnboardingWizard>

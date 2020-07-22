@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react'
+import React from 'react'
 import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import Divider from '@material-ui/core/Divider'
@@ -9,9 +9,6 @@ import layoutActions from '../../store/modules/layout'
 import useLayoutCellRenderer from '../hooks/useLayoutCellRenderer'
 
 const useStyles = makeStyles(theme => ({
-  root: {
-
-  },
   row: {
     display: 'flex',
     flexDirection: 'row',
@@ -19,11 +16,15 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const LayoutEditor = ({
+const DraggableLayout = ({
   content_id,
   layout_id,
+  layout_data,
   simpleMovement,
+  simpleEditor,
   divider,
+  editable = true,
+  withContext = true,
 }) => {
 
   const actions = Actions(useDispatch(), {
@@ -38,7 +39,10 @@ const LayoutEditor = ({
   } = useLayoutCellRenderer({
     content_id,
     layout_id,
+    layout_data,
     simpleMovement,
+    simpleEditor,
+    editable,
   })
 
   const onDragEnd = result => {
@@ -48,6 +52,7 @@ const LayoutEditor = ({
     actions.onLayoutSwapRow({
       content_id,
       layout_id,
+      layout_data,
       sourceIndex,
       targetIndex,
     })
@@ -55,61 +60,68 @@ const LayoutEditor = ({
 
   if(!layout || layout.length <= 0) return null
 
-  return (
-    <div className={ classes.root }>    
-      <DragDropContext onDragEnd={ onDragEnd }>
-        <Droppable droppableId="droppable">
-          {(provided, snapshot) => (
-            <div
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-            >
-              {
-                layout.map((row, i) => {
+  const droppable = (
+    <Droppable droppableId={`layout-${content_id}`}>
+      {(provided, snapshot) => (
+        <div
+          {...provided.droppableProps}
+          ref={provided.innerRef}
+        >
+          {
+            layout.map((row, i) => {
+              const rowId = row[0].id
 
-                  const rowId = row[0].id
-
-                  return (
-                    <Draggable
-                      key={ rowId }
-                      draggableId={ rowId }
-                      index={ i }
+              return (
+                <Draggable
+                  key={ rowId }
+                  draggableId={ rowId }
+                  index={ i }
+                >
+                  {(provided, snapshot) => (
+                    <div
+                      className={ classes.row }
+                      ref={ provided.innerRef }
+                      { ...provided.draggableProps }
+                      { ...provided.dragHandleProps }
+                      style={ provided.draggableProps.style }
                     >
-                      {(provided, snapshot) => (
-                        <div
-                          className={ classes.row }
-                          ref={ provided.innerRef }
-                          { ...provided.draggableProps }
-                          { ...provided.dragHandleProps }
-                          style={ provided.draggableProps.style }
-                        >
-                          {
-                            row.map((cell, j) => {
-                              return getCell({
-                                cell,
-                                rowIndex: i,
-                                cellIndex: j,
-                              })
-                            })
-                          }
-                        </div>
-                      )}
-                    </Draggable>
-                  )
-                })
-              }
-              { provided.placeholder }
-            </div>
-          )}
-        </Droppable>
-      </DragDropContext>
+                      {
+                        row.map((cell, j) => {
+                          return getCell({
+                            cell,
+                            rowIndex: i,
+                            cellIndex: j,
+                          })
+                        })
+                      }
+                    </div>
+                  )}
+                </Draggable>
+              )
+            })
+          }
+          { provided.placeholder }
+        </div>
+      )}
+    </Droppable>
+  )
+
+  const renderContent = withContext ? (
+    <DragDropContext onDragEnd={ onDragEnd }>
+      { droppable }
+    </DragDropContext>
+  ) : droppable
+
+  return (
+    <>
+      { renderContent }
       {
         divider && (
           <Divider />
         )
       }
-    </div>
+    </>
   )
 }
 
-export default LayoutEditor
+export default DraggableLayout

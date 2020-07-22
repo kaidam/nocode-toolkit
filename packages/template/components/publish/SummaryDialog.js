@@ -11,11 +11,12 @@ import green from '@material-ui/core/colors/green'
 import blue from '@material-ui/core/colors/blue'
 
 import jobActions from '../../store/modules/job'
+import publishActions from '../../store/modules/publish'
 import dialogActions from '../../store/modules/dialog'
 import snackbarActions from '../../store/modules/snackbar'
 import dialogSelectors from '../../store/selectors/dialog'
-import systemSelectors from '../../store/selectors/system'
 import jobSelectors from '../../store/selectors/job'
+import websiteSelectors from '../../store/selectors/website'
 
 import FacebookIcon from '@material-ui/icons/Facebook'
 import TwitterIcon from '@material-ui/icons/Twitter'
@@ -116,9 +117,10 @@ const SummaryDialog = ({
   const classes = useStyles()
 
   const dialogParams = useSelector(dialogSelectors.dialogParams)
-  const config = useSelector(systemSelectors.config)
+  const config = useSelector(websiteSelectors.config)
   const publishStatus = useSelector(jobSelectors.publishStatus)
   const job = useSelector(jobSelectors.data)
+  const isOpen = dialogParams && dialogParams.name == 'publishSummary' ? true : false
 
   const isJobLive = (
     job &&
@@ -126,26 +128,27 @@ const SummaryDialog = ({
     publishStatus.job == job.jobid
   )
 
-  const {
-    id,
-  } = (dialogParams.publishSummary || {})
+  const id = dialogParams ? dialogParams.id : null
 
   const actions = Actions(useDispatch(), {
     onClose: dialogActions.closeAll,
-    onViewLogs: jobActions.viewLogs,
-    onDeploy: jobActions.deploy,
-    onOpenHistory: jobActions.openHistory,
-    onLoadPublished: jobActions.loadPublished,
+    onViewLogs: publishActions.viewLogs,
+    onDeploy: publishActions.deploy,
+    onOpenHistory: publishActions.openHistory,
+    onLoadPublished: publishActions.loadPublished,
     onSetSuccess: snackbarActions.setSuccess,
   })
 
   useEffect(() => {
     if(!id) return
+    if(!isOpen) return
     actions.onLoadPublished(id)
   }, [
     id,
+    isOpen,
   ])
 
+  if(!isOpen) return null
   if(!job || !job.result) return null
 
   let url = ''

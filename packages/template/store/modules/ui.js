@@ -3,8 +3,11 @@ import Promise from 'bluebird'
 import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
 
+import uiActions from './ui'
 import uiSelectors from '../selectors/ui'
 import dialogActions from './dialog'
+import snackbarActions from './snackbar'
+import apiUtils from '../utils/api'
 
 import { ui as initialState } from '../initialState'
 
@@ -26,6 +29,26 @@ const reducers = {
       state.confirmWindow.accepted = false
     }
   },
+  openFormWindow: (state, action) => {
+    state.formWindow = action.payload
+  },
+  acceptFormWindow: (state, action) => {
+    if(state.formWindow) {
+      state.formWindow.accepted = true
+      state.formWindow.values = action.payload
+    }
+  },
+  cancelFormWindow: (state, action) => {
+    if(state.formWindow) {
+      state.formWindow.accepted = false
+    }
+  },
+  resetFormWindow: (state, action) => {
+    state.formWindow.accepted = null
+  },
+  clearFormWindow: (state, action) => {
+    state.formWindow = null
+  },
   setPreviewMode: (state, action) => {
     state.previewMode = action.payload
   },
@@ -34,14 +57,6 @@ const reducers = {
   },
   setScrollToCurrentPage: (state, action) => {
     state.scrollToCurrentPage = action.payload
-  },
-  setQuickstartWindow: (state, action) => {
-    state.quickstartWindow = action.payload
-  },
-  acceptQuickstartWindow: (state, action) => {
-    state.quickstartWindow = Object.assign({}, action.payload, {
-      accepted: true,
-    })
   },
   setSettingsOpen: (state, action) => {
     state.settingsOpen = action.payload
@@ -75,7 +90,7 @@ const sideEffects = {
     let open = true
     let confirmed = false
     while(open) {
-      await Promise.delay(100)
+      await Promise.delay(10)
       const currentSettings = selector(getState())
       if(!currentSettings || typeof(currentSettings.accepted) == 'boolean') {
         confirmed = currentSettings ?
@@ -94,12 +109,48 @@ const sideEffects = {
     chatlio.open()
   },
 
-  getQuickstartConfig: (windowConfig = {}) => async (dispatch, getState) => {
-    dispatch(actions.setQuickstartWindow(windowConfig))
-    await dispatch(actions.waitForWindow(uiSelectors.quickstartWindow))
-    const results = uiSelectors.quickstartWindow(getState())
-    dispatch(actions.setQuickstartWindow(null))
-    return results
+  getFormValues: ({
+    tabs,
+    values = {},
+    config = {},
+    onSubmit,
+  }) => async (dispatch, getState) => {
+    dispatch(actions.openFormWindow({
+      tabs,
+      values,
+      config,
+    }))
+
+    let hasSubmitted = false
+    let result = null
+
+    while(!hasSubmitted) {
+      const confirmed = await dispatch(uiActions.waitForWindow(uiSelectors.formWindow))
+      if(confirmed) {
+        const windowState = uiSelectors.formWindow(getState())
+        result = windowState.values
+        if(onSubmit) {
+          try {
+            result = await onSubmit(result)
+            hasSubmitted = true
+          } catch(e) {
+            const errorMessage = apiUtils.getErrorMessage(e)
+            dispatch(snackbarActions.setError(errorMessage))
+            dispatch(actions.resetFormWindow())
+            dispatch(actions.setLoading(false))
+            result = null
+          }
+        }
+        else {
+          hasSubmitted = true
+        }
+      }
+      else {
+        hasSubmitted = true
+      }
+    }
+    dispatch(actions.clearFormWindow())
+    return result
   },
 }
 

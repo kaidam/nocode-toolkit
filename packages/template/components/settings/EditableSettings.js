@@ -1,21 +1,19 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
-import icons from '../../icons'
 
 import FocusElement from '../widgets/FocusElement'
 import Actions from '../../utils/actions'
-import settingsActions from '../../store/modules/settings'
+import formActions from '../../store/modules/form'
 
 const EditableSettings = ({
   title,
-  form,
+  group,
   children,
 }) => {
-
   const actions = Actions(useDispatch(), {
-    onOpenSettings: () => settingsActions.editSettingsSection({
-      form,
+    onOpenSettings: () => formActions.editSettingsGroup({
       title,
+      group,
     }),
   })
 

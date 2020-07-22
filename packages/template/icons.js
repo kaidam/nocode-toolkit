@@ -12,6 +12,7 @@
 
 import React from 'react'
 
+import WebsiteIcon from '@material-ui/icons/Language'
 import HomeIcon from '@material-ui/icons/Home'
 import AddIcon from '@material-ui/icons/Add'
 import EditIcon from '@material-ui/icons/Edit'
@@ -24,11 +25,11 @@ import RefreshIcon from '@material-ui/icons/Refresh'
 import ContentIcon from '@material-ui/icons/Inbox'
 import OpenIcon from '@material-ui/icons/OpenInBrowser'
 import SortIcon from '@material-ui/icons/Sort'
+import LoginIcon from '@material-ui/icons/ExitToApp'
 import LogoutIcon from '@material-ui/icons/PowerSettingsNew'
 import FolderIcon from '@material-ui/icons/Folder'
 import FolderOpenIcon from '@material-ui/icons/FolderOpen'
 import DocumentIcon from '@material-ui/icons/InsertDriveFile'
-import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 import LinkIcon from '@material-ui/icons/Link'
 import VideoIcon from '@material-ui/icons/VideoLibrary'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
@@ -47,6 +48,7 @@ import CellIcon  from '@material-ui/icons/ViewColumn'
 import TitleIcon from '@material-ui/icons/Title'
 import TextIcon from '@material-ui/icons/Subject'
 import ImageIcon from '@material-ui/icons/InsertPhoto'
+import WarningIcon from '@material-ui/icons/Warning'
 import ErrorIcon from '@material-ui/icons/Error'
 import SuccessIcon from '@material-ui/icons/CheckCircle'
 import WaitingIcon from '@material-ui/icons/HourglassEmpty'
@@ -76,9 +78,9 @@ import DomainIcon from '@material-ui/icons/Language'
 import CloseIcon from '@material-ui/icons/Close'
 import HelpIcon from '@material-ui/icons/LiveHelp'
 import SaveIcon from '@material-ui/icons/Save'
-import TemplateIcon from '@material-ui/icons/Dashboard'
+import Dashboard from '@material-ui/icons/Dashboard'
 import InfoIcon from '@material-ui/icons/Info'
-import BackNextIcon from '@material-ui/icons/SyncAlt'
+//import BackNextIcon from '@material-ui/icons/SyncAlt'
 import SearchIcon from '@material-ui/icons/Search'
 import BuildIcon from '@material-ui/icons/Build'
 import ClipboardIcon from '@material-ui/icons/FileCopy'
@@ -91,7 +93,16 @@ import WidgetIcon from '@material-ui/icons/Widgets'
 import GuideIcon from '@material-ui/icons/Subject'
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
-
+import UnfoldMoreIcon from '@material-ui/icons/UnfoldMore'
+import TemplateIcon from '@material-ui/icons/ViewQuilt'
+import PaymentsIcon from '@material-ui/icons/CreditCard'
+import VisibleIcon from '@material-ui/icons/Visibility'
+import TrendingUpIcon from '@material-ui/icons/TrendingUp'
+import PdfIcon from '@material-ui/icons/PictureAsPdf'
+import AnalyticsIcon from '@material-ui/icons/Equalizer'
+import Attachment from '@material-ui/icons/Attachment'
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart'
+import HTMLIcon from '@material-ui/icons/MenuOpen'
 import UnsplashLogo from './components/icons/UnsplashLogo'
 import GoogleDriveLogo from './components/icons/GoogleDriveLogo'
 import GoogleDocsLogo from './components/icons/GoogleDocsLogo'
@@ -102,6 +113,11 @@ import LinkedInIcon from '@material-ui/icons/LinkedIn'
 import YouTubeIcon from '@material-ui/icons/YouTube'
 import InstagramIcon from '@material-ui/icons/Instagram'
 import PinterestIcon from '@material-ui/icons/Pinterest'
+import BackNextIcon from '@material-ui/icons/CompareArrows'
+import DocumentContentIcon from '@material-ui/icons/Description'
+import DocumentHeaderIcon from '@material-ui/icons/HorizontalSplit'
+import LinearScaleIcon from '@material-ui/icons/LinearScale'
+import PowerInputIcon from '@material-ui/icons/PowerInput'
 
 const icons = {
   add: AddIcon,
@@ -109,16 +125,20 @@ const icons = {
   delete: DeleteIcon,
   close: CloseIcon,
   clear: ClearIcon,
+  website: WebsiteIcon,
   settings: SettingsIcon,
   publish: PublishIcon,
   history: HistoryIcon,
   refresh: RefreshIcon,
   content: ContentIcon,
   open: OpenIcon,
+  login: LoginIcon,
   logout: LogoutIcon,
   folder: FolderIcon,
   folderopen: FolderOpenIcon,
+  drag: UnfoldMoreIcon,
   document: DocumentIcon,
+  snippet: Attachment,
   item: DocumentIcon,
   drive: GoogleDriveLogo,
   docs: GoogleDocsLogo,
@@ -149,12 +169,14 @@ const icons = {
   quote: QuoteIcon,
   error: ErrorIcon,
   success: SuccessIcon,
+  warning: WarningIcon,
   waiting: WaitingIcon,
   logs: LogsIcon,
   undo: UndoIcon,
   look: LookIcon,
   move: MoveIcon,
   movevert: MoveVertIcon,
+  html: HTMLIcon,
   payment: PaymentIcon,
   contact: ContactIcon,
   addPanelTop: AddPanelTop,
@@ -166,19 +188,25 @@ const icons = {
   alignRight: AlignRightIcon,
   people: PeopleIcon,
   code: CodeIcon,
-  plugin: PluginIcon,
   domain: DomainIcon,
   help: HelpIcon,
   save: SaveIcon,
   template: TemplateIcon,
   widget: WidgetIcon,
-  layout: TemplateIcon,
+  visible: VisibleIcon,
+  layout: Dashboard,
+  builder: Dashboard,
   info: InfoIcon,
   backnext: BackNextIcon,
   search: SearchIcon,
   build: BuildIcon,
   clipboard: ClipboardIcon,
   account: AccountCircle,
+  payments: PaymentsIcon,
+  tendingUp: TrendingUpIcon,
+  shopping: ShoppingCartIcon,
+  pdf: PdfIcon,
+  analytics: AnalyticsIcon,
   sync: SyncIcon,
   send: SendIcon,
   menu: MenuIcon,
@@ -194,6 +222,11 @@ const icons = {
   youtube: YouTubeIcon,
   instagram: InstagramIcon,
   pinterest: PinterestIcon,
+  documentContent: DocumentContentIcon,
+  documentHeader: DocumentHeaderIcon,
+  breadcrumbs: LinearScaleIcon,
+  documentTitle: PowerInputIcon,
+  documentInfo: InfoIcon,
 }
 
 export default icons

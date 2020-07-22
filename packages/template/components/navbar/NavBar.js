@@ -59,18 +59,8 @@ const NavBar = ({
   })
 
   const treeSelector = useMemo(contentSelectors.sectionTree, [])
-  const tree = useSelector(state => treeSelector(state, section))
-  const homeItem = useSelector(contentSelectors.homeSingletonItem)
+  const navbarItems = useSelector(state => treeSelector(state, section))
   const showUI = useSelector(systemSelectors.showUI)
-
-  const navbarItems = useMemo(() => {
-    if(!withHome || !homeItem) return tree
-    return [homeItem].concat(tree)
-  }, [
-    tree,
-    withHome,
-    homeItem,
-  ])
 
   if(small) {
     const getButton = useCallback((onClick) => {

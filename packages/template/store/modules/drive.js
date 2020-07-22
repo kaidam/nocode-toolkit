@@ -1,16 +1,15 @@
-import axios from 'axios'
-
 import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
 
 import networkWrapper from '../utils/networkWrapper'
-import apiUtils from '../utils/api'
+import { handlers } from '../utils/api'
 import itemUtils from '../../utils/item'
 
 import { drive as initialState } from '../initialState'
 
 import driveSelectors from '../selectors/drive'
 import systemSelectors from '../selectors/system'
+import websiteSelectors from '../selectors/website'
 import uiActions from './ui'
 
 const prefix = 'drive'
@@ -78,27 +77,6 @@ const reducers = {
   },
 }
 
-const loaders = {
-
-  getList: (getState, {
-    parent = 'root',
-    filter,
-    search,
-  } = {}) => axios.get(apiUtils.websiteUrl(getState, `/remote/drive/list/${parent}`), {
-    params: {
-      filter,
-      search,
-    }
-  })
-    .then(apiUtils.process),
-
-  getAncestors: (getState, {
-    parent,
-  } = {}) => axios.get(apiUtils.websiteUrl(getState, `/remote/drive/ancestors/${parent}`))
-    .then(apiUtils.process),
-
-}
-
 const sideEffects = {
 
   // get a list of content from a remote driver under parent
@@ -108,10 +86,12 @@ const sideEffects = {
     search,
     filter,
   } = {}) => wrapper('getList', async (dispatch, getState) => {
-    const items = await loaders.getList(getState, {
-      parent,
-      search,
-      filter,
+    const websiteId = websiteSelectors.websiteId(getState())
+    const items = await handlers.get(`/remote/${websiteId}/drive/list/${parent}`, null, {
+      params: {
+        filter,
+        search,
+      }
     })
     dispatch(actions.setList(items))
     dispatch(actions.setSearchActive(search ? true : false))
@@ -120,9 +100,8 @@ const sideEffects = {
   getAncestors: ({
     parent,
   } = {}) => wrapper('getAncestors', async (dispatch, getState) => {
-    const ancestors = await loaders.getAncestors(getState, {
-      parent,
-    })
+    const websiteId = websiteSelectors.websiteId(getState())
+    const ancestors = await handlers.get(`/remote/${websiteId}/drive/ancestors/${parent}`)
     dispatch(actions.setAncestors(ancestors))
   }),
 

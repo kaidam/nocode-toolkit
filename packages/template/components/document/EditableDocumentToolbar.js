@@ -11,13 +11,14 @@ import useDocumentEditor from '../hooks/useDocumentEditor'
 
 import icons from '../../icons'
 
-import contentSelectors from '@nocode-works/template/store/selectors/content'
+import contentSelectors from '../../store/selectors/content'
 
 const EditIcon = icons.edit
 const AddIcon = icons.add
 const OpenIcon = icons.open
 const RemoveIcon = icons.clear
 const SettingsIcon = icons.settings
+const LayoutIcon = icons.layout
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -79,9 +80,9 @@ const EditableDocumentToolbar = ({
     isFolder,
     onOpenDrive,
     getAddMenu,
-    onAddWidget,
     onRemove,
     onOpenSettings,
+    onEditLayout,
   } = useDocumentEditor({
     node,
     layouts,
@@ -118,28 +119,26 @@ const EditableDocumentToolbar = ({
 
   const getSmallMenuItems = useCallback(() => {
     return [{
-      title: isFolder ? 'Open Folder' : 'Edit Document',
+      title: isFolder ? 'View Folder' : 'Edit Document',
       icon: isFolder ? OpenIcon : EditIcon,
       handler: onOpenDrive,
-    }, {
+    }, isFolder ? {
       title: 'Add',
       icon: AddIcon,
-      handler: isFolder ? null : onAddWidget,
-      items: isFolder ? getAddMenu() : null,
-    }, {
-      title: 'Remove',
-      icon: RemoveIcon,
-      handler: onRemove,
+      items: getAddMenu(),
+    } : null, {
+      title: 'Edit Layout',
+      icon: LayoutIcon,
+      handler: onEditLayout,
     }, {
       title: 'Settings',
       icon: SettingsIcon,
       handler: onOpenSettings,
-    }]
+    }].filter(i => i)
   }, [
     isFolder,
     onOpenDrive,
     getAddMenu,
-    onAddWidget,
     onRemove,
     onOpenSettings,
   ])
@@ -150,10 +149,6 @@ const EditableDocumentToolbar = ({
       [`editDocument`]: {
         id: 'editDocument',
         ref: editButtonRef,
-      },
-      [`addBlogContent`]: {
-        id: 'addBlogContent',
-        ref: addButtonRef,
       },
     })
   }, [])
@@ -186,7 +181,7 @@ const EditableDocumentToolbar = ({
                     ref={ editButtonRef }
                     onClick={ onOpenDrive }
                   >
-                    <OpenIcon className={ classes.icon } />&nbsp;&nbsp;Open Folder
+                    <OpenIcon className={ classes.icon } />&nbsp;&nbsp;View Folder
                   </Button>
                 ) : (
                   <Button
@@ -199,38 +194,31 @@ const EditableDocumentToolbar = ({
                   </Button>
                 )
               }
+              {
+                isFolder && (
+                  <>
+                    <Divider
+                      className={ classes.divider }
+                      orientation="vertical"
+                    />
+                    <MenuButton
+                      getButton={ getAddButton }
+                      getItems={ getAddMenu }
+                    />
+                  </>
+                )
+              }
             </div>
             <div className={ classes.filler }></div>
             {
               !node.externallyLoaded && (
                 <div className={ classes.right }>
-                  {
-                    isFolder ? (
-                      <MenuButton
-                        getButton={ getAddButton }
-                        getItems={ getAddMenu }
-                      />
-                    ) : (
-                      <Button
-                        className={ classes.button }
-                        size="small"
-                        onClick={ onAddWidget }
-                      >
-                        <AddIcon className={ classes.icon } />&nbsp;&nbsp;Add
-                      </Button>
-                    )
-                  }
-                  
-                  <Divider
-                    className={ classes.divider }
-                    orientation="vertical"
-                  />
                   <Button
                     className={ classes.button }
                     size="small"
-                    onClick={ onRemove }
+                    onClick={ onEditLayout }
                   >
-                    <RemoveIcon className={ classes.icon } />&nbsp;&nbsp;Remove
+                    <LayoutIcon className={ classes.icon } />&nbsp;&nbsp;Edit Layout
                   </Button>
                   <Divider
                     className={ classes.divider }

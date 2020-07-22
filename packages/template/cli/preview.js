@@ -12,10 +12,11 @@ const loggers = require('./loggers')
 const Api = require('./api')
 
 const createJob = ({
+  websiteId,
   api,
 }) => axios({
   method: 'post',
-  url: api.getUrl('/publish'),
+  url: api.getUrl(`/publish/${websiteId}`),
   headers: api.getAuthHeaders(),
   data: {
     local: true,
@@ -25,11 +26,12 @@ const createJob = ({
 
 const loadJob = ({
   api,
+  websiteId,
   id,
   fromLogId = '',
 }) => axios({
   method: 'get',
-  url: api.getUrl(`/job/${id}`),
+  url: api.getUrl(`/jobs/${websiteId}/get/${id}`),
   headers: api.getAuthHeaders(),
   params: {
     fromLogId,
@@ -37,12 +39,23 @@ const loadJob = ({
 })
   .then(res => res.data)
 
+const loadInitialState = ({
+  api,
+  websiteId,
+}) => axios({
+  method: 'get',
+  url: api.getUrl(`/websites/${websiteId}/initialState`),
+  headers: api.getAuthHeaders(),
+})
+  .then(res => res.data)
+
 const loadResults = ({
   api,
+  websiteId,
   filename,
 }) => axios({
   method: 'get',
-  url: api.getUrl(`/file/job/${filename}`),
+  url: api.getUrl(`/storage/${websiteId}/file/job/${filename}`),
   headers: api.getAuthHeaders(),
 })
   .then(res => res.data)
@@ -66,15 +79,23 @@ const waitForPublishJob = async ({
   if(!filename && !cachePreviewFileExists) {
 
     logger(loggers.info(`creating remote publish job`))
-    const { id } = await createJob({api})
+    const { id } = await createJob({
+      websiteId: options.websiteId,
+      api,
+    })
     logger(loggers.info(`job created: ${id}`))
 
-    let job = await loadJob({api, id})
+    let job = await loadJob({
+      api,
+      websiteId: options.websiteId,
+      id
+    })
     let fromLogId = ''
 
     while(job.status == 'created' || job.status == 'running') {
       job = await loadJob({
         api,
+        websiteId: options.websiteId,
         id,
         fromLogId,
       })
@@ -87,6 +108,7 @@ const waitForPublishJob = async ({
 
     job = await loadJob({
       api,
+      websiteId: options.websiteId,
       id,
       fromLogId,
     })
@@ -111,6 +133,7 @@ const waitForPublishJob = async ({
   else {
     collection = await loadResults({
       api,
+      websiteId: options.websiteId,
       filename,
     })
 
@@ -132,11 +155,22 @@ const publishWebsite = async ({
   logger,
 }) => {
   logger(loggers.info(`building website HTML`))
+
+  const api = Api({
+    options,
+  })
+
+  const initialState = await loadInitialState({
+    api,
+    websiteId: options.websiteId,
+  })
+
   await Publish({
     options: Options.get({
       debugBuild: options.debugBuild,
       cacheId: options.cacheId,
     }),
+    initialState,
     plugins: () => [
       (context) => {
         context.data = collection

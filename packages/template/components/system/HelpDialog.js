@@ -8,6 +8,7 @@ import Button from '@material-ui/core/Button'
 import Actions from '../../utils/actions'
 import uiActions from '../../store/modules/ui'
 import dialogActions from '../../store/modules/dialog'
+import dialogSelectors from '../../store/selectors/dialog'
 import Window from '../dialog/Window'
 
 import icons from '../../icons'
@@ -23,6 +24,9 @@ const HelpDialog = ({
 
 }) => {
   const classes = useStyles()
+  const dialogParams = useSelector(dialogSelectors.dialogParams)
+
+  const isOpen = dialogParams && dialogParams.name == 'help' ? true : false
 
   const actions = Actions(useDispatch(), {
     onOpenLiveChat: uiActions.openLiveChat,
@@ -33,7 +37,7 @@ const HelpDialog = ({
 
   return (
     <Window
-      open
+      open={ isOpen }
       title="Help"
       size="sm"
       cancelTitle="Close"

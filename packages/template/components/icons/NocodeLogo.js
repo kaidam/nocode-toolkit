@@ -8,7 +8,7 @@ const NocodeLogo = ({
       style={{
         width: `${size}px`,
       }}
-      src="images/favicon.png"
+      src="https://nocode.works/assets/favicon.png"
     />
   )
 }

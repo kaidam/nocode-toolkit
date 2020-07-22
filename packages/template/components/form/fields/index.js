@@ -5,7 +5,7 @@ import CheckboxField from './Checkbox'
 import MultipleCheckboxField from './MultipleCheckbox'
 import SelectField from './Select'
 import ColorPickerField from './ColorPickerField'
-import Image from './Image'
+import File from './File'
 import Sorting from './Sorting'
 import MakeHomepage from './MakeHomepage'
 import HiddenItems from './HiddenItems'
@@ -19,7 +19,8 @@ const fields = {
   multipleCheckbox: MultipleCheckboxField,
   select: SelectField,
   color: ColorPickerField,
-  image: Image,
+  image: File,
+  file: File,
   sorting: Sorting,
   hiddenItems: HiddenItems,
   makeHomepage: MakeHomepage,

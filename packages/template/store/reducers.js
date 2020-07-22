@@ -6,6 +6,9 @@ import { reducer as router } from './modules/router'
 import { reducer as snackbar } from './modules/snackbar'
 import { reducer as search } from './modules/search'
 import { reducer as document } from './modules/document'
+import { reducer as ecommerce } from './modules/ecommerce'
+import { reducer as contactform } from './modules/contactform'
+import { reducer as website } from './modules/website'
 
 import importPromises from './importer'
 
@@ -35,24 +38,22 @@ const reducers = {
   snackbar,
   search,
   document,
+  ecommerce,
+  contactform,
+  website,
   network: GetReducer('network'),
   system: GetReducer('system'),
   settings: GetReducer('settings'),
   dialog: GetReducer('dialog'),
   ui: GetReducer('ui'),
   content: GetReducer('content'),
+  form: GetReducer('form'),
   drive: GetReducer('drive'),
   unsplash: GetReducer('unsplash'),
   job: GetReducer('job'),
+  publish: GetReducer('publish'),
   fileupload: GetReducer('fileupload'),
   layout: GetReducer('layout'),
-  
-  // finder: GetReducer('finder'),
-  // content: GetReducer('content'),
-  // job: GetReducer('job'),
-  // fileupload: GetReducer('fileupload'),
-  // document: GetReducer('document'),
-  // section: GetReducer('section'),
 }
 
 export default reducers

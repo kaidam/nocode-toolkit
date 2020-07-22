@@ -60,6 +60,8 @@ const Window = ({
   noActions = false,
   submitButtonColor = 'primary',
   cancelButtonColor = 'default',
+  disabled = false,
+  actions,
   onCancel,
   onSubmit,
   theme = {},
@@ -83,6 +85,8 @@ const Window = ({
     [classes.fullHeightPaper]: fullHeight,
     [classes.noWindowScroll]: noScroll,
   }, classes.paper, theme.paper)
+
+  const actionsClassname = theme.actions
   
   return (
     <Dialog
@@ -110,7 +114,7 @@ const Window = ({
       </DialogContent>
       {
         !noActions && (
-          <DialogActions>
+          <DialogActions className={ actionsClassname }>
             <div className={ classes.buttonsContainer }>
               <div className={ classes.buttonsLeft }>
                 { leftButtons }
@@ -136,7 +140,7 @@ const Window = ({
                       type="button"
                       variant="contained"
                       color={ submitButtonColor }
-                      disabled={ loading ? true : false }
+                      disabled={ disabled || loading ? true : false }
                       onClick={ onSubmit }
                     >
                       { submitTitle }
@@ -146,6 +150,13 @@ const Window = ({
                 { rightButtons || buttons }
               </div>
             </div>
+          </DialogActions>
+        )
+      }
+      {
+        actions && (
+          <DialogActions className={ actionsClassname }>
+            { actions }
           </DialogActions>
         )
       }

@@ -7,7 +7,6 @@ import jobActions from './job'
 import snackbarActions from './snackbar'
 
 import settingsSelectors from '../selectors/settings'
-
 import networkWrapper from '../utils/networkWrapper'
 
 import { settings as initialState } from '../initialState'
@@ -17,21 +16,19 @@ const prefix = 'settings'
 const wrapper = networkWrapper.factory(prefix)
 
 const reducers = {
-  
-}
-
-const loaders = {
-  
+  setWindowOpen: (state, action) => {
+    state.windowOpen = action.payload
+  }
 }
 
 const sideEffects = {
 
   openDialog: (params = {}) => (dispatch, getState) => {
-    dispatch(dialogActions.open('settings', params))
+    dispatch(actions.setWindowOpen(true))
   },
 
   closeDialog: () => (dispatch, getState) => {
-    dispatch(dialogActions.close('settings'))
+    dispatch(actions.setWindowOpen(false))
   },
 
   updateSettings: (data, reload = true) => async (dispatch, getState) => {
@@ -56,11 +53,6 @@ const sideEffects = {
     await dispatch(jobActions.reload())
     dispatch(dialogActions.close('settings'))
     dispatch(snackbarActions.setSuccess(`settings updated`))
-  }, {
-    autoLoading: {
-      transparent: true,
-      message: 'saving settings',
-    },
   }),
 
   // use to edit things that live in the settings

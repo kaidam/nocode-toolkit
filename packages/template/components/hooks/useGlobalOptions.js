@@ -7,6 +7,7 @@ import systemActions from '../../store/modules/system'
 import dialogActions from '../../store/modules/dialog'
 import uiActions from '../../store/modules/ui'
 import jobActions from '../../store/modules/job'
+import publishActions from '../../store/modules/publish'
 import uiSelectors from '../../store/selectors/ui'
 import icons from '../../icons'
 
@@ -38,8 +39,8 @@ const useGlobalOptions = ({
     onOpenSettings: settingsActions.openDialog,
     onSetPreviewMode: uiActions.setPreviewMode,
     onRebuild: () => jobActions.rebuild({withSnackbar:true}),
-    onPublish: jobActions.publish,
-    onViewHistory: jobActions.openHistory,
+    onPublish: publishActions.publish,
+    onViewHistory: publishActions.openHistory,
     onLogout: systemActions.logout,
     onViewHelp: () => dialogActions.open('help'),
   })
@@ -59,7 +60,7 @@ const useGlobalOptions = ({
   const getMenuItems = useCallback(() => {
     return [{
       id: 'build',
-      title: 'Build Website',
+      title: 'Build Preview',
       icon: icons.send,
       iconColor: 'secondary',
       handler: actions.onPublish,
@@ -69,17 +70,17 @@ const useGlobalOptions = ({
       icon: icons.settings,
       handler: () => onOpenSettingsPanel('general'),
     },{
-      title: `${previewMode ? 'Disable' : 'Enable'} Preview`,
-      icon: previewMode ? icons.hide : icons.look,
-      handler: previewMode ? onDisablePreview : onEnablePreview,
-    },{
       title: 'Re-Sync Drive',
       icon: icons.refresh,
       handler: actions.onRebuild,
+    },{
+      title: `${previewMode ? 'Disable' : 'Enable'} Proof Mode`,
+      icon: previewMode ? icons.hide : icons.look,
+      handler: previewMode ? onDisablePreview : onEnablePreview,
     },
     '-',
     {
-      title: 'History',
+      title: 'Publish History',
       icon: icons.history,
       handler: actions.onViewHistory,
     }, {
@@ -109,31 +110,3 @@ const useGlobalOptions = ({
 }
 
 export default useGlobalOptions
-
-/*
-
-  {
-      title: 'Layout',
-      icon: icons.layout,
-      handler: () => onOpenSettingsPanel('layout'),
-    }, 
-    '-',
-    {
-      title: 'Plugins',
-      icon: icons.plugin,
-      handler: () => onOpenSettingsPanel('plugins'),
-    }, {
-      title: 'Snippets',
-      icon: icons.code,
-      handler: () => onOpenSettingsPanel('snippets'),
-    },{
-      title: 'Security',
-      icon: icons.lock,
-      handler: () => onOpenSettingsPanel('security'),
-    },{
-      title: 'Domains',
-      icon: icons.domain,
-      handler: () => onOpenSettingsPanel('domain'),
-    },
-
-*/

@@ -1,14 +1,14 @@
-import systemUtils from '../utils/system'
-
 export const system = {
   initialiseCalled: false,
   initialised: false,
   user: null,
   tokenStatus: null,
-  config: systemUtils.isNode ? {} : window._uiConfigData || {},
-  website: {
-    meta: {},
-  },
+}
+
+export const website = {
+  websites: [],
+  config: {},
+  template: {},
   dnsInfo: null,
 }
 
@@ -17,20 +17,25 @@ export const ui = {
   confirmWindow: null,
   previewMode: false,
   scrollToCurrentPage: true,
-  quickstartWindow: null,
   settingsOpen: false,
+  formWindow: null,
 }
 
 export const settings = {
-  dnsInfo: null,
+  windowOpen: false,
 }
 
 export const dialog = {
-  
+  window: null,
 }
 
 export const layout = {
   widgetWindow: null,
+  layoutWindow: null,
+}
+
+export const form = {
+  
 }
 
 export const content = {
@@ -65,11 +70,24 @@ export const section = {
 
 }
 
+export const contactform = {
+  formId: null,
+  values: {},
+  errors: {},
+}
+
+export const ecommerce = {
+  
+}
+
 export const job = {
   list: [],
-  publishStatus: {},
   id: null,
   data: null,
+}
+
+export const publish = {
+  publishStatus: {},
 }
 
 export const network = {
@@ -104,11 +122,16 @@ const initialState = {
   ui,
   settings,
   dialog,
+  website,
   system,
   content,
+  form,
+  contactform,
+  ecommerce,
   drive,
   unsplash,
   job,
+  publish,
   document,
   section,
   fileupload,

@@ -5,7 +5,6 @@ import deepmerge from 'deepmerge'
 
 import settingsSelectors from '../store/selectors/settings'
 import nocodeSelectors from '../store/selectors/nocode'
-import routerSelectors from '../store/selectors/router'
 
 const getThemeSettings = ({
   settings,
@@ -34,7 +33,7 @@ const useTheme = (processor, {
 } = {}) => {
   const settings = useSelector(settingsSelectors.settings) 
   const config = useSelector(nocodeSelectors.config)
-  const route = useSelector(routerSelectors.route)
+  const route = useSelector(nocodeSelectors.route)
   const theme = useMemo(() => {
     const themeSettings = getThemeSettings({
       settings,

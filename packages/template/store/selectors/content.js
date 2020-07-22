@@ -1,29 +1,24 @@
 import { createSelector } from 'reselect'
-import deepmerge from 'deepmerge'
+import { v4 as uuid } from 'uuid'
 import childrenUtils from '../../utils/children'
 import documentUtils from '../../utils/document'
 import nocodeSelectors from './nocode'
 import routerSelectors from './router'
-import systemSelectors from './system'
 import settingsSelectors from './settings'
+import websiteSelectors from './website'
 
-const DEFAULT_OBJECT = {}
-const DEFAULT_ARRAY = []
-
-const formWindow = state => state.content.formWindow
-
-const settings = createSelector(
-  nocodeSelectors.nodes,
-  nodes => nodes.settings || DEFAULT_OBJECT,
-)
+import {
+  DEFAULT_LAYOUT,
+  DEFAULT_CELL_SETTINGS,
+} from '../../config'
 
 const sectionTree = () => createSelector(
   nocodeSelectors.sections,
   nocodeSelectors.nodes,
   nocodeSelectors.annotations,
   nocodeSelectors.locations,
-  routerSelectors.routeMap,
-  routerSelectors.route,
+  nocodeSelectors.routeMap,
+  nocodeSelectors.route,
   (_, name) => name,
   (sections, nodes, annotations, locations, routeMap, currentRoute, name) => {
     const getChildren = ({
@@ -74,7 +69,7 @@ const section = () => createSelector(
   nocodeSelectors.sections,
   nocodeSelectors.annotations,
   nocodeSelectors.locations,
-  systemSelectors.website,
+  websiteSelectors.websiteData,
   (_, name) => name,
   (nodes, sections, annotations, locations, website, name) => {
     const section = sections[name]
@@ -104,30 +99,6 @@ const section = () => createSelector(
       addTargetFolderId,
       sourceFolders,
     }
-  },
-)
-
-// this returns the singleton item
-// if there is one
-const homeSingletonItem = createSelector(
-  nocodeSelectors.nodes,
-  nocodeSelectors.singletons,
-  systemSelectors.website,
-  routerSelectors.routeNameMap,
-  routerSelectors.route,
-  (nodes, singletons, website, routeMap, currentRoute) => {
-    const route = routeMap['root']
-    const singleton = singletons['home']
-    if(!route || !singleton) return null
-    const node = nodes[singleton.item]
-    if(!node) return null
-    return Object.assign({}, node, {
-      isSingletonHome: true,
-      name: 'Home',
-      route,
-      currentPage: currentRoute.item == node.id,
-      children: [],
-    })
   },
 )
 
@@ -208,7 +179,7 @@ const itemChildren = () => createSelector(
 // be a ghost folder and resolves into the section
 // if that is the case
 const itemRoute = () => createSelector(
-  routerSelectors.routeMap,
+  nocodeSelectors.routeMap,
   nocodeSelectors.locations,
   (_, params) => params,
   (routeMap, locations, {parentId, itemId} = {}) => {
@@ -235,107 +206,16 @@ const itemRoute = () => createSelector(
   },
 )
 
-const form = createSelector(
-  settingsSelectors.forms,
-  formWindow,
-  (storeForms, formWindow) => {
-    const formNames = formWindow.forms || []
-   
-    const initialValues = deepmerge.all(
-      formNames.map(name => {
-        const formConfig = storeForms[name]
-        return formConfig.initialValues
-      }).concat([formWindow.values])  
-    )
-
-    // if we want tabs - reduce the form names into their respective schema tabs
-    const tabs = formWindow.singlePage ? null : formNames.reduce((all, name) => {
-      const formConfig = storeForms[name]
-      if(formConfig.tabs) {
-        return all.concat(formConfig.tabs)
-      }
-      else if(formConfig.schema) {
-        return all.concat([{
-          id: formConfig.id,
-          title: formConfig.title,
-          schema: formConfig.schema,
-          handers: formConfig.handers,
-        }])
-      }
-      else {
-        return all
-      }
-    }, [])
-
-    // if we want single page - reduce the form names into a long list
-    const schema = formWindow.singlePage ? formNames.reduce((all, name) => {
-      const formConfig = storeForms[name]
-      if(formConfig.tabs) {
-        return all
-          .concat(formConfig.tabs.reduce((all, tab) => {
-            return all
-              .concat(tab.noTitle ? [] : [tab.title])
-              .concat(tab.schema)
-          }, []))
-      }
-      else if(formConfig.schema) {
-        return all
-          .concat([
-            formConfig.title
-          ])
-          .concat(formConfig.schema)
-      }
-      else {
-        return all
-      }
-    }, []) : null
-
-    const otherProps = formNames.reduce((all, name) => {
-      const formConfig = storeForms[name]
-      const ret = Object.assign({}, all, formConfig)
-      delete(ret.tabs)
-      delete(ret.schema)
-      delete(ret.initialValues)
-      return ret
-    }, {})
-
-    return {
-      tabs,
-      schema,
-      initialValues,
-      ...otherProps
-    }
-  }
-)
-
-const formValues = createSelector(
-  formWindow,
-  (formWindow) => {
-    if(!formWindow) return DEFAULT_OBJECT
-    return formWindow.values || DEFAULT_OBJECT
-  }
-)
-
-// flatten the current (potentially tabbed) schema into a single list
-// this is used for the validation
-const flatFormSchema = createSelector(
-  form,
-  (form) => {
-    if(!form) return DEFAULT_ARRAY
-    const tabSchema = (form.tabs || []).reduce((all, tab) => {
-      return all.concat(tab.schema)
-    }, [])
-    return (form.schema || []).concat(tabSchema)
-  }
-)
-
 const document = createSelector(
-  routerSelectors.route,
-  routerSelectors.queryParams,
+  nocodeSelectors.route,
+  routerSelectors.params,
   nocodeSelectors.nodes,
   nocodeSelectors.annotations,
   nocodeSelectors.externals,
-  (route, routeParams, nodes, annotations, externalMap) => {
+  settingsSelectors.settings,
+  websiteSelectors.websiteMeta,
+  websiteSelectors.websiteLayouts,
+  (route, routeParams, nodes, annotations, externalMap, settings, websiteMeta, templateLayouts) => {
     let externalIds = []
     let node = null
 
@@ -366,10 +246,65 @@ const document = createSelector(
       cssImports,
     } = documentUtils.extractImports(externals[0])
 
+    let layoutInfo = {
+      type: 'default',
+      websiteLayoutId: websiteMeta.layout,
+      annotationLayoutId: annotation.layout_id,
+      selectedLayoutId: null,
+    }
+
+    let layoutData = DEFAULT_LAYOUT
+
+    const documentTemplateLayout = annotation.layout_id && templateLayouts[annotation.layout_id] ?
+      templateLayouts[annotation.layout_id].layout :
+      null
+
+    const websiteTemplateLayout = websiteMeta.layout && templateLayouts[websiteMeta.layout] ?
+      templateLayouts[websiteMeta.layout].layout :
+      null
+
+    // this page has an overriden layout
+    if(annotation.layout && annotation.layout.filter(row => row).length > 0) {
+      layoutData = annotation.layout
+      layoutInfo.type = 'custom'
+    }
+    else if(documentTemplateLayout) {
+      layoutData = documentTemplateLayout
+      layoutInfo.type = 'document'
+      layoutInfo.selectedLayoutId = layoutInfo.annotationLayoutId
+    }
+    // otherwise pick the layout from the settings
+    else if(websiteTemplateLayout) {
+      layoutData = websiteTemplateLayout
+      layoutInfo.type = 'website'
+      layoutInfo.selectedLayoutId = layoutInfo.websiteLayoutId
+    }
+
+    if(!layoutData) {
+      layoutData = DEFAULT_LAYOUT
+      layoutInfo.type = 'default'
+      layoutInfo.selectedLayoutId = null
+    }
+
+    const layout = layoutData
+      .map(row => {
+        return row.map(cell => {
+          const data = Object.assign({}, {
+            settings: DEFAULT_CELL_SETTINGS,
+          }, cell.data)
+          const processedCell = Object.assign({}, cell)
+          if(!processedCell.id) processedCell.id = uuid()
+          processedCell.data = data
+          return processedCell
+        })
+      })
+
     return {
       node: Object.assign({}, node, {route}),
       route,
       annotation,
+      layout,
+      layoutInfo,
       html,
       cssImports,
     }
@@ -399,9 +334,9 @@ const getAncestors = ({
 }
 
 const routeAncestors = createSelector(
-  routerSelectors.route,
+  nocodeSelectors.route,
   nocodeSelectors.nodes,
-  routerSelectors.routePathMap,
+  nocodeSelectors.routePathMap,
   nocodeSelectors.config,
   (route, nodes, routePathMap, config) => getAncestors({
     route,
@@ -413,9 +348,9 @@ const routeAncestors = createSelector(
 
 // include the home item in the ancestors
 const fullRouteAncestors = createSelector(
-  routerSelectors.route,
+  nocodeSelectors.route,
   nocodeSelectors.nodes,
-  routerSelectors.routePathMap,
+  nocodeSelectors.routePathMap,
   nocodeSelectors.config,
   (route, nodes, routePathMap, config) => {
     const ancestors = getAncestors({
@@ -454,10 +389,10 @@ const routeBaseLocation = createSelector(
 )
 
 const routeChildren = createSelector(
-  routerSelectors.route,
+  nocodeSelectors.route,
   nocodeSelectors.nodes,
   nocodeSelectors.annotations,
-  routerSelectors.routeMap,
+  nocodeSelectors.routeMap,
   (route, nodes, annotations, routeMap) => {
     const item = nodes[route.item]
     const sortedChildIds = childrenUtils.sortChildren({
@@ -476,23 +411,48 @@ const routeChildren = createSelector(
   },
 )
 
+const breadcrumbs = createSelector(
+  nocodeSelectors.route,
+  routeAncestors,
+  (route, ancestors) => {
+
+    // remove the home link and current page
+    const useItems = ancestors
+      .filter(item => item.route.location == 'singleton:home' ? false : true)
+      .filter(item => item.route.path != '/')
+      .filter(item => item.route.name != route.name)
+      .filter(item => item.node)
+
+    if(useItems.length <= 0) return []
+
+    return [{
+      title: 'Home',
+      path: '/',
+      name: 'root',
+      isLink: true,
+    }].concat(
+      useItems.map(item => ({
+        title: item.node.name.replace(/^\w/, st => st.toUpperCase()),
+        path: item.route.path,
+        name: item.route.name,
+        isLink: true,
+      }))
+    )
+  },
+)
+
 const selectors = {
-  formWindow,
-  settings,
   sectionTree,
-  homeSingletonItem,
   sectionHiddenItems,
   section,
   itemRoute,
   itemChildren,
-  form,
-  formValues,
-  flatFormSchema,
   document,
   routeAncestors,
   fullRouteAncestors,
   routeBaseLocation,
   routeChildren,
+  breadcrumbs,
 }
 
 export default selectors

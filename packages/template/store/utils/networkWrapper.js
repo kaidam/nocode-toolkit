@@ -1,5 +1,6 @@
 import apiUtils from './api'
 
+import uiActions from '../modules/ui'
 import networkActions from '../modules/network'
 import snackbarActions from '../modules/snackbar'
 
@@ -18,6 +19,9 @@ const networkWrapper = ({
   // a function to handle any errors that were caught - normally a snackbar messaage
   errorHandler,
 
+  // a function to run if we were succesful
+  successHandler,
+
   // function to run before anything else
   before,
 
@@ -27,16 +31,37 @@ const networkWrapper = ({
   // whether to show a snackbar error if an error occurs
   snackbarError = true,
 
-  // auto-trigger uiActions.setLoading before and after
+  // auto show loading
+  showLoading = false,
+
+  // auto clear the loading
+  hideLoading = false,
+
+  // auto clear the loading if there is an error
+  hideLoadingOnError = true,
+
+  // means showLoading, hideLoading & hideLoadingOnError = true
   autoLoading = false,
+
+  // what do we send to the loading store
+  loadingProps = true,
+
+  // should we actually throw any error to the caller
+  throwErrors = false,
+
+  // if given - auto clear the error after this time (ms)
+  removeErrorAfter = 0,
 
 }) => async (dispatch, getState) => {
 
   if(autoLoading) {
-    dispatch({
-      type: 'ui/setLoading',
-      payload: autoLoading,
-    })
+    showLoading = true
+    hideLoading = true
+    hideLoadingOnError = true
+  }
+  
+  if(showLoading) {
+    dispatch(uiActions.setLoading(loadingProps))
   }
 
   if(before) {
@@ -52,9 +77,13 @@ const networkWrapper = ({
   dispatch(networkActions.startLoading(networkName))
 
   let result = null
+  let errorToThrow = null
 
   try {
     result = await handler(dispatch, getState)
+    if(successHandler) {
+      await successHandler(dispatch, getState)
+    }
   } catch(error) {
     const errorMessage = apiUtils.getErrorMessage(error)
     console.error(`Network request failure`)
@@ -64,9 +93,18 @@ const networkWrapper = ({
       name: networkName,
       value: errorMessage,
     }))
+    if(removeErrorAfter > 0) {
+      setTimeout(() => {
+        dispatch(networkActions.setError({
+          name: networkName,
+          value: '',
+        }))
+      }, removeErrorAfter)
+    }
     if(errorHandler) await errorHandler(dispatch, getState, errorMessage)
     if(snackbarError) dispatch(snackbarActions.setError(errorMessage))
     result = null
+    errorToThrow = error
   }
 
   dispatch(networkActions.stopLoading(networkName))
@@ -75,11 +113,15 @@ const networkWrapper = ({
     await after(dispatch, getState)
   }
 
-  if(autoLoading) {
-    dispatch({
-      type: 'ui/setLoading',
-      payload: false,
-    })
+  if(hideLoading) {
+    dispatch(uiActions.setLoading(null))
+  }
+  else if(hideLoadingOnError && errorToThrow) {
+    dispatch(uiActions.setLoading(null))
+  }
+  
+  if(throwErrors && errorToThrow) {
+    throw errorToThrow
   }
 
   return result

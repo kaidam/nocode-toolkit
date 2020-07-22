@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import routerActions from '../../store/modules/router'
 import nocodeSelectors from '../../store/selectors/nocode'
-import routerSelectors from '../../store/selectors/router'
 import systemSelectors from '../../store/selectors/system'
 import driveActions from '../../store/modules/drive'
 
@@ -30,6 +29,7 @@ const useStyles = makeStyles(theme => ({
   }),
 }))
 
+
 const DefaultBody = lazy(() => import(/* webpackChunkName: "ui" */ './DefaultBody'))
 const ReloadTrigger = lazy(() => import(/* webpackChunkName: "ui" */ './ReloadTrigger'))
 
@@ -41,7 +41,7 @@ const DocumentBody = ({
   const dispatch = useDispatch()
 
   const showUI = useSelector(systemSelectors.showUI)
-  const routePathMap = useSelector(routerSelectors.routePathMap)
+  const routePathMap = useSelector(nocodeSelectors.routePathMap)
   const config = useSelector(nocodeSelectors.config)
   const tokenStatus = useSelector(systemSelectors.tokenStatus)
 

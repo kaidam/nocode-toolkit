@@ -8,6 +8,7 @@ const FormWrapper = ({
   initialValues,
   error,
   children = () => {},
+  validate,
   onSubmit,
 }) => {
   const [ showErrors, setShowErrors ] = useState(false)
@@ -20,6 +21,7 @@ const FormWrapper = ({
       initialValues={ useInitialValues }
       validationSchema={ validationSchema }
       validateOnMount
+      validate={ validate }
       onSubmit={ onSubmit }
     >
       {
@@ -35,21 +37,15 @@ const FormWrapper = ({
             setShowErrors(true)
             handleSubmit()
           }
-          return (
-            <form>
-              {
-                children({
-                  isValid,
-                  values,
-                  errors,
-                  showErrors,
-                  touched,
-                  onSubmit: submitWrapper,
-                  onSetFieldValue: setFieldValue,
-                })
-              }
-            </form>
-          )
+          return children({
+            isValid,
+            values,
+            errors,
+            showErrors,
+            touched,
+            onSubmit: submitWrapper,
+            onSetFieldValue: setFieldValue,
+          })
         }
       }
     </Formik>

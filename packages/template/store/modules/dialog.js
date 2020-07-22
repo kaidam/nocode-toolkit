@@ -1,34 +1,32 @@
 import CreateReducer from '../utils/createReducer'
 import CreateActions from '../utils/createActions'
 
-import routerActions from './router'
-
 import { dialog as initialState } from '../initialState'
 
 const prefix = 'dialog'
 
 const reducers = {
-  
+  setWindow: (state, action) => {
+    state.window = action.payload
+  }
 }
 
 const sideEffects = {
   open: (name, params = {}) => (dispatch, getState) => {
-    const newParams = Object.assign({}, params, {open:'yes'})
-    const mappedParams = Object.keys(newParams).reduce((all, id) => {
-      all[`dialog_${name}_${id}`] = newParams[id]
-      return all
-    }, {})
-    dispatch(routerActions.addQueryParams(mappedParams))
+    const windowValues = Object.assign({}, params, {
+      name,
+    })
+    dispatch(actions.setWindow(windowValues))
   },
   replace: (name, params = {}) => (dispatch, getState) => {
     dispatch(actions.closeAll())
     dispatch(actions.open(name, params))
   },
   close: (name) => (dispatch, getState) => {
-    dispatch(routerActions.removeQueryParams(id => id.indexOf(`dialog_${name}_`) == 0 ? false : true))
+    dispatch(actions.setWindow(null))
   },
   closeAll: () => (dispatch, getState) => {
-    dispatch(routerActions.clearQueryParams())
+    dispatch(actions.setWindow(null))
   },
   
 }

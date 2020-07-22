@@ -42,38 +42,42 @@ const DriveUpgradeRequestModal = ({
 
   const upgradeWindow = useSelector(driveSelectors.upgradeWindow)
 
-  const content = upgradeWindow.mode == 'linked_documents' ? (
-    <>
-      <Typography gutterBottom>
-        We have found links to other documents on your Google drive.
-      </Typography>
-      <Typography gutterBottom>
-        To perform this action we will need full access to your Google Drive.
-      </Typography>
-      <Typography gutterBottom>
-        Presently - we can only see content you have created with nocode.
-      </Typography>
-      <Typography gutterBottom>
-        Click the button below to login with Google.
-      </Typography>
-    </>
-  ) : (
-    <>
-      <Typography gutterBottom>
-        To perform this action we will need full access to your Google Drive.
-      </Typography>
-      <Typography gutterBottom>
-        Presently - we can only see content you have created with nocode.
-      </Typography>
-      <Typography gutterBottom>
-        Click the button below to login with Google.
-      </Typography>
-    </>
-  )
+  let content = null
+
+  if(upgradeWindow) {
+    content = upgradeWindow.mode == 'linked_documents' ? (
+      <>
+        <Typography gutterBottom>
+          We have found links to other documents on your Google drive.
+        </Typography>
+        <Typography gutterBottom>
+          To perform this action we will need full access to your Google Drive.
+        </Typography>
+        <Typography gutterBottom>
+          Presently - we can only see content you have created with nocode.
+        </Typography>
+        <Typography gutterBottom>
+          Click the button below to login with Google.
+        </Typography>
+      </>
+    ) : (
+      <>
+        <Typography gutterBottom>
+          To perform this action we will need full access to your Google Drive.
+        </Typography>
+        <Typography gutterBottom>
+          Presently - we can only see content you have created with nocode.
+        </Typography>
+        <Typography gutterBottom>
+          Click the button below to login with Google.
+        </Typography>
+      </>
+    )
+  }
 
   return (
     <Window
-      open
+      open={ upgradeWindow ? true : false }
       title="Full Drive Access Required"
       fullHeight
       withCancel

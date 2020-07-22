@@ -4,7 +4,7 @@ const path = require('path')
 const archiver = require('archiver')
 const Build = require('./build')
 const loggers = require('./loggers')
-
+const esm = require("esm")(module)
 const Api = require('./api')
 
 // load the template and version data from package.json
@@ -27,6 +27,7 @@ const getTemplateData = async ({
     name,
     version,
     description = '',
+    nocode = {},
   } = packageData
 
   if(!name) {
@@ -37,11 +38,20 @@ const getTemplateData = async ({
     throw new Error(`no version found in your package.json file`)
   }
 
+  let settings = {}
+
+  // convert the settings es6 export into JSON
+  if(nocode.settings) {
+    settings = esm(`${process.cwd()}/${nocode.settings}`)
+  }
+
   return {
     name,
     flags: '',
     version,
     templateMeta: {},
+    settings: settings.default,
+    nocode,
     versionMeta: {
       description,
     },
@@ -130,11 +140,49 @@ const uploadFiles = async ({
 
 }
 
+const uploadScreenshot = async ({
+  options,
+  logger,
+  name,
+  version,
+  filepath,
+}) => {
+  const api = Api({
+    options,
+  })
+
+  logger(loggers.info(`uploading screenshot`))
+
+  const data = await new Promise(async (resolve, reject) => {
+    try {
+      if(!fs.existsSync(filepath)) throw new Error(`screenshot ${filepath} not found`)
+      const filename = path.basename(filepath)
+      const result = await axios({
+        method: 'post',
+        url: api.getApiUrl(`/templates/${name}/screenshot/${version}`),
+        params: {filename},
+        headers: api.getAuthHeaders(),
+        data: fs.createReadStream(filepath),
+      }).then(res => res.data)
+      resolve(result)
+    } catch(e) {
+      reject(e)
+      if(e.response) {
+        e._code = e.response.status
+        reject(e)
+      }
+    }
+  })
+  logger(loggers.success(`screenshot uploaded`))
+  return data
+}
+
 const publishTemplate = async ({
   options,
   logger,
   data,
 }) => {
+
   const api = Api({
     options,
   })
@@ -150,9 +198,7 @@ const publishTemplate = async ({
     method: 'post',
     url: api.getApiUrl(`/templates/${name}/publish/${version}`),
     headers: api.getAuthHeaders(),
-    data: {
-      versionMeta: data.versionMeta,
-    }
+    data,
   })
     .then(res => res.data)
 
@@ -188,6 +234,16 @@ const Publish = async ({
     version: templateData.version,
     folder: path.join(options.projectFolder, options.buildPath),
   })
+
+  if(templateData.nocode.screenshot) {
+    templateData.screenshot = await uploadScreenshot({
+      options,
+      logger,
+      name: template.name,
+      version: templateData.version,
+      filepath: path.join(options.projectFolder, templateData.nocode.screenshot),
+    })
+  }
 
   await publishTemplate({
     options,

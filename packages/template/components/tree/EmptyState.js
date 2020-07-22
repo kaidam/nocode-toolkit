@@ -40,7 +40,10 @@ const EmptyState = ({
   const {
     getAddItems,
   } = useSectionEditor({
-    section,    
+    section,
+    content_id: `section:${section}`,
+    layout_id: 'widgets',
+    withWidgets: true,
   })
 
   const menuButton = useMenuButton({
@@ -52,7 +55,7 @@ const EmptyState = ({
       <Typography variant="caption" className={ classes.text } gutterBottom>
         This is a section with no content.
         <br /><br />
-        We can fix that by adding some Google Documents to it.
+        We can fix that by adding something:
       </Typography>
       <div className={ classes.buttonContainer }>
         <Button
@@ -65,11 +68,8 @@ const EmptyState = ({
             menuButton.onClick(e)
           }}
         >
-          <AddIcon />&nbsp;&nbsp;Add Content
+          <AddIcon />&nbsp;&nbsp;Add
         </Button>
-      </div>
-      <div className={ classes.iconContainer }>
-        <CodeIcon className={ classes.icon } />
       </div>
       {
         menuButton.menus
