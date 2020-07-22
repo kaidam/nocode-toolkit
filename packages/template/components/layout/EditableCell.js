@@ -71,8 +71,8 @@ const useStyles = makeStyles(theme => {
       color: theme.palette.grey[600],
     },
     content: ({simpleEditor}) => ({
-      border: simpleEditor ? '' : `1px solid #e5e5e5`,
-      boxShadow: simpleEditor ? '' : `1px 1px 2px 0px rgba(0,0,0,0.3)`
+      border: simpleEditor ? '' : `1px dashed #ccc`,
+      //boxShadow: simpleEditor ? '' : `1px 1px 2px 0px rgba(0,0,0,0.3)`
     })
   }
 })

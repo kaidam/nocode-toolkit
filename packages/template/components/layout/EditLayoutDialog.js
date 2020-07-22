@@ -76,6 +76,9 @@ const useStyles = makeStyles(theme => ({
     paddingLeft: theme.spacing(2),
     paddingRight: theme.spacing(2),
   },
+  pageCaption: {
+    marginBottom: theme.spacing(2),
+  }
 }))
 
 const TABS = [{
@@ -104,6 +107,7 @@ const EditLayoutDialog = ({
     onClose: layoutActions.closeLayoutWindow,
     onChangeLayoutTemplate: layoutActions.changeDocumentLayoutTemplate,
     onSaveLayout: layoutActions.saveLayoutTemplate,
+    onAddWidget: layoutActions.add,
   })
 
   const layoutWindow = useSelector(layoutSelectors.layoutWindow)
@@ -132,6 +136,15 @@ const EditLayoutDialog = ({
         data: layout,
       })
     }
+    else if(result.destination.droppableId != result.source.droppableId && result.source.droppableId == `widgets`) {
+      actions.onAddWidget({
+        content_id: node.id,
+        layout_id: 'layout',
+        layout_data: layout,
+        type: result.draggableId,
+        rowIndex: result.destination.index,
+      })
+    }
     
   }
 
@@ -151,6 +164,11 @@ const EditLayoutDialog = ({
         <div className={ classes.root }>
           <div className={ classes.contentContainer }>
             <div className={ classes.content }>
+              <div className={ classes.pageCaption }>
+                <Typography variant="caption">
+                  Click and drag widgets on the page to sort them...
+                </Typography>
+              </div>
               <Paper className={ classes.layout }>
                 <DraggableLayout
                   content_id={ node.id }
