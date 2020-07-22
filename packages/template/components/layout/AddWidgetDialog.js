@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
+import Tooltip from '@material-ui/core/Tooltip'
 import Typography from '@material-ui/core/Typography'
 import Avatar from '@material-ui/core/Avatar'
 import Divider from '@material-ui/core/Divider'
@@ -113,22 +114,24 @@ const AddWidgetDialog = ({
                     const CardIcon = widget.icon
                     return (
                       <Grid item xs={ 12 } sm={ 3 } key={ `item-${j}-${i}` }>
-                        <Card
-                          className={ classes.card }
-                          onClick={ () => actions.onSubmit({
-                            type: widget.id,
-                            data: widget.data || {},
-                          }) }
-                        >
-                          <CardHeader
-                            avatar={
-                              <Avatar className={ classes.avatar }>
-                                <CardIcon />
-                              </Avatar>
-                            }
-                            title={ widget.title }
-                          />
-                        </Card>
+                        <Tooltip title={ widget.description }>
+                          <Card
+                            className={ classes.card }
+                            onClick={ () => actions.onSubmit({
+                              type: widget.id,
+                              data: widget.data || {},
+                            }) }
+                          >
+                            <CardHeader
+                              avatar={
+                                <Avatar className={ classes.avatar }>
+                                  <CardIcon />
+                                </Avatar>
+                              }
+                              title={ widget.title }
+                            />
+                          </Card>
+                        </Tooltip>
                       </Grid>
                     )
                   })

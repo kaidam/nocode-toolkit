@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
 import { DragDropContext } from 'react-beautiful-dnd'
 
 import Tabs from '../widgets/Tabs'
@@ -45,6 +46,10 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
   },
+  sidebarHeader: {
+    padding: theme.spacing(2),
+    marginBottom: theme.spacing(1),
+  },
   sidebarContent: {
     flexGrow: 1,
     overflowY: 'auto',
@@ -66,7 +71,11 @@ const useStyles = makeStyles(theme => ({
   saveButtonContainer: {
     marginTop: theme.spacing(2),
     textAlign: 'right',
-  }
+  },
+  widgetsContainer: {
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+  },
 }))
 
 const TABS = [{
@@ -171,13 +180,29 @@ const EditLayoutDialog = ({
             <div className={ classes.sidebarContent }>
               {
                 tab == 'widgets' ? (
-                  <DraggableWidgets />
+                  <div>
+                    <div className={ classes.sidebarHeader }>
+                      <Typography variant="caption">
+                        Click and drag widgets onto the page to add them...
+                      </Typography>
+                    </div>
+                    <div className={ classes.widgetsContainer }>
+                      <DraggableWidgets />
+                    </div>
+                  </div>
                 ) : (
-                  <LayoutLibrary
-                    layouts={ layouts }
-                    selected={ layoutInfo.selectedLayoutId }
-                    onSelect={ onUpdateLayoutId }
-                  />
+                  <div>
+                    <div className={ classes.sidebarHeader }>
+                      <Typography variant="caption">
+                        Choose from the library of preset layouts...
+                      </Typography>
+                    </div>
+                    <LayoutLibrary
+                      layouts={ layouts }
+                      selected={ layoutInfo.selectedLayoutId }
+                      onSelect={ onUpdateLayoutId }
+                    />
+                  </div>
                 )
               }
             </div>
