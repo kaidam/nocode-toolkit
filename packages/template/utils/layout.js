@@ -137,6 +137,18 @@ const deleteCell = ({
   return newLayout
 }
 
+const convertLayoutToTemplate = ({
+  layout,
+}) => {
+  return layout.map(row => {
+    return row.map(cell => {
+      return {
+        type: cell.type,
+      }
+    })
+  })
+}
+
 const layoutUtils = {
   insertRow,
   insertCell,
@@ -144,6 +156,7 @@ const layoutUtils = {
   swapRow,
   moveCell,
   deleteCell,
+  convertLayoutToTemplate,
 }
 
 export default layoutUtils

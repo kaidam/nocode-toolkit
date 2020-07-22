@@ -62,6 +62,10 @@ const useStyles = makeStyles(theme => ({
   layout: {
     padding: theme.spacing(2),
     width: '100%',
+  },
+  saveButtonContainer: {
+    marginTop: theme.spacing(2),
+    textAlign: 'right',
   }
 }))
 
@@ -90,10 +94,11 @@ const EditLayoutDialog = ({
     onLayoutSwapRow: layoutActions.swapRow,
     onClose: layoutActions.closeLayoutWindow,
     onChangeLayoutTemplate: layoutActions.changeDocumentLayoutTemplate,
+    onSaveLayout: layoutActions.saveLayoutTemplate,
   })
 
   const layoutWindow = useSelector(layoutSelectors.layoutWindow)
-  const layouts = useSelector(websiteSelectors.templateLayouts)
+  const layouts = useSelector(websiteSelectors.websiteLayouts)
 
   const onUpdateLayoutId = id => {
     actions.onChangeLayoutTemplate({
@@ -145,6 +150,14 @@ const EditLayoutDialog = ({
                   withContext={ false }
                 />
               </Paper>
+              <div className={ classes.saveButtonContainer }>
+                <Button
+                  variant="contained"
+                  onClick={ actions.onSaveLayout }
+                >
+                  Save Layout
+                </Button>
+              </div>
             </div>
           </div>
           <div className={ classes.sidebar }>

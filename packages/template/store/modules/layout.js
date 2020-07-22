@@ -395,6 +395,83 @@ const sideEffects = {
     await dispatch(snackbarActions.setSuccess(`layout updated`))
   }),
 
+  saveLayoutTemplate: ({
+    
+  }) => wrapper('saveLayoutTemplate', async (dispatch, getState) => {
+    const {
+      layout,
+    } = contentSelectors.document(getState())
+
+    const websiteId = websiteSelectors.websiteId(getState())
+    const websiteMeta = websiteSelectors.websiteMeta(getState())
+    const customLayouts = websiteMeta.customLayouts || {}
+
+    const formValues = await dispatch(uiActions.getFormValues({
+      tabs: [{
+        id: 'layout',
+        title: 'Layout',
+        schema: [{
+          id: 'name',
+          title: 'Name',
+          default: '',
+          validate: {
+            type: 'string',
+            methods: [
+              ['required', 'The name is required'],
+            ],
+          }
+        }, {
+          id: 'description',
+          title: 'Description',
+          default: '',
+          component: 'textarea',
+          rows: 5,
+        }]
+      }],
+      values: {},
+      config: {
+        title: 'Save Layout',
+        showLoading: false,
+        size: 'sm',
+        fullHeight: false,
+      },
+    }))
+
+    if(!formValues) return
+
+    dispatch(uiActions.setLoading(true))
+    
+    let appendNumber = 0
+    const id = formValues.name.replace(/\s+/g, '-').toLowerCase()
+    let useid = id
+
+    while(customLayouts[useid]) {
+      appendNumber++
+      useid = `${id}-${appendNumber}`
+    }
+
+    const template = layoutUtils.convertLayoutToTemplate({
+      layout,
+    })
+
+    const newLayouts = Object.assign({}, customLayouts, {
+      [useid]: {
+        title: formValues.name,
+        description: formValues.description,
+        layout: template,
+      }
+    })
+
+    await dispatch(websiteActions.updateMeta(websiteId, {
+      customLayouts: newLayouts,
+    }, {
+      snackbar: true,
+      snackbarTitle: `layout created`
+    }))    
+  }, {
+    hideLoading: true,
+  }),
+
 }
 
 const reducer = CreateReducer({
