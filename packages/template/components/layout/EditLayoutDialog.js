@@ -1,17 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import Paper from '@material-ui/core/Paper'
 import { DragDropContext } from 'react-beautiful-dnd'
 
+import Tabs from '../widgets/Tabs'
 import Actions from '../../utils/actions'
 import layoutActions from '../../store/modules/layout'
 import layoutSelectors from '../../store/selectors/layout'
 import contentSelectors from '../../store/selectors/content'
+import websiteSelectors from '../../store/selectors/website'
 
 import DraggableLayout from './DraggableLayout'
 import DraggableWidgets from './DraggableWidgets'
+import LayoutLibrary from './LayoutLibrary'
 import Window from '../dialog/Window'
 
 const useStyles = makeStyles(theme => ({
@@ -46,6 +49,10 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     overflowY: 'auto',
   },
+  sidebarTabs: {
+    flexGrow: 0,
+    borderBottom: `1px solid #ccc`,
+  },
   sidebarFooter: {
     flexGrow: 0,
     textAlign: 'right',
@@ -58,23 +65,42 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
+const TABS = [{
+  id: 'widgets',
+  title: 'Widgets',
+},{
+  id: 'layouts',
+  title: 'Layouts',
+}]
+
 const EditLayoutDialog = ({
   
 }) => {
 
   const classes = useStyles()
+  const [ tab, setTab ] = useState(TABS[0].id)
   
   const {
     node,
     layout,
+    layoutInfo,
   } = useSelector(contentSelectors.document)
 
   const actions = Actions(useDispatch(), {
     onLayoutSwapRow: layoutActions.swapRow,
     onClose: layoutActions.closeLayoutWindow,
+    onChangeLayoutTemplate: layoutActions.changeDocumentLayoutTemplate,
   })
 
   const layoutWindow = useSelector(layoutSelectors.layoutWindow)
+  const layouts = useSelector(websiteSelectors.templateLayouts)
+
+  const onUpdateLayoutId = id => {
+    actions.onChangeLayoutTemplate({
+      content_id: node.id,
+      template_id: id,
+    })
+  }
 
   const onDragEnd = result => {
     if (!result.destination || !result.source) return
@@ -122,8 +148,25 @@ const EditLayoutDialog = ({
             </div>
           </div>
           <div className={ classes.sidebar }>
+            <div className={ classes.sidebarTabs }>
+              <Tabs
+                tabs={ TABS }
+                current={ tab }
+                onChange={ id => setTab(id) }
+              />
+            </div>
             <div className={ classes.sidebarContent }>
-              <DraggableWidgets />
+              {
+                tab == 'widgets' ? (
+                  <DraggableWidgets />
+                ) : (
+                  <LayoutLibrary
+                    layouts={ layouts }
+                    selected={ layoutInfo.selectedLayoutId }
+                    onSelect={ onUpdateLayoutId }
+                  />
+                )
+              }
             </div>
             <div className={ classes.sidebarFooter }>
               <Button

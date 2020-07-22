@@ -1,16 +1,18 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
-import Grid from '@material-ui/core/Grid'
-
 import LayoutCard from '../widgets/LayoutCard'
 
 const useStyles = makeStyles(theme => ({
- 
+  root: {
+    
+  },
+  card: {
+    margin: theme.spacing(2),
+  }
 }))
 
-const SettingsLayout = ({
-  greyBg,
+const LayoutLibrary = ({
   selected,
   layouts,
   onSelect,
@@ -19,29 +21,24 @@ const SettingsLayout = ({
   const classes = useStyles()
   
   return (
-    <Grid
-      container
-      spacing={ 4 }
-      justify="center"
-      alignItems="stretch"
-    >
+    <div className={ classes.root }>
       {
         Object.keys(layouts).map(key => {
           return (
-            <Grid key={ key } item xs={ 12 } sm={ 6 } md={ 4 } lg={ 3 }>
+            <div className={ classes.card } key={ key }>
               <LayoutCard
                 id={ key }
                 data={ layouts[key] }
                 isSelected={ key == selected }
-                greyBg={ greyBg }
+                greyBg
                 onSelect={ onSelect }
               />
-            </Grid>
+            </div>
           )
         })
       }
-    </Grid>
+    </div>
   )
 }
 
-export default SettingsLayout
+export default LayoutLibrary

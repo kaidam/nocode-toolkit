@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Tooltip from '@material-ui/core/Tooltip'
 
 import FocusElementOverlay from '../widgets/FocusElementOverlay'
+import WidgetSummary from '../widgets/WidgetSummary'
 
 import colorUtils from '../../utils/color'
 import eventUtils from '../../utils/events'
@@ -63,11 +64,11 @@ const useStyles = makeStyles(theme => {
     },
     headerIcon: {
       fontSize: '1em',
-      color: theme.palette.primary.main,
+      color: theme.palette.grey[600],
     },
     headerText: {
       fontSize: '0.7em',
-      color: theme.palette.primary.main,
+      color: theme.palette.grey[600],
     },
     content: ({simpleEditor}) => ({
       border: simpleEditor ? '' : `1px solid #e5e5e5`,
@@ -163,14 +164,12 @@ const EditableCell = ({
     }
   }
 
-  const WidgetIcon = widget.icon
-
   const renderContent = simpleEditor ? children : (
     <>
       <div className={ classes.headerContainer }>
-        <div className={ classes.header }>
-          <WidgetIcon className={ classes.headerIcon }/>&nbsp;&nbsp;<span className={ classes.headerText }>{ widget.title }</span>
-        </div>
+        <WidgetSummary
+          widget={ widget }
+        />
       </div>
       <div className={ classes.content }>
         { children }

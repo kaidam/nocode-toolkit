@@ -108,9 +108,32 @@ const settingsTabs = createSelector(
   settingsSchema => settingsSchema.tabs || DEFALT_ARRAY
 )
 
+// the pre-defined layouts provided by the template
 const templateLayouts = createSelector(
   settingsSchema,
   settingsSchema => settingsSchema.layout || DEFAULT_OBJECT
+)
+
+// the template layouts plus user-created ones
+const websiteLayouts = createSelector(
+  templateLayouts,
+  websiteMeta,
+  (templateLayouts, websiteMeta) => {
+    const websiteLayouts = websiteMeta.customLayouts || {}
+    const processedTemplateLayouts = Object.keys(templateLayouts).reduce((all, key) => {
+      all[key] = Object.assign({}, templateLayouts[key], {
+        type: 'template',
+      })
+      return all
+    }, {})
+    const processedWebsiteLayouts = Object.keys(websiteLayouts).reduce((all, key) => {
+      all[key] = Object.assign({}, websiteLayouts[key], {
+        type: 'website',
+      })
+      return all
+    }, {})
+    return Object.assign({}, processedWebsiteLayouts, processedTemplateLayouts)
+  }
 )
 
 const onboardingActive = createSelector(
@@ -144,6 +167,7 @@ const selectors = {
   settingsSchema,
   settingsTabs,
   templateLayouts,
+  websiteLayouts,
   onboardingActive,
   ...networkGroup('website', [
     'list',

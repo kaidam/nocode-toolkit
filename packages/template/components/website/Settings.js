@@ -163,7 +163,7 @@ const WebsiteSettings = ({
   const websiteId = useSelector(websiteSelectors.websiteId)
   const website = useSelector(websiteSelectors.websiteData)
   const params = useSelector(routerSelectors.params)
-  const layouts = useSelector(websiteSelectors.templateLayouts)
+  const layouts = useSelector(websiteSelectors.websiteLayouts)
   const websiteMeta = useSelector(websiteSelectors.websiteMeta)
 
   const tabs = TABS.concat(extraTabs)

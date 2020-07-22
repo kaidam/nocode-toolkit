@@ -13,6 +13,7 @@ import snackbarActions from './snackbar'
 import uiActions from './ui'
 import websiteSelectors from '../selectors/website'
 import settingsSelectors from '../selectors/settings'
+import contentSelectors from '../selectors/content'
 import websiteActions from './website'
 
 import layoutUtils from '../../utils/layout'
@@ -348,6 +349,50 @@ const sideEffects = {
       data,
       rowIndex,
     }))
+  }),
+
+  changeDocumentLayoutTemplate: ({
+    content_id,
+    template_id,
+  }) => wrapper('changeDocumentLayoutTemplate', async (dispatch, getState) => {
+    const {
+      annotation,
+      layoutInfo,
+    } = contentSelectors.document(getState())
+
+    // this means we currently have a custom layout - we should confirm they want to remove this
+    if(annotation.layout) {
+      const confirm = await dispatch(uiActions.waitForConfirmation({
+        title: `Custom layout will be reset!`,
+        message: `
+          <p>You are currently using a custom layout and this will be lost if you change the layout</p>
+          <p>Are you sure you want to change the layout for this page?.</p>
+        `,
+        confirmTitle: `Confirm - Update Layout`,
+      }))
+      if(!confirm) return
+    }
+
+    const newAnnotation = Object.assign({}, annotation)
+
+    // we are choosing the same layout as the website setting
+    // so delete the document annotation
+    if(template_id == layoutInfo.websiteLayoutId) {
+      newAnnotation.layout = null
+      newAnnotation.layout_id = null
+    }
+    // clear the custom layout and set the annotation to use the given layout
+    else {
+      newAnnotation.layout = null
+      newAnnotation.layout_id = template_id
+    }
+
+    await dispatch(contentActions.updateAnnotation({
+      id: content_id,
+      data: newAnnotation,
+    }))
+
+    await dispatch(snackbarActions.setSuccess(`layout updated`))
   }),
 
 }

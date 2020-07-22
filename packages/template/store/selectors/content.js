@@ -216,7 +216,7 @@ const document = createSelector(
   nocodeSelectors.externals,
   settingsSelectors.settings,
   websiteSelectors.websiteMeta,
-  websiteSelectors.templateLayouts,
+  websiteSelectors.websiteLayouts,
   (route, routeParams, nodes, annotations, externalMap, settings, websiteMeta, templateLayouts) => {
     let externalIds = []
     let node = null
@@ -248,24 +248,44 @@ const document = createSelector(
       cssImports,
     } = documentUtils.extractImports(externals[0])
 
+    let layoutInfo = {
+      type: 'default',
+      websiteLayoutId: websiteMeta.layout,
+      annotationLayoutId: annotation.layout_id,
+      selectedLayoutId: null,
+    }
+
     let layoutData = DEFAULT_LAYOUT
-    const templateLayout = websiteMeta.layout && templateLayouts[websiteMeta.layout] ?
+
+    const documentTemplateLayout = annotation.layout_id && templateLayouts[annotation.layout_id] ?
+      templateLayouts[annotation.layout_id].layout :
+      null
+
+    const websiteTemplateLayout = websiteMeta.layout && templateLayouts[websiteMeta.layout] ?
       templateLayouts[websiteMeta.layout].layout :
       null
 
     // this page has an overriden layout
-    if(annotation.layout) {
+    if(annotation.layout && annotation.layout.filter(row => row).length > 0) {
       layoutData = annotation.layout
+      layoutInfo.type = 'custom'
+    }
+    else if(documentTemplateLayout) {
+      layoutData = documentTemplateLayout
+      layoutInfo.type = 'document'
+      layoutInfo.selectedLayoutId = layoutInfo.annotationLayoutId
     }
     // otherwise pick the layout from the settings
-    else if(templateLayout) {
-      layoutData = templateLayout
+    else if(websiteTemplateLayout) {
+      layoutData = websiteTemplateLayout
+      layoutInfo.type = 'website'
+      layoutInfo.selectedLayoutId = layoutInfo.websiteLayoutId
     }
 
-    layoutData = layoutData.filter(row => row)
-
-    if(layoutData.length <= 0) {
-      layoutData = templateLayout || DEFAULT_LAYOUT
+    if(!layoutData) {
+      layoutData = DEFAULT_LAYOUT
+      layoutInfo.type = 'default'
+      layoutInfo.selectedLayoutId = null
     }
 
     const layout = layoutData
@@ -286,6 +306,7 @@ const document = createSelector(
       route,
       annotation,
       layout,
+      layoutInfo,
       html,
       cssImports,
     }
