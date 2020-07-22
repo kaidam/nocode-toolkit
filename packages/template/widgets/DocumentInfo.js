@@ -40,8 +40,7 @@ const Render = ({
 
   if(!modifiedTime && !lastModifyingUser) return null
   if(isFolder) return null
-  if(node.route && node.route.path == '/') return null
-
+  
   return (
     <div className={ classes.root }>
       Updated <span className={ classes.bold }>{ new Date(modifiedTime).toLocaleString() }</span>

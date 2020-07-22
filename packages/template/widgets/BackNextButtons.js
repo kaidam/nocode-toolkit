@@ -87,8 +87,6 @@ const Render = ({
     tree,
   ])
 
-  if(node.route && node.route.path == '/') return null
-  
   const currentIndex = sectionIds.indexOf(node.id)
 
   const prevId = sectionIds[currentIndex - 1]

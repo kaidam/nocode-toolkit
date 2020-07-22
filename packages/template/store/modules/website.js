@@ -97,6 +97,7 @@ const sideEffects = {
         message: 'Setting up your website for the first time...',
       }))
     }
+    await handlers.put(`/preview/${website.id}/recalculate`)
     document.location = `/builder/website/${website.id}`
   }, {
     showLoading: true,
