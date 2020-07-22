@@ -21,3 +21,10 @@ export const RELOAD_APP_JOBS = [
 ]
 
 export const SEARCH_DELAY = 1000
+
+export const DEFAULT_LAYOUT = [[{type: 'documentContent'}]]
+export const DEFAULT_CELL_SETTINGS = {
+  horizontal_align: 'left',
+  vertical_align: 'top',
+  padding: 8,
+}

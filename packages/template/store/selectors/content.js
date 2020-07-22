@@ -7,12 +7,10 @@ import routerSelectors from './router'
 import settingsSelectors from './settings'
 import websiteSelectors from './website'
 
-const DEFAULT_LAYOUT = [[{type: 'documentContent'}]]
-const DEFAULT_CELL_SETTINGS = {
-  horizontal_align: 'left',
-  vertical_align: 'top',
-  padding: 8,
-}
+import {
+  DEFAULT_LAYOUT,
+  DEFAULT_CELL_SETTINGS,
+} from '../../config'
 
 const sectionTree = () => createSelector(
   nocodeSelectors.sections,

@@ -23,6 +23,10 @@ import library from '../../library'
 
 const prefix = 'layout'
 
+import {
+  DEFAULT_CELL_SETTINGS,
+} from '../../config'
+
 const wrapper = networkWrapper.factory(prefix)
 
 const reducers = {
@@ -130,7 +134,7 @@ const sideEffects = {
       }
     }
     const useData = Object.assign({}, {
-      settings: {},
+      settings: DEFAULT_CELL_SETTINGS,
     }, data)
     dispatch(uiActions.setLoading(true))
     await dispatch(actions.update({
