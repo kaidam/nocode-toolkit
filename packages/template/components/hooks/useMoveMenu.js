@@ -20,9 +20,9 @@ const IconCombo = (Left, Right) => () => (
 )
 
 const useMoveMenu = ({
-  layout,
   content_id,
   layout_id,
+  layout_data,
   simpleMovement = false,
   rowIndex,
   cellIndex,
@@ -40,13 +40,14 @@ const useMoveMenu = ({
     }) => () => actions.onLayoutMove({
       content_id,
       layout_id,
+      layout_data,
       rowIndex,
       cellIndex,
       direction,
       merge,
     })
 
-    const row = layout[rowIndex]
+    const row = layout_data[rowIndex]
 
     let up = null
 
@@ -89,7 +90,7 @@ const useMoveMenu = ({
     let down = null
 
     if(simpleMovement) {
-      down = (rowIndex < layout.length - 1) ? {
+      down = (rowIndex < layout_data.length - 1) ? {
         title: 'Down',
         icon: IconCombo(DownIcon, RowIcon),
         handler: getOnMoveHandler({
@@ -99,14 +100,14 @@ const useMoveMenu = ({
       } : null
     }
     else {
-      down = (rowIndex < layout.length - 1 || row.length > 1) ? {
+      down = (rowIndex < layout_data.length - 1 || row.length > 1) ? {
         title: 'Down',
         icon: IconCombo(DownIcon, RowIcon),
-        handler: rowIndex == layout.length - 1 ? getOnMoveHandler({
+        handler: rowIndex == layout_data.length - 1 ? getOnMoveHandler({
           direction: 'down',
           merge: false,
         }) : null,
-        items: rowIndex == layout.length - 1 ? null : [{
+        items: rowIndex == layout_data.length - 1 ? null : [{
           title: 'Down: Own Row',
           icon: IconCombo(DownIcon, RowIcon),
           handler: getOnMoveHandler({
@@ -147,7 +148,7 @@ const useMoveMenu = ({
       right,
     ].filter(i => i)
   }, [
-    layout,
+    layout_data,
     content_id,
     layout_id,
     rowIndex,

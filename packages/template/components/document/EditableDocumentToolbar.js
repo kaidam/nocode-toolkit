@@ -80,7 +80,6 @@ const EditableDocumentToolbar = ({
     isFolder,
     onOpenDrive,
     getAddMenu,
-    onAddWidget,
     onRemove,
     onOpenSettings,
     onEditLayout,
@@ -123,25 +122,23 @@ const EditableDocumentToolbar = ({
       title: isFolder ? 'View Folder' : 'Edit Document',
       icon: isFolder ? OpenIcon : EditIcon,
       handler: onOpenDrive,
-    }, {
+    }, isFolder ? {
       title: 'Add',
       icon: AddIcon,
-      handler: isFolder ? null : onAddWidget,
-      items: isFolder ? getAddMenu() : null,
-    }, {
-      title: 'Remove',
-      icon: RemoveIcon,
-      handler: onRemove,
+      items: getAddMenu(),
+    } : null, {
+      title: 'Edit Layout',
+      icon: LayoutIcon,
+      handler: onEditLayout,
     }, {
       title: 'Settings',
       icon: SettingsIcon,
       handler: onOpenSettings,
-    }]
+    }].filter(i => i)
   }, [
     isFolder,
     onOpenDrive,
     getAddMenu,
-    onAddWidget,
     onRemove,
     onOpenSettings,
   ])

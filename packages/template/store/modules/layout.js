@@ -58,7 +58,7 @@ const sideEffects = {
   update: ({
     content_id,
     layout_id,
-    data,
+    layout_data,
     handler,
     params,
   }) => async (dispatch, getState) => {
@@ -67,7 +67,7 @@ const sideEffects = {
     const annotations = nocodeSelectors.annotations(getState())
     const annotation = annotations[content_id] || {}
 
-    const layoutData = data || annotation[layout_id] || []
+    const layoutData = layout_data || annotation[layout_id] || []
 
     const layout = handlerFn({
       layout: layoutData,
@@ -87,6 +87,7 @@ const sideEffects = {
   add: ({
     content_id,
     layout_id,
+    layout_data,
     type,
     data,
     rowIndex = -1,
@@ -134,6 +135,7 @@ const sideEffects = {
     await dispatch(actions.update({
       content_id,
       layout_id,
+      layout_data,
       handler: 'insertRow',
       params: {
         rowIndex,
@@ -152,13 +154,13 @@ const sideEffects = {
   edit: ({
     content_id,
     layout_id,
-    layout,
+    layout_data,
     rowIndex,
     cellIndex,
   }) => wrapper('edit', async (dispatch, getState) => {
     const websiteId = websiteSelectors.websiteId(getState())
     const settings = settingsSelectors.settings(getState())
-    const cell = layout[rowIndex][cellIndex]
+    const cell = layout_data[rowIndex][cellIndex]
     if(!cell) throw new Error(`no cell found`)
     const widget = library.widgets[cell.type]
     if(!widget) throw new Error(`widget ${cell.type} not found`)
@@ -197,6 +199,7 @@ const sideEffects = {
     await dispatch(actions.update({
       content_id,
       layout_id,
+      layout_data,
       handler: 'updateCell',
       params: {
         rowIndex,
@@ -216,6 +219,7 @@ const sideEffects = {
   delete: ({
     content_id,
     layout_id,
+    layout_data,
     rowIndex,
     cellIndex,
   }) => wrapper('delete', async (dispatch, getState) => {
@@ -232,6 +236,7 @@ const sideEffects = {
     await dispatch(actions.update({
       content_id,
       layout_id,
+      layout_data,
       handler: 'deleteCell',
       params: {
         rowIndex,
@@ -246,6 +251,7 @@ const sideEffects = {
   move: ({
     content_id,
     layout_id,
+    layout_data,
     rowIndex,
     cellIndex,
     direction,
@@ -254,6 +260,7 @@ const sideEffects = {
     await dispatch(actions.update({
       content_id,
       layout_id,
+      layout_data,
       handler: 'moveCell',
       params: {
         rowIndex,
@@ -268,14 +275,14 @@ const sideEffects = {
   swapRow: ({
     content_id,
     layout_id,
-    data,
+    layout_data,
     sourceIndex,
     targetIndex,
   }) => wrapper('swapRow', async (dispatch, getState) => {
     await dispatch(actions.update({
       content_id,
       layout_id,
-      data,
+      layout_data,
       handler: 'swapRow',
       params: {
         sourceIndex,
@@ -318,6 +325,7 @@ const sideEffects = {
     location = 'document',
     content_id,
     layout_id,
+    layout_data,
     rowIndex = -1,
   }) => wrapper('addWidget', async (dispatch, getState) => {
     const result = await dispatch(actions.getWidget({
@@ -335,6 +343,7 @@ const sideEffects = {
     dispatch(actions.add({
       content_id,
       layout_id,
+      layout_data,
       type,
       data,
       rowIndex,

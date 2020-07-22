@@ -11,6 +11,8 @@ import library from '../../library'
 
 import useSectionSelector from './useSectionSelector'
 
+const DEFAULT_ARRAY = []
+
 const useSectionEditor = ({
   section,
   content_id,
@@ -33,15 +35,21 @@ const useSectionEditor = ({
     section,
   })
 
+  const layout_data = annotation && annotation[layout_id] ?
+    annotation[layout_id] :
+    DEFAULT_ARRAY
+
   const onAddWidget = useCallback(() => {
     actions.onWidgetAdd({
       location: 'section',
       content_id,
       layout_id,
+      layout_data,
     })
   }, [
     content_id,
     layout_id,
+    layout_data,
   ])
 
   const onOpenSettings = useCallback(() => {

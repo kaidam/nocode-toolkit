@@ -125,9 +125,9 @@ const EditableCell = ({
     onEdit,
     getMenuItems,
   } = useCellEditor({
-    layout,
     content_id,
     layout_id,
+    layout_data: layout,
     simpleMovement,
     rowIndex,
     cellIndex,

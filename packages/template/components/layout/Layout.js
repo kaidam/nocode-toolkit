@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
 const Layout = ({
   content_id,
   layout_id,
-  data,
+  layout_data,
   simpleMovement,
   divider,
   editable = true,
@@ -29,7 +29,7 @@ const Layout = ({
   } = useLayoutCellRenderer({
     content_id,
     layout_id,
-    data,
+    layout_data,
     simpleMovement,
     editable,
   })

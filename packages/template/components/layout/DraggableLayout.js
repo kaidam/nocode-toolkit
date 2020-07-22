@@ -16,10 +16,10 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const LayoutEditor = ({
+const DraggableLayout = ({
   content_id,
   layout_id,
-  data,
+  layout_data,
   simpleMovement,
   simpleEditor,
   divider,
@@ -39,7 +39,7 @@ const LayoutEditor = ({
   } = useLayoutCellRenderer({
     content_id,
     layout_id,
-    data,
+    layout_data,
     simpleMovement,
     simpleEditor,
     editable,
@@ -52,14 +52,13 @@ const LayoutEditor = ({
     actions.onLayoutSwapRow({
       content_id,
       layout_id,
+      layout_data,
       sourceIndex,
       targetIndex,
-      data,
     })
   }
 
-  const useLayout = data || layout
-  if(!useLayout || useLayout.length <= 0) return null
+  if(!layout || layout.length <= 0) return null
 
   const droppable = (
     <Droppable droppableId={`layout-${content_id}`}>
@@ -69,7 +68,7 @@ const LayoutEditor = ({
           ref={provided.innerRef}
         >
           {
-            useLayout.map((row, i) => {
+            layout.map((row, i) => {
               const rowId = row[0].id
 
               return (
@@ -125,4 +124,4 @@ const LayoutEditor = ({
   )
 }
 
-export default LayoutEditor
+export default DraggableLayout

@@ -80,12 +80,13 @@ const EditLayoutDialog = ({
     if (!result.destination || !result.source) return
 
     // normal drag to re-order
-    if(result.destination.droppableId == result.source.droppableId && result.destination.droppableId == 'layout') {
+    if(result.destination.droppableId == result.source.droppableId && result.destination.droppableId == `layout-${node.id}`) {
       const sourceIndex = result.source.index
       const targetIndex = result.destination.index
       actions.onLayoutSwapRow({
         content_id: node.id,
         layout_id: 'layout',
+        layout_data: layout,
         sourceIndex,
         targetIndex,
         data: layout,
@@ -114,7 +115,7 @@ const EditLayoutDialog = ({
                 <DraggableLayout
                   content_id={ node.id }
                   layout_id="layout"
-                  data={ layout }
+                  layout_data={ layout }
                   withContext={ false }
                 />
               </Paper>

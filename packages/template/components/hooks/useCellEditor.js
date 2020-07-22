@@ -19,9 +19,9 @@ const MoveIcon = icons.move
 
 */
 const useCellEditor = ({
-  layout,
   content_id,
   layout_id,
+  layout_data,
   simpleMovement = false,
   rowIndex,
   cellIndex,
@@ -37,7 +37,7 @@ const useCellEditor = ({
   const onEdit = () => actions.onLayoutEdit({
     content_id,
     layout_id,
-    layout,
+    layout_data,
     rowIndex,
     cellIndex,
   })
@@ -45,22 +45,27 @@ const useCellEditor = ({
   const onDelete = () => actions.onLayoutDelete({
     content_id,
     layout_id,
-    layout,
+    layout_data,
     rowIndex,
     cellIndex,
   })
 
   const getMoveMenuItems = useMoveMenu({
-    layout,
     content_id,
     layout_id,
+    layout_data,
     simpleMovement,
     rowIndex,
     cellIndex,
   })
 
+  const cell = layout_data[rowIndex][cellIndex]
+  const widget = library.widgets[cell.type]
+
   const getMenuItems = useCallback(() => {
     const moveItems = getMoveMenuItems()
+    let deletable = true
+    if(typeof(widget.deletable) === 'boolean') deletable = widget.deletable
     return [
       {
         title: 'Edit',
@@ -72,18 +77,19 @@ const useCellEditor = ({
         icon: MoveIcon,
         items: moveItems,
       } : null, 
-      {
+      deletable ? {
         title: 'Delete',
         icon: DeleteIcon,
         handler: onDelete,
-      }
+      } : null,
     ].filter(i => i)
   }, [
     getMoveMenuItems,
+    cell,
+    widget,
   ])
 
-  const cell = layout[rowIndex][cellIndex]
-  const widget = library.widgets[cell.type]
+  
 
   return {
     onEdit,

@@ -10,7 +10,7 @@ const DEFAULT_LAYOUT = []
 const useLayoutCellRenderer = ({
   content_id,
   layout_id,
-  data,
+  layout_data,
   simpleMovement,
   simpleEditor,
   editable,
@@ -18,7 +18,7 @@ const useLayoutCellRenderer = ({
 
   const annotations = useSelector(nocodeSelectors.annotations)
   const annotation = annotations[content_id] || {}
-  const layout = data || annotation[layout_id] || DEFAULT_LAYOUT
+  const layout = layout_data || annotation[layout_id] || DEFAULT_LAYOUT
   const showUI = useSelector(systemSelectors.showUI)
 
   const getCell = ({
