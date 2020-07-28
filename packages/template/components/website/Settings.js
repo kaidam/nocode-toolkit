@@ -171,18 +171,6 @@ const WebsiteSettings = ({
   const initialTab = withRouter ? (params.section || tabs[0].id) : tabs[0].id
   const [ tab, setTab ] = useState(initialTab)
 
-  const isOwner = website && website.id != 'new' && website.collaboration_type == 'owner'
-
-  useEffect(() => {
-    if(websiteId == 'new') return
-    if(website && website.collaboration_type != 'owner') {
-      dispatch(snackbarActions.setError(`access denied`))
-      dispatch(routerActions.navigateTo('website.list'))
-    }
-  }, [
-    website,
-  ])
-
   const onChangeTab = useCallback((section) => {
     if(withRouter) {
       dispatch(routerActions.addQueryParams({section}))
@@ -203,25 +191,6 @@ const WebsiteSettings = ({
       <div className={ classes.loading }>
         <Loading />
       </div>
-    )
-  }
-
-  if(!isOwner) {
-    return (
-      <div>
-        <div className={ classes.container }>
-          <Grid container spacing={ 0 }>
-            <Grid item xs={ 6 }>
-              <Paper className={ classes.paper }>
-                <WebsiteForm
-                  new
-                  onCancel={ onCancel }
-                />
-              </Paper>
-            </Grid>
-          </Grid>
-        </div>
-      </div> 
     )
   }
 

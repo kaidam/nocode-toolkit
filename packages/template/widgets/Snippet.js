@@ -16,7 +16,7 @@ const Render = ({
   if(!snippet) return null
   return (
     <HTML
-      html={ snippet.code }
+      html={ snippet.data.html }
     />
   )
 }

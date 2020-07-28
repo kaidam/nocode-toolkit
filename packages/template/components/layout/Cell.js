@@ -71,7 +71,7 @@ const Cell = ({
   const classes = useStyles(settings)
   const widget = widgets[cell.type]
   const Renderer = widget ? widget.Render : UnknownTypeRenderer
-
+  
   let renderedContent = Renderer({
     data: cell.data,
     cell: {
@@ -81,6 +81,20 @@ const Cell = ({
       cellIndex,
     },
   })
+
+  if(!widget) {
+    return (
+      <div
+        className={ classes.root }
+      >
+        <span className={ classes.defaultContent }>
+          {
+            `no widget found: ${cell.type}`
+          }
+        </span>
+      </div>
+    )
+  }
 
   if(editable) {
     if(!renderedContent || widget.editablePlaceHolder) {

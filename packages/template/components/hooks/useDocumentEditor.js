@@ -83,7 +83,7 @@ const useDocumentEditor = ({
     onOpenSettings,
     getAddMenu,
     onAddWidget,
-    onEditLayout: actions.onEditLayout,
+    onEditLayout: () => actions.onEditLayout(),
   }
 }
 

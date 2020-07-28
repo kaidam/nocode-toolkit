@@ -98,24 +98,24 @@ const fileSnippets = createSelector(
 const headSnippetCode = createSelector(
   globalSnippets,
   (snippets) => snippets
-    .filter(snippet => snippet.headCode)
-    .map(snippet => snippet.headCode)
+    .filter(snippet => snippet.data.head)
+    .map(snippet => snippet.data.head)
     .join("\n")
 )
 
 const beforeBodySnippetCode = createSelector(
   globalSnippets,
   (snippets) => snippets
-    .filter(snippet => snippet.beforeBodyCode)
-    .map(snippet => snippet.beforeBodyCode)
+    .filter(snippet => snippet.data.before_body)
+    .map(snippet => snippet.data.before_body)
     .join("\n")
 )
 
 const afterBodySnippetCode = createSelector(
   globalSnippets,
   (snippets) => snippets
-    .filter(snippet => snippet.afterBodyCode)
-    .map(snippet => snippet.afterBodyCode)
+    .filter(snippet => snippet.data.after_body)
+    .map(snippet => snippet.data.after_body)
     .join("\n")
 )
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
@@ -110,8 +110,13 @@ const EditLayoutDialog = ({
     onAddWidget: layoutActions.add,
   })
 
+  
   const layoutWindow = useSelector(layoutSelectors.layoutWindow)
   const layouts = useSelector(websiteSelectors.websiteLayouts)
+
+  const onClose = useCallback(() => {
+    actions.onClose()
+  })
 
   const onUpdateLayoutId = id => {
     actions.onChangeLayoutTemplate({
@@ -158,7 +163,7 @@ const EditLayoutDialog = ({
       noScroll
       noActions
       size="lg"
-      onCancel={ actions.onClose }
+      onCancel={ onClose }
     >
       <DragDropContext onDragEnd={ onDragEnd }>
         <div className={ classes.root }>
@@ -227,7 +232,7 @@ const EditLayoutDialog = ({
             <div className={ classes.sidebarFooter }>
               <Button
                 variant="contained"
-                onClick={ actions.onClose }
+                onClick={ onClose }
               >
                 Close
               </Button>
