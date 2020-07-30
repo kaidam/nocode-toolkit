@@ -16,6 +16,7 @@ import dialogActions from '../../store/modules/dialog'
 import snackbarActions from '../../store/modules/snackbar'
 import dialogSelectors from '../../store/selectors/dialog'
 import jobSelectors from '../../store/selectors/job'
+import publishSelectors from '../../store/selectors/publish'
 import websiteSelectors from '../../store/selectors/website'
 
 import FacebookIcon from '@material-ui/icons/Facebook'
@@ -118,7 +119,7 @@ const SummaryDialog = ({
 
   const dialogParams = useSelector(dialogSelectors.dialogParams)
   const config = useSelector(websiteSelectors.config)
-  const publishStatus = useSelector(jobSelectors.publishStatus)
+  const publishStatus = useSelector(publishSelectors.publishStatus)
   const job = useSelector(jobSelectors.data)
   const isOpen = dialogParams && dialogParams.name == 'publishSummary' ? true : false
 
@@ -160,7 +161,7 @@ const SummaryDialog = ({
     publishStatus.meta.urls &&
     publishStatus.meta.urls.length > 0
   ) {
-    url = publishStatus.meta.urls[0]
+    url = publishStatus.meta.urls[process.env.NODE_ENV == 'production' ? 0 : publishStatus.meta.urls.length - 1]
   }
 
   if(!url) {

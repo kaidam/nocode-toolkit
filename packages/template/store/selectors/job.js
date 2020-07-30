@@ -13,7 +13,7 @@ const NETWORK_NAMES = networkProps('job', [
 
 const data = state => state.job.data
 const list = state => state.job.list
-const publishStatus = state => state.job.publishStatus
+const publishStatus = state => state.publish.publishStatus
 const id = state => state.job.id
 
 const status = createSelector(

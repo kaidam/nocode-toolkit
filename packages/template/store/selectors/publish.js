@@ -1,4 +1,4 @@
-const publishStatus = state => state.job.publishStatus
+const publishStatus = state => state.publish.publishStatus
 
 const selectors = {
   publishStatus,
