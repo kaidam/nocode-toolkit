@@ -41,7 +41,7 @@ const tags = {
 const getInitialState = (data) => {
   return data ? `
     <script type="text/javascript">
-      window._nocodeInitialState = ${ JSON.stringify(data) }
+      window._nocodeInitialStateBase64 = '${new Buffer(JSON.stringify(data)).toString('base64')}'
     </script>
 ` : ''
 }

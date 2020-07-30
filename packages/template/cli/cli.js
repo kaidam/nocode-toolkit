@@ -37,6 +37,9 @@ const cli = require('yargs')
           logger: console.log,
         })
       } catch(err) {
+        if(err.response && err.response.data && err.response.data.error) {
+          console.error(loggers.error(err.response.data.error))
+        }
         errorLogger(err)
       }
     },
@@ -52,6 +55,9 @@ const cli = require('yargs')
           logger: console.log,
         })
       } catch(err) {
+        if(err.response && err.response.data && err.response.data.error) {
+          console.error(loggers.error(err.response.data.error))
+        }
         errorLogger(err)
       }
     },
@@ -67,6 +73,9 @@ const cli = require('yargs')
           logger: console.log,
         })
       } catch(err) {
+        if(err.response && err.response.data && err.response.data.error) {
+          console.error(loggers.error(err.response.data.error))
+        }
         errorLogger(err)
       }
     },

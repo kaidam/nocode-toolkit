@@ -113,7 +113,14 @@ const Data = (globals) => {
       return injectedState
     }
     else {
-      const initialState = window._nocodeInitialState || injectedState
+      let initialState = injectedState || {
+        nocode: {}
+      }
+
+      if(window._nocodeInitialStateBase64) {
+        initialState = JSON.parse(window.atob(window._nocodeInitialStateBase64))
+      }
+
       // in the case of a serverside render - the 
       // _nocodeInitialState.nocode.items
       // will be empty because it was cleared out - we populate it
