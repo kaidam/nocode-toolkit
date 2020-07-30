@@ -121,9 +121,11 @@ const waitForPublishJob = async ({
     jobId = job.jobid
   }
 
-  logger(loggers.success(`job complete`))
-  logger(loggers.info(`downloading results: ${filename}`))
-
+  if(!cachePreviewFileExists) {
+    logger(loggers.success(`job complete`))
+    logger(loggers.info(`downloading results: ${filename}`))
+  }
+  
   let collection = null
 
   if(cachePreviewFileExists) {
@@ -156,14 +158,23 @@ const publishWebsite = async ({
 }) => {
   logger(loggers.info(`building website HTML`))
 
-  const api = Api({
-    options,
-  })
+  const cachePreviewFile = options.cachePreviewFile
+  let cachePreviewFileExists = cachePreviewFile ?
+    fs.existsSync(cachePreviewFile) :
+    false
 
-  const initialState = await loadInitialState({
-    api,
-    websiteId: options.websiteId,
-  })
+  let initialState = {}
+
+  if(!cachePreviewFileExists) {
+    const api = Api({
+      options,
+    })
+
+    initialState = await loadInitialState({
+      api,
+      websiteId: options.websiteId,
+    })
+  }
 
   await Publish({
     options: Options.get({
