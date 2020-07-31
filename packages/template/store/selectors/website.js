@@ -12,7 +12,10 @@ const websites = state => state.website.websites
 const config = state => state.website.config
 const template = state => state.website.template
 const dnsInfo = state => state.website.dnsInfo
-const routerParams = state => state.router.route.params
+const routerParams = state => {
+  if(!state.router || !state.router.route) return {}
+  return state.router.route.params || {}
+}
 const nocode = state => state.nocode
 
 // works for both builder and frontend
