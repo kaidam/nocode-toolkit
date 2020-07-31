@@ -1,5 +1,6 @@
 import Render from '../components/ecommerce/Wrapper'
 import icons from '../icons'
+import ecommerceSelectors from '../store/selectors/ecommerce'
 
 const form = [{
   id: 'ecommerce',
@@ -78,4 +79,15 @@ export default {
   group: 'Plugins',
   form,
   icon: icons.shopping,
+  addHandler: (getState) => {
+    const connection = ecommerceSelectors.stripeConnectData(getState())
+    if(connection && connection.connected) return true
+    return {
+      title: 'Connect your stripe account',
+      message: `
+<p>So you can add ecommerce buttons, we need you to connect your Stripe account so you can get paid.<p>
+<p>Click the website settings button (top right) and click "ecommerce" to connect your stripe account</p>          
+`
+    }
+  },
 }

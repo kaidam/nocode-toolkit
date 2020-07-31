@@ -110,6 +110,18 @@ const sideEffects = {
       }))
       return
     }
+
+    if(widget.addHandler) {
+      const addHandlerResult = widget.addHandler(getState)
+      if(addHandlerResult !== true) {
+        dispatch(uiActions.waitForConfirmation({
+          title: addHandlerResult.title,
+          message: addHandlerResult.message,
+          hideConfirm: true,
+        }))
+        return
+      }
+    }
     
     if(widgetUtils.canEdit(widget)) {
       const newData = await dispatch(uiActions.getFormValues({
