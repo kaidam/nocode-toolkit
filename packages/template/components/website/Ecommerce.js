@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
+import FeatureGate from './FeatureGate'
 
 import routerActions from '../../store/modules/router'
 import routerSelectors from '../../store/selectors/router'
@@ -57,41 +58,43 @@ const SettingsEcommerce = ({
   ])
   
   return (
-    <Grid container spacing={ 4 }>
-      <Grid item xs={ 6 }>
-        <Paper className={ classes.paper }>
-          <Grid container spacing={ 0 }>
-            <Grid item xs={ 12 }>
-              <Typography variant="h6" gutterBottom>Ecommerce</Typography>
-            </Grid>
-            <Grid item xs={ 12 }>
-              {
-                stripeConnectData ? (
-                  <div>
-                    <div className={ classes.tick }>✔</div>
-                    <Typography>
-                      Your Stripe account is now connected and you can add payment buttons!
-                    </Typography>
-                  </div>
-                ) : (
-                  <div>
-                    <Typography>
-                      If you want to take payments, you must first <strong>connect your stripe account</strong>
-                    </Typography>
-                    <div
-                      className={ classes.stripeButton }
-                      onClick={ onConnect }
-                    >
-                      <img src={ IMAGE_URL } />
+    <FeatureGate feature="ecommerce">
+      <Grid container spacing={ 4 }>
+        <Grid item xs={ 6 }>
+          <Paper className={ classes.paper }>
+            <Grid container spacing={ 0 }>
+              <Grid item xs={ 12 }>
+                <Typography variant="h6" gutterBottom>Ecommerce</Typography>
+              </Grid>
+              <Grid item xs={ 12 }>
+                {
+                  stripeConnectData ? (
+                    <div>
+                      <div className={ classes.tick }>✔</div>
+                      <Typography>
+                        Your Stripe account is now connected and you can add payment buttons!
+                      </Typography>
                     </div>
-                  </div>
-                )
-              }
+                  ) : (
+                    <div>
+                      <Typography>
+                        If you want to take payments, you must first <strong>connect your stripe account</strong>
+                      </Typography>
+                      <div
+                        className={ classes.stripeButton }
+                        onClick={ onConnect }
+                      >
+                        <img src={ IMAGE_URL } />
+                      </div>
+                    </div>
+                  )
+                }
+              </Grid>
             </Grid>
-          </Grid>
-        </Paper>
+          </Paper>
+        </Grid>
       </Grid>
-    </Grid>
+    </FeatureGate>
   )
 }
 

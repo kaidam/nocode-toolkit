@@ -60,6 +60,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
   },
   container: {
+    height: '100%',
     padding: theme.spacing(4),
   },
   paper: {

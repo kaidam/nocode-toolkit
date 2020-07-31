@@ -8,6 +8,7 @@ import IconButton from '@material-ui/core/IconButton'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 
+import FeatureGate from './FeatureGate'
 import FormControl from '@material-ui/core/FormControl'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import RadioGroup from '@material-ui/core/RadioGroup'
@@ -188,7 +189,7 @@ const SettingsSecurity = ({
   }]
 
   return (
-    <>
+    <FeatureGate feature="passwords">
       <Grid container spacing={ 4 }>
         <Grid item xs={ 12 } sm={ 12 } md={ 6 }>
           <Paper className={ classes.paper }>
@@ -348,7 +349,7 @@ const SettingsSecurity = ({
           </DeleteConfirm>
         )
       }
-    </>
+    </FeatureGate>
   )
 }
 

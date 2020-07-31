@@ -9,6 +9,7 @@ import Grid from '@material-ui/core/Grid'
 import TextField from '@material-ui/core/TextField'
 import Typography from '@material-ui/core/Typography'
 
+import FeatureGate from './FeatureGate'
 import SimpleTable from '../table/SimpleTable'
 import DeleteConfirm from '../dialog/DeleteConfirm'
 import FormDialog from '../form/Dialog'
@@ -171,7 +172,7 @@ const SettingsDomains = ({
   })
 
   return (
-    <>
+    <FeatureGate feature="domain">
       <Grid container spacing={ 4 }>
         <Grid item xs={ 12 } sm={ 12 } md={ 6 }>
           <Paper className={ classes.paper }>
@@ -297,7 +298,7 @@ const SettingsDomains = ({
           </DeleteConfirm>
         )
       }
-    </>
+    </FeatureGate>
   )
 }
 
