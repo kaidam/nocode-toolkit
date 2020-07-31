@@ -12,6 +12,7 @@ import LayoutDialog from '../layout/EditLayoutDialog'
 import PublishDialog from '../publish/PublishDialog'
 import PublishSummaryDialog from '../publish/SummaryDialog'
 import PublishHistoryDialog from '../publish/HistoryDialog'
+import UpgradeDialog from '../ui/UpgradeWindow'
 import HelpDialog from '../system/HelpDialog'
 import library from '../../library'
 
@@ -32,6 +33,7 @@ const DialogLoader = ({
       <FormWindowDialog />
       <UnsplashDialog />
       <HelpDialog />
+      <UpgradeDialog />
       {
         library.autoSnackbar && (
           <SnackBar />

@@ -15,6 +15,7 @@ export const website = {
 export const ui = {
   loading: false,
   confirmWindow: null,
+  upgradeWindow: null,
   previewMode: false,
   scrollToCurrentPage: true,
   settingsOpen: false,

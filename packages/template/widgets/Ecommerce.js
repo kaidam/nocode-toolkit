@@ -74,6 +74,7 @@ export default {
   description: 'Allow visitors to purchase things from your website',
   Render,
   locations: ['document', 'section'],
+  feature: 'ecommerce',
   group: 'Plugins',
   form,
   icon: icons.shopping,

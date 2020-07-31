@@ -49,6 +49,21 @@ const websiteData = createSelector(
   }
 )
 
+const websiteFeatures = createSelector(
+  websiteData,
+  (website) => {
+    const features = website.features || {}
+    return Object.keys(features).reduce((all, key) => {
+      const entry = features[key]
+      let value = entry.value
+      if(value == 'on') value = true
+      else if(value == 'off') value = false
+      all[key] = value
+      return all
+    }, {})
+  }
+)
+
 const websiteMeta = createSelector(
   websiteData,
   (data) => data && data.meta ? data.meta : DEFAULT_OBJECT
@@ -159,6 +174,7 @@ const selectors = {
   dnsInfo,
   websiteData,
   websiteMeta,
+  websiteFeatures,
   homepage,
   websiteList,
   ownedWebsiteList,

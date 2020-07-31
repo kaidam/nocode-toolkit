@@ -16,6 +16,9 @@ import globals from '../../utils/globals'
 const prefix = 'ui'
 
 const reducers = {
+  setUpgradeWindow: (state, action) => {
+    state.upgradeWindow = action.payload
+  },
   setConfirmWindow: (state, action) => {
     state.confirmWindow = action.payload
   },

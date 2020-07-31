@@ -18,6 +18,7 @@ export default {
   description: 'Show a form visitors can use to get in touch',
   Render,
   locations: ['document', 'section'],
+  feature: 'forms',
   group: 'Plugins',
   form,
   icon: icons.contact,

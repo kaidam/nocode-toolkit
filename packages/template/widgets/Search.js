@@ -229,6 +229,7 @@ export default {
   Render: Search,
   description: 'A search form that will search the content of your website',
   locations: ['document', 'section'],
+  feature: 'search',
   group: 'Plugins',
   icon: icons.search,
   editable: false,

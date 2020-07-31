@@ -101,6 +101,16 @@ const sideEffects = {
     const settings = settingsSelectors.settings(getState())
     const widget = library.widgets[type]
     if(!widget) throw new Error(`widget ${type} not found`)
+
+    const features = websiteSelectors.websiteFeatures(getState())
+
+    if(widget.feature && !features[widget.feature]) {
+      dispatch(uiActions.setUpgradeWindow({
+        title: `Add ${widget.title}`,
+      }))
+      return
+    }
+    
     if(widgetUtils.canEdit(widget)) {
       const newData = await dispatch(uiActions.getFormValues({
         tabs: widgetUtils.getFormTabs({
