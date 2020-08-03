@@ -111,6 +111,7 @@ const UnsplashDialog = ({
   ])
 
   const leftButtons = useMemo(() => {
+    if(!items || items.length <= 0) return null
     return (
       <React.Fragment>
         <Button
@@ -133,6 +134,7 @@ const UnsplashDialog = ({
     )
   }, [
     movePage,
+    items,
   ])
 
   return (

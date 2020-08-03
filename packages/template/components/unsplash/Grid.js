@@ -1,10 +1,11 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography'
+import GridList from '@material-ui/core/GridList'
+import GridListTile from '@material-ui/core/GridListTile'
+import GridListTileBar from '@material-ui/core/GridListTileBar'
+import IconButton from '@material-ui/core/IconButton'
 import icons from '../../icons'
 
 const AddIcon = icons.add
@@ -35,6 +36,16 @@ const UnsplashGrid = ({
 }) => {
 
   const classes = useStyles()
+
+  if(!items || items.length <= 0) {
+    return (
+      <div className={ classes.root }>
+        <Typography variant="body1">
+          Enter a search query to find images to add...
+        </Typography>
+      </div>
+    )
+  }
 
   return (
     <div className={ classes.root }>
