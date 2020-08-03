@@ -57,6 +57,8 @@ const NavbarSettings = ({
   contrast,
   focusRef,
   align,
+  getAddItems,
+  withSettings,
 }) => {
   const classes = useStyles({
     vertical,
@@ -73,14 +75,11 @@ const NavbarSettings = ({
     setIsMenuOpen(false)
   })
 
-  const {    
-    getAddItems,
-    onOpenSettings,
-    getAllItems,
-  } = useSectionEditor({
+  const sectionEditor = useSectionEditor({
     section,
     content_id: `section:${section}`,
     layout_id: 'widgets',
+    getAddItems,
   })
   
   const getAddButton = useCallback((onClick) => {
@@ -121,20 +120,24 @@ const NavbarSettings = ({
     <>
       <Hidden smDown implementation="css">
         <div className={ classes.bigroot }>
-          <Button
-            className={ classes.button }
-            size="small"
-            classes={{
-              label: classes.buttonLabel,
-            }}
-            onClick={ onOpenSettings }
-          >
-            <SettingsIcon className={ classes.icon } />&nbsp;&nbsp;Settings
-          </Button>
+          {
+            withSettings && (
+              <Button
+                className={ classes.button }
+                size="small"
+                classes={{
+                  label: classes.buttonLabel,
+                }}
+                onClick={ sectionEditor.onOpenSettings }
+              >
+                <SettingsIcon className={ classes.icon } />&nbsp;&nbsp;Settings
+              </Button>
+            )
+          }
           <MenuButton
             asFragment
             getButton={ getAddButton }
-            getItems={ getAddItems }
+            getItems={ sectionEditor.getAddItems }
             onOpen={ onOpenMenu }
             onClose={ onCloseMenu }
           />
@@ -143,7 +146,7 @@ const NavbarSettings = ({
       <Hidden mdUp implementation="css">
         <MenuButton
           getButton={ getSettingsButton }
-          getItems={ getAllItems }
+          getItems={ withSettings ? sectionEditor.getAllItems : sectionEditor.getAddItems }
           onOpen={ onOpenMenu }
           onClose={ onCloseMenu }
         />
@@ -162,19 +165,3 @@ const NavbarSettings = ({
 }
 
 export default NavbarSettings
-
-
-/* <MenuButton
-        getButton={ getSettingsButton }
-        getItems={ getAllItems }
-        anchorOrigin={{
-          horizontal: 'right',
-          vertical: 'top',
-        }}
-        transformOrigin={{
-          horizontal: 'right',
-          vertical: 'top',
-        }}
-        onOpen={ onOpenMenu }
-        onClose={ onCloseMenu }
-      /> */

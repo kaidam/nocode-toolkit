@@ -10,6 +10,7 @@ import Sorting from './Sorting'
 import MakeHomepage from './MakeHomepage'
 import HiddenItems from './HiddenItems'
 import DriveFolders from './DriveFolders'
+import Tags from './Tags'
 
 const fields = {
   text: TextField,
@@ -25,6 +26,7 @@ const fields = {
   hiddenItems: HiddenItems,
   makeHomepage: MakeHomepage,
   driveFolders: DriveFolders,
+  tags: Tags,
 }
 
 export const defaultValues = {

@@ -53,7 +53,7 @@ const NocodeLink = ({
     if(url) return url
     if(path) return path
     const route = routeMap[name]
-    return route.path
+    return route ? route.path : '/'
   }, [
     name,
     path,

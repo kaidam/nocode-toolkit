@@ -64,6 +64,7 @@ const sideEffects = {
     title,
     driver,
     form,
+    type,
     section,
     parentId,
   }) => wrapper('createContent', async (dispatch, getState) => {
@@ -83,12 +84,19 @@ const sideEffects = {
         size: 'sm',
         fullHeight: false,
       },
-      onSubmit: (data) => handlers.post(`/content/${websiteId}/${driver}`, {
-        type: form,
-        section,
-        parentId,
-        data,
-      })
+      onSubmit: async (data) => {
+        const annotation = Object.assign({}, data.annotation, {
+          form,
+          type,
+        })
+        const res = await handlers.post(`/content/${websiteId}/${driver}`, {
+          type: type || form,
+          section,
+          parentId,
+          data: Object.assign({}, data, {annotation})
+        })
+        return res
+      }
     }))
     if(result) {
       await dispatch(jobActions.reload())

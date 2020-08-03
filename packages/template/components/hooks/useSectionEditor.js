@@ -18,6 +18,7 @@ const useSectionEditor = ({
   content_id,
   layout_id,
   withWidgets,
+  getAddItems,
 }) => {
 
   const actions = Actions(useDispatch(), {
@@ -60,7 +61,15 @@ const useSectionEditor = ({
     section,
   ])
 
-  const getAddItems = useCallback(() => {
+  const getAddItemsHandler = useCallback(() => {
+
+    if(getAddItems) {
+      return getAddItems({
+        onCreateContent: actions.onCreateContent,
+        onImportContent: actions.onImportContent,
+        addTargetFolderId,
+      })
+    }
 
     const newDocumentHandler = () => actions.onCreateContent({
       title: 'Create Document',
@@ -117,6 +126,7 @@ const useSectionEditor = ({
       } : null,
     ].filter(i => i)
   }, [
+    getAddItems,
     addTargetFolderId,
     withWidgets,
     onAddWidget,
@@ -128,7 +138,7 @@ const useSectionEditor = ({
       {
         title: 'Add',
         icon: icons.add,
-        items: getAddItems(),
+        items: getAddItemsHandler(),
       },
 
       {
@@ -141,14 +151,14 @@ const useSectionEditor = ({
     ].filter(i => i)
   }, [
     section,
-    getAddItems,
+    getAddItemsHandler,
     onOpenSettings,
   ])
   
   return {
     node,
     annotation,
-    getAddItems,
+    getAddItems: getAddItemsHandler,
     getAllItems,
     onOpenSettings,
   }

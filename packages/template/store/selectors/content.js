@@ -441,6 +441,28 @@ const breadcrumbs = createSelector(
   },
 )
 
+// get an array of unique values by merging an array
+// prop of all annotations
+// used for example for blogpost tags
+const mergedAnnotationArray = () => createSelector(
+  nocodeSelectors.annotations,
+  (_, field) => field,
+  (annotations, field) => {
+    const valueMap = Object
+      .keys(annotations)
+      .reduce((all, id) => {
+        const annotation = annotations[id]
+        const value = annotation[field]
+        if(!value) return all
+        value.forEach(v => {
+          all[v] = true
+        })
+        return all
+      }, {})
+    return Object.keys(valueMap)
+  }
+)
+
 const selectors = {
   sectionTree,
   sectionHiddenItems,
@@ -453,6 +475,7 @@ const selectors = {
   routeBaseLocation,
   routeChildren,
   breadcrumbs,
+  mergedAnnotationArray,
 }
 
 export default selectors

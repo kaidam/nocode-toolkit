@@ -42,8 +42,10 @@ const NavBarSection = ({
   vertical,
   align = 'left',
   editable = true,
+  withSettings = true,
   isItemActive,
   className,
+  getAddItems,
 }) => {
   const classes = useStyles({
     vertical,
@@ -65,6 +67,8 @@ const NavBarSection = ({
           vertical,
           focusRef,
           align,
+          getAddItems,
+          withSettings,
         }}
       />
     </div>
