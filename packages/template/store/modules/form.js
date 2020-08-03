@@ -136,7 +136,14 @@ const sideEffects = {
         size: 'sm',
         fullHeight: false,
       },
-      onSubmit: (data) => handlers.put(`/content/${websiteId}/${driver}/${content_id}`, data)
+      onSubmit: async (data) => {
+        const finalAnnotation = Object.assign({}, annotation, data.annotation)
+        const finalData = Object.assign({}, data, {
+          annotation: finalAnnotation,
+        })
+        const res = await handlers.put(`/content/${websiteId}/${driver}/${content_id}`, finalData)
+        return res
+      }
     }))
     if(result) {
       await dispatch(jobActions.reload())
