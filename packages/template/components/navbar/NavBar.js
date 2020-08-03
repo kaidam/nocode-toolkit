@@ -47,10 +47,12 @@ const NavBar = ({
   contrast,
   vertical,
   align,
-  withHome,
 
   // the name of the section this navbar is for
   section,
+  items,
+  editable,
+  isItemActive,
 }) => {
 
   const classes = useStyles({
@@ -61,6 +63,13 @@ const NavBar = ({
   const treeSelector = useMemo(contentSelectors.sectionTree, [])
   const navbarItems = useSelector(state => treeSelector(state, section))
   const showUI = useSelector(systemSelectors.showUI)
+
+  const useNavbarItems = useMemo(() => {
+    return items ? items : navbarItems
+  }, [
+    items,
+    navbarItems,
+  ])
 
   if(small) {
     const getButton = useCallback((onClick) => {
@@ -81,7 +90,7 @@ const NavBar = ({
       return (
         <Suspense>
           <NavBarDropdownUI
-            children={ navbarItems }
+            children={ useNavbarItems }
             getButton={ getButton }
           />
         </Suspense>
@@ -90,7 +99,7 @@ const NavBar = ({
     else {
       return (
         <NavBarDropdown
-          children={ navbarItems }
+          children={ useNavbarItems }
           getButton={ getButton }
         />
       )
@@ -104,24 +113,28 @@ const NavBar = ({
         <NavBarItem
           key={ i }
           showUI={ showUI }
+          editable={ editable }
           node={ node }
           contrast={ contrast }
           vertical={ vertical }
           align={ align }
+          isItemActive={ isItemActive }
         />
       )
     }, [
       showUI,
+      editable,
       contrast,
       vertical,
       align, 
+      isItemActive,
     ])
 
-    return showUI ? (
+    return showUI && editable ? (
       <Suspense>
         <DraggableNavBar
           section={ section }
-          items={ navbarItems }
+          items={ useNavbarItems }
           contrast={ contrast }
           vertical={ vertical }
           align={ align }
@@ -132,7 +145,7 @@ const NavBar = ({
       <nav>
         <ul className={ classes.navbar }>
           {
-            navbarItems.map(getNavbarItem)
+            useNavbarItems.map(getNavbarItem)
           }
         </ul>
       </nav>

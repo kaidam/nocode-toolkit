@@ -24,6 +24,7 @@ import nocodeSelectors from '../../store/selectors/nocode'
 const NocodeLink = ({
   path,
   name,
+  params,
   url,
   children,
   onClick,
@@ -40,7 +41,7 @@ const NocodeLink = ({
     e.stopPropagation()
     e.nativeEvent.stopImmediatePropagation()
     const routeName = name || utils.routePathToName(path)
-    dispatch(routerActions.navigateTo(routeName))
+    dispatch(routerActions.navigateTo(routeName, params))
     if(onClick) onClick(e)
     return false
   }, [

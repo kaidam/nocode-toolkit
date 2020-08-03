@@ -129,6 +129,8 @@ const NavBarItem = ({
   contrast,
   align = 'left',
   vertical,
+  editable,
+  isItemActive,
 }) => {
 
   const [ isHovered, setIsHovered ] = useState(false)
@@ -164,7 +166,11 @@ const NavBarItem = ({
 
   const ancestors = useSelector(contentSelectors.fullRouteAncestors)
 
-  const isNodeActive = ancestors.find(ancestor => ancestor.node && ancestor.node.id == node.id)
+  const isNodeActive = isItemActive ?
+    isItemActive({
+      node,
+    }) : 
+    ancestors.find(ancestor => ancestor.node && ancestor.node.id == node.id)
 
   const itemClass = classnames({
     [classes.item]: true,
@@ -249,7 +255,7 @@ const NavBarItem = ({
             onClose={ onCloseMenu }
           />
           {
-            (isHovered || isMenuOpen) && (
+            editable && (isHovered || isMenuOpen) && (
               <Suspense>
                 <NavBarItemButton
                   node={ node }
@@ -345,6 +351,7 @@ const NavBarItem = ({
         } :
         {
           name: node.route.name,
+          params: node.route.params,
         }
 
       if(node.type == 'link' && node.url.indexOf('code:') == 0) {
@@ -372,7 +379,7 @@ const NavBarItem = ({
             { node.name }
           </LinkComponent>
           {
-            (isHovered || isMenuOpen) && (
+            editable && (isHovered || isMenuOpen) && (
               <Suspense>
                 <NavBarItemButton
                   node={ node }

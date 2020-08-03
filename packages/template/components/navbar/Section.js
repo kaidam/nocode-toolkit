@@ -37,10 +37,12 @@ const useStyles = makeStyles(theme => ({
 const NavBarSection = ({
   small,
   section,
+  items,
   contrast,
   vertical,
-  align,
-  withHome,
+  align = 'left',
+  editable = true,
+  isItemActive,
   className,
 }) => {
   const classes = useStyles({
@@ -62,6 +64,7 @@ const NavBarSection = ({
           contrast,
           vertical,
           focusRef,
+          align,
         }}
       />
     </div>
@@ -74,21 +77,34 @@ const NavBarSection = ({
     >
       <NavBar
         section={ section }
+        items={ items }
+        editable={ editable }
         small={ small }
         contrast={ contrast }
         vertical={ vertical }
         align={ align }
-        withHome={ withHome }
+        isItemActive={ isItemActive }
       />
     </div>
+  )
+
+  const renderContent = align == 'left' ? (
+    <>
+      { editor }
+      { content }
+    </>
+  ) : (
+    <>
+      { content }
+      { editor }
+    </>
   )
 
   return (
     <div
       className={ rootClassname }
     >
-      { editor }
-      { content }
+      { renderContent }
     </div>
   )
 }

@@ -35,7 +35,6 @@ const DraggableNavBar = ({
   vertical,
   align,
   getNavbarItem,
-
 }) => {
   
   const classes = useStyles({
