@@ -1,5 +1,6 @@
 import React from 'react'
 import Link from '../components/widgets/Link'
+import UnsplashCopyright from '../components/widgets/UnsplashCopyright'
 import icons from '../icons'
 
 const SIZES = {
@@ -27,50 +28,14 @@ const Render = ({
 
   const useSize = SIZES[size] || SIZES.default
   
-  let copyrightContent = null
+  const copyrightContent = (
+    <UnsplashCopyright
+      unsplash={ unsplash }
+      withWrapper={ copyrightBelow ? false : true }
+    />
+  )
 
-  if(unsplash) {
-    const {
-      user: {
-        fullname,
-        username,
-      }
-    } = unsplash
-
-    copyrightContent = (
-      <div>
-        image by <a
-          style={{
-            color: '#000000',
-          }}
-          target="_blank"
-          href={`http://unsplash.com/@${username}?utm_source=nocode&utm_medium=referral`}
-        >{ fullname }</a> on <a
-          style={{
-            color: '#000000',
-          }}
-          target="_blank"
-          href="https://unsplash.com/?utm_source=nocode&utm_medium=referral"
-        >Unsplash</a>
-      </div>
-    )
-  }
-
-  const copyright = copyrightContent && !copyrightBelow ? (
-    <div
-      style={{
-        position: 'absolute',
-        bottom: '15px',
-        right: '10px',
-        backgroundColor: 'rgba(255,255,255,0.7)',
-        padding: '7px',
-        fontSize: '0.8em',
-      }}
-    >
-      { copyrightContent }
-    </div>
-  ) : null
-
+  const copyrightInImageContent = copyrightBelow ? null : copyrightContent
   const copyrightBelowContent = copyrightBelow ? copyrightContent : null
 
   const img = (
@@ -102,7 +67,7 @@ const Render = ({
         }}
       >
         { imageContent }
-        { copyright }
+        { copyrightInImageContent }
       </div>
       { copyrightBelowContent }
     </div>

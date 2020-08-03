@@ -17,6 +17,7 @@ const Layout = ({
   children,
   head,
   favicon,
+  titleField = 'company_name',
   material = false,
 }) => {
 
@@ -35,7 +36,7 @@ const Layout = ({
   return (
     <React.Fragment>
       <Header
-        title={ settings.company_name || 'Nocode Website' } 
+        title={ settings[titleField] || 'Nocode Website' } 
       > 
         <meta name="description" content={ settings.description } />
         <meta name="keywords" content={ settings.keywords } />

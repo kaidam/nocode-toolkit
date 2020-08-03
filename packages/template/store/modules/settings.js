@@ -54,37 +54,6 @@ const sideEffects = {
     dispatch(dialogActions.close('settings'))
     dispatch(snackbarActions.setSuccess(`settings updated`))
   }),
-
-  // use to edit things that live in the settings
-  // data but have their own forms
-  // (like logo + copyright)
-  editSettingsSection: ({
-    form,
-    title,
-  } = {}) => wrapper('editSettingsSection', async (dispatch, getState) => {
-    const values = settingsSelectors.settings(getState())
-    const result = await dispatch(contentActions.waitForForm({
-      forms: [form],
-      values,
-      formWindowConfig: {
-        title,
-        size: 'sm',
-        fullHeight: false,
-      },
-      onSubmit: async (data) => {
-        await dispatch(contentActions.saveContent({
-          content_id: 'settings',
-          location: 'singleton:settings',
-          data,
-        }))
-        return data
-      }
-    }))
-    if(!result) return
-    await dispatch(jobActions.reload())
-    dispatch(snackbarActions.setSuccess(`settings updated`))
-  }),
-
   
 }
 

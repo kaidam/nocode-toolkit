@@ -1,15 +1,19 @@
 import { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import Actions from '../../utils/actions'
 import driveUtils from '../../utils/drive'
 import icons from '../../icons'
 
+import nocodeSelectors from '../../store/selectors/nocode'
 import layoutActions from '../../store/modules/layout'
 import formActions from '../../store/modules/form'
 
 const useDocumentEditor = ({
   node,
 }) => {
+
+  const annotations = useSelector(nocodeSelectors.annotations)
+  const annotation = annotations[node.id] || {}
 
   const actions = Actions(useDispatch(), {
     onCreateContent: formActions.createContent,
@@ -36,14 +40,20 @@ const useDocumentEditor = ({
   ])
 
   const onOpenSettings = useCallback(() => {
+
+    const form = annotation && annotation.form ?
+      annotation.form :
+      `drive.${node.type || 'folder'}`
+
     actions.onEditContent({
       title: `Edit ${(node.type || 'folder').replace(/^\w/, st => st.toUpperCase())}`,
       driver: 'drive',
-      form: `drive.${node.type || 'folder'}`,
+      form,
       content_id: node.id,
     })
   }, [
     node,
+    annotation,
   ])
 
   const getAddMenu = useCallback(() => {

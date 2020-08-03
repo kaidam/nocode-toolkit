@@ -66,6 +66,7 @@ const EditableDocumentToolbar = ({
   className,
   layouts,
   small,
+  borderTop,
 }) => {
   const classes = useStyles()
   const context = useContext(OnboardingContext)
@@ -155,7 +156,7 @@ const EditableDocumentToolbar = ({
 
   if(small) {
     return (
-      <Toolbar>
+      <Toolbar borderTop={ borderTop }>
         <div className={ className }>
           <div className={ classes.container } ref={ editButtonRef }>
             <MenuButton
@@ -169,7 +170,7 @@ const EditableDocumentToolbar = ({
   }
   else {
     return (
-      <Toolbar>
+      <Toolbar borderTop={ borderTop }>
         <div className={ className }>
           <div className={ classes.container }>
             <div className={ classes.left }>

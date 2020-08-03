@@ -204,6 +204,47 @@ const sideEffects = {
     hideLoading: true,
   }),
 
+
+  // use the settings as a generic store for data
+  // for things that don't appear in the global settings UI
+  // but are saved there
+  editSettingsPrefix: ({
+    schema,
+    prefix,
+    values,
+    title = 'Edit Settings',
+    size = 'sm',
+  } = {}) => wrapper('editSettingsPrefix', async (dispatch, getState) => {
+    const websiteId = websiteSelectors.websiteId(getState())
+    const settings = settingsSelectors.settings(getState())
+    await dispatch(uiActions.getFormValues({
+      tabs: [{
+        id: 'settingsPrefix',
+        title: 'Settings Prefix',
+        schema,
+      }],
+      values,
+      config: {
+        title,
+        showLoading: true,
+        size,
+        fullHeight: false,
+      },
+      onSubmit: async (data) => {
+        const settingsUpdate = Object.assign({}, settings, {
+          [prefix]: data,
+        })
+        await dispatch(websiteActions.updateMeta(websiteId, {settings: settingsUpdate}, {
+          snackbar: true,
+          snackbarTitle: `${title} updated`,
+        }))
+      }
+    }))
+  }, {
+    hideLoading: true,
+  }),
+
+
 }
 
 const reducer = CreateReducer({

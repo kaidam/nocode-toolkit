@@ -1,6 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
@@ -8,20 +7,8 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import Checkbox from '@material-ui/core/Checkbox'
-import ButtonList from '../../widgets/ButtonList'
 
-import Actions from '../../../utils/actions'
-import contentActions from '../../../store/modules/content'
 import contentSelectors from '../../../store/selectors/content'
-import icons from '../../../icons'
-
-const HideIcon = icons.hide
-
-const useStyles = makeStyles(theme => ({
-  hiddenRoot: {
-    border: '1px solid #cccccc',
-  },
-}))
 
 const TagsEditor = ({
   field: {
@@ -33,8 +20,6 @@ const TagsEditor = ({
   },
   item,
 }) => {
-  const classes = useStyles()
-
   const storeTagSelector = useMemo(contentSelectors.mergedAnnotationArray, [])
   const storeTagData = useSelector(state => storeTagSelector(state, item.field || 'tags'))
   const allTags = useMemo(() => {
@@ -86,12 +71,12 @@ const TagsEditor = ({
         </Typography>
       </Grid>
       <Grid item xs={ 12 }>
-        <div className={ classes.tags }>
+        <div>
           {
             allTags.map((tag, i) => {
               const checked = value.indexOf(tag) >= 0
               return (
-                <div className={ classes.tag } key={ tag }>
+                <div key={ tag }>
                   <FormControlLabel
                     control={
                       <Checkbox
