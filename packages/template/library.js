@@ -20,6 +20,7 @@ const library = {
   onboarding: {
     steps: [],
   },
+  initialise: null,
 }
 
 export default library

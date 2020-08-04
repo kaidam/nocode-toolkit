@@ -143,8 +143,8 @@ const ImageField = ({
   const buttons = useMemo(() => {
 
     const local = {
-      title: 'Choose File',
-      help: 'Upload an image from your computer',
+      title: 'Upload File',
+      help: 'Upload an file from your computer',
       icon: icons.upload,
       handler: onOpenUploader,
     }

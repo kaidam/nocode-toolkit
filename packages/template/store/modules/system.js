@@ -8,7 +8,6 @@ import {
 import library from '../../library'
 import globals from '../../utils/globals'
 import networkWrapper from '../utils/networkWrapper'
-import apiUtils from '../utils/api'
 
 import jobActions from './job'
 import publishActions from './publish'
@@ -86,6 +85,12 @@ const sideEffects = {
 
     // if we have a preview job, let's wait for it
     await dispatch(jobActions.waitForPreviewJob())
+
+    // if the template has an initialise function call it
+
+    if(library.initialise) {
+      await library.initialise(dispatch, getState)
+    }
 
     // now activate the UI
     dispatch(uiActions.setLoading(false))

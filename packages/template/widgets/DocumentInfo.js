@@ -22,7 +22,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const Render = ({
-  
+  children,
 }) => {
 
   const classes = useStyles()
@@ -51,6 +51,7 @@ const Render = ({
           </>
         )
       }
+      { children }
     </div>
   )
 }
