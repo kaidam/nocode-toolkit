@@ -124,6 +124,8 @@ const uploadFiles = async ({
         url: api.getApiUrl(`/templates/${name}/upload/${version}`),
         headers: api.getAuthHeaders(),
         data: archive,
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity
       })
 
       resolve()
