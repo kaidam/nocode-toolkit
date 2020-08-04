@@ -43,11 +43,11 @@ const sectionTree = () => createSelector(
             route,
             currentPage: currentRoute.item == node.id,
             annotation: annotations[id],
-            children: getChildren({
+            children: node.children && node.children.length > 0 ? getChildren({
               parentId: id,
               location: `node:${id}`,
               childIds: node.children,
-            })
+            }) : [],
           })
         })
     }
@@ -56,6 +56,7 @@ const sectionTree = () => createSelector(
       nodes,
       locations,
     })
+
     return getChildren({
       parentId: `section:${name}`,
       location: `section:${name}`,

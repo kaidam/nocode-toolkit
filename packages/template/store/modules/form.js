@@ -100,9 +100,15 @@ const sideEffects = {
     }))
     if(result) {
       await dispatch(jobActions.reload())
+      if(library.hooks.createContent) {
+        await library.hooks.createContent({
+          dispatch,
+          getState,
+          item: result,
+        })
+      }
       dispatch(snackbarActions.setSuccess(`content created`))
     }
-    
   }, {
     hideLoading: true,
   }),

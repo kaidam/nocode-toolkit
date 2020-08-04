@@ -21,6 +21,7 @@ const library = {
     steps: [],
   },
   initialise: null,
+  hooks: {},
 }
 
 export default library
