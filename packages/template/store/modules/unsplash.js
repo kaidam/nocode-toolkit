@@ -43,6 +43,19 @@ const reducers = {
   },
 }
 
+const processUnsplashItem = (item) => ({
+  url: item.urls.regular,
+  unsplash: {
+    image: {
+      id: item.id,
+    },
+    user: {
+      fullname: item.user.name,
+      username: item.user.username,
+    }
+  }
+})
+
 const sideEffects = {
 
   // get a list of content from a remote driver under parent
@@ -84,8 +97,35 @@ const sideEffects = {
     }
     dispatch(uiActions.setLoading(false))
     dispatch(actions.clearWindow())
-    return result
+    return processUnsplashItem(result)
   },
+
+  getRandomImage: ({
+    query,
+    size = 'landscape',
+  }) => wrapper('getRandomImage', async (dispatch, getState) => {
+    const websiteId = websiteSelectors.websiteId(getState())
+    const websiteData = websiteSelectors.websiteData(getState())
+
+    const getImage = (query) => handlers.get(`/remote/${websiteId}/unsplash/random`, null, {
+      params: {
+        query,
+        size,
+      }
+    })
+
+    let randomImage = await getImage(query)
+
+    if(randomImage.errors && randomImage.errors.length > 0) {
+      randomImage = await getImage(websiteData.name)
+    }
+
+    if(randomImage.errors && randomImage.errors.length > 0) {
+      randomImage = await getImage('website')
+    }
+
+    return processUnsplashItem(randomImage)
+  }),
 
 }
 

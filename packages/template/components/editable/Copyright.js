@@ -16,55 +16,40 @@ const useStyles = makeStyles(theme => {
       alignItems: 'center',
       //marginTop: theme.spacing(2),
     },
-    copyrightText: {
+    copyrightText: ({color}) => ({
       // marginLeft: theme.spacing(2),
       // marginRight: theme.spacing(2),
-      color: theme.palette.primary.contrastText,
-    },
+      color: color == 'light' ?
+        theme.palette.primary.contrastText :
+        '#666'
+    }),
     editButton: {
       //marginRight: theme.spacing(2),
     },
-    editIcon: {
-      color: theme.palette.primary.contrastText,
-    }
+    editIcon: ({color}) => ({
+      // marginLeft: theme.spacing(2),
+      // marginRight: theme.spacing(2),
+      color: color == 'light' ?
+        theme.palette.primary.contrastText :
+        '#666'
+    }),
   }
 })
 
-const autoCopyrightMessage = ({
-  company_name,
-}) => {
-  return `© ${new Date().getFullYear()} ${company_name}`
-}
+const autoCopyrightMessage = title => `© ${new Date().getFullYear()} ${title || ''}`
 
 const Copyright = ({
-  
+  color = 'light',
+  field = 'company_name',
 }) => {
-  const classes = useStyles()
+  const classes = useStyles({
+    color,
+  })
   const settings = useSelector(settingsSelectors.settings)
   const showUI = useSelector(systemSelectors.showUI)
 
-  const {
-    copyright_mode,
-    company_name,
-    copyright_message,
-  } = settings
+  const value = autoCopyrightMessage(settings[field])
 
-  let value = ''
-
-  if(copyright_mode == 'none' && showUI) {
-    value = 'copyright message disabled'
-  }
-  else if(copyright_mode == 'auto' || !copyright_mode) {
-    value = autoCopyrightMessage({
-      company_name,
-    })
-  }
-  else if(copyright_mode == 'manual') {
-    value = copyright_message
-  }
-
-  value = value.replace(/\d{4}/, new Date().getFullYear())
-  
   const content = (
     <div className={ classes.container }>
       <Typography

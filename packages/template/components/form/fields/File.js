@@ -78,11 +78,12 @@ const ImageField = ({
   },
   form: {
     setFieldValue,
+    values,
   },
   item,
 }) => {
   const classes = useStyles()
-  
+
   const uploadInProgress = useSelector(fileuploadSelectors.inProgress)
   const uploadStatus = useSelector(fileuploadSelectors.status)
   const syncLoading = useSelector(fileuploadSelectors.loading.syncFiles)
@@ -94,6 +95,7 @@ const ImageField = ({
     reset: fileuploadActions.reset,
     getDriveItem: driveActions.getDriveItem,
     getUnsplashItem: unsplashActions.getUnsplashItem,
+    getRandomUnsplashItem: unsplashActions.getRandomImage,
   })
 
   const {
@@ -140,6 +142,17 @@ const ImageField = ({
     setFieldValue(name, image)
   }, [])
 
+  const onChooseRandomUnsplashImage = useCallback(async () => {
+    const query = values[item.random_query_field]
+    const image = await actions.getRandomUnsplashItem({
+      query,
+    })
+    setFieldValue(name, image)
+  }, [
+    values,
+    item,
+  ])
+
   const buttons = useMemo(() => {
 
     const local = {
@@ -163,6 +176,13 @@ const ImageField = ({
       handler: onChooseUnsplashImage,
     }
 
+    const randomUnsplash = {
+      title: 'Random',
+      help: 'Choose a random image from Unsplash',
+      icon: icons.unsplash,
+      handler: onChooseRandomUnsplashImage,
+    }
+
     return [
       !item.providers || item.providers.indexOf('local') >= 0 ?
         local :
@@ -172,6 +192,9 @@ const ImageField = ({
         null,
       !item.providers || item.providers.indexOf('unsplash') >= 0 ?
         unsplash :
+        null,
+      item.random_query_field && item.providers && item.providers.indexOf('unsplash_random') >= 0 ?
+        randomUnsplash :
         null,
       !item.noReset ? {
         title: 'Reset',
@@ -197,6 +220,7 @@ const ImageField = ({
         )
       })
   }, [
+    onChooseRandomUnsplashImage,
     onResetValue,
   ])
 

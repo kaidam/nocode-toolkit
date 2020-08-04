@@ -63,18 +63,7 @@ const UnsplashGrid = ({
                 onClick={ (e) => {
                   e.preventDefault()
                   e.stopPropagation()
-                  onSelectItem({
-                    url: item.urls.regular,
-                    unsplash: {
-                      image: {
-                        id: item.id,
-                      },
-                      user: {
-                        fullname: item.user.name,
-                        username: item.user.username,
-                      }
-                    }
-                  })
+                  onSelectItem(item)
                 }}
               >
                 <img src={ item.urls.thumb } alt={ 'test' } />

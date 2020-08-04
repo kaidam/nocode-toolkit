@@ -62,6 +62,7 @@ const IconMap = {
 }
 
 const Render = ({
+  getEmptyContent,
 }) => {
   
   const classes = useStyles()
@@ -70,7 +71,7 @@ const Render = ({
 
   const data = settings.social_links || {}
 
-  const links = LINKS
+  let links = LINKS
     .filter(item => data[item.key] ? true : false)
     .map((item, i) => {
       const value = data[item.key]
@@ -82,12 +83,17 @@ const Render = ({
       const socialClasses = classnames(classes.smIcon, classes[item.icon])
       return (
         <div className={ classes.icon } key={ i }>
-          <a href={ url }>
+          <a href={ url } target="_blank">
             <Icon className={ socialClasses } />
           </a>
         </div>
       )
     })
+
+  if(links.length <= 0 && getEmptyContent) {
+    links = getEmptyContent()
+  }
+
   return (
     <div className={ classes.container }>
       {

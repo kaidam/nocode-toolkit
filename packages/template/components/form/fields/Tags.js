@@ -20,6 +20,7 @@ const TagsEditor = ({
   },
   item,
 }) => {
+
   const storeTagSelector = useMemo(contentSelectors.mergedAnnotationArray, [])
   const storeTagData = useSelector(state => storeTagSelector(state, item.field || 'tags'))
   const allTags = useMemo(() => {
@@ -70,7 +71,7 @@ const TagsEditor = ({
           { item.helperText }
         </Typography>
       </Grid>
-      <Grid item xs={ 12 }>
+      <Grid item xs={ 6 }>
         <div>
           {
             allTags.map((tag, i) => {
@@ -96,15 +97,14 @@ const TagsEditor = ({
           }
         </div>
       </Grid>
-      <Grid item xs={ 9 }>
+      <Grid item xs={ 6 }>
         <TextField
-          label="Add New Tag"
+          label="New Tag"
           fullWidth
           value={ newTag }
           onChange={ onChangeNewTag }
         />
-      </Grid>
-      <Grid item xs={ 3 }>
+        <div style={{height:'20px'}}></div>
         <Button
           variant="contained"
           size="small"
@@ -113,7 +113,6 @@ const TagsEditor = ({
           Add New Tag
         </Button>
       </Grid>
-      
     </Grid>
   )
 }

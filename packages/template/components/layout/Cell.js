@@ -101,7 +101,7 @@ const Cell = ({
       renderedContent = (
         <span className={ classes.defaultContent }>
           {
-            widget.editablePlaceHolder || `no content found`
+            widget.editablePlaceHolder || `click to edit content`
           }
         </span>
       )

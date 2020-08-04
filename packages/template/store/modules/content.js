@@ -17,6 +17,8 @@ import nocodeActions from './nocode'
 import snackbarActions from './snackbar'
 import routerActions from './router'
 
+import library from '../../library'
+
 import { content as initialState } from '../initialState'
 import {
   GOOGLE_DOUBLE_BUBBLE_RELOAD_DELAY,
@@ -131,6 +133,14 @@ const sideEffects = {
       reload: true,
       snackbarMessage: `${name} hidden`,
     }))
+
+    if(library.hooks.hideContent) {
+      await library.hooks.hideContent({
+        dispatch,
+        getState,
+        id,
+      })
+    }
   }, {
     hideLoading: true,
   }),
@@ -236,6 +246,7 @@ const sideEffects = {
 
   importContent: ({
     section,
+    annotation,
     listFilter,
     addFilter,
   }) => wrapper('importContent', async (dispatch, getState) => {
@@ -246,7 +257,17 @@ const sideEffects = {
     }))
     if(!result) return
     await handlers.post(`/section/${websiteId}/${section}/import`, result)
+    if(annotation) {
+      await handlers.put(`/annotation/${websiteId}/${result.id}`, annotation)
+    }
     await dispatch(jobActions.rebuild())
+    if(library.hooks.importContent) {
+      await library.hooks.importContent({
+        dispatch,
+        getState,
+        item: result,
+      })
+    }
     dispatch(snackbarActions.setSuccess(`content added`))
   }),
 
@@ -270,24 +291,16 @@ const sideEffects = {
     await handlers.delete(`/section/${websiteId}/${section}/import/${content_id}`)
     await dispatch(routerActions.navigateTo('root'))
     await dispatch(jobActions.rebuild())
+    if(library.hooks.removeSectionContent) {
+      await library.hooks.removeSectionContent({
+        dispatch,
+        getState,
+        id: content_id,
+      })
+    }
     dispatch(snackbarActions.setSuccess(`content removed`))
   }, {
     hideLoading: true,
-  }),
-
-  getRandomContent: ({
-    driver,
-    query,
-    size,
-  }) => wrapper('getRandomContent', async (dispatch, getState) => {
-    const websiteId = websiteSelectors.websiteId(getState())
-    const result = await handlers.get(`/remote/${websiteId}/${driver}/random`, null, {
-      params: {
-        query,
-        size,
-      }
-    })
-    return result
   }),
 
 }

@@ -150,7 +150,7 @@ const forms = {
           ],
         }
       }],
-    },{
+    }, {
       id: 'actions',
       title: 'Actions',
       schema: [{

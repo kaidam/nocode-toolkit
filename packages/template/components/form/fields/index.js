@@ -8,6 +8,7 @@ import ColorPickerField from './ColorPickerField'
 import File from './File'
 import Sorting from './Sorting'
 import MakeHomepage from './MakeHomepage'
+import HideItem from './HideItem'
 import HiddenItems from './HiddenItems'
 import DriveFolders from './DriveFolders'
 import Tags from './Tags'
@@ -25,6 +26,7 @@ const fields = {
   sorting: Sorting,
   hiddenItems: HiddenItems,
   makeHomepage: MakeHomepage,
+  hideItem: HideItem,
   driveFolders: DriveFolders,
   tags: Tags,
 }
