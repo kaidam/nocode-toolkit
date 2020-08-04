@@ -275,6 +275,21 @@ const sideEffects = {
     hideLoading: true,
   }),
 
+  getRandomContent: ({
+    driver,
+    query,
+    size,
+  }) => wrapper('getRandomContent', async (dispatch, getState) => {
+    const websiteId = websiteSelectors.websiteId(getState())
+    const result = await handlers.get(`/remote/${websiteId}/${driver}/random`, null, {
+      params: {
+        query,
+        size,
+      }
+    })
+    return result
+  }),
+
 }
 
 const reducer = CreateReducer({
