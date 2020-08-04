@@ -153,6 +153,13 @@ const sideEffects = {
     }))
     if(result) {
       await dispatch(jobActions.reload())
+      if(library.hooks.editContent) {
+        await library.hooks.editContent({
+          dispatch,
+          getState,
+          item: result,
+        })
+      }
       dispatch(snackbarActions.setSuccess(`content updated`))
     }
   }, {
