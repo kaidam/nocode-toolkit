@@ -17,6 +17,7 @@ const ServerConfig = (options) => {
   const webpackConfig = {
     mode: 'production',
     target: 'node',
+    devtool: 'source-map',
     context: projectFolder,
     entry: entryPointServer,
     output: {

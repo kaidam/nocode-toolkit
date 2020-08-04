@@ -86,11 +86,11 @@ const addCli = (cli) => {
     .option('debug-build', {
       describe: 'don\'t minify server code (for debugging)',
     })
-    .option('preview-file', {
-      describe: 'use an existing preview file',
+    .option('save-preview-file', {
+      describe: 'save the build data into a local file',
     })
-    .option('cache-preview-file', {
-      describe: 'save the job results to a local file',
+    .option('use-preview-file', {
+      describe: 'use the build data in a local file',
     })
     .option('build', {
       describe: 'Build the template before doing a preview?',

@@ -69,80 +69,59 @@ const waitForPublishJob = async ({
   })
 
   let jobId = new Date().getTime()
-  let filename = options.previewFile
+  let filename = ''
 
-  const cachePreviewFile = options.cachePreviewFile
-  let cachePreviewFileExists = cachePreviewFile ?
-    fs.existsSync(cachePreviewFile) :
-    false
+  
+  logger(loggers.info(`creating remote publish job`))
+  const { id } = await createJob({
+    websiteId: options.websiteId,
+    api,
+  })
+  logger(loggers.info(`job created: ${id}`))
 
-  if(!filename && !cachePreviewFileExists) {
+  let job = await loadJob({
+    api,
+    websiteId: options.websiteId,
+    id
+  })
+  let fromLogId = ''
 
-    logger(loggers.info(`creating remote publish job`))
-    const { id } = await createJob({
-      websiteId: options.websiteId,
-      api,
-    })
-    logger(loggers.info(`job created: ${id}`))
-
-    let job = await loadJob({
-      api,
-      websiteId: options.websiteId,
-      id
-    })
-    let fromLogId = ''
-
-    while(job.status == 'created' || job.status == 'running') {
-      job = await loadJob({
-        api,
-        websiteId: options.websiteId,
-        id,
-        fromLogId,
-      })
-      if(job.fromLogId) {
-        fromLogId = job.fromLogId
-        logger(job.logs.join("\n"))
-      }
-      await Promise.delay(1000)
-    }
-
+  while(job.status == 'created' || job.status == 'running') {
     job = await loadJob({
       api,
       websiteId: options.websiteId,
       id,
       fromLogId,
     })
-
-    if(job.status == 'error') {
-      throw new Error(job.result.error)
+    if(job.fromLogId) {
+      fromLogId = job.fromLogId
+      logger(job.logs.join("\n"))
     }
-
-    filename = job.result.filename
-    jobId = job.jobid
+    await Promise.delay(1000)
   }
 
-  if(!cachePreviewFileExists) {
-    logger(loggers.success(`job complete`))
-    logger(loggers.info(`downloading results: ${filename}`))
+  job = await loadJob({
+    api,
+    websiteId: options.websiteId,
+    id,
+    fromLogId,
+  })
+
+  if(job.status == 'error') {
+    throw new Error(job.result.error)
   }
+
+  filename = job.result.filename
+  jobId = job.jobid
   
-  let collection = null
-
-  if(cachePreviewFileExists) {
-    const cacheData = fs.readFileSync(cachePreviewFile, 'utf8')
-    collection = JSON.parse(cacheData)
-  }
-  else {
-    collection = await loadResults({
-      api,
-      websiteId: options.websiteId,
-      filename,
-    })
-
-    if(cachePreviewFile) {
-      fs.writeFileSync(cachePreviewFile, JSON.stringify(collection), 'utf8')
-    }
-  }
+  logger(loggers.success(`job complete`))
+  logger(loggers.info(`downloading results: ${filename}`))
+  
+  const collection = await loadResults({
+    api,
+    websiteId: options.websiteId,
+    filename,
+  })
 
   collection.config.cacheId = jobId
 
@@ -155,17 +134,11 @@ const publishWebsite = async ({
   options,
   collection,
   logger,
+  initialState,
 }) => {
   logger(loggers.info(`building website HTML`))
 
-  const cachePreviewFile = options.cachePreviewFile
-  let cachePreviewFileExists = cachePreviewFile ?
-    fs.existsSync(cachePreviewFile) :
-    false
-
-  let initialState = {}
-
-  if(!cachePreviewFileExists) {
+  if(!initialState) {
     const api = Api({
       options,
     })
@@ -192,6 +165,7 @@ const publishWebsite = async ({
     concurrency: 5,
   })
   logger(loggers.success(`your website has been built in the ${options.publishPath} folder`))
+  return initialState
 }
 
 const serveWebsite = ({
@@ -225,19 +199,40 @@ const Preview = async ({
       logger,
     })
   }
-  
-  const collection = await waitForPublishJob({
-    options,
-    logger,
-  })
 
-  await publishWebsite({
+  let collection = null
+  let initialState = null
+
+  if(options.usePreviewFile) {
+    if(!fs.existsSync(options.usePreviewFile)) {
+      throw new Error(`preview file does not exist: ${options.usePreviewFile}`)
+    }
+    const previewData = JSON.parse(fs.readFileSync(options.usePreviewFile, 'utf8'))
+    collection = previewData.collection
+    initialState = previewData.initialState
+  }
+  else {
+    collection = await waitForPublishJob({
+      options,
+      logger,
+    })
+  }
+
+  initialState = await publishWebsite({
     options: Object.assign({}, options, {
       cacheId: collection.config.cacheId,
     }),
     collection,
     logger,
+    initialState,
   })
+
+  if(options.savePreviewFile) {
+    fs.writeFileSync(options.savePreviewFile, JSON.stringify({
+      collection,
+      initialState,
+    }), 'utf8')
+  }
 
   if(options.serve) {
     serveWebsite({

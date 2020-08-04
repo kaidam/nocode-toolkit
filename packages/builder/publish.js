@@ -216,7 +216,7 @@ const Publish = async ({
         },
       })
     } catch(e) {
-      throw new Error(routerError || e)
+      throw routerError || e
     }
 
     // turn the render results into a string
