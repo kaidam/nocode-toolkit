@@ -8,7 +8,6 @@ import MenuButton from '../widgets/MenuButton'
 import FocusElementOverlay from '../widgets/FocusElementOverlay'
 import OnboardingContext from '../contexts/onboarding'
 import useSectionEditor from '../hooks/useSectionEditor'
-import useIconButton from '../hooks/useIconButton'
 
 import icons from '../../icons'
 const SettingsIcon = icons.settings
@@ -65,6 +64,7 @@ const NavbarSettings = ({
     contrast,
     align,
   })
+  const navbarRef = useRef(null)
   const context = useContext(OnboardingContext)
   const [ isMenuOpen, setIsMenuOpen ] = useState(false)
   const onOpenMenu = useCallback(() => {
@@ -116,10 +116,20 @@ const NavbarSettings = ({
     classes
   ])
 
+  useEffect(() => {
+    context.setFocusElements({
+      [`navbar_${section}_${small ? 'small' : 'full'}`]: {
+        id: `navbar_${section}`,
+        ref: navbarRef,
+        padding: 10,
+      },
+    })
+  }, [])
+
   return (
     <>
       <Hidden smDown implementation="css">
-        <div className={ classes.bigroot }>
+        <div className={ classes.bigroot } ref={ navbarRef }>
           {
             withSettings && (
               <Button
