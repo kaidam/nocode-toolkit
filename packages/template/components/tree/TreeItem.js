@@ -159,7 +159,10 @@ const TreeItem = ({
     rightIcon = (
       <FolderIcon
         className={ colorClassname }
-        onClick={ eventUtils.cancelEventHandler(onOpenItem) }
+        onClick={ (e) => {
+          eventUtils.cancelEvent(e)
+          onOpenItem()
+        }}
       />
     )
   }
