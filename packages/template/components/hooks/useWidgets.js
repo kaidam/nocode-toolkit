@@ -26,7 +26,7 @@ const useWidgets = ({
       .concat(snippets.map(snippet => {
         return {
           id: 'snippet',
-          globalId: `snippet-${snippet.id}`,
+          globalId: `composite:snippet:${snippet.id}`,
           title: snippet.data.name,
           description: `Render the ${snippet.data.name} snippet`,
           locations: ['document', 'section'],

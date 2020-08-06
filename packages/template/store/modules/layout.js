@@ -99,6 +99,15 @@ const sideEffects = {
   }) => wrapper('add', async (dispatch, getState) => {
     const websiteId = websiteSelectors.websiteId(getState())
     const settings = settingsSelectors.settings(getState())
+
+    const processed = widgetUtils.processNewWidget({
+      type,
+      data,
+    })
+
+    type = processed.type
+    data = processed.data
+    
     const widget = library.widgets[type]
     if(!widget) throw new Error(`widget ${type} not found`)
 

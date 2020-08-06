@@ -83,6 +83,31 @@ const getCellDataValue = ({
   }
 }
 
+// snippets need "composite" types
+// e.g. snippet:<id>
+// the "type" is snippet but we need
+// to inject the data of {id}
+const processNewWidget = ({
+  type,
+  data,
+}) => {
+  if(type.indexOf('composite:') < 0) {
+    return {
+      type,
+      data,
+    }
+  }
+
+  const [ _, compositeType, compositeId ] = type.split(':')
+
+  return {
+    type: compositeType,
+    data: {
+      id: compositeId,
+    }
+  }
+}
+
 const utils = {
   canEdit,
   filterSettingsTabs,
@@ -91,6 +116,7 @@ const utils = {
   getWebsiteSettingsValue,
   getCellDataValue,
   mergeSettings,
+  processNewWidget,
 }
 
 export default utils
