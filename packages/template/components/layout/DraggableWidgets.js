@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 const DraggableWidgets = ({
-  
+  onWidgetClick,
 }) => {
   const classes = useStyles()
 
@@ -87,6 +87,11 @@ const DraggableWidgets = ({
                               { ...provided.draggableProps }
                               { ...provided.dragHandleProps }
                               style={ provided.draggableProps.style }
+                              onClick={ () => {
+                                onWidgetClick({
+                                  type: widget.globalId,
+                                })
+                              } }
                             >
                               <Tooltip title={ widget.description }>
                                 <Card

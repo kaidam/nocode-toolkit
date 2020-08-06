@@ -159,6 +159,18 @@ const EditLayoutDialog = ({
     
   }
 
+  const onWidgetClick = ({
+    type,
+  }) => {
+    actions.onAddWidget({
+      content_id: node.id,
+      layout_id: 'layout',
+      layout_data: layout,
+      type,
+      rowIndex: layout.length,
+    })
+  }
+
   if(!layoutWindow) return null
 
   return (
@@ -216,7 +228,9 @@ const EditLayoutDialog = ({
                       </Typography>
                     </div>
                     <div className={ classes.widgetsContainer }>
-                      <DraggableWidgets />
+                      <DraggableWidgets
+                        onWidgetClick={ onWidgetClick }
+                      />
                     </div>
                   </div>
                 ) : (
