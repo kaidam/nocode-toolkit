@@ -58,6 +58,7 @@ const TreeSection = ({
     simpleMovement: true,
     simpleEditor: true,
     divider: true,
+    autoHeight: false,
   }
 
   return (

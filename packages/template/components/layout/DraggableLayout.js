@@ -9,9 +9,9 @@ import layoutActions from '../../store/modules/layout'
 import useLayoutCellRenderer from '../hooks/useLayoutCellRenderer'
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    height: '100%',
-  },
+  root: ({autoHeight}) => ({
+    height: autoHeight ? '100%' : '',
+  }),
   row: {
     display: 'flex',
     flexDirection: 'row',
@@ -28,13 +28,16 @@ const DraggableLayout = ({
   divider,
   editable = true,
   withContext = true,
+  autoHeight = true,
 }) => {
 
   const actions = Actions(useDispatch(), {
     onLayoutSwapRow: layoutActions.swapRow,
   })
 
-  const classes = useStyles()
+  const classes = useStyles({
+    autoHeight,
+  })
 
   const {
     layout,
