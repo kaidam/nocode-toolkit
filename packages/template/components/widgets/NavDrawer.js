@@ -34,6 +34,7 @@ const NavDrawer = ({
   anchor,
   icon,
   theme = {},
+  getChildren,
   ...props
 }) => {
 
@@ -68,11 +69,20 @@ const NavDrawer = ({
         onClose={ closeDrawer }
       >
         <div className={ navbarClassname }>
-          <Component
-            isNavDrawer
-            onClick={ closeDrawer }
-            {...props}
-          />
+          {
+            getChildren ? (
+              getChildren({
+                closeDrawer,
+              })
+            ) : (
+              <Component
+                isNavDrawer
+                onClick={ closeDrawer }
+                {...props}
+              />
+            )
+          }
+          
         </div>
       </Drawer>
     </React.Fragment> 

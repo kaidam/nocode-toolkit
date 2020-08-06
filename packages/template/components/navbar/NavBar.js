@@ -15,7 +15,7 @@ const DraggableNavBar = lazy(() => import(/* webpackChunkName: "ui" */ './Dragga
 
 import icons from '../../icons'
 
-const MoreVertIcon = icons.moreVert
+const MenuIcon = icons.menu
 
 const useStyles = makeStyles(theme => {
   return {
@@ -31,6 +31,7 @@ const useStyles = makeStyles(theme => {
       marginLeft: theme.spacing(vertical ? 0 : 1),
     }),
     icon: ({contrast}) => ({
+      fontSize: '1.4em',
       color: contrast ?
         theme.palette.primary.contrastText :
         theme.palette.primary.main,
@@ -79,7 +80,7 @@ const NavBar = ({
           className={ classes.iconButton }
           onClick={ onClick }
         >
-          <MoreVertIcon className={ classes.icon } fontSize="inherit" />
+          <MenuIcon className={ classes.icon } fontSize="inherit" />
         </IconButton>
       )
     }, [

@@ -13,22 +13,22 @@ const DraggableLayout = lazy(() => import(/* webpackChunkName: "ui" */ '../layou
 const DraggableTree = lazy(() => import(/* webpackChunkName: "ui" */ './DraggableTree'))
 
 const useStyles = makeStyles(theme => ({
-  root: {
-    height: '100%',
+  root: ({autoHeight}) => ({
+    height: autoHeight ? '100%' : '',
     display: 'flex',
     flexDirection: 'column',
-  },
+  }),
   header: {
     flexGrow: 0,
   },
-  contentContainer: {
-    height: '100%',
+  contentContainer: ({autoHeight}) => ({
+    height: autoHeight ? '100%' : '',
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
-    overflowY: 'auto',
+    overflowY: autoHeight ? 'auto' : '',
     overflowX: 'hidden',
-  },
+  }),
   widgets: {
     flexGrow: 0,
   },
@@ -41,9 +41,12 @@ const TreeSection = ({
   section,
   type,
   isNavDrawer,
+  autoHeight = true,
   onClick,
 }) => {
-  const classes = useStyles()
+  const classes = useStyles({
+    autoHeight,
+  })
   const showUI = useSelector(systemSelectors.showUI)
 
   const containerRef = useRef()
