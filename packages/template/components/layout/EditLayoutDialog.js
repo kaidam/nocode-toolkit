@@ -31,12 +31,15 @@ const useStyles = makeStyles(theme => ({
     overflowY: 'auto',
   },
   content: {
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
     margin: 'auto',
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
     width: '100%',
+    height: '100%',
     maxWidth: '624px',
-    minWidth: '400px',
+    minWidth: '400px', 
+    display: 'flex',
+    flexDirection: 'column',
   },
   sidebar: {
     flexGrow: 0,
@@ -64,13 +67,15 @@ const useStyles = makeStyles(theme => ({
     padding: theme.spacing(1),
     borderTop: `1px solid #ccc`,
   },
-  layout: {
+  paper: {
     padding: theme.spacing(2),
     width: '100%',
+    flexGrow: 1,
   },
   saveButtonContainer: {
     marginTop: theme.spacing(2),
     textAlign: 'right',
+    flexGrow: 0,
   },
   widgetsContainer: {
     paddingLeft: theme.spacing(2),
@@ -78,6 +83,7 @@ const useStyles = makeStyles(theme => ({
   },
   pageCaption: {
     marginBottom: theme.spacing(2),
+    flexGrow: 0,
   }
 }))
 
@@ -174,7 +180,7 @@ const EditLayoutDialog = ({
                   Click and drag widgets on the page to sort them...
                 </Typography>
               </div>
-              <Paper className={ classes.layout }>
+              <Paper className={ classes.paper }>
                 <DraggableLayout
                   content_id={ node.id }
                   layout_id="layout"

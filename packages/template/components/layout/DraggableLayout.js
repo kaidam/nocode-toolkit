@@ -9,6 +9,9 @@ import layoutActions from '../../store/modules/layout'
 import useLayoutCellRenderer from '../hooks/useLayoutCellRenderer'
 
 const useStyles = makeStyles(theme => ({
+  root: {
+    height: '100%',
+  },
   row: {
     display: 'flex',
     flexDirection: 'row',
@@ -64,6 +67,7 @@ const DraggableLayout = ({
     <Droppable droppableId={`layout-${content_id}`}>
       {(provided, snapshot) => (
         <div
+          className={ classes.root }
           {...provided.droppableProps}
           ref={provided.innerRef}
         >
