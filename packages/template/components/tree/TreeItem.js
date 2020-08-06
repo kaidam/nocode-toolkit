@@ -80,7 +80,7 @@ const TreeItem = ({
 }) => {
 
   const settings = useSelector(settingsSelectors.settings)
-  const folderPages = settings.folderPages === true
+  const folderPages = settings.folderPages === true || settings.folderPages === "yes"
 
   const [ isHovered, setIsHovered ] = useState(null)
   const [ isMenuOpen, setIsMenuOpen ] = useState(false)
@@ -182,12 +182,14 @@ const TreeItem = ({
   else linkType = 'internal'
 
   const onClickItem = useCallback(() => {
-    if(onClick) onClick()
+    const isFolderToggle = node.type == 'folder' && !folderPages
+    if(onClick) onClick({
+      isFolderToggle,
+    })
     onDisableScrollToCurrentPage()
-
     // if we do not have folder pages - we toggle the
     // folder to show the contents
-    if(node.type == 'folder' && !folderPages) {
+    if(isFolderToggle) {
       onToggleFolder(node.id)  
       return true
     }
