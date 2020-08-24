@@ -129,10 +129,6 @@ const Router = ({
     if(window.__nocodeTrackingPage) {
       router.useMiddleware(trackingMiddleware(window.__nocodeTrackingPage))
     }
-
-    if(window._nocodeTrackingInitialise) {
-      window._nocodeTrackingInitialise()
-    }
   }
 
   return router

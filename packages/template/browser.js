@@ -1,8 +1,9 @@
 import React from 'react'
+import Promise from 'bluebird'
 import { hydrate, render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { HelmetProvider } from 'react-helmet-async'
-
+import systemUtils from './utils/system'
 import Store from './store'
 
 const rootEl = document.querySelector('#_nocode_root')
@@ -28,9 +29,18 @@ const Render = ({
     we replace the router to cope with the routes potentially having updated
   
   */
-  const render = () => {
+  const render = async () => {
     const router = createRouter()
     router.start()
+
+    // give the tracking some time to settle so sentry
+    // will catch any initial rendering errors
+    if(!systemUtils.isNode) {
+      if(window._nocodeTrackingActive) {
+        await Promise.delay(1000)
+      }
+    }
+    
     renderFunction((
       <Provider store={ store }>
         <HelmetProvider>
