@@ -192,7 +192,7 @@ const NavBarItem = ({
       }
     }
     else {
-      dispatch(routerActions.navigateTo(node.route.name))
+      if(node.route) dispatch(routerActions.navigateTo(node.route.name))
     }
   }
 
@@ -349,10 +349,15 @@ const NavBarItem = ({
           href: node.url,
           target: '_external'
         } :
-        {
-          name: node.route.name,
-          params: node.route.params,
-        }
+        (
+          node.route ? {
+            name: node.route.name,
+            params: node.route.params,
+          } : {
+            name: 'root',
+            params: {},
+          }
+        )
 
       if(node.type == 'link' && node.url.indexOf('code:') == 0) {
         linkProps = {
