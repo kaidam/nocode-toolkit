@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import Typography from '@material-ui/core/Typography'
 import Link from '../widgets/Link'
 import Suspense from '../system/Suspense'
+import DefaultFolder from './DefaultFolder'
 
 import contentSelectors from '../../store/selectors/content'
 
@@ -48,7 +49,6 @@ const useStyles = makeStyles(theme => ({
 
 const FolderLayout = ({
   node,
-  DefaultFolder,
   addContentFilter,
 }) => {
   const classes = useStyles()
