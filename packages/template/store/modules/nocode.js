@@ -84,7 +84,7 @@ const sideEffects = {
       let throwError = false
 
       // this is likely a permissions error
-      if(err.response.status == 404) {
+      if(err.response && err.response.status == 404) {
 
         const documentId = id.match(/^drive:.*\.html$/) ?
           id.replace(/^drive:/, '').replace(/\.html$/, '') :
