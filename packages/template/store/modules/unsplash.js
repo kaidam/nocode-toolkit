@@ -46,18 +46,21 @@ const reducers = {
   },
 }
 
-const processUnsplashItem = (item) => ({
-  url: item.urls.regular,
-  unsplash: {
-    image: {
-      id: item.id,
-    },
-    user: {
-      fullname: item.user.name,
-      username: item.user.username,
+const processUnsplashItem = (item) => {
+  if(!item || !item.urls) return DEFAULT_IMAGE
+  return {
+    url: item.urls.regular,
+    unsplash: {
+      image: {
+        id: item.id,
+      },
+      user: {
+        fullname: item.user.name,
+        username: item.user.username,
+      }
     }
   }
-})
+}
 
 const sideEffects = {
 
