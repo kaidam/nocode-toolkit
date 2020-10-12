@@ -242,7 +242,7 @@ const EditLayoutDialog = ({
                     </div>
                     <LayoutLibrary
                       layouts={ layouts }
-                      selected={ layoutInfo.selectedLayoutId }
+                      selected={ layoutInfo ? layoutInfo.selectedLayoutId : null }
                       onSelect={ onUpdateLayoutId }
                     />
                   </div>

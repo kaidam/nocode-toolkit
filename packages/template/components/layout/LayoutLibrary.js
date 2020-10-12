@@ -29,7 +29,7 @@ const LayoutLibrary = ({
               <LayoutCard
                 id={ key }
                 data={ layouts[key] }
-                isSelected={ key == selected }
+                isSelected={ selected ? key == selected : false }
                 greyBg
                 onSelect={ onSelect }
               />
