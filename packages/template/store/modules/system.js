@@ -78,7 +78,7 @@ const sideEffects = {
     if(tokenStatus && tokenStatus.action == 'login') {
       const redirect = document.location.host == 'localhost:8000' ?
         `http://localhost/scope/${tokenStatus.name}` :
-        `${tokenStatus.name}`
+        `/scope/${tokenStatus.name}`
       document.location = redirect
       return
     }
