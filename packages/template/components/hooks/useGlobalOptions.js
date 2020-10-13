@@ -60,7 +60,7 @@ const useGlobalOptions = ({
   const getMenuItems = useCallback(() => {
     return [{
       id: 'build',
-      title: 'Build Preview',
+      title: 'Publish',
       icon: icons.send,
       iconColor: 'secondary',
       handler: actions.onPublish,
