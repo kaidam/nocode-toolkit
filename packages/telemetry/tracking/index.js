@@ -30,6 +30,8 @@ const allTrackers = {
   slack: slackTracker,
 }
 
+let hooks = []
+
 const trackers = Object.keys(allTrackers).reduce((all, name) => {
   const tracker = allTrackers[name]
   if(!tracker.isActive()) return all
@@ -44,7 +46,8 @@ const loopTrackers = fn => {
   })
 }
 
-const initialise = (params) => {
+const initialise = (params, passedHooks) => {
+  if(passedHooks) hooks = passedHooks
   loopTrackers(tracker => {
     if(!tracker.initialise) return
     tracker.initialise(params)
@@ -89,7 +92,12 @@ const trackEvent = (userid, name, params) => {
     if(!tracker.trackEvent) return
     tracker.trackEvent(userid, name, params)
   })
+  hooks.forEach(hook => {
+    hook(userid, name, params)
+  })
 }
+
+const addHook = (fn) => hooks.push(fn)
 
 module.exports = {
   initialise,
@@ -98,6 +106,7 @@ module.exports = {
   requestHandler,
   errorHandler,
   trackEvent,
+  addHook,
 }
   
 
