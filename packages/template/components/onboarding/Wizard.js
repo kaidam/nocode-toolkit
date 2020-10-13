@@ -156,6 +156,9 @@ const OnboardingWizard = ({
   }
 
   const cancelOnboarding = () => {
+    if(currentStep && currentStep.onClose) {
+      currentStep.onClose(store.dispatch, store.getState)
+    }
     setTargetStepIndex(onboardingConfig.steps.length)
   }
 
