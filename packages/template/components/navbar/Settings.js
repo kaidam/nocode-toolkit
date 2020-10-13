@@ -28,6 +28,9 @@ const useStyles = makeStyles(theme => ({
     //marginTop: theme.spacing(0.5),
     textTransform: 'none',
     textAlign: align == 'left' ? 'right' : 'left',
+    border: contrast ?
+      `1px solid rgba(255, 255, 255, 0.5)` :
+      `1px solid rgba(0, 0, 0, 0.23)`,
     color: contrast ?
       theme.palette.primary.contrastText :
       theme.palette.grey[600],
@@ -90,6 +93,7 @@ const NavbarSettings = ({
           label: classes.buttonLabel,
         }}
         size="small"
+        variant="outlined"
         onClick={ onClick }
       >
         <AddIcon className={ classes.icon } />&nbsp;&nbsp;Add
@@ -135,6 +139,7 @@ const NavbarSettings = ({
               <Button
                 className={ classes.button }
                 size="small"
+                variant="outlined"
                 classes={{
                   label: classes.buttonLabel,
                 }}
@@ -144,6 +149,7 @@ const NavbarSettings = ({
               </Button>
             )
           }
+          <div style={{height:'2px'}}></div>
           <MenuButton
             asFragment
             getButton={ getAddButton }

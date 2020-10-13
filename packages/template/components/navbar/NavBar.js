@@ -48,6 +48,7 @@ const NavBar = ({
   contrast,
   vertical,
   align,
+  float,
 
   // the name of the section this navbar is for
   section,
@@ -119,6 +120,7 @@ const NavBar = ({
           contrast={ contrast }
           vertical={ vertical }
           align={ align }
+          float={ float }
           isItemActive={ isItemActive }
         />
       )
@@ -127,7 +129,8 @@ const NavBar = ({
       editable,
       contrast,
       vertical,
-      align, 
+      align,
+      float,
       isItemActive,
     ])
 
@@ -139,6 +142,7 @@ const NavBar = ({
           contrast={ contrast }
           vertical={ vertical }
           align={ align }
+          float={ float }
           getNavbarItem={ getNavbarItem }
         />
       </Suspense>

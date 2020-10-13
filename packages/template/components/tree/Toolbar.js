@@ -75,6 +75,7 @@ const TreeToolbar = ({
         ref={ settingsRef }
         className={ classes.button }
         size="small"
+        variant="outlined"
         onClick={ onClick }
       >
         <AddIcon className={ classes.icon } />&nbsp;&nbsp;Add
@@ -101,6 +102,7 @@ const TreeToolbar = ({
           <Button
             className={ classes.button }
             size="small"
+            variant="outlined"
             onClick={ onOpenSettings }
           >
             <SettingsIcon className={ classes.icon } />&nbsp;&nbsp;Settings

@@ -41,6 +41,7 @@ const NavBarSection = ({
   contrast,
   vertical,
   align = 'left',
+  settingsAlign,
   editable = true,
   withSettings = true,
   isItemActive,
@@ -56,6 +57,8 @@ const NavBarSection = ({
   const rootClassname = classnames(classes.root, className)
   const focusRef = useRef()
 
+  const useSettingsAlign = settingsAlign || align
+
   const editor = showUI ? (
     <div className={ classes.editorContainer }>
       <Suspense
@@ -66,7 +69,7 @@ const NavBarSection = ({
           contrast,
           vertical,
           focusRef,
-          align,
+          align: useSettingsAlign,
           getAddItems,
           withSettings,
         }}
@@ -92,7 +95,7 @@ const NavBarSection = ({
     </div>
   )
 
-  const renderContent = align == 'left' ? (
+  const renderContent = useSettingsAlign == 'left' ? (
     <>
       { editor }
       { content }
