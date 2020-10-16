@@ -281,7 +281,13 @@ const Publish = async ({
     }, {concurrency: concurrency || 1})
   } catch(e) {
     externalsServer.close()
-    throw e
+    if(process.env.NOCODE_QUIT_ON_ERRORS) {
+      console.error(e.toString())
+      process.exit(1)
+    }
+    else {
+      throw e
+    }
   }
   
   externalsServer.close()
