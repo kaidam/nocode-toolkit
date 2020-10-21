@@ -162,12 +162,13 @@ const EditLayoutDialog = ({
   const onWidgetClick = ({
     type,
   }) => {
+    const useLayout = layout || []
     actions.onAddWidget({
       content_id: node.id,
       layout_id: 'layout',
-      layout_data: layout,
+      layout_data: useLayout,
       type,
-      rowIndex: layout.length,
+      rowIndex: useLayout.length,
     })
   }
 
