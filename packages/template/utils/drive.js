@@ -36,7 +36,8 @@ const getEditUrl = (item) => {
 }
 
 const getGoogleLink = (url) => {
-  return `https://accounts.google.com/ServiceLoginAuth?continue=${encodeURIComponent(url)}`
+  //return `https://accounts.google.com/ServiceLoginAuth?continue=${encodeURIComponent(url)}`
+  return url
 }
 
 const getFolderLink = (id) => {
