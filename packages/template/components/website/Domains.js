@@ -278,7 +278,7 @@ const SettingsDomains = ({
                 You can create a <strong>CNAME</strong> record that points to <strong>nocode.works</strong>
               </Typography>
               <Typography gutterBottom>
-                Or you can create an <strong>A</strong> record that points to <strong>{ ip }</strong>
+                Or you can create an <strong>A</strong> record that points to <strong>104.155.75.230</strong>
               </Typography>
             </div>
             
