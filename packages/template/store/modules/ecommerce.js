@@ -56,6 +56,7 @@ const sideEffects = {
   // use the Stripe library to redirect to the session
   //
   // the redirect URL will trigger the confirmation window
+  // we need to get the connected id from the api
   purchase: ({
     id,
     name,
