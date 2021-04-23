@@ -65,7 +65,10 @@ const sideEffects = {
   }) => wrapper('purchase', async (dispatch, getState) => {
     dispatch(uiActions.setLoading(true))
     const websiteId = websiteSelectors.websiteId(getState())
-    const { publicKey } = await handlers.get(`/plugins/ecommerce/public_key`)
+    const {
+      publicKey,
+      connectedStripeId,
+    } = await handlers.get(`/plugins/ecommerce/public_key/${websiteId}`)
     const line_items = [{
       name,
       description,
@@ -90,7 +93,9 @@ const sideEffects = {
       cancel_url,
     })
 
-    const stripe = Stripe(publicKey)
+    const stripe = Stripe(publicKey, {
+      stripeAccount: connectedStripeId,
+    })
 
     stripe.redirectToCheckout({
       sessionId: session_data.id
