@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
+import classnames from 'classnames'
 
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import List from '@material-ui/core/List'
@@ -39,7 +40,7 @@ const Folder = ({
           {...provided.droppableProps}
           ref={provided.innerRef}
         >
-          <List className={ classes.root }>
+          <List className={ classnames('nocode-tree-list', classes.root) }>
             {
               nodes.map((node, i) => {
                 const open = openFolders[node.id]

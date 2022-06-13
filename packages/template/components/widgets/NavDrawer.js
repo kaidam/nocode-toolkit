@@ -57,10 +57,11 @@ const NavDrawer = ({
   return (
     <React.Fragment>
       <IconButton 
+        className="nocode-nav-drawer-button"
         onClick={ openDrawer }
       >
         <UseIcon
-          className={ iconClassname }
+          className={ classnames('nocode-drawer-open-button-icon', iconClassname) }
         />
       </IconButton>
       <Drawer 

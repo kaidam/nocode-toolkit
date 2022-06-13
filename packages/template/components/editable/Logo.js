@@ -1,5 +1,6 @@
 import React, { lazy } from 'react'
 import { useSelector } from 'react-redux'
+import classnames from 'classnames'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import Link from '../widgets/Link'
@@ -55,17 +56,17 @@ const Logo = ({
   if(!logo_text && !logo && showUI) logo_text = 'Your Logo'
 
   const content = (
-    <div className={ classes.container }>
+    <div className={ classnames(classes.container, 'nocode-logo-container') }>
       {
         logo && logo.url && (
-          <img className={ classes.logoImage } src={ logo.url } />
+          <img className={ classnames(classes.logoImage, 'nocode-logo-image') } src={ logo.url } />
         )
       }
       {
         logo_text && (
           <Typography
             variant="h5"
-            className={ classes.logoText }
+            className={ classnames(classes.logoText, 'nocode-logo-text') }
           >
             { logo_text }
           </Typography>

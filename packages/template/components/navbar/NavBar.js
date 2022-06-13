@@ -2,6 +2,7 @@ import React, { lazy, useMemo, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import IconButton from '@material-ui/core/IconButton'
+import classnames from 'classnames'
 
 import contentSelectors from '../../store/selectors/content'
 import systemSelectors from '../../store/selectors/system'
@@ -78,10 +79,10 @@ const NavBar = ({
       return (
         <IconButton
           size="small"
-          className={ classes.iconButton }
+          className={ classnames('nocode-navbar-open-button', classes.iconButton) }
           onClick={ onClick }
         >
-          <MenuIcon className={ classes.icon } fontSize="inherit" />
+          <MenuIcon className={ classnames('nocode-navbar-open-button-icon', classes.icon) } fontSize="inherit" />
         </IconButton>
       )
     }, [
@@ -147,8 +148,8 @@ const NavBar = ({
         />
       </Suspense>
     ) : (
-      <nav>
-        <ul className={ classes.navbar }>
+      <nav className={ classnames('nocode-navbar-nav') }>
+        <ul className={ classnames('nocode-navbar-ul', classes.navbar) }>
           {
             useNavbarItems.map(getNavbarItem)
           }
