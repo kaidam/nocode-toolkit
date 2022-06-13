@@ -67,6 +67,7 @@ const sideEffects = {
   create: ({
     name,
     template,
+    options,
     layout,
   }) => wrapper('create', async (dispatch, getState) => {
     const {
@@ -77,6 +78,7 @@ const sideEffects = {
     const flatSchema = tabs.reduce((all, tab) => all.concat(tab.schema), [])
     const settings = formUtils.getInitialValues(flatSchema, {
       [websiteNameField]: name,
+      ...options,
     })
     const {
       website,
