@@ -19,12 +19,7 @@ const babelLoader = {
             'legacy': true
           },
         ],
-        [
-          '@babel/plugin-proposal-class-properties',
-          {
-            'loose': true
-          },
-        ],
+        '@babel/plugin-proposal-class-properties',
         '@babel/plugin-proposal-function-sent',
         '@babel/plugin-proposal-export-namespace-from',
         '@babel/plugin-proposal-numeric-separator',
