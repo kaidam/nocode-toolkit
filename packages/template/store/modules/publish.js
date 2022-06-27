@@ -60,7 +60,6 @@ const sideEffects = {
   publish: ({
     localModeOverride = false,
   } = {}) => wrapper('publish', async (dispatch, getState) => {
-    const websiteId = websiteSelectors.websiteId(getState())
     const nocodeConfig = nocodeSelectors.config(getState())
     if(nocodeConfig.publishDisabled && !localModeOverride) {
       const result = await dispatch(uiActions.waitForConfirmation({
@@ -74,36 +73,39 @@ const sideEffects = {
       }))
 
       if(!result) return
+      dispatch(actions.publishCore())
+    }
+    else {
+      dispatch(actions.publishCore())
+    }
+  }),
 
-      dispatch(actions.publish({
-        localModeOverride: true,
+  publishCore: () => wrapper('publishCore', async (dispatch, getState) => {
+    const websiteId = websiteSelectors.websiteId(getState())
+    dispatch(jobActions.resetData())
+    const {
+      id,
+    } = await handlers.post(`/publish/${websiteId}`, {})
+    dispatch(dialogActions.open('publish', {}))
+    const job = await dispatch(jobActions.waitForJob({
+      id,
+    }))
+    // the publish job has told us we will need to upgrade
+    // drive access before it can continue
+    // (probably because we discovered links to other documentss)
+    if(job.result && job.result.action == 'driveAccess') {
+      dispatch(dialogActions.closeAll())
+      dispatch(driveActions.upgradeScope({
+        mode: job.result.mode,
       }))
     }
     else {
-      dispatch(jobActions.resetData())
-      const {
-        id,
-      } = await handlers.post(`/publish/${websiteId}`, {})
-      dispatch(dialogActions.open('publish', {}))
-      const job = await dispatch(jobActions.waitForJob({
+      dispatch(dialogActions.replace('publishSummary', {
         id,
       }))
-      // the publish job has told us we will need to upgrade
-      // drive access before it can continue
-      // (probably because we discovered links to other documentss)
-      if(job.result && job.result.action == 'driveAccess') {
-        dispatch(dialogActions.closeAll())
-        dispatch(driveActions.upgradeScope({
-          mode: job.result.mode,
-        }))
-      }
-      else {
-        dispatch(dialogActions.replace('publishSummary', {
-          id,
-        }))
-      }
-    }    
+    }
   }),
+
 
   viewLogs: ({id}) => async (dispatch, getState) => {
     dispatch(jobActions.resetData())

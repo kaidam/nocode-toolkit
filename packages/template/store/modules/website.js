@@ -215,16 +215,15 @@ const sideEffects = {
       if(!confirmed) return
     }
 
-    await dispatch(actions.updateSecurityModeConfirm(id, mode))
+    const result = await dispatch(actions.updateSecurityModeConfirm(id, mode))
+    return result
   }),
 
   updateSecurityModeConfirm: (id, mode) => wrapper('updateSecurityModeConfirm', async (dispatch, getState) => {
     const result = await handlers.put(`/websites/${id}/security_mode`, {mode})
-    console.log('--------------------------------------------')
-    console.dir(result)
     await dispatch(actions.get(id))
     dispatch(snackbarActions.setSuccess(`settings updated`))
-    return true
+    return result
   }, {
     autoLoading: true,
   }),

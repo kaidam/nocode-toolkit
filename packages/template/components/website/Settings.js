@@ -15,6 +15,9 @@ import WebsiteSnippets from '../website/Snippets'
 import WebsiteEcommerce from '../website/Ecommerce'
 import DialogButtons from '../widgets/DialogButtons'
 import ConfirmWindow from '../dialog/Confirm'
+import PublishDialog from '../publish/PublishDialog'
+import PublishSummaryDialog from '../publish/SummaryDialog'
+import PublishHistoryDialog from '../publish/HistoryDialog'
 
 import routerActions from '../../store/modules/router'
 import routerSelectors from '../../store/selectors/router'
@@ -158,6 +161,7 @@ const WebsiteSettings = ({
   buttonAlign,
   extraTabs = [],
   withRouter = false,
+  includeDialogs = false,
   ...extraProps
 }) => {
   const classes = useStyles()
@@ -235,7 +239,16 @@ const WebsiteSettings = ({
           )
         }
       </div>
-      <ConfirmWindow />
+      {
+        includeDialogs && (
+          <>
+            <PublishDialog />
+            <PublishSummaryDialog />
+            <PublishHistoryDialog />
+            <ConfirmWindow />
+          </>
+        )
+      }
     </div>
   )
 }

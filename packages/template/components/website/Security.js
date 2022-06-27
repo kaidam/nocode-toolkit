@@ -18,7 +18,7 @@ import FormDialog from '../form/Dialog'
 
 import websiteSelectors from '../../store/selectors/website'
 import websiteActions from '../../store/modules/website'
-import uiActions from '../../store/modules/ui'
+import publishActions from '../../store/modules/publish'
 
 import DeleteConfirm from '../dialog/DeleteConfirm'
 import SimpleTable from '../table/SimpleTable'
@@ -112,16 +112,10 @@ const SettingsSecurity = ({
   ])
 
   const onSetMode = useCallback(async (mode) => {
-
-    return dispatch(websiteActions.updateSecurityMode(website.id, mode))    
-    // const result = await dispatch(uiActions.waitForConfirmation({
-    //   title: `Change Security & Republish?`,
-    //   message: `When you change the `,
-    // }))
-    // if(!result) return
-    // onUpdateSecurity({
-    //   password_mode: mode,
-    // })
+    const result = await dispatch(websiteActions.updateSecurityMode(website.id, mode))
+    if(result && result.republish) {
+      await dispatch(publishActions.publishCore())
+    }
   }, [
     website,
   ])
