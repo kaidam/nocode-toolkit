@@ -235,6 +235,8 @@ const sideEffects = {
     await dispatch(actions.get(id))
     dispatch(snackbarActions.setSuccess(`custom domain added`))
     return true
+  }, {
+    autoLoading: true,
   }),
 
   removeUrl: ({
@@ -246,6 +248,8 @@ const sideEffects = {
     await dispatch(actions.get(id))
     dispatch(snackbarActions.setSuccess(`custom domain deleted`))
     return true
+  }, {
+    autoLoading: true,
   }),
 }
 
