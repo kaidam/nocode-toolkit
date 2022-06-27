@@ -195,6 +195,8 @@ const sideEffects = {
     await dispatch(actions.get(id))
     dispatch(snackbarActions.setSuccess(`settings updated`))
     return true
+  }, {
+    autoLoading: true,
   }),
 
 
