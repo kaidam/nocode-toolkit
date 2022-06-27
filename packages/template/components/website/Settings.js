@@ -14,6 +14,7 @@ import WebsiteSecurity from '../website/Security'
 import WebsiteSnippets from '../website/Snippets'
 import WebsiteEcommerce from '../website/Ecommerce'
 import DialogButtons from '../widgets/DialogButtons'
+import ConfirmWindow from '../dialog/Confirm'
 
 import routerActions from '../../store/modules/router'
 import routerSelectors from '../../store/selectors/router'
@@ -234,6 +235,7 @@ const WebsiteSettings = ({
           )
         }
       </div>
+      <ConfirmWindow />
     </div>
   )
 }

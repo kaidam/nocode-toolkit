@@ -14,6 +14,7 @@ import {
 
 import jobActions from './job'
 import snackbarActions from './snackbar'
+import uiActions from './ui'
 
 const prefix = 'website'
 const wrapper = networkWrapper.factory(prefix)
@@ -192,6 +193,35 @@ const sideEffects = {
   updateSecurity: (id, data) => wrapper('updateSecurity', async (dispatch, getState) => {
     if(id == 'new') return
     await handlers.put(`/websites/${id}/security`, data)
+    await dispatch(actions.get(id))
+    dispatch(snackbarActions.setSuccess(`settings updated`))
+    return true
+  }, {
+    autoLoading: true,
+  }),
+
+  updateSecurityMode: (id, mode) => wrapper('updateSecurityMode', async (dispatch, getState) => {
+    if(id == 'new') return
+    const websiteId = websiteSelectors.websiteId(getState())
+    const publishData = await handlers.get(`/publish/${websiteId}/status`)
+
+    // we need to check that it's ok to remove all publish jobs before we change the security mode
+    if(publishData.job) {
+      const confirmed = await dispatch(uiActions.waitForConfirmation({
+        title: `Change Security & Republish?`,
+        message: `You have already published your website. Changing the security mode will remove all published builds. Are you sure you want to continue?`,
+      }))
+
+      if(!confirmed) return
+    }
+
+    await dispatch(actions.updateSecurityModeConfirm(id, mode))
+  }),
+
+  updateSecurityModeConfirm: (id, mode) => wrapper('updateSecurityModeConfirm', async (dispatch, getState) => {
+    const result = await handlers.put(`/websites/${id}/security_mode`, {mode})
+    console.log('--------------------------------------------')
+    console.dir(result)
     await dispatch(actions.get(id))
     dispatch(snackbarActions.setSuccess(`settings updated`))
     return true
