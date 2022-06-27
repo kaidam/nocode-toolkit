@@ -41,8 +41,9 @@ const useStyles = makeStyles(theme => {
   }
 })
 
+
 const Logo = ({
-  
+  defaultLogo,
 }) => {
   const classes = useStyles()
   const settings = useSelector(settingsSelectors.settings)
@@ -60,6 +61,11 @@ const Logo = ({
       {
         logo && logo.url && (
           <img className={ classnames(classes.logoImage, 'nocode-logo-image') } src={ logo.url } />
+        )
+      }
+      {
+        (!logo || !logo.url) && defaultLogo && (
+          <img className={ classnames(classes.logoImage, 'nocode-logo-image') } src={ defaultLogo } />
         )
       }
       {
