@@ -179,6 +179,7 @@ const NavBarItem = ({
     [classes.item]: true,
     [classes.itemActive]: isNodeActive,
     'nocode-navbar-item': true,
+    'nocode-navbar-item-active': isNodeActive,
     'nocode-navbar-item-hover': isHovered,
   })
 
