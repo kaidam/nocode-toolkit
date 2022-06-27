@@ -211,6 +211,8 @@ const sideEffects = {
     await handlers.put(`/websites/${id}/subdomain`, {subdomain})
     await dispatch(actions.get(id))
     dispatch(snackbarActions.setSuccess(`subdomain updated`))
+  }, {
+    autoLoading: true,
   }),
 
   addUrl: ({
