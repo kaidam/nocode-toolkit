@@ -1,8 +1,7 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import classnames from 'classnames'
-import settingsSelectors from '../store/selectors/settings'
+import useSocialLinks from '../components/hooks/useSocialLinks'
 import icons from '../icons'
 
 const useStyles = makeStyles(theme => ({
@@ -43,15 +42,6 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-const LINKS = [
-  {icon: 'facebook', key: 'facebook'},
-  {icon: 'twitter', key: 'twitter'},
-  {icon: 'linkedin', key: 'linkedin'},
-  {icon: 'youtube', key: 'youtube'},
-  {icon: 'pinterest', key: 'pinterest'},
-  {icon: 'instagram', key: 'instagram'},
-]
-
 const IconMap = {
   facebook: icons.facebook,
   twitter: icons.twitter,
@@ -67,23 +57,15 @@ const Render = ({
   
   const classes = useStyles()
   
-  const settings = useSelector(settingsSelectors.settings)
-
-  const data = settings.social_links || {}
-
-  let links = LINKS
-    .filter(item => data[item.key] ? true : false)
+  const socialLinks = useSocialLinks()
+  
+  let links = socialLinks
     .map((item, i) => {
-      const value = data[item.key]
-      const url = value.match(/^https?:\/\//i) ?
-        value :
-        `http://${value}`
-      // Icon is now a React class
       const Icon = IconMap[item.icon]
       const socialClasses = classnames(classes.smIcon, classes[item.icon])
       return (
         <div className={ classes.icon } key={ i }>
-          <a href={ url } target="_blank">
+          <a href={ item.url } target="_blank">
             <Icon className={ socialClasses } />
           </a>
         </div>
