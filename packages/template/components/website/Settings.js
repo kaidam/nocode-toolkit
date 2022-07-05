@@ -135,7 +135,7 @@ const TABS = [{
   )
 },{
   id: 'snippets',
-  title: 'Snippets',
+  title: 'Scripts',
   icon: icons.snippet,
   footer: true,
   render: (props, classes) => (
