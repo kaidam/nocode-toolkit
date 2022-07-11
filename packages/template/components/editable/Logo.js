@@ -44,6 +44,7 @@ const useStyles = makeStyles(theme => {
 
 const Logo = ({
   defaultLogo,
+  hideText,
 }) => {
   const classes = useStyles()
   const settings = useSelector(settingsSelectors.settings)
@@ -69,7 +70,7 @@ const Logo = ({
         )
       }
       {
-        logo_text && (
+        logo_text && !hideText && (
           <Typography
             variant="h5"
             className={ classnames(classes.logoText, 'nocode-logo-text') }

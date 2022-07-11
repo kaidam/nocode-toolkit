@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import contentSelectors from '../../store/selectors/content'
 import settingsSelectors from '../../store/selectors/settings'
 import Layout from '../layout/Layout'
+import useGoogleDocumentImages from '../hooks/useGoogleDocumentImages'
 
 const useStyles = makeStyles(theme => ({
   container: ({
@@ -12,7 +13,11 @@ const useStyles = makeStyles(theme => ({
     autoLineHeight,
   }) => {
 
-    const ret = {}
+    const ret = {
+      '& h1,h2,h3,h4,h5,h6': {
+        'wordBreak': 'break-word',
+      }
+    }
 
     if(imageDropshadow) {
       ret['& .nocode-document-image-container'] = {
@@ -47,6 +52,10 @@ const DocumentPage = ({
   const classes = useStyles({
     imageDropshadow: settings.imageDropshadow,
     autoLineHeight: settings.autoLineHeight
+  })
+
+  useGoogleDocumentImages({
+    containerSelector: '.document-container'
   })
 
   return (
