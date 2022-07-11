@@ -31,8 +31,9 @@ export const getAllFields = (settings) => {
       title: 'Email Address' + (emailRequired ? ' (*)' : ''),
       description: 'Please enter your email address',
       validate: value => {
+        if(value && value.indexOf('@') > -1) return null
         if(settings.emailField != 'yesrequired') return null
-        return value ? null : `your email is a required field`
+        return value ? (value.indexOf('@') > 0 ? null : `please supply a valid email address`) : `your email is a required field`
       },
     }, {
       id: 'phone',
