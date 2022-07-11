@@ -4,7 +4,6 @@ import networkWrapper from '../utils/networkWrapper'
 
 import contactformSelectors from '../selectors/contactform'
 import websiteSelectors from '../selectors/website'
-import fields from '../../components/contactform/fields'
 
 import {
   handlers,
@@ -45,7 +44,8 @@ const reducers = {
 
 const sideEffects = {
 
-  submit: () => wrapper('submit', async (dispatch, getState) => {
+  submit: ({settings, fields}) => wrapper('submit', async (dispatch, getState) => {
+
     dispatch(actions.setErrors({}))
     const websiteId = websiteSelectors.websiteId(getState())
     const values = contactformSelectors.values(getState())
@@ -63,8 +63,10 @@ const sideEffects = {
       dispatch(snackbarActions.setError(`the form is not valid`))
       return
     }
-
-    await handlers.post(`/plugins/contactform/${websiteId}/submit`, values)
+    await handlers.post(`/plugins/contactform/${websiteId}/submit`, {
+      values,
+      settings,
+    })
     dispatch(snackbarActions.setSuccess(`Message sent`))
     dispatch(actions.setErrors({}))
     dispatch(actions.setValues({}))

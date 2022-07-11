@@ -64,7 +64,7 @@ const form = [{
     },
 
     {
-      id: 'commentsField',
+      id: 'messageField',
       title: 'Comments Field?',
       default: 'no',
       component: 'radio',
