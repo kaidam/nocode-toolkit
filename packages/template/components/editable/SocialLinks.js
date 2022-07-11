@@ -20,7 +20,9 @@ const SocialLinks = ({
         return showUI ? (
           <span style={{
             color: '#666',
-            fontSize: '0.8em'
+            backgroundColor: '#fff',
+            padding: '5px',
+            //fontSize: '0.8em'
           }}>click to edit your social links</span>
         ) : null
       }}

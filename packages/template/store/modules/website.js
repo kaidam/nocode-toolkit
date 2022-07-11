@@ -14,6 +14,7 @@ import {
 
 import jobActions from './job'
 import snackbarActions from './snackbar'
+import uiActions from './ui'
 
 const prefix = 'website'
 const wrapper = networkWrapper.factory(prefix)
@@ -67,6 +68,7 @@ const sideEffects = {
   create: ({
     name,
     template,
+    options,
     layout,
   }) => wrapper('create', async (dispatch, getState) => {
     const {
@@ -77,6 +79,7 @@ const sideEffects = {
     const flatSchema = tabs.reduce((all, tab) => all.concat(tab.schema), [])
     const settings = formUtils.getInitialValues(flatSchema, {
       [websiteNameField]: name,
+      ...options,
     })
     const {
       website,
@@ -193,6 +196,36 @@ const sideEffects = {
     await dispatch(actions.get(id))
     dispatch(snackbarActions.setSuccess(`settings updated`))
     return true
+  }, {
+    autoLoading: true,
+  }),
+
+  updateSecurityMode: (id, mode) => wrapper('updateSecurityMode', async (dispatch, getState) => {
+    if(id == 'new') return
+    const websiteId = websiteSelectors.websiteId(getState())
+    const publishData = await handlers.get(`/publish/${websiteId}/status`)
+
+    // we need to check that it's ok to remove all publish jobs before we change the security mode
+    if(publishData.job) {
+      const confirmed = await dispatch(uiActions.waitForConfirmation({
+        title: `Change Security & Republish?`,
+        message: `You have already published your website. Changing the security mode will remove all published builds. Are you sure you want to continue?`,
+      }))
+
+      if(!confirmed) return
+    }
+
+    const result = await dispatch(actions.updateSecurityModeConfirm(id, mode))
+    return result
+  }),
+
+  updateSecurityModeConfirm: (id, mode) => wrapper('updateSecurityModeConfirm', async (dispatch, getState) => {
+    const result = await handlers.put(`/websites/${id}/security_mode`, {mode})
+    await dispatch(actions.get(id))
+    dispatch(snackbarActions.setSuccess(`settings updated`))
+    return result
+  }, {
+    autoLoading: true,
   }),
 
 
@@ -209,6 +242,8 @@ const sideEffects = {
     await handlers.put(`/websites/${id}/subdomain`, {subdomain})
     await dispatch(actions.get(id))
     dispatch(snackbarActions.setSuccess(`subdomain updated`))
+  }, {
+    autoLoading: true,
   }),
 
   addUrl: ({
@@ -231,6 +266,8 @@ const sideEffects = {
     await dispatch(actions.get(id))
     dispatch(snackbarActions.setSuccess(`custom domain added`))
     return true
+  }, {
+    autoLoading: true,
   }),
 
   removeUrl: ({
@@ -242,6 +279,8 @@ const sideEffects = {
     await dispatch(actions.get(id))
     dispatch(snackbarActions.setSuccess(`custom domain deleted`))
     return true
+  }, {
+    autoLoading: true,
   }),
 }
 

@@ -36,11 +36,12 @@ const useStyles = makeStyles(theme => {
     itemContainer: ({
       vertical,
       align = 'left',
+      float = 'left',
     } = {}) => {
       return vertical ? {
         
       } : {
-        float: align,
+        float: float,
       }
     },
 
@@ -128,6 +129,7 @@ const NavBarItem = ({
   showUI,
   contrast,
   align = 'left',
+  float = 'left',
   vertical,
   editable,
   isItemActive,
@@ -158,6 +160,7 @@ const NavBarItem = ({
   const classes = useStyles({
     contrast,
     align,
+    float,
     vertical,
     isHovered,
   })
@@ -175,6 +178,9 @@ const NavBarItem = ({
   const itemClass = classnames({
     [classes.item]: true,
     [classes.itemActive]: isNodeActive,
+    'nocode-navbar-item': true,
+    'nocode-navbar-item-active': isNodeActive,
+    'nocode-navbar-item-hover': isHovered,
   })
 
   // folders can be treated as documents
@@ -296,7 +302,7 @@ const NavBarItem = ({
       const getRenderedItem = (onItemClick, uiMode) => {
         return (
           <li
-            className={ classes.itemContainer }  
+            className={ classes.itemContainer }
           >
             <div
               className={ itemClass }
@@ -372,7 +378,7 @@ const NavBarItem = ({
 
       return (
         <li
-          className={ classes.itemContainer }
+          className={ classnames('nocode-navbar-item-container', classes.itemContainer) }
           ref={ containerRef }
           onMouseEnter={ onHover }
           onMouseLeave={ onLeave }

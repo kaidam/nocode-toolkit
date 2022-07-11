@@ -128,6 +128,8 @@ const TreeItem = ({
 
   const listItemClassname = classnames({
     [classes.active]: node.currentPage,
+    'nocode-tree-item': true,
+    'nocode-tree-item-active': node.currentPage,
   }, classes.menuItem)
 
   const colorClassname = classnames({
@@ -235,7 +237,7 @@ const TreeItem = ({
           onClick={ onItemClick }
         >
           <ListItemText
-            className={ classes.itemText }
+            className={ classnames('nocode-tree-text', classes.itemText) }
             classes={{
               primary: colorClassname
             }}

@@ -13,6 +13,7 @@ import uiActions from './ui'
 import websiteSelectors from '../selectors/website'
 import nocodeSelectors from '../selectors/nocode'
 import jobSelectors from '../selectors/job'
+import library from '../../library'
 
 const prefix = 'job'
 
@@ -164,6 +165,13 @@ const sideEffects = {
       dispatch(uiActions.setLoading(false))
       if(withSnackbar) {
         dispatch(snackbarActions.setSuccess(`website rebuilt`))
+      }
+      if(library.hooks.resyncDrive) {
+        await library.hooks.resyncDrive({
+          dispatch,
+          getState,
+          id: jobId,
+        })
       }
     }
   },

@@ -41,6 +41,7 @@ const NavBarSection = ({
   contrast,
   vertical,
   align = 'left',
+  float = 'left',
   settingsAlign,
   editable = true,
   withSettings = true,
@@ -90,6 +91,7 @@ const NavBarSection = ({
         contrast={ contrast }
         vertical={ vertical }
         align={ align }
+        float={ float }
         isItemActive={ isItemActive }
       />
     </div>

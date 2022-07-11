@@ -18,6 +18,7 @@ import FormDialog from '../form/Dialog'
 
 import websiteSelectors from '../../store/selectors/website'
 import websiteActions from '../../store/modules/website'
+import publishActions from '../../store/modules/publish'
 
 import DeleteConfirm from '../dialog/DeleteConfirm'
 import SimpleTable from '../table/SimpleTable'
@@ -36,6 +37,12 @@ const useStyles = makeStyles(theme => ({
   },
   saveButton: {
     marginTop: theme.spacing(1),
+  },
+  paddingBottom: {
+    marginBottom: theme.spacing(2),
+  },
+  paddingTop: {
+    marginTop: theme.spacing(2),
   }
 }))
 
@@ -110,11 +117,14 @@ const SettingsSecurity = ({
     website,
   ])
 
-  const onSetMode = useCallback((mode) => {
-    onUpdateSecurity({
-      password_mode: mode,
-    })
-  }, [onUpdateSecurity])
+  const onSetMode = useCallback(async (mode) => {
+    const result = await dispatch(websiteActions.updateSecurityMode(website.id, mode))
+    if(result && result.republish) {
+      await dispatch(publishActions.publishCore())
+    }
+  }, [
+    website,
+  ])
   
   const onAddUser = useCallback(async (user) => {
     const result = await onUpdateSecurity({
@@ -254,7 +264,7 @@ const SettingsSecurity = ({
               <Paper className={ classes.paper }>
                 <Grid container spacing={ 0 }>
                   <Grid item xs={ 12 }>
-                    <Typography>
+                    <Typography gutterBottom className={ classes.paddingBottom }>
                       Require that a user has logged in with a Google account.
                       If you add a rule for "mydomain.com" - then any google user
                       with an email address @mydomain.com can see the website.
@@ -284,6 +294,13 @@ const SettingsSecurity = ({
                         </IconButton>
                       )}
                     />
+                  </Grid>
+                  <Grid item xs={ 12 }>
+                    <Typography gutterBottom className={ classes.paddingTop }>
+                      <strong>NOTE:</strong> you will always be able to see the website because you are logged into nocode as the owner of the website.
+
+                      If you want to test this feature, first logout of nocode or open an incognito window to view the website.
+                    </Typography>
                   </Grid>
                 </Grid>
               </Paper>

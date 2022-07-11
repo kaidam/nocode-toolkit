@@ -1,4 +1,5 @@
 import React from 'react'
+import classnames from 'classnames'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 
@@ -24,7 +25,7 @@ const Folder = ({
   const classes = useStyles()
   if(!nodes || nodes.length <= 0) return null
   return (
-    <List className={ classes.root }>
+    <List className={ classnames('nocode-tree-list', classes.root) }>
       {
         nodes.map((node, i) => {
           const open = openFolders[node.id]

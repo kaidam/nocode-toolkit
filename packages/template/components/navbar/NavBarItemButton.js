@@ -25,6 +25,11 @@ const useStyles = makeStyles(theme => ({
     cursor: 'pointer',
     zIndex: 1000,
   }),
+
+  buttonClick: {
+    padding: '3px',
+    cursor: 'pointer',
+  }
 }))
 
 const getButtonPosition = ({
@@ -94,11 +99,13 @@ const NavBarItemButton = ({
 
   const getButton = useCallback((onOpenMenu) => {
     return (
-      <div className={ classes.buttonContainer } onClick={ onOpenMenu }>
-        <IconButton
-          settingsButton
-          title={ node.name }
-        />
+      <div className={ classes.buttonContainer }>
+        <div className={ classes.buttonClick } onClick={ onOpenMenu }>
+          <IconButton
+            settingsButton
+            title={ node.name }
+          />
+        </div>
       </div>
     )
   }, [

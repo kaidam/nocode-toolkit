@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react'
+import classnames from 'classnames'
 import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
@@ -71,7 +72,7 @@ const DraggableNavBar = ({
   }
 
   return (
-    <nav>
+    <nav className={ classnames('nocode-navbar-nav') }>
       <DragDropContext
         onDragEnd={ onDragEnd }
       >
@@ -85,7 +86,7 @@ const DraggableNavBar = ({
               {...provided.droppableProps}
               ref={provided.innerRef}
             >
-              <ul className={ classes.navbar }>
+              <ul className={ classnames('nocode-navbar-ul', classes.navbar) }>
                 {
                   items.map((item, i) => {
                     return (

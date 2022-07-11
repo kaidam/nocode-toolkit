@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo } from 'react'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch, useStore } from 'react-redux'
 import { useDropzone } from 'react-dropzone'
 
 import Tooltip from '@material-ui/core/Tooltip'
@@ -84,6 +84,7 @@ const ImageField = ({
 }) => {
   const classes = useStyles()
 
+  const store = useStore()
   const uploadInProgress = useSelector(fileuploadSelectors.inProgress)
   const uploadStatus = useSelector(fileuploadSelectors.status)
   const syncLoading = useSelector(fileuploadSelectors.loading.syncFiles)
@@ -143,11 +144,23 @@ const ImageField = ({
   }, [])
 
   const onChooseRandomUnsplashImage = useCallback(async () => {
-    const query = values[item.random_query_field]
-    const image = await actions.getRandomUnsplashItem({
-      query,
-    })
-    setFieldValue(name, image)
+    let query = ''
+    if(item.random_query_field) {
+      query = values[item.random_query_field]
+    }
+    else if(item.get_random_query_field) {
+      query = item.get_random_query_field(values, store.getState())
+    }
+    if(query) {
+      let image = await actions.getRandomUnsplashItem({
+        query,
+      })
+      console.log('--------------------------------------------')
+      console.dir(`searching for unsplash item: ${query}`)
+      console.dir(image)
+      setFieldValue(name, image)
+    }
+    
   }, [
     values,
     item,
@@ -193,7 +206,7 @@ const ImageField = ({
       !item.providers || item.providers.indexOf('unsplash') >= 0 ?
         unsplash :
         null,
-      item.random_query_field && item.providers && item.providers.indexOf('unsplash_random') >= 0 ?
+      (item.random_query_field || item.get_random_query_field) && item.providers && item.providers.indexOf('unsplash_random') >= 0 ?
         randomUnsplash :
         null,
       !item.noReset ? {

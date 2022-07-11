@@ -1,4 +1,5 @@
 import React, { lazy } from 'react'
+import classnames from 'classnames'
 import { useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
@@ -51,10 +52,10 @@ const Copyright = ({
   const value = autoCopyrightMessage(settings[field])
 
   const content = (
-    <div className={ classes.container }>
+    <div className={ classnames(classes.container, 'nocode-copyright-container') }>
       <Typography
         variant="body1"
-        className={ classes.copyrightText }
+        className={ classnames(classes.copyrightText, 'nocode-copyright-text') }
       >
         { value }
       </Typography>

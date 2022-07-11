@@ -263,8 +263,8 @@ const SettingsSnippets = ({
       <Grid item xs={ 12 } sm={ 12 } md={ 12 } lg={ 4 }>
         <Paper className={ classes.paper }>
           <SnippetGroup
-            title="Page Snippets"
-            message="Chunks of HTML that you can add to pages"
+            title="Custom Widgets"
+            message="Chunks of HTML that you can add to page layouts as a widget - for example, a Google Map or an embeddable form."
             data={ pageSnippets }
             onAdd={ () => setEditSnippet({
               type: 'page',
@@ -278,8 +278,8 @@ const SettingsSnippets = ({
       <Grid item xs={ 12 } sm={ 12 } md={ 12 } lg={ 4 }>
         <Paper className={ classes.paper }>
           <SnippetGroup
-            title="Global Snippets"
-            message="Appear on all pages and are useful for adding script tags or custom CSS"
+            title="Sitewide Scripts"
+            message="Appear on all pages and are useful for adding script tags or custom CSS - for example Google Analytics or Facebook pixel."
             data={ globalSnippets }
             onAdd={ () => setEditSnippet({
               type: 'global',
@@ -293,8 +293,8 @@ const SettingsSnippets = ({
       <Grid item xs={ 12 } sm={ 12 } md={ 12 } lg={ 4 }>
         <Paper className={ classes.paper }>
           <SnippetGroup
-            title="File Snippets"
-            message="Upload files that will be published alongside your website"
+            title="Files"
+            message="Upload files that will be published alongside your website - for example a PDF or to validate the ownership of your website."
             data={ fileSnippets }
             onAdd={ () => setEditSnippet({
               type: 'file',
