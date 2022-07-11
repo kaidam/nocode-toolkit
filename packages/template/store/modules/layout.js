@@ -211,7 +211,7 @@ const sideEffects = {
         cell,
       }),
       config: {
-        size: 'sm',
+        size: widget.windowSize || 'sm',
         fullHeight: false,
         showLoading: true,
       }
