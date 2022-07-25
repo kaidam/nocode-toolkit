@@ -73,6 +73,10 @@ const getSectionChildrenIds = ({
     const node = nodes[id]
     return all.concat(node.children || [])
   }, [])
+  .reduce((all, id) => {
+    if(all.indexOf(id) >= 0) return all
+    return all.concat([id])
+  }, [])
 }
 
 // sort the children of an item based on
