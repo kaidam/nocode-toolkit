@@ -25,7 +25,7 @@
     "detect-node": "^2.0.4",
     "dot-prop": "^5.2.0",
     "dotty": "^0.1.0",
-    "dset": "^2.0.1",
+    "dset": "^3.1.2",
     "esm": "^3.2.25",
     "express": "^4.16.4",
     "express-static-gzip": "^2.0.5",
