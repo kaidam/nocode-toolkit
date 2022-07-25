@@ -51,8 +51,8 @@ const Develop = ({
     try {
       const apiRes = await axios({
         method: req.method,
-        url: req.originalUrl,
-        headers: Object.assign({}, req.headers, api.getAuthHeaders()),
+        url: `${options.nocodeApiHostname}${req.originalUrl}`,
+        headers: api.getAuthHeaders(),
         data: req,
         responseType: 'stream',
       })
